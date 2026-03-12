@@ -5,15 +5,6 @@ import { Calendar, Clock, ArrowRight, BookOpen } from 'lucide-react'
 import Link from 'next/link'
 import { blogPosts } from '@/lib/data'
 
-const tagColors = [
-  'bg-indigo-500/10 text-indigo-400 border-indigo-500/20',
-  'bg-violet-500/10 text-violet-400 border-violet-500/20',
-  'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-  'bg-sky-500/10 text-sky-400 border-sky-500/20',
-  'bg-rose-500/10 text-rose-400 border-rose-500/20',
-  'bg-amber-500/10 text-amber-400 border-amber-500/20',
-]
-
 export default function Blog() {
   const [featured, ...rest] = blogPosts
 
@@ -45,11 +36,12 @@ export default function Blog() {
                   <span className="w-1.5 h-1.5 rounded-full bg-indigo-400" />
                   Öne Çıkan
                 </span>
-                {featured.tags.map((tag) => (
-                  <span key={tag} className="px-2.5 py-1 text-xs rounded-full border border-gray-200 dark:border-white/8 text-gray-500 dark:text-gray-400">
-                    {tag}
-                  </span>
-                ))}
+                <span
+                  className="px-2.5 py-1 text-xs rounded-full border font-medium"
+                  style={{ color: featured.tagColor, borderColor: `${featured.tagColor}40`, background: `${featured.tagColor}10` }}
+                >
+                  {featured.tag}
+                </span>
               </div>
               <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition-colors mb-3 leading-snug">
                 {featured.title}
@@ -81,7 +73,7 @@ export default function Blog() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
         {rest.map((post, i) => (
           <motion.div
-            key={post.id}
+            key={post.slug}
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15 + i * 0.08, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
@@ -89,11 +81,12 @@ export default function Blog() {
             <Link href={`/blog/${post.slug}`} className="block group h-full">
               <div className="h-full rounded-2xl border border-gray-200 dark:border-white/8 bg-white dark:bg-white/[0.03] hover:border-indigo-300 dark:hover:border-indigo-500/40 hover:shadow-lg dark:hover:shadow-indigo-500/5 transition-all duration-300 p-5 flex flex-col">
                 <div className="flex flex-wrap gap-1.5 mb-3">
-                  {post.tags.map((tag, ti) => (
-                    <span key={tag} className={`px-2 py-0.5 text-[11px] rounded-full border ${tagColors[(i + ti) % tagColors.length]}`}>
-                      {tag}
-                    </span>
-                  ))}
+                  <span
+                    className="px-2 py-0.5 text-[11px] rounded-full border font-medium"
+                    style={{ color: post.tagColor, borderColor: `${post.tagColor}40`, background: `${post.tagColor}10` }}
+                  >
+                    {post.tag}
+                  </span>
                 </div>
                 <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition-colors mb-2 leading-snug flex-1 text-[15px]">
                   {post.title}

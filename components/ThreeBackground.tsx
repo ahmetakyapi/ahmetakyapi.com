@@ -213,9 +213,14 @@ function ParticleField({
     // Smooth mouse lerp
     matRef.current.uniforms.uMouse.value.lerp(mouseRef.current, 0.08)
 
+    // Sync click time with Three clock on first frame after click
+    if (clickRef.current.time === -1) {
+      clickRef.current.time = t
+    }
+
     // Click shockwave
     const clickAge = t - clickRef.current.time
-    if (clickAge < 3) {
+    if (clickAge >= 0 && clickAge < 3) {
       matRef.current.uniforms.uClickWave.value = clickAge
       matRef.current.uniforms.uClickPos.value.copy(clickRef.current.pos)
     } else {
@@ -315,10 +320,14 @@ function ConnectionLines({ mouseRef }: { mouseRef: React.MutableRefObject<THREE.
     }
 
     if (lineGeoRef.current) {
-      lineGeoRef.current.setAttribute(
-        'position',
-        new THREE.Float32BufferAttribute(lv.slice(0, vi), 3),
-      )
+      const attr = lineGeoRef.current.getAttribute('position') as THREE.BufferAttribute | undefined
+      if (attr) {
+        // Reuse existing buffer — no allocation
+        ;(attr.array as Float32Array).set(lv.subarray(0, vi))
+        attr.needsUpdate = true
+      } else {
+        lineGeoRef.current.setAttribute('position', new THREE.BufferAttribute(lv.slice(), 3))
+      }
       lineGeoRef.current.setDrawRange(0, vi / 3)
     }
   })
@@ -399,10 +408,9 @@ function Scene({
 
       <EffectComposer>
         <Bloom
-          luminanceThreshold={0.2}
+          luminanceThreshold={0.25}
           luminanceSmoothing={0.9}
-          intensity={0.8}
-          mipmapBlur
+          intensity={0.6}
         />
       </EffectComposer>
     </>
@@ -417,6 +425,7 @@ export default function ThreeBackground() {
   const [mounted, setMounted] = useState(false)
   const mouseRef = useRef(new THREE.Vector2(999, 999))
   const clickRef = useRef({ pos: new THREE.Vector2(0, 0), time: -10 })
+  const pausedRef = useRef(false)
 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
@@ -433,22 +442,24 @@ export default function ThreeBackground() {
     function onClick(e: MouseEvent) {
       const el = e.target as HTMLElement
       if (el.closest('a, button, input, textarea, select, [role="button"], nav, header')) return
-      clickRef.current = {
-        pos: new THREE.Vector2(
-          (e.clientX / window.innerWidth) * 2 - 1,
-          -(e.clientY / window.innerHeight) * 2 + 1,
-        ),
-        time: -10, // will be set in useFrame
-      }
-      // Mark as "needs sync" with Three clock
-      clickRef.current.time = -1
+      clickRef.current.pos.set(
+        (e.clientX / window.innerWidth) * 2 - 1,
+        -(e.clientY / window.innerHeight) * 2 + 1,
+      )
+      clickRef.current.time = -1 // will be synced in useFrame
     }
 
-    window.addEventListener('mousemove', onMouseMove)
+    function onVisibility() {
+      pausedRef.current = document.hidden
+    }
+
+    window.addEventListener('mousemove', onMouseMove, { passive: true })
     window.addEventListener('click', onClick)
+    document.addEventListener('visibilitychange', onVisibility)
     return () => {
       window.removeEventListener('mousemove', onMouseMove)
       window.removeEventListener('click', onClick)
+      document.removeEventListener('visibilitychange', onVisibility)
     }
   }, [])
 
@@ -466,16 +477,6 @@ export default function ThreeBackground() {
         }}
         dpr={[1, 1.5]}
         style={{ background: 'transparent' }}
-        onCreated={({ clock }) => {
-          // Sync click handler with Three clock
-          const origOnClick = clickRef.current
-          const intervalId = setInterval(() => {
-            if (clickRef.current.time === -1) {
-              clickRef.current.time = clock.elapsedTime
-            }
-          }, 16)
-          return () => clearInterval(intervalId)
-        }}
       >
         <Suspense fallback={null}>
           <Scene mouseRef={mouseRef} clickRef={clickRef} />

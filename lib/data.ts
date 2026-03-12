@@ -1,14 +1,15 @@
 export interface Project {
   id: number
+  category: string
   title: string
   description: string
-  tech: string[]
-  github: string
-  live: string | null
-  language: string
-  stars: number
-  featured: boolean
+  tags: string[]
+  link: string
+  github?: string
+  accent: string
   gradient: string
+  badge: 'Canlı' | 'GitHub'
+  featured: boolean
 }
 
 export type Block =
@@ -20,13 +21,13 @@ export type Block =
   | { type: 'callout'; variant: 'tip' | 'info' | 'warning'; text: string }
 
 export interface BlogPost {
-  id: number
+  slug: string
+  tag: string
+  tagColor: string
   title: string
   excerpt: string
   date: string
   readTime: string
-  tags: string[]
-  slug: string
   coverGradient: string
   content: Block[]
 }
@@ -34,63 +35,67 @@ export interface BlogPost {
 export const projects: Project[] = [
   {
     id: 1,
+    category: 'Portfolio & Showcase',
     title: 'ahmetakyapi.com',
     description: 'Bu sitenin kendisi. Next.js App Router, TailwindCSS ve Framer Motion ile sıfırdan tasarlayıp geliştirdiğim kişisel portfolio ve blog sitesi. Dark/light tema, Giscus yorum sistemi ve teknik blog yazıları içeriyor.',
-    tech: ['Next.js', 'TypeScript', 'TailwindCSS', 'Framer Motion'],
+    tags: ['Next.js', 'TypeScript', 'TailwindCSS', 'Framer Motion'],
+    link: 'https://ahmetakyapi.com',
     github: 'https://github.com/ahmetakyapi/ahmetakyapi.me',
-    live: 'https://ahmetakyapi.com',
-    language: 'TypeScript',
-    stars: 2,
-    featured: true,
+    accent: '#6366f1',
     gradient: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%)',
+    badge: 'Canlı',
+    featured: true,
   },
   {
     id: 2,
+    category: 'Productivity',
     title: 'DigyNotes',
     description: 'Minimalist dijital not alma uygulaması. Notları başlık ve içerikle hızlıca oluşturup kategorilere göre düzenleyebilir, anlık arama yapabilirsin. TypeScript ile tip güvenli geliştirildi.',
-    tech: ['TypeScript', 'React', 'TailwindCSS'],
+    tags: ['TypeScript', 'React', 'TailwindCSS'],
+    link: 'https://digy-notes.vercel.app',
     github: 'https://github.com/ahmetakyapi/DigyNotes',
-    live: 'https://digy-notes.vercel.app',
-    language: 'TypeScript',
-    stars: 0,
-    featured: true,
+    accent: '#8b5cf6',
     gradient: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%)',
+    badge: 'Canlı',
+    featured: false,
   },
   {
     id: 3,
+    category: 'Finance',
     title: 'Keskealsaydım',
     description: '"Keşke o zaman Bitcoin almıştım" hissini sayıya döken araç. Geçmişe dönüp seçtiğin varlığa yatırım yapsaydın bugün ne kadar olurdu sorusunu yanıtlıyor.',
-    tech: ['TypeScript', 'React', 'TailwindCSS'],
+    tags: ['TypeScript', 'React', 'TailwindCSS'],
+    link: 'https://keskealsaydim.vercel.app',
     github: 'https://github.com/ahmetakyapi/keskealsaydim',
-    live: 'https://keskealsaydim.vercel.app',
-    language: 'TypeScript',
-    stars: 0,
-    featured: true,
+    accent: '#10b981',
     gradient: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+    badge: 'Canlı',
+    featured: false,
   },
   {
     id: 4,
+    category: 'Utility',
     title: 'Ramazan Vakitleri',
     description: "Türkiye'nin 81 ili için güncel iftar ve sahur vakitlerini listeleyen sade web uygulaması. İl seçimine göre otomatik filtreleme.",
-    tech: ['JavaScript', 'HTML', 'CSS'],
+    tags: ['JavaScript', 'HTML', 'CSS'],
+    link: 'https://ramazan-vakitleri.vercel.app',
     github: 'https://github.com/ahmetakyapi/ramazan-vakitleri',
-    live: 'https://ramazan-vakitleri.vercel.app',
-    language: 'JavaScript',
-    stars: 1,
-    featured: false,
+    accent: '#f59e0b',
     gradient: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+    badge: 'Canlı',
+    featured: false,
   },
 ]
 export const blogPosts: BlogPost[] = [
   {
-    id: 1,
+    slug: 'framer-motion-sayfa-gecis-animasyonlari',
+    tag: 'Motion',
+    tagColor: '#bb4ade',
     title: 'Framer Motion ile Sayfa Geçiş Animasyonları',
     excerpt:
       'Next.js projelerinde AnimatePresence ve motion bileşenlerini kullanarak etkileyici sayfa geçiş animasyonları nasıl yapılır?',
     date: '2024-03-15',
     readTime: '5 dk',
-    tags: ['React', 'Framer Motion', 'Animation'],
-    slug: 'framer-motion-sayfa-gecis-animasyonlari',
     coverGradient: 'linear-gradient(135deg, #bb4ade 0%, #6366f1 50%, #3b82f6 100%)',
     content: [
       { type: 'p', text: 'Bir web uygulamasında sayfa geçişleri, kullanıcının deneyimini sessizce şekillendiren detaylardır. Kaba bir anlık geçiş yerine akıcı bir animasyon, uygulamanın kalitesi hakkında güçlü bir sinyal verir. React ekosisteminde bu iş için en olgun araç Framer Motion.' },
@@ -165,14 +170,14 @@ const item = {
     ],
   },
   {
-    id: 2,
+    slug: 'typescript-ile-daha-iyi-react-bilesenleri',
+    tag: 'TypeScript',
+    tagColor: '#3178c6',
     title: 'TypeScript ile Daha İyi React Bileşenleri',
     excerpt:
       'TypeScript kullanarak React bileşenlerinizi tip güvenli, bakımı kolay ve daha güçlü hale getirmenin pratik yolları.',
     date: '2024-02-20',
     readTime: '8 dk',
-    tags: ['TypeScript', 'React', 'Best Practices'],
-    slug: 'typescript-ile-daha-iyi-react-bilesenleri',
     coverGradient: 'linear-gradient(135deg, #3178c6 0%, #235a97 100%)',
     content: [
       { type: 'p', text: 'JavaScript\'te bir bileşene yanlış prop geçtiğinizde hatayı çalışma zamanında öğrenirsiniz — muhtemelen production\'da. TypeScript ile bu hata derleme anında, kodunuzu yazdığınız anda yakalanır.' },
@@ -264,14 +269,14 @@ export function List<T>({ items, renderItem, keyExtractor, emptyText = 'Sonuç y
     ],
   },
   {
-    id: 3,
+    slug: 'tailwindcss-dark-tema-tasarimi',
+    tag: 'Design',
+    tagColor: '#06b6d4',
     title: 'TailwindCSS ile Modern Dark Tema Tasarımı',
     excerpt:
       'next-themes ve TailwindCSS kullanarak kullanıcı tercihine saygı duyan, tutarlı dark/light tema sistemi kurmanın detaylı rehberi.',
     date: '2024-01-10',
     readTime: '6 dk',
-    tags: ['TailwindCSS', 'Design', 'Dark Mode'],
-    slug: 'tailwindcss-dark-tema-tasarimi',
     coverGradient: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%)',
     content: [
       { type: 'p', text: 'Dark tema artık bir "ekstra özellik" değil, kullanıcıların beklediği temel bir UX standardı. Doğru yapmak; sistemin tercihine saygı duymak, her iki temada da tutarlı görünmek ve hydration sorunlarına düşmemekten geçiyor.' },
@@ -360,14 +365,14 @@ html:not(.dark) .glass {
     ],
   },
   {
-    id: 4,
+    slug: 'firebase-realtime-chat-uygulamasi',
+    tag: 'Architecture',
+    tagColor: '#f59e0b',
     title: 'Firebase ile Realtime Chat Uygulaması',
     excerpt:
       'React ve Firebase Realtime Database kullanarak anlık mesajlaşma uygulaması geliştirme — auth, listeners ve optimize render.',
     date: '2023-12-05',
     readTime: '10 dk',
-    tags: ['Firebase', 'React', 'Realtime'],
-    slug: 'firebase-realtime-chat-uygulamasi',
     coverGradient: 'linear-gradient(135deg, #f59e0b 0%, #ef4444 100%)',
     content: [
       { type: 'p', text: 'Firebase Realtime Database, WebSocket\'i yönetmeye gerek kalmadan anlık veri senkronizasyonu sağlar. Bu yazıda React ile sıfırdan çalışan bir chat uygulaması kuruyoruz — auth, mesaj akışı ve performans optimizasyonuyla.' },

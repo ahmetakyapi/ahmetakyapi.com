@@ -17,7 +17,7 @@ export default function BlogPostClient({ post }: { post: BlogPost }) {
 
   useEffect(() => setMounted(true), [])
 
-  const others = blogPosts.filter(p => p.id !== post.id).slice(0, 2)
+  const others = blogPosts.filter(p => p.slug !== post.slug).slice(0, 2)
 
   return (
     <div className="min-h-screen bg-[#f8f9fc] dark:bg-[#060811] text-gray-900 dark:text-gray-100 transition-colors duration-300">
@@ -70,11 +70,12 @@ export default function BlogPostClient({ post }: { post: BlogPost }) {
         }} />
         <div className="relative h-full flex flex-col justify-end max-w-3xl mx-auto px-6 pb-7">
           <div className="flex flex-wrap gap-2 mb-3">
-            {post.tags.map(tag => (
-              <span key={tag} className="px-2.5 py-0.5 text-[11px] font-medium rounded-full bg-white/15 text-white border border-white/20 backdrop-blur-sm">
-                {tag}
-              </span>
-            ))}
+            <span
+              className="px-2.5 py-0.5 text-[11px] font-medium rounded-full bg-white/15 text-white border border-white/20 backdrop-blur-sm"
+              style={{ background: `${post.tagColor}33`, borderColor: `${post.tagColor}66` }}
+            >
+              {post.tag}
+            </span>
           </div>
           <h1 className="text-xl sm:text-2xl font-bold text-white leading-snug">{post.title}</h1>
         </div>
@@ -116,7 +117,7 @@ export default function BlogPostClient({ post }: { post: BlogPost }) {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {others.map((other, i) => (
                 <motion.div
-                  key={other.id}
+                  key={other.slug}
                   initial={{ opacity: 0, y: 16 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -125,11 +126,12 @@ export default function BlogPostClient({ post }: { post: BlogPost }) {
                   <Link href={`/blog/${other.slug}`} className="block group">
                     <div className="rounded-2xl border border-gray-200 dark:border-white/8 bg-white dark:bg-white/[0.03] hover:border-indigo-300 dark:hover:border-indigo-500/40 hover:shadow-md dark:hover:shadow-indigo-500/5 transition-all duration-300 p-4">
                       <div className="flex flex-wrap gap-1.5 mb-2">
-                        {other.tags.slice(0, 2).map(tag => (
-                          <span key={tag} className="px-2 py-0.5 text-[10px] rounded-full bg-indigo-500/8 text-indigo-500 dark:text-indigo-400 border border-indigo-500/15">
-                            {tag}
-                          </span>
-                        ))}
+                        <span
+                          className="px-2 py-0.5 text-[10px] rounded-full border font-medium"
+                          style={{ color: other.tagColor, borderColor: `${other.tagColor}40`, background: `${other.tagColor}10` }}
+                        >
+                          {other.tag}
+                        </span>
                       </div>
                       <h4 className="text-sm font-semibold text-gray-800 dark:text-gray-200 group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition-colors leading-snug mb-2">
                         {other.title}
