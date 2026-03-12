@@ -62,8 +62,8 @@ export const projects: Project[] = [
   {
     id: 3,
     category: 'Finance',
-    title: 'Keskealsaydım',
-    description: '"Keşke o zaman Bitcoin almıştım" hissini sayıya döken araç. Geçmişe dönüp seçtiğin varlığa yatırım yapsaydın bugün ne kadar olurdu sorusunu yanıtlıyor.',
+    title: 'Keşke Alsaydım',
+    description: '"Keşke o zaman o hisseyi alsaydım" hissini sayıya döken araç. Geçmişe dönüp seçtiğin varlığa yatırım yapsaydın bugün ne kadar olurdu sorusunu yanıtlıyor.',
     tags: ['TypeScript', 'React', 'TailwindCSS'],
     link: 'https://keskealsaydim.vercel.app',
     github: 'https://github.com/ahmetakyapi/keskealsaydim',
@@ -469,6 +469,13 @@ useEffect(() => {
 
 export const techStack = [
   {
+    name: 'Angular',
+    tagline: 'Enterprise ölçekli SPA\'lar',
+    color: '#dd0031',
+    bg: 'rgba(221,0,49,0.06)',
+    border: 'rgba(221,0,49,0.2)',
+  },
+  {
     name: 'React',
     tagline: 'Bileşen bazlı UI mimarim',
     color: '#61dafb',
@@ -483,18 +490,18 @@ export const techStack = [
     border: 'rgba(255,255,255,0.12)',
   },
   {
+    name: 'Node.js',
+    tagline: 'API & sunucu tarafı işlemler',
+    color: '#339933',
+    bg: 'rgba(51,153,51,0.06)',
+    border: 'rgba(51,153,51,0.18)',
+  },
+  {
     name: 'TypeScript',
     tagline: 'Tip güvenli, ölçeklenebilir kod',
     color: '#3178c6',
     bg: 'rgba(49,120,198,0.06)',
     border: 'rgba(49,120,198,0.2)',
-  },
-  {
-    name: 'Angular',
-    tagline: 'Enterprise ölçekli SPA\'lar',
-    color: '#dd0031',
-    bg: 'rgba(221,0,49,0.06)',
-    border: 'rgba(221,0,49,0.2)',
   },
   {
     name: 'TailwindCSS',
@@ -516,12 +523,5 @@ export const techStack = [
     color: '#54c5f8',
     bg: 'rgba(84,197,248,0.06)',
     border: 'rgba(84,197,248,0.18)',
-  },
-  {
-    name: 'Node.js',
-    tagline: 'API & sunucu tarafı işlemler',
-    color: '#339933',
-    bg: 'rgba(51,153,51,0.06)',
-    border: 'rgba(51,153,51,0.18)',
   },
 ]

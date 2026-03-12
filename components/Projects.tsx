@@ -54,45 +54,55 @@ export default function Projects() {
   const [featured, ...rest] = projects
 
   return (
-    <section className="max-w-5xl mx-auto px-6 py-20">
+    <section className="max-w-6xl mx-auto px-6 py-20">
+      {/* Background glows */}
+      <div className="pointer-events-none absolute inset-0 -z-[1]">
+        <div className="absolute top-[20%] right-[-5%] w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle,rgba(139,92,246,0.08),transparent_60%)]" />
+        <div className="absolute bottom-[10%] left-[-5%] w-[400px] h-[400px] rounded-full bg-[radial-gradient(circle,rgba(34,211,238,0.06),transparent_60%)]" />
+      </div>
+
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-60px' }}
         transition={{ duration: 0.5 }}
-        className="mb-16"
+        className="mb-12"
       >
-        <p className="font-mono text-indigo-400 text-xs tracking-widest uppercase mb-3">
+        <p className="eyebrow-label mb-3 text-[11px] text-violet-600 dark:text-violet-400/80">
           Seçilmiş Çalışmalar
         </p>
-        <h2 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-4">
-          Projeler<span className="text-gradient">.</span>
+        <h2 className="text-[clamp(2.2rem,5vw,3.5rem)] font-extrabold tracking-[-0.04em] leading-[1.1]">
+          <span className="text-slate-900 dark:text-white">Projeler</span>
         </h2>
-        <p className="text-gray-500 dark:text-gray-400 max-w-lg leading-relaxed">
-          Üzerinde zaman harcadığım, canlıda çalışan ürünler.
-        </p>
       </motion.div>
 
+      {/* Featured project — full width */}
       <motion.div
-        variants={container}
-        initial="hidden"
-        animate="visible"
-        className="flex flex-col gap-6"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-60px' }}
+        transition={{ duration: 0.55 }}
+        className="mb-5"
       >
-        {/* Featured project */}
-        <motion.div variants={cardAnim}>
-          <FeaturedCard project={featured} />
-        </motion.div>
-
-        {/* Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {rest.map((project) => (
-            <motion.div key={project.id} variants={cardAnim}>
-              <ProjectCard project={project} />
-            </motion.div>
-          ))}
-        </div>
+        <FeaturedCard project={featured} />
       </motion.div>
+
+      {/* Rest — 3-column grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 items-stretch">
+        {rest.map((project, i) => (
+          <motion.div
+            key={project.id}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ delay: i * 0.1, duration: 0.55 }}
+            className="h-full"
+          >
+            <ProjectCard project={project} />
+          </motion.div>
+        ))}
+      </div>
     </section>
   )
 }
@@ -131,56 +141,52 @@ function FeaturedCard({ project }: { project: (typeof projects)[number] }) {
             style={{ background: tilt.shine }}
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-[1fr_1.1fr]">
-            {/* Left — gradient preview */}
-            <div className="relative h-52 md:h-auto min-h-[220px] overflow-hidden">
-              <div className="absolute inset-0" style={{ background: project.gradient }} />
-              <div className="absolute inset-0 bg-grid opacity-20" />
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent to-white/5 dark:to-black/20" />
+          <div className="grid grid-cols-1 md:grid-cols-[1fr_1.6fr]">
+            {/* Left — browser mockup preview */}
+            <div className="relative h-64 md:h-auto min-h-[300px] overflow-hidden flex items-center justify-center p-8 bg-[#f0eeff] dark:bg-[#0e0c1a] dark:[background:linear-gradient(145deg,#0e0c1a_0%,#13102b_100%)] [background:linear-gradient(145deg,#eef2ff_0%,#ede9fe_100%)]"
+            >
+              {/* Soft ambient glow */}
+              <div
+                className="absolute inset-0 opacity-40"
+                style={{ background: `radial-gradient(ellipse at 50% 60%, ${project.accent}40 0%, transparent 70%)` }}
+              />
 
-              {/* Floating particles on hover */}
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
-                {Array.from({ length: 12 }).map((_, i) => (
-                  <motion.div
-                    key={i}
-                    className="absolute w-1 h-1 rounded-full bg-white/60"
-                    animate={{
-                      y: [0, -80 - Math.random() * 60],
-                      x: [0, (Math.random() - 0.5) * 40],
-                      opacity: [0, 0.8, 0],
-                    }}
-                    transition={{
-                      duration: 2 + Math.random() * 1.5,
-                      repeat: Infinity,
-                      delay: Math.random() * 2,
-                      ease: 'easeOut',
-                    }}
-                    style={{
-                      left: `${10 + Math.random() * 80}%`,
-                      bottom: '10%',
-                    }}
-                  />
-                ))}
-              </div>
+              {/* Browser window mockup */}
+              <div className="relative w-full max-w-[260px] rounded-xl overflow-hidden shadow-2xl border border-white/10 group-hover:scale-[1.03] transition-transform duration-500">
+                {/* Browser chrome */}
+                <div className="flex items-center gap-1.5 px-3 py-2.5 bg-slate-100 dark:bg-white/[0.06] border-b border-slate-200 dark:border-white/[0.08]">
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-400" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-yellow-400" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
+                  {/* URL bar */}
+                  <div className="ml-2 flex-1 rounded-md bg-white dark:bg-white/[0.06] border border-slate-200 dark:border-white/[0.07] px-2.5 py-1">
+                    <span className="text-[9px] text-slate-400 dark:text-white/40 font-mono tracking-wide">ahmetakyapi.com</span>
+                  </div>
+                </div>
 
-              {/* Badge */}
-              <div className="absolute top-4 right-4">
-                <span className="px-2.5 py-1 rounded-full bg-black/25 text-xs backdrop-blur-md border border-white/10 font-medium"
-                  style={{ color: project.accent }}>
-                  {project.badge}
-                </span>
-              </div>
-
-              {/* Tech badges */}
-              <div className="absolute bottom-4 left-4 flex gap-2 flex-wrap">
-                {project.tags.map((t) => (
-                  <span
-                    key={t}
-                    className="px-2.5 py-1 text-[11px] font-medium rounded-lg bg-black/25 text-white backdrop-blur-md border border-white/15"
-                  >
-                    {t}
-                  </span>
-                ))}
+                {/* Page content mockup */}
+                <div className="bg-white dark:bg-[#0a0814] px-4 pt-4 pb-5">
+                  {/* Hero area */}
+                  <div className="mb-3 pb-3 border-b border-slate-100 dark:border-white/[0.05]">
+                    <div className="w-12 h-1.5 rounded-full mb-1.5 opacity-70" style={{ background: project.accent }} />
+                    <div className="w-24 h-3 rounded-md bg-slate-200 dark:bg-white/20 mb-1" />
+                    <div className="w-16 h-3 rounded-md mb-3" style={{ background: `${project.accent}60` }} />
+                    <div className="space-y-1">
+                      <div className="w-full h-1.5 rounded bg-slate-100 dark:bg-white/10" />
+                      <div className="w-4/5 h-1.5 rounded bg-slate-100 dark:bg-white/10" />
+                    </div>
+                  </div>
+                  {/* Cards row */}
+                  <div className="grid grid-cols-3 gap-1.5">
+                    {[0.9, 0.7, 0.8].map((op) => (
+                      <div key={op} className="rounded-lg bg-slate-50 dark:bg-white/[0.05] border border-slate-200 dark:border-white/[0.06] p-2">
+                        <div className="w-3 h-3 rounded-md mb-1.5 opacity-70" style={{ background: project.accent }} />
+                        <div className="w-full h-1 rounded bg-slate-200 dark:bg-white/20 mb-1" />
+                        <div className="w-3/4 h-1 rounded bg-slate-100 dark:bg-white/10" style={{ opacity: op }} />
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -242,7 +248,7 @@ function ProjectCard({ project }: { project: (typeof projects)[number] }) {
   const tilt = useCardTilt(10)
 
   return (
-    <div style={{ perspective: 1000 }}>
+    <div style={{ perspective: 1000 }} className="h-full">
       <motion.article
         ref={tilt.ref}
         style={{

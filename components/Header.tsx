@@ -60,7 +60,7 @@ export default function Header({ activeTab, setActiveTab, tabs }: HeaderProps) {
                 Ahmet Akyapı
               </span>
               <span className="text-[10px] text-gray-400 dark:text-gray-500 mt-0.5">
-                Frontend Developer
+                Fullstack Developer
               </span>
             </span>
           </motion.button>
