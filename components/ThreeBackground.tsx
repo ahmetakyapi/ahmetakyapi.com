@@ -4,6 +4,7 @@ import { useRef, useMemo, Suspense, useEffect, useState, useCallback } from 'rea
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 import { EffectComposer, Bloom } from '@react-three/postprocessing'
+import { useTheme } from 'next-themes'
 
 /* ═══════════════════════════════════════════════════════════════════════════
    GLSL Simplex Noise
@@ -58,7 +59,7 @@ float snoise(vec3 v){
 `
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   Elegant Particle Field — 3500 particles, soft white/blue tones
+   Elegant Particle Field
    ═══════════════════════════════════════════════════════════════════════════ */
 
 const PARTICLE_COUNT = 440
@@ -70,6 +71,7 @@ uniform float uTime;
 uniform vec2 uMouse;
 uniform float uClickWave;
 uniform vec2 uClickPos;
+uniform float uAlphaScale;
 
 attribute float aSize;
 attribute float aPhase;
@@ -82,21 +84,18 @@ varying float vMouseDist;
 void main() {
   vec3 pos = position;
 
-  // Slow organic drift
   float n = snoise(pos * 0.08 + uTime * 0.06);
   float n2 = snoise(pos * 0.12 + uTime * 0.04 + 50.0);
   pos.x += sin(uTime * 0.15 + aPhase) * 0.4 + n * 0.6;
   pos.y += cos(uTime * 0.12 + aPhase * 1.3) * 0.3 + n2 * 0.5;
   pos.z += sin(uTime * 0.08 + aPhase * 0.7) * 0.2;
 
-  // Mouse — smooth fluid repulsion
   vec3 mouseWorld = vec3(uMouse.x * 14.0, uMouse.y * 9.0, 0.0);
   vec3 toMouse = pos - mouseWorld;
   float mouseDist = length(toMouse);
   float repulse = smoothstep(5.0, 0.0, mouseDist);
   pos += normalize(toMouse + 0.001) * repulse * 2.5;
 
-  // Click shockwave — expanding ring
   if (uClickWave > 0.0 && uClickWave < 3.0) {
     vec3 toClick = pos - vec3(uClickPos * vec2(14.0, 9.0), 0.0);
     float clickDist = length(toClick);
@@ -110,15 +109,13 @@ void main() {
   vec4 mvPos = modelViewMatrix * vec4(pos, 1.0);
   gl_Position = projectionMatrix * mvPos;
 
-  // Size — depth-aware with proximity boost
   float depth = -mvPos.z;
   float proximityScale = 1.0 + repulse * 1.5;
   gl_PointSize = aSize * proximityScale * (160.0 / depth);
   gl_PointSize = clamp(gl_PointSize, 0.2, 6.2);
 
-  // Color — subtle brightening near mouse
   vColor = aColor + vec3(0.08, 0.18, 0.24) * repulse;
-  vAlpha = smoothstep(50.0, 8.0, depth) * (0.1 + n * 0.04);
+  vAlpha = smoothstep(50.0, 8.0, depth) * (0.1 + n * 0.04) * uAlphaScale;
   vMouseDist = mouseDist;
 }
 `
@@ -132,12 +129,10 @@ void main() {
   float d = length(gl_PointCoord - 0.5);
   if (d > 0.5) discard;
 
-  // Soft circular falloff with subtle glow
   float core = smoothstep(0.5, 0.02, d);
   float glow = smoothstep(0.5, 0.15, d) * 0.4;
   float alpha = (core + glow) * vAlpha;
 
-  // Proximity glow boost
   float proxBoost = smoothstep(5.0, 1.0, vMouseDist) * 0.14;
   alpha += proxBoost * core;
 
@@ -145,12 +140,33 @@ void main() {
 }
 `
 
+/* Colour palettes */
+const DARK_PALETTE = [
+  [0.89, 0.93, 0.99],
+  [0.72, 0.86, 0.98],
+  [0.61, 0.75, 0.97],
+  [0.33, 0.51, 0.96],
+  [0.40, 0.90, 0.80],
+  [0.95, 0.97, 1.00],
+]
+
+const LIGHT_PALETTE = [
+  [0.27, 0.33, 0.62],
+  [0.22, 0.30, 0.72],
+  [0.18, 0.26, 0.58],
+  [0.12, 0.20, 0.50],
+  [0.30, 0.48, 0.75],
+  [0.35, 0.40, 0.65],
+]
+
 function ParticleField({
   mouseRef,
   clickRef,
+  isLight,
 }: {
   mouseRef: React.MutableRefObject<THREE.Vector2>
   clickRef: React.MutableRefObject<{ pos: THREE.Vector2; time: number }>
+  isLight: boolean
 }) {
   const pointsRef = useRef<THREE.Points>(null!)
   const matRef = useRef<THREE.ShaderMaterial>(null!)
@@ -161,32 +177,21 @@ function ParticleField({
     const ph = new Float32Array(PARTICLE_COUNT)
     const col = new Float32Array(PARTICLE_COUNT * 3)
 
-    // Soft palette — mostly white/ice with occasional cobalt/mint accents
-    const palette = [
-      [0.89, 0.93, 0.99],   // soft ice
-      [0.72, 0.86, 0.98],   // airy cyan
-      [0.61, 0.75, 0.97],   // cool blue
-      [0.33, 0.51, 0.96],   // cobalt
-      [0.40, 0.90, 0.80],   // mint accent
-      [0.95, 0.97, 1.00],   // near white
-    ]
+    const palette = isLight ? LIGHT_PALETTE : DARK_PALETTE
 
     for (let i = 0; i < PARTICLE_COUNT; i++) {
-      // Wide, shallow distribution — like cosmic dust
       const spread = 42
       pos[i * 3] = (Math.random() - 0.5) * spread * 1.6
       pos[i * 3 + 1] = (Math.random() - 0.5) * spread
       pos[i * 3 + 2] = (Math.random() - 0.5) * 18 - 5
 
-      // Most particles small, few larger — power distribution
       sz[i] = 0.45 + Math.pow(Math.random(), 4) * 1.7
       ph[i] = Math.random() * Math.PI * 2
 
-      // Mostly light colors, ~15% get cobalt/mint accents
       const ci = Math.random() < 0.15
-        ? 3 + Math.floor(Math.random() * 2)   // cobalt or mint
-        : Math.floor(Math.random() * 3)        // white/blue variants
-      const brightness = 0.7 + Math.random() * 0.3
+        ? 3 + Math.floor(Math.random() * 2)
+        : Math.floor(Math.random() * 3)
+      const brightness = isLight ? 0.7 + Math.random() * 0.25 : 0.7 + Math.random() * 0.3
       const c = palette[ci]
       col[i * 3] = c[0] * brightness
       col[i * 3 + 1] = c[1] * brightness
@@ -194,7 +199,7 @@ function ParticleField({
     }
 
     return { positions: pos, sizes: sz, phases: ph, colors: col }
-  }, [])
+  }, [isLight])
 
   const uniforms = useMemo(
     () => ({
@@ -202,23 +207,28 @@ function ParticleField({
       uMouse: { value: new THREE.Vector2(999, 999) },
       uClickWave: { value: 0 },
       uClickPos: { value: new THREE.Vector2(0, 0) },
+      uAlphaScale: { value: isLight ? 2.8 : 1.0 },
     }),
-    [],
+    [isLight],
   )
+
+  /* Update blending and alpha scale when theme changes */
+  useEffect(() => {
+    if (!matRef.current) return
+    matRef.current.blending = isLight ? THREE.NormalBlending : THREE.AdditiveBlending
+    matRef.current.uniforms.uAlphaScale.value = isLight ? 2.8 : 1.0
+    matRef.current.needsUpdate = true
+  }, [isLight])
 
   useFrame(({ clock }) => {
     const t = clock.elapsedTime
     matRef.current.uniforms.uTime.value = t
-
-    // Smooth mouse lerp
     matRef.current.uniforms.uMouse.value.lerp(mouseRef.current, 0.08)
 
-    // Sync click time with Three clock on first frame after click
     if (clickRef.current.time === -1) {
       clickRef.current.time = t
     }
 
-    // Click shockwave
     const clickAge = t - clickRef.current.time
     if (clickAge >= 0 && clickAge < 3) {
       matRef.current.uniforms.uClickWave.value = clickAge
@@ -227,7 +237,6 @@ function ParticleField({
       matRef.current.uniforms.uClickWave.value = 0
     }
 
-    // Very slow field rotation
     pointsRef.current.rotation.y = t * 0.008
   })
 
@@ -246,19 +255,25 @@ function ParticleField({
         uniforms={uniforms}
         transparent
         depthWrite={false}
-        blending={THREE.AdditiveBlending}
+        blending={isLight ? THREE.NormalBlending : THREE.AdditiveBlending}
       />
     </points>
   )
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   Subtle connection lines — only near cursor, max 120 nodes
+   Subtle connection lines
    ═══════════════════════════════════════════════════════════════════════════ */
 
 const LINE_COUNT = 12
 
-function ConnectionLines({ mouseRef }: { mouseRef: React.MutableRefObject<THREE.Vector2> }) {
+function ConnectionLines({
+  mouseRef,
+  isLight,
+}: {
+  mouseRef: React.MutableRefObject<THREE.Vector2>
+  isLight: boolean
+}) {
   const lineGeoRef = useRef<THREE.BufferGeometry>(null!)
 
   const basePositions = useMemo(() => {
@@ -297,7 +312,6 @@ function ConnectionLines({ mouseRef }: { mouseRef: React.MutableRefObject<THREE.
     const mouseRadius = 4.8
 
     for (let i = 0; i < LINE_COUNT; i++) {
-      // Only draw lines near mouse
       const mx = ap[i * 3] - mouseX
       const my = ap[i * 3 + 1] - mouseY
       if (mx * mx + my * my > mouseRadius * mouseRadius) continue
@@ -322,7 +336,6 @@ function ConnectionLines({ mouseRef }: { mouseRef: React.MutableRefObject<THREE.
     if (lineGeoRef.current) {
       const attr = lineGeoRef.current.getAttribute('position') as THREE.BufferAttribute | undefined
       if (attr) {
-        // Reuse existing buffer — no allocation
         ;(attr.array as Float32Array).set(lv.subarray(0, vi))
         attr.needsUpdate = true
       } else {
@@ -336,10 +349,10 @@ function ConnectionLines({ mouseRef }: { mouseRef: React.MutableRefObject<THREE.
     <lineSegments>
       <bufferGeometry ref={lineGeoRef} />
       <lineBasicMaterial
-        color="#67e8f9"
+        color={isLight ? '#3b4a8a' : '#67e8f9'}
         transparent
-        opacity={0.02}
-        blending={THREE.AdditiveBlending}
+        opacity={isLight ? 0.07 : 0.02}
+        blending={isLight ? THREE.NormalBlending : THREE.AdditiveBlending}
         depthWrite={false}
       />
     </lineSegments>
@@ -347,10 +360,16 @@ function ConnectionLines({ mouseRef }: { mouseRef: React.MutableRefObject<THREE.
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   Soft mouse glow — a gentle light following cursor
+   Soft mouse glow
    ═══════════════════════════════════════════════════════════════════════════ */
 
-function MouseGlow({ mouseRef }: { mouseRef: React.MutableRefObject<THREE.Vector2> }) {
+function MouseGlow({
+  mouseRef,
+  isLight,
+}: {
+  mouseRef: React.MutableRefObject<THREE.Vector2>
+  isLight: boolean
+}) {
   const meshRef = useRef<THREE.Mesh>(null!)
   const target = useRef(new THREE.Vector3(0, 0, 1))
 
@@ -361,12 +380,12 @@ function MouseGlow({ mouseRef }: { mouseRef: React.MutableRefObject<THREE.Vector
 
   return (
     <mesh ref={meshRef}>
-      <sphereGeometry args={[3, 16, 16]} />
+      <sphereGeometry args={[0.9, 16, 16]} />
       <meshBasicMaterial
-        color="#2563eb"
+        color={isLight ? '#4f46e5' : '#2563eb'}
         transparent
-        opacity={0.006}
-        blending={THREE.AdditiveBlending}
+        opacity={isLight ? 0.008 : 0.006}
+        blending={isLight ? THREE.NormalBlending : THREE.AdditiveBlending}
         depthWrite={false}
       />
     </mesh>
@@ -374,7 +393,7 @@ function MouseGlow({ mouseRef }: { mouseRef: React.MutableRefObject<THREE.Vector
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   Camera — gentle parallax + breathing
+   Camera
    ═══════════════════════════════════════════════════════════════════════════ */
 
 function CameraRig() {
@@ -395,24 +414,28 @@ function CameraRig() {
 function Scene({
   mouseRef,
   clickRef,
+  isLight,
 }: {
   mouseRef: React.MutableRefObject<THREE.Vector2>
   clickRef: React.MutableRefObject<{ pos: THREE.Vector2; time: number }>
+  isLight: boolean
 }) {
   return (
     <>
-      <ParticleField mouseRef={mouseRef} clickRef={clickRef} />
-      <ConnectionLines mouseRef={mouseRef} />
-      <MouseGlow mouseRef={mouseRef} />
+      <ParticleField mouseRef={mouseRef} clickRef={clickRef} isLight={isLight} />
+      <ConnectionLines mouseRef={mouseRef} isLight={isLight} />
+      <MouseGlow mouseRef={mouseRef} isLight={isLight} />
       <CameraRig />
 
-      <EffectComposer>
-        <Bloom
-          luminanceThreshold={0.25}
-          luminanceSmoothing={0.9}
-          intensity={0.6}
-        />
-      </EffectComposer>
+      {!isLight && (
+        <EffectComposer>
+          <Bloom
+            luminanceThreshold={0.25}
+            luminanceSmoothing={0.9}
+            intensity={0.6}
+          />
+        </EffectComposer>
+      )}
     </>
   )
 }
@@ -426,6 +449,8 @@ export default function ThreeBackground() {
   const mouseRef = useRef(new THREE.Vector2(999, 999))
   const clickRef = useRef({ pos: new THREE.Vector2(0, 0), time: -10 })
   const pausedRef = useRef(false)
+  const { resolvedTheme } = useTheme()
+  const [themeReady, setThemeReady] = useState(false)
 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
@@ -446,7 +471,7 @@ export default function ThreeBackground() {
         (e.clientX / window.innerWidth) * 2 - 1,
         -(e.clientY / window.innerHeight) * 2 + 1,
       )
-      clickRef.current.time = -1 // will be synced in useFrame
+      clickRef.current.time = -1
     }
 
     function onVisibility() {
@@ -463,11 +488,18 @@ export default function ThreeBackground() {
     }
   }, [])
 
-  if (!mounted) return null
+  useEffect(() => {
+    if (resolvedTheme) setThemeReady(true)
+  }, [resolvedTheme])
+
+  if (!mounted || !themeReady) return null
+
+  const isLight = resolvedTheme !== 'dark'
 
   return (
     <div className="fixed inset-0 -z-10 pointer-events-none" aria-hidden>
       <Canvas
+        key={isLight ? 'light' : 'dark'}
         camera={{ position: [0, 0, 12], fov: 55, near: 0.1, far: 80 }}
         gl={{
           antialias: true,
@@ -479,7 +511,7 @@ export default function ThreeBackground() {
         style={{ background: 'transparent' }}
       >
         <Suspense fallback={null}>
-          <Scene mouseRef={mouseRef} clickRef={clickRef} />
+          <Scene mouseRef={mouseRef} clickRef={clickRef} isLight={isLight} />
         </Suspense>
       </Canvas>
     </div>

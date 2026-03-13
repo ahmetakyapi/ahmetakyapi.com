@@ -91,7 +91,7 @@ export default function Page() {
       <div className="min-h-screen flex flex-col text-gray-900 dark:text-gray-100 transition-colors duration-300">
         {/* Fixed ambient background */}
         <div className="fixed inset-0 pointer-events-none -z-10">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_10%,rgba(79,70,229,0.12),transparent_26%),radial-gradient(circle_at_82%_8%,rgba(34,211,238,0.1),transparent_24%),radial-gradient(circle_at_50%_100%,rgba(16,185,129,0.06),transparent_28%)]" />
+          <div className="absolute inset-0 dark:bg-[radial-gradient(circle_at_18%_10%,rgba(79,70,229,0.12),transparent_26%),radial-gradient(circle_at_82%_8%,rgba(34,211,238,0.1),transparent_24%),radial-gradient(circle_at_50%_100%,rgba(16,185,129,0.06),transparent_28%)] bg-[radial-gradient(circle_at_14%_10%,rgba(120,110,80,0.05),transparent_26%),radial-gradient(circle_at_84%_8%,rgba(99,102,241,0.04),transparent_24%)]" />
           <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.02)_0%,transparent_18%,transparent_78%,rgba(8,145,178,0.03)_100%)] dark:bg-[linear-gradient(180deg,rgba(255,255,255,0.02)_0%,transparent_18%,transparent_78%,rgba(8,145,178,0.03)_100%)]" />
         </div>
 

@@ -429,7 +429,7 @@ export default function InteractiveGlobe() {
       ctx.fill()
 
       // Label
-      if (visibility > 0.3 && sz >= 300) {
+      if (visibility > 0.3 && sz >= 240) {
         const labelAlpha = Math.min(1, (visibility - 0.3) * 3.5)
         ctx.globalAlpha = labelAlpha * alpha
 

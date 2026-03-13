@@ -54,11 +54,11 @@ export default function Projects() {
   const [featured, ...rest] = projects
 
   return (
-    <section className="max-w-6xl mx-auto px-6 py-20">
+    <section className="max-w-6xl mx-auto px-6 py-12 sm:py-20">
       {/* Background glows */}
       <div className="pointer-events-none absolute inset-0 -z-[1]">
-        <div className="absolute top-[20%] right-[-5%] w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle,rgba(139,92,246,0.08),transparent_60%)]" />
-        <div className="absolute bottom-[10%] left-[-5%] w-[400px] h-[400px] rounded-full bg-[radial-gradient(circle,rgba(34,211,238,0.06),transparent_60%)]" />
+        <div className="absolute top-[20%] right-[-5%] w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle,rgba(139,92,246,0.08),transparent_60%)] dark:opacity-100 opacity-60" />
+        <div className="absolute bottom-[10%] left-[-5%] w-[400px] h-[400px] rounded-full bg-[radial-gradient(circle,rgba(34,211,238,0.07),transparent_60%)] dark:opacity-100 opacity-50" />
       </div>
 
       {/* Header */}
@@ -67,12 +67,12 @@ export default function Projects() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: '-60px' }}
         transition={{ duration: 0.5 }}
-        className="mb-12"
+        className="mb-8 sm:mb-12"
       >
-        <p className="eyebrow-label mb-3 text-[11px] text-violet-600 dark:text-violet-400/80">
+        <p className="eyebrow-label mb-2 sm:mb-3 text-[11px] text-violet-600 dark:text-violet-400/80">
           Seçilmiş Çalışmalar
         </p>
-        <h2 className="text-[clamp(2.2rem,5vw,3.5rem)] font-extrabold tracking-[-0.04em] leading-[1.1]">
+        <h2 className="text-[clamp(1.9rem,5vw,3.5rem)] font-extrabold tracking-[-0.04em] leading-[1.1]">
           <span className="text-slate-900 dark:text-white">Projeler</span>
         </h2>
       </motion.div>
@@ -89,7 +89,7 @@ export default function Projects() {
       </motion.div>
 
       {/* Rest — 3-column grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 items-stretch">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 items-stretch">
         {rest.map((project, i) => (
           <motion.div
             key={project.id}
@@ -143,7 +143,7 @@ function FeaturedCard({ project }: { project: (typeof projects)[number] }) {
 
           <div className="grid grid-cols-1 md:grid-cols-[1fr_1.6fr]">
             {/* Left — browser mockup preview */}
-            <div className="relative h-64 md:h-auto min-h-[300px] overflow-hidden flex items-center justify-center p-8 bg-[#f0eeff] dark:bg-[#0e0c1a] dark:[background:linear-gradient(145deg,#0e0c1a_0%,#13102b_100%)] [background:linear-gradient(145deg,#eef2ff_0%,#ede9fe_100%)]"
+            <div className="relative h-52 md:h-auto md:min-h-[300px] overflow-hidden flex items-center justify-center p-6 md:p-8 bg-[#f0eeff] dark:bg-[#0e0c1a] dark:[background:linear-gradient(145deg,#0e0c1a_0%,#13102b_100%)] [background:linear-gradient(145deg,#eef2ff_0%,#ede9fe_100%)]"
             >
               {/* Soft ambient glow */}
               <div
@@ -191,7 +191,7 @@ function FeaturedCard({ project }: { project: (typeof projects)[number] }) {
             </div>
 
             {/* Right — content */}
-            <div className="p-7 md:p-8 flex flex-col justify-center relative z-20" style={{ transform: 'translateZ(10px)' }}>
+            <div className="p-5 sm:p-7 md:p-8 flex flex-col justify-center relative z-20" style={{ transform: 'translateZ(10px)' }}>
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition-colors">
                 {project.title}
               </h3>

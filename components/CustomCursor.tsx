@@ -77,8 +77,8 @@ export default function CustomCursor() {
         className="fixed top-0 left-0 pointer-events-none z-[9999] rounded-full"
         style={{ x: dotX, y: dotY, translateX: '-50%', translateY: '-50%' }}
         animate={{
-          width:   isPress ? 5  : 8,
-          height:  isPress ? 5  : 8,
+          width:   isPress ? 7  : 10,
+          height:  isPress ? 7  : 10,
           opacity: visible ? (isHover ? 0 : 1) : 0,
           backgroundColor: '#ffffff',
         }}
@@ -90,8 +90,8 @@ export default function CustomCursor() {
         className="fixed top-0 left-0 pointer-events-none z-[9998] rounded-full"
         style={{ x: ringX, y: ringY, translateX: '-50%', translateY: '-50%', border: '1.5px solid' }}
         animate={{
-          width:   isHover ? 46 : isPress ? 20 : 30,
-          height:  isHover ? 46 : isPress ? 20 : 30,
+          width:   isHover ? 36 : isPress ? 16 : 26,
+          height:  isHover ? 36 : isPress ? 16 : 26,
           opacity: visible ? 1 : 0,
           borderColor:     isHover ? 'rgba(99,102,241,0.85)' : 'rgba(255,255,255,0.45)',
           backgroundColor: isHover ? 'rgba(99,102,241,0.08)' : 'transparent',

@@ -44,24 +44,23 @@ export default function NotFound() {
   ]
 
   return (
-    <div className="min-h-screen bg-[#060811] flex items-center justify-center relative overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0" style={{
-        backgroundImage: 'linear-gradient(rgba(99,102,241,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(99,102,241,0.04) 1px, transparent 1px)',
-        backgroundSize: '48px 48px',
-      }} />
+    <div className="min-h-screen dark:bg-[#060811] bg-[#f4f6fb] flex items-center justify-center relative overflow-hidden transition-colors duration-300">
+      {/* Background grid */}
+      <div className="absolute inset-0 bg-grid" />
+
+      {/* Radial glow */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_50%,rgba(99,102,241,0.10),transparent_65%)]" />
 
       {/* Ambient orbs */}
       <motion.div
         animate={{ scale: [1, 1.2, 1], opacity: [0.15, 0.25, 0.15] }}
         transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-        className="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-600/20 rounded-full blur-[100px] pointer-events-none"
+        className="absolute top-1/4 left-1/4 w-96 h-96 dark:bg-indigo-600/20 bg-indigo-400/10 rounded-full blur-[100px] pointer-events-none"
       />
       <motion.div
         animate={{ scale: [1, 1.15, 1], opacity: [0.1, 0.18, 0.1] }}
         transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 3 }}
-        className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-violet-600/20 rounded-full blur-[100px] pointer-events-none"
+        className="absolute bottom-1/4 right-1/4 w-80 h-80 dark:bg-violet-600/20 bg-violet-400/10 rounded-full blur-[100px] pointer-events-none"
       />
 
       <div className="relative z-10 text-center px-6 max-w-lg mx-auto">
@@ -103,10 +102,10 @@ export default function NotFound() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.5 }}
         >
-          <p className="font-mono text-indigo-400/70 text-xs tracking-widest uppercase mb-3">
+          <p className="font-mono dark:text-indigo-400/70 text-indigo-500/80 text-xs tracking-widest uppercase mb-3">
             sayfa bulunamadı
           </p>
-          <p className="text-gray-400 text-[15px] leading-relaxed mb-8">
+          <p className="dark:text-gray-400 text-slate-600 text-[15px] leading-relaxed mb-8">
             Aradığın sayfa silinmiş, taşınmış ya da hiç var olmamış olabilir.
           </p>
         </motion.div>
@@ -116,10 +115,10 @@ export default function NotFound() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.45, duration: 0.5 }}
-          className="glass rounded-2xl p-4 mb-7 text-left border border-white/8"
+          className="glass rounded-2xl p-4 mb-7 text-left"
         >
-          <p className="font-mono text-[11px] text-gray-500 mb-3 tracking-wide">
-            <span className="text-gray-600">// </span>belki bunlara bakmak ister misin?
+          <p className="font-mono text-[11px] dark:text-gray-500 text-slate-400 mb-3 tracking-wide">
+            <span className="dark:text-gray-600 text-slate-500">// </span>belki bunlara bakmak ister misin?
           </p>
           <div className="space-y-1">
             {items.map((item, i) => (
@@ -128,7 +127,7 @@ export default function NotFound() {
                 initial={{ opacity: 0, x: -8 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.55 + i * 0.08 }}
-                className="flex items-center gap-2 text-sm text-gray-400"
+                className="flex items-center gap-2 text-sm dark:text-gray-400 text-slate-600"
               >
                 <span className="text-indigo-500 font-mono text-xs">→</span>
                 {item}
@@ -154,7 +153,7 @@ export default function NotFound() {
           </Link>
           <button
             onClick={() => history.back()}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium text-gray-400 glass border border-white/10 hover:text-white transition-all"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium dark:text-gray-400 text-slate-600 glass dark:hover:text-white hover:text-slate-900 transition-all"
           >
             <ArrowLeft className="w-4 h-4" />
             Geri
