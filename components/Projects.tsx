@@ -3,7 +3,8 @@
 import { useRef, useCallback } from 'react'
 import { motion, useMotionValue, useSpring, useMotionTemplate, useTransform } from 'framer-motion'
 import { Github, ExternalLink, ArrowUpRight } from 'lucide-react'
-import { projects } from '@/lib/data'
+import type { Project } from '@/lib/data'
+import { getOrderedProjects } from '@/lib/site-content'
 
 const container = {
   hidden: { opacity: 0 },
@@ -50,8 +51,9 @@ function useCardTilt(intensity = 8) {
   return { ref, rotateX: rx, rotateY: ry, brightness, shine, borderShine, onMove, onLeave }
 }
 
-export default function Projects() {
-  const [featured, ...rest] = projects
+export default function Projects({ projects }: { projects: Project[] }) {
+  const orderedProjects = getOrderedProjects(projects)
+  const [featured, ...rest] = orderedProjects
 
   return (
     <section className="max-w-6xl mx-auto px-6 py-12 sm:py-20">
@@ -78,15 +80,17 @@ export default function Projects() {
       </motion.div>
 
       {/* Featured project — full width */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-60px' }}
-        transition={{ duration: 0.55 }}
-        className="mb-5"
-      >
-        <FeaturedCard project={featured} />
-      </motion.div>
+      {featured && (
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-60px' }}
+          transition={{ duration: 0.55 }}
+          className="mb-5"
+        >
+          <FeaturedCard project={featured} />
+        </motion.div>
+      )}
 
       {/* Rest — 3-column grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 items-stretch">
@@ -110,7 +114,7 @@ export default function Projects() {
 /* ═══════════════════════════════════════════════════════════════════════════
    Featured Card — holographic 3D tilt, horizontal layout
    ═══════════════════════════════════════════════════════════════════════════ */
-function FeaturedCard({ project }: { project: (typeof projects)[number] }) {
+function FeaturedCard({ project }: { project: Project }) {
   const tilt = useCardTilt(6)
 
   return (
@@ -244,7 +248,7 @@ function FeaturedCard({ project }: { project: (typeof projects)[number] }) {
 /* ═══════════════════════════════════════════════════════════════════════════
    Regular Card — 3D tilt with holographic hover
    ═══════════════════════════════════════════════════════════════════════════ */
-function ProjectCard({ project }: { project: (typeof projects)[number] }) {
+function ProjectCard({ project }: { project: Project }) {
   const tilt = useCardTilt(10)
 
   return (

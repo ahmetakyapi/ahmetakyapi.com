@@ -7,10 +7,11 @@ import Hero from '@/components/Hero'
 import Projects from '@/components/Projects'
 import Blog from '@/components/Blog'
 import Footer from '@/components/Footer'
-import CustomCursor from '@/components/CustomCursor'
 import CommandPalette from '@/components/CommandPalette'
 import ScrollToTop from '@/components/ScrollToTop'
 import NoiseTexture from '@/components/NoiseTexture'
+import { defaultSiteContent } from '@/lib/site-content'
+import { trackView } from '@/lib/track-view'
 import dynamic from 'next/dynamic'
 const ThreeBackground = dynamic(() => import('@/components/ThreeBackground'), { ssr: false })
 
@@ -26,6 +27,7 @@ const tabs = [
 export default function Page() {
   const [activeTab, setActiveTab] = useState<TabId>('home')
   const [hasHydrated, setHasHydrated] = useState(false)
+  const [content, setContent] = useState(defaultSiteContent)
   const prevTabRef = useRef<TabId>('home')
 
   function navigate(tab: string) {
@@ -36,6 +38,29 @@ export default function Page() {
   /* G+H / G+P / G+B keyboard shortcuts */
   useEffect(() => {
     setHasHydrated(true)
+  }, [])
+
+  useEffect(() => {
+    let cancelled = false
+
+    async function loadContent() {
+      try {
+        const response = await fetch('/api/content', { cache: 'no-store' })
+        if (!response.ok) return
+        const payload = await response.json()
+        if (!cancelled) {
+          setContent(payload)
+        }
+      } catch {
+        // Default content is used as a safe fallback.
+      }
+    }
+
+    void loadContent()
+
+    return () => {
+      cancelled = true
+    }
   }, [])
 
   useEffect(() => {
@@ -57,6 +82,11 @@ export default function Page() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab])
 
+  useEffect(() => {
+    const pathname = activeTab === 'home' ? '/' : `/${activeTab}`
+    void trackView(pathname)
+  }, [activeTab])
+
   /* Direction: +1 forward, -1 backward */
   const dir = TAB_ORDER.indexOf(activeTab) >= TAB_ORDER.indexOf(prevTabRef.current) ? 1 : -1
 
@@ -64,18 +94,15 @@ export default function Page() {
     initial: (d: number) => ({
       opacity: 0,
       x: d * 48,
-      filter: 'blur(6px)',
     }),
     animate: {
       opacity: 1,
       x: 0,
-      filter: 'blur(0px)',
       transition: { duration: 0.38, ease: [0.22, 1, 0.36, 1] },
     },
     exit: (d: number) => ({
       opacity: 0,
       x: d * -48,
-      filter: 'blur(6px)',
       transition: { duration: 0.28, ease: [0.22, 1, 0.36, 1] },
     }),
   }
@@ -83,7 +110,6 @@ export default function Page() {
   return (
     <>
       <ThreeBackground />
-      <CustomCursor />
       <NoiseTexture />
       <CommandPalette onNavigate={navigate} />
       <ScrollToTop />
@@ -111,9 +137,9 @@ export default function Page() {
               animate="animate"
               exit="exit"
             >
-              {activeTab === 'home'     && <Hero onNavigate={navigate} />}
-              {activeTab === 'projects' && <Projects />}
-              {activeTab === 'blog'     && <Blog />}
+              {activeTab === 'home'     && <Hero onNavigate={navigate} home={content.home} projects={content.projects} blogPosts={content.blogPosts} />}
+              {activeTab === 'projects' && <Projects projects={content.projects} />}
+              {activeTab === 'blog'     && <Blog blogPosts={content.blogPosts} />}
             </motion.div>
           </AnimatePresence>
         </main>

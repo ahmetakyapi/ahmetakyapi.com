@@ -3,14 +3,14 @@
 import { motion } from 'framer-motion'
 import { Calendar, Clock, ArrowUpRight } from 'lucide-react'
 import Link from 'next/link'
-import { blogPosts } from '@/lib/data'
+import type { BlogPost } from '@/lib/data'
 
 function formatDate(dateStr: string) {
   const d = new Date(dateStr)
   return d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' })
 }
 
-export default function Blog() {
+export default function Blog({ blogPosts }: { blogPosts: BlogPost[] }) {
   const [featured, ...rest] = blogPosts
 
   return (
@@ -43,61 +43,59 @@ export default function Blog() {
         </div>
 
         {/* Featured post */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
-          transition={{ duration: 0.55 }}
-          className="group relative overflow-hidden rounded-[28px] border border-slate-200 dark:border-white/[0.06] bg-white dark:bg-[#0c0b18] mb-8"
-        >
-          {/* Gradient background */}
-          <div
-            className="absolute inset-0 opacity-20 dark:opacity-30"
-            style={{ background: featured.coverGradient }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-[#0c0b18] via-white/60 dark:via-[#0c0b18]/60 to-transparent" />
+        {featured && (
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.55 }}
+            className="group relative mb-8 overflow-hidden rounded-[28px] border border-slate-200 bg-white dark:border-white/[0.06] dark:bg-[#0c0b18]"
+          >
+            <div
+              className="absolute inset-0 opacity-20 dark:opacity-30"
+              style={{ background: featured.coverGradient }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-white via-white/60 to-transparent dark:from-[#0c0b18] dark:via-[#0c0b18]/60" />
 
-          <Link href={`/blog/${featured.slug}`} className="relative z-10 block p-5 sm:p-7 lg:p-8">
-            {/* Top row: featured badge + tag */}
-            <div className="flex items-center justify-between mb-auto pb-5 sm:pb-6">
-              <span className="rounded-full border border-slate-300 dark:border-white/15 bg-slate-100 dark:bg-white/[0.08] px-3 py-1 text-[11px] font-semibold text-slate-600 dark:text-white/80 backdrop-blur-sm">
-                Öne Çıkan
-              </span>
-              <span
-                className="rounded-full border px-3 py-1 text-[11px] font-semibold backdrop-blur-sm"
-                style={{ color: featured.tagColor, borderColor: `${featured.tagColor}40`, background: `${featured.tagColor}15` }}
-              >
-                {featured.tag}
-              </span>
-            </div>
-
-            {/* Content */}
-            <div className="mt-10 sm:mt-16 lg:mt-24">
-              <h3 className="text-[22px] sm:text-[28px] lg:text-[32px] font-bold tracking-[-0.03em] text-slate-900 dark:text-white leading-tight transition-colors">
-                {featured.title}
-              </h3>
-              <p className="mt-3 sm:mt-4 max-w-lg text-[14px] sm:text-[15px] leading-[1.75] sm:leading-[1.8] text-slate-500 dark:text-slate-400 line-clamp-3 sm:line-clamp-none">
-                {featured.excerpt}
-              </p>
-
-              {/* Meta */}
-              <div className="mt-5 sm:mt-8 pt-4 sm:pt-6 border-t border-slate-200 dark:border-white/[0.06] flex items-center gap-4 sm:gap-6 text-[11px] sm:text-[12px] text-slate-500">
-                <span className="flex items-center gap-1.5">
-                  <Calendar className="h-3 w-3" />
-                  {formatDate(featured.date)}
+            <Link href={`/blog/${featured.slug}`} className="relative z-10 block p-5 sm:p-7 lg:p-8">
+              <div className="mb-auto flex items-center justify-between pb-5 sm:pb-6">
+                <span className="rounded-full border border-slate-300 bg-slate-100 px-3 py-1 text-[11px] font-semibold text-slate-600 backdrop-blur-sm dark:border-white/15 dark:bg-white/[0.08] dark:text-white/80">
+                  Öne Çıkan
                 </span>
-                <span className="flex items-center gap-1.5">
-                  <Clock className="h-3 w-3" />
-                  {featured.readTime}
-                </span>
-                <span className="flex items-center gap-2 text-slate-500 dark:text-slate-400 font-medium ml-auto group-hover:text-slate-900 dark:group-hover:text-white transition-colors">
-                  Oku
-                  <ArrowUpRight className="h-3.5 w-3.5" />
+                <span
+                  className="rounded-full border px-3 py-1 text-[11px] font-semibold backdrop-blur-sm"
+                  style={{ color: featured.tagColor, borderColor: `${featured.tagColor}40`, background: `${featured.tagColor}15` }}
+                >
+                  {featured.tag}
                 </span>
               </div>
-            </div>
-          </Link>
-        </motion.div>
+
+              <div className="mt-10 sm:mt-16 lg:mt-24">
+                <h3 className="text-[22px] font-bold leading-tight tracking-[-0.03em] text-slate-900 transition-colors dark:text-white sm:text-[28px] lg:text-[32px]">
+                  {featured.title}
+                </h3>
+                <p className="mt-3 max-w-lg text-[14px] leading-[1.75] text-slate-500 line-clamp-3 dark:text-slate-400 sm:mt-4 sm:text-[15px] sm:leading-[1.8] sm:line-clamp-none">
+                  {featured.excerpt}
+                </p>
+
+                <div className="mt-5 flex items-center gap-4 border-t border-slate-200 pt-4 text-[11px] text-slate-500 dark:border-white/[0.06] sm:mt-8 sm:gap-6 sm:pt-6 sm:text-[12px]">
+                  <span className="flex items-center gap-1.5">
+                    <Calendar className="h-3 w-3" />
+                    {formatDate(featured.date)}
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <Clock className="h-3 w-3" />
+                    {featured.readTime}
+                  </span>
+                  <span className="ml-auto flex items-center gap-2 font-medium text-slate-500 transition-colors group-hover:text-slate-900 dark:text-slate-400 dark:group-hover:text-white">
+                    Oku
+                    <ArrowUpRight className="h-3.5 w-3.5" />
+                  </span>
+                </div>
+              </div>
+            </Link>
+          </motion.div>
+        )}
 
         {/* Blog cards grid */}
         <div className="grid gap-3 sm:gap-5 sm:grid-cols-2 lg:grid-cols-3">

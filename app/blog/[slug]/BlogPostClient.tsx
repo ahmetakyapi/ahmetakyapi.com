@@ -6,10 +6,10 @@ import { useTheme } from 'next-themes'
 import { ArrowLeft, Calendar, Clock, Sun, Moon, ArrowRight, Copy, Check } from 'lucide-react'
 import Link from 'next/link'
 import type { BlogPost, Block } from '@/lib/data'
-import { blogPosts } from '@/lib/data'
 import GiscusComments from '@/components/GiscusComments'
+import { trackView } from '@/lib/track-view'
 
-export default function BlogPostClient({ post }: { post: BlogPost }) {
+export default function BlogPostClient({ post, allPosts }: { post: BlogPost; allPosts: BlogPost[] }) {
   const { setTheme, resolvedTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
   const { scrollYProgress } = useScroll()
@@ -17,7 +17,11 @@ export default function BlogPostClient({ post }: { post: BlogPost }) {
 
   useEffect(() => setMounted(true), [])
 
-  const others = blogPosts.filter(p => p.slug !== post.slug).slice(0, 2)
+  useEffect(() => {
+    void trackView(`/blog/${post.slug}`)
+  }, [post.slug])
+
+  const others = allPosts.filter(p => p.slug !== post.slug).slice(0, 2)
   const sections = post.content.flatMap((block, index) =>
     block.type === 'h2' ? [{ id: getSectionId(index), text: block.text }] : [],
   )

@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import { ThemeProvider } from 'next-themes'
+import dynamic from 'next/dynamic'
 import './globals.css'
+
+const CustomCursor = dynamic(() => import('@/components/CustomCursor'), { ssr: false })
 
 export const metadata: Metadata = {
   title: 'Ahmet Akyapı | Fullstack Developer',
@@ -20,6 +23,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="tr" suppressHydrationWarning>
       <body>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+          <CustomCursor />
           {children}
         </ThemeProvider>
       </body>

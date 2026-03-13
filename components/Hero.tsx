@@ -5,45 +5,16 @@ import { motion, useMotionValue, useSpring } from 'framer-motion'
 import { ArrowRight, ArrowUpRight, Github, ExternalLink, Calendar, Clock } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import dynamic from 'next/dynamic'
-import { projects, blogPosts, techStack } from '@/lib/data'
+import { techStack } from '@/lib/data'
+import type { BlogPost, Project } from '@/lib/data'
+import { getOrderedProjects } from '@/lib/site-content'
+import type { HomeContent } from '@/lib/site-content'
 
 const InteractiveGlobe = dynamic(() => import('@/components/InteractiveGlobe'), { ssr: false })
-
-/* ─── Static data ─────────────────────────────────────────────────────────── */
-const valueProps = [
-  {
-    icon: '⚡',
-    title: 'Hız ve Akış',
-    description:
-      'Arayüz deneyiminin akıcı, tutarlı ve gecikmesiz hissedilmesi; yalnızca görünen katmanın değil, veri akışının ve sistem kurgusunun da doğru tasarlanmasına bağlıdır. API yapısından UI render sürecine kadar her katmanda performans, sadelik ve kullanıcı ritmi ön planda tutulur.',
-    color: '#f59e0b',
-    glow: 'rgba(245,158,11,0.18)',
-  },
-  {
-    icon: '◈',
-    title: 'Sistem Düşüncesi',
-    description:
-      'Ölçeklenebilir arayüzler; bileşen sınırlarının, veri yapılarının ve tip güvenliğinin en baştan net kurulmasıyla güç kazanır. Framework bağımsız bir bakışla, kod tabanının büyüdükçe karmaşıklaşmayan; aksine daha okunabilir, sürdürülebilir ve yönetilebilir bir yapıda kalması hedeflenir.',
-    color: '#8b5cf6',
-    glow: 'rgba(139,92,246,0.18)',
-  },
-  {
-    icon: '✦',
-    title: 'Detay ve Hareket',
-    description:
-      'Mikro etkileşimler, geçişler, yüklenme durumları ve boş ekranlar; ürün kalitesini görünür kılan ince katmandır. Hareket dili ve görsel ritim, yalnızca estetik bir tercih değil; algıyı güçlendiren ve deneyimi rafine eden bir tasarım unsuru olarak ele alınır.',
-    color: '#22d3ee',
-    glow: 'rgba(34,211,238,0.18)',
-  },
-]
 
 const featuredStack = techStack.filter((tech) =>
   ['Angular', 'React', 'Next.js', 'TypeScript', 'Node.js', 'TailwindCSS', 'Framer Motion'].includes(tech.name),
 )
-
-const featuredProject = projects[0]
-const sideProjects = projects.slice(1, 3)
-const previewPosts = blogPosts.slice(0, 3)
 
 function formatDate(dateStr: string) {
   const d = new Date(dateStr)
@@ -75,12 +46,26 @@ function useMagnetic(strength = 0.26) {
 /* ═════════════════════════════════════════════════════════════════════════════
    Hero Component
    ═════════════════════════════════════════════════════════════════════════════ */
-export default function Hero({ onNavigate }: { onNavigate: (target: string) => void }) {
+export default function Hero({
+  onNavigate,
+  home,
+  projects,
+  blogPosts,
+}: {
+  onNavigate: (target: string) => void
+  home: HomeContent
+  projects: Project[]
+  blogPosts: BlogPost[]
+}) {
   const magnetic = useMagnetic()
   const { resolvedTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
   useEffect(() => setMounted(true), [])
   const isLight = mounted && resolvedTheme !== 'dark'
+  const orderedProjects = getOrderedProjects(projects)
+  const featuredProject = orderedProjects[0]
+  const sideProjects = orderedProjects.slice(1, 3)
+  const previewPosts = blogPosts.slice(0, 3)
 
   return (
     <section className="relative overflow-hidden">
@@ -113,29 +98,18 @@ export default function Hero({ onNavigate }: { onNavigate: (target: string) => v
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
               </span>
               <span className="text-[11px] font-semibold uppercase tracking-[0.18em] dark:text-emerald-300/80 text-emerald-700">
-                Fullstack Developer
+                {home.roleLabel}
               </span>
             </motion.div>
 
             <h1 className="display-heading max-w-[620px] overflow-visible pb-4 sm:pb-6 text-[52px] leading-[1.02] dark:text-white text-slate-900 sm:text-[76px] lg:text-[88px] xl:text-[96px] 2xl:text-[110px]">
-              <span className="block">Ahmet</span>
-              <span className="hero-name-gradient block pb-[0.08em]">Akyapı</span>
+              <span className="block">{home.firstName}</span>
+              <span className="hero-name-gradient block pb-[0.08em]">{home.lastName}</span>
             </h1>
 
             <div className="mt-4 sm:mt-5 max-w-[30rem] space-y-3 sm:space-y-4 text-[15px] sm:text-[16px] lg:text-[17px] xl:text-[16px] 2xl:text-[18px] leading-[1.75] sm:leading-[1.8] dark:text-slate-400 text-slate-500">
-              <p className="[text-wrap:balance]">
-                Angular, React ve TypeScript ile{' '}
-                <span className="font-bold dark:text-white text-slate-900">sade, hızlı</span>
-                {' '}ve{' '}
-                <span className="font-bold dark:text-white text-slate-900">detay kalitesi yüksek</span>{' '}
-                arayüzler geliştiriyorum.
-              </p>
-              <p className="[text-wrap:balance]">
-                Benim için iyi bir ürün deneyimi; yalnızca çalışması değil,{' '}
-                <span className="dark:text-slate-300 text-slate-700 font-medium">doğru kurgu içermesi</span>{' '}
-                ve{' '}
-                <span className="dark:text-slate-300 text-slate-700 font-medium">görsel olarak dengeli olmasıdır.</span>
-              </p>
+              <p className="[text-wrap:balance]">{home.introPrimary}</p>
+              <p className="[text-wrap:balance]">{home.introSecondary}</p>
             </div>
 
             <div className="mt-6 sm:mt-8 xl:mt-7 flex flex-wrap items-center gap-3 sm:gap-4">
@@ -170,7 +144,7 @@ export default function Hero({ onNavigate }: { onNavigate: (target: string) => v
                 Uzmanlık:
               </span>
               <div className="flex flex-wrap gap-2">
-                {['UI Systems', 'Design', 'Performance', 'Web'].map((item) => (
+                {home.expertise.map((item) => (
                   <span
                     key={item}
                     className="rounded-full dark:border-white/10 border border-slate-200 dark:bg-white/[0.04] bg-white/80 px-3 py-1.5 text-[12px] font-medium dark:text-slate-400 text-slate-600"
@@ -210,7 +184,7 @@ export default function Hero({ onNavigate }: { onNavigate: (target: string) => v
           className="hero-surface mb-6 sm:mb-10 rounded-[28px] sm:rounded-[34px] px-4 py-5 sm:px-6 sm:py-7"
         >
           <div className="grid gap-3 sm:gap-4 sm:grid-cols-3">
-            {valueProps.map((item, index) => (
+            {home.valueProps.map((item, index) => (
               <motion.article
                 key={item.title}
                 initial={{ opacity: 0, y: 20 }}
@@ -299,7 +273,8 @@ export default function Hero({ onNavigate }: { onNavigate: (target: string) => v
       {/* ══════════════════════════════════════════════════════════════════════
          FEATURED PROJECTS SECTION
          ══════════════════════════════════════════════════════════════════════ */}
-      <div className="mx-auto max-w-6xl px-6 py-10 sm:py-20">
+      {featuredProject && (
+        <div className="mx-auto max-w-6xl px-6 py-10 sm:py-20">
         {/* Section header */}
         <div className="flex items-end justify-between mb-8 sm:mb-12">
           <motion.div
@@ -556,6 +531,7 @@ export default function Hero({ onNavigate }: { onNavigate: (target: string) => v
           </button>
         </motion.div>
       </div>
+      )}
 
       {/* ══════════════════════════════════════════════════════════════════════
          BLOG PREVIEW SECTION

@@ -1,18 +1,17 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
-import { blogPosts } from '@/lib/data'
+import { getSiteContent } from '@/lib/server/content-store'
 import BlogPostClient from './BlogPostClient'
 
 interface Props {
   params: { slug: string }
 }
 
-export function generateStaticParams() {
-  return blogPosts.map((p) => ({ slug: p.slug }))
-}
+export const dynamic = 'force-dynamic'
 
-export function generateMetadata({ params }: Props): Metadata {
-  const post = blogPosts.find((p) => p.slug === params.slug)
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const content = await getSiteContent()
+  const post = content.blogPosts.find((p) => p.slug === params.slug)
   if (!post) return {}
   return {
     title: `${post.title} — Ahmet Akyapı`,
@@ -20,8 +19,9 @@ export function generateMetadata({ params }: Props): Metadata {
   }
 }
 
-export default function BlogPostPage({ params }: Props) {
-  const post = blogPosts.find((p) => p.slug === params.slug)
+export default async function BlogPostPage({ params }: Props) {
+  const content = await getSiteContent()
+  const post = content.blogPosts.find((p) => p.slug === params.slug)
   if (!post) notFound()
-  return <BlogPostClient post={post} />
+  return <BlogPostClient post={post} allPosts={content.blogPosts} />
 }
