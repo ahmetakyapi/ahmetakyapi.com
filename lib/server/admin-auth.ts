@@ -6,13 +6,19 @@ const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 7
 
 function getAdminPassword() {
   if (process.env.ADMIN_PASSWORD) return process.env.ADMIN_PASSWORD
-  if (process.env.NODE_ENV !== 'production') return 'admin1234'
+  if (process.env.NODE_ENV !== 'production') {
+    console.warn('[admin-auth] ADMIN_PASSWORD tanımlı değil — dev varsayılan şifre kullanılıyor.')
+    return 'admin1234'
+  }
   return ''
 }
 
 function getSessionSecret() {
   if (process.env.ADMIN_SESSION_SECRET) return process.env.ADMIN_SESSION_SECRET
-  if (process.env.NODE_ENV !== 'production') return 'dev-admin-session-secret'
+  if (process.env.NODE_ENV !== 'production') {
+    console.warn('[admin-auth] ADMIN_SESSION_SECRET tanımlı değil — dev varsayılan secret kullanılıyor.')
+    return 'dev-admin-session-secret'
+  }
   return ''
 }
 

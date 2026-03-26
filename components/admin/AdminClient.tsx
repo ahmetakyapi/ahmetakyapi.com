@@ -45,6 +45,26 @@ export default function AdminClient() {
     if (session?.authenticated) void loadAdminData()
   }, [session?.authenticated])
 
+  // Periodically check session validity (every 5 minutes)
+  useEffect(() => {
+    if (!session?.authenticated) return
+
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch('/api/admin/session', { cache: 'no-store' })
+        const data = (await res.json()) as SessionResponse
+        if (!data.authenticated) {
+          showToast('Oturum süresi doldu. Lütfen tekrar giriş yapın.', 'error')
+          setSession(data)
+        }
+      } catch {
+        // Silently ignore network errors during periodic check
+      }
+    }, 5 * 60 * 1000)
+
+    return () => clearInterval(interval)
+  }, [session?.authenticated, showToast])
+
   async function loadSession() {
     setLoading(true)
     try {

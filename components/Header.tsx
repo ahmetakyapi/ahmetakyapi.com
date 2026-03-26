@@ -156,6 +156,8 @@ export default function Header({ activeTab, setActiveTab, tabs }: HeaderProps) {
             <button
               onClick={() => setMenuOpen((v) => !v)}
               className="md:hidden p-2 glass rounded-lg text-gray-500 hover:text-gray-800 dark:hover:text-gray-200 transition-colors"
+              aria-label={menuOpen ? 'Menüyü kapat' : 'Menüyü aç'}
+              aria-expanded={menuOpen}
             >
               <AnimatePresence mode="wait" initial={false}>
                 <motion.div

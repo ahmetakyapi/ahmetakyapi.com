@@ -127,7 +127,7 @@ export default function Page() {
           tabs={tabs.map(t => ({ ...t }))}
         />
 
-        <main className="flex-1 pt-16 overflow-x-hidden">
+        <main id="main-content" className="flex-1 pt-16 overflow-x-hidden">
           <AnimatePresence mode="wait" custom={dir}>
             <motion.div
               key={activeTab}

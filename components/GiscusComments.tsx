@@ -16,7 +16,7 @@ export default function GiscusComments() {
   // 1. github.com/ahmetakyapi/ahmetakyapi.com reposunda Discussions'ı etkinleştirin
   // 2. giscus.app adresine gidip repo bilgilerini girin
   // 3. Aldığınız data-repo-id ve data-category-id değerlerini buraya yazın
-  const REPO = process.env.NEXT_PUBLIC_GISCUS_REPO ?? 'ahmetakyapi/ahmetakyapi.me'
+  const REPO = process.env.NEXT_PUBLIC_GISCUS_REPO ?? 'ahmetakyapi/ahmetakyapi.com'
   const REPO_ID = process.env.NEXT_PUBLIC_GISCUS_REPO_ID ?? ''
   const CATEGORY = process.env.NEXT_PUBLIC_GISCUS_CATEGORY ?? 'General'
   const CATEGORY_ID = process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID ?? ''

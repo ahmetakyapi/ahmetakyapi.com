@@ -133,8 +133,38 @@ export default function CommandPalette({ onNavigate }: Props) {
     return () => window.removeEventListener('keydown', onKey)
   }, [open, flat, selected, close])
 
+  const panelRef = useRef<HTMLDivElement>(null)
+
   useEffect(() => {
     if (open) setTimeout(() => inputRef.current?.focus(), 50)
+  }, [open])
+
+  // Focus trap: keep Tab cycling within the panel
+  useEffect(() => {
+    if (!open) return
+
+    function onTab(e: KeyboardEvent) {
+      if (e.key !== 'Tab' || !panelRef.current) return
+
+      const focusable = panelRef.current.querySelectorAll<HTMLElement>(
+        'input, button, [tabindex]:not([tabindex="-1"])'
+      )
+      if (focusable.length === 0) return
+
+      const first = focusable[0]
+      const last = focusable[focusable.length - 1]
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault()
+        last.focus()
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault()
+        first.focus()
+      }
+    }
+
+    window.addEventListener('keydown', onTab)
+    return () => window.removeEventListener('keydown', onTab)
   }, [open])
 
   return (
@@ -154,6 +184,10 @@ export default function CommandPalette({ onNavigate }: Props) {
 
             {/* Panel */}
             <motion.div
+              ref={panelRef}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Komut paleti"
               initial={{ opacity: 0, scale: 0.96, y: -12 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96, y: -12 }}

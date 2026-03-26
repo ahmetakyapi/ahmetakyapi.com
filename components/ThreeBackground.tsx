@@ -227,6 +227,7 @@ function CameraRig() {
 
 export default function ThreeBackground() {
   const [mounted, setMounted] = useState(false)
+  const [visible, setVisible] = useState(true)
   const { resolvedTheme } = useTheme()
   const [themeReady, setThemeReady] = useState(false)
 
@@ -240,14 +241,22 @@ export default function ThreeBackground() {
     if (resolvedTheme) setThemeReady(true)
   }, [resolvedTheme])
 
+  // Pause rendering when tab is not visible
+  useEffect(() => {
+    const onVisibility = () => setVisible(document.visibilityState === 'visible')
+    document.addEventListener('visibilitychange', onVisibility)
+    return () => document.removeEventListener('visibilitychange', onVisibility)
+  }, [])
+
   if (!mounted || !themeReady) return null
 
   const isLight = resolvedTheme !== 'dark'
 
   return (
-    <div className="fixed inset-0 -z-10 pointer-events-none" aria-hidden>
+    <div className="fixed inset-0 -z-10 pointer-events-none" aria-hidden="true">
       <Canvas
         key={isLight ? 'light' : 'dark'}
+        frameloop={visible ? 'always' : 'never'}
         camera={{ position: [0, 0, 12], fov: 55, near: 0.1, far: 80 }}
         gl={{
           antialias: false,
