@@ -16,8 +16,9 @@ export default async function Image() {
           flexDirection: 'column',
           justifyContent: 'space-between',
           padding: '80px',
-          background:
-            'radial-gradient(circle at 18% 12%, rgba(99,102,241,0.35), transparent 45%), radial-gradient(circle at 82% 10%, rgba(34,211,238,0.25), transparent 40%), radial-gradient(circle at 50% 100%, rgba(16,185,129,0.18), transparent 45%), #04070d',
+          backgroundColor: '#04070d',
+          backgroundImage:
+            'radial-gradient(circle at 18% 12%, rgba(99,102,241,0.35), transparent 45%), radial-gradient(circle at 82% 10%, rgba(34,211,238,0.25), transparent 40%), radial-gradient(circle at 50% 100%, rgba(16,185,129,0.18), transparent 45%)',
           color: '#e2e8f0',
           fontFamily: 'sans-serif',
         }}
