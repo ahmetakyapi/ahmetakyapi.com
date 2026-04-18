@@ -1,22 +1,42 @@
 import type { Metadata } from 'next'
+import { Manrope, IBM_Plex_Mono } from 'next/font/google'
 import { ThemeProvider } from 'next-themes'
 import dynamic from 'next/dynamic'
 import './globals.css'
 
 const CustomCursor = dynamic(() => import('@/components/CustomCursor'), { ssr: false })
 
+const manrope = Manrope({
+  subsets: ['latin', 'latin-ext'],
+  weight: ['400', '500', '600', '700', '800'],
+  variable: '--font-inter',
+  display: 'swap',
+})
+
+const ibmPlexMono = IBM_Plex_Mono({
+  subsets: ['latin', 'latin-ext'],
+  weight: ['400', '500', '600'],
+  variable: '--font-mono',
+  display: 'swap',
+})
+
 export const metadata: Metadata = {
-  title: 'Ahmet Akyapı | Fullstack Developer',
+  title: {
+    default: 'Ahmet Akyapı | Fullstack Developer',
+    template: '%s — Ahmet Akyapı',
+  },
   description:
     'React, TypeScript ve Next.js odaklı çalışan Fullstack Developer. Performanslı, rafine ve kullanıcı odaklı ürün deneyimleri geliştiriyorum.',
   keywords: ['Fullstack Developer', 'React', 'TypeScript', 'Next.js', 'Ahmet Akyapı'],
   authors: [{ name: 'Ahmet Akyapı', url: 'https://github.com/ahmetakyapi' }],
+  creator: 'Ahmet Akyapı',
   metadataBase: new URL('https://ahmetakyapi.com'),
-  icons: {
-    icon: '/icon.svg',
-    apple: '/icon.svg',
+  alternates: {
+    canonical: '/',
+    types: {
+      'application/rss+xml': '/rss.xml',
+    },
   },
-  manifest: '/manifest.json',
   openGraph: {
     title: 'Ahmet Akyapı | Fullstack Developer',
     description: 'React, TypeScript ve Next.js odaklı Fullstack Developer.',
@@ -30,11 +50,21 @@ export const metadata: Metadata = {
     title: 'Ahmet Akyapı | Fullstack Developer',
     description: 'React, TypeScript ve Next.js odaklı Fullstack Developer.',
   },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="tr" suppressHydrationWarning>
+    <html lang="tr" className={`${manrope.variable} ${ibmPlexMono.variable}`} suppressHydrationWarning>
       <body>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           <a
