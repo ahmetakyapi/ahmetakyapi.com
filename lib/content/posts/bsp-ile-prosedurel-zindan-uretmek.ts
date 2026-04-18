@@ -4,9 +4,9 @@ export const post: BlogPost = {
     slug: 'bsp-ile-prosedurel-zindan-uretmek',
     tag: 'Gamedev',
     tagColor: '#a855f7',
-    title: 'BSP ile Prosedürel Zindan Üretmek: Dungeon Mates Notları',
+    title: 'Dungeon Mates — BSP ile Her Oyunda Farklı Bir Zindan Üretmek',
     excerpt:
-      'Binary Space Partitioning ile her oyunda farklı bir zindan haritası nasıl üretilir? Dungeon Mates\'te kullandığım algoritmayı adım adım.',
+      'Binary Space Partitioning ile yürünebilir, tutarlı ve her seferinde farklı bir zindan haritası nasıl üretilir? Kullandığım algoritma, adım adım.',
     date: '2026-02-14',
     readTime: '11 dk',
     coverGradient: 'linear-gradient(135deg, #a855f7 0%, #6366f1 50%, #0ea5e9 100%)',

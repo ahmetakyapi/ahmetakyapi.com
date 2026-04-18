@@ -4,9 +4,9 @@ export const post: BlogPost = {
     slug: 'neon-drizzle-serverless-db-katmani',
     tag: 'Database',
     tagColor: '#10b981',
-    title: 'Neon + Drizzle ile Serverless\'ta Veritabanı Katmanını Sadeleştirmek',
+    title: 'Mimio — Prisma\'dan Drizzle\'a, Cold Start\'ı Saniyenin Altına İndirmek',
     excerpt:
-      'Mimio\'yu yazarken Prisma\'dan Drizzle\'a neden geçtim, Neon serverless driver\'ıyla Vercel edge\'inde nelere dikkat ettim. Üretim notları.',
+      'Vercel\'da Prisma cold start\'ı 900ms\'yi buluyordu. Neon serverless driver + Drizzle ile ilk isteği 100ms bandına çekmenin üretim notları.',
     date: '2026-03-22',
     readTime: '7 dk',
     coverGradient: 'linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%)',

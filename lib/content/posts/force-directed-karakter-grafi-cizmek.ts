@@ -4,9 +4,9 @@ export const post: BlogPost = {
     slug: 'force-directed-karakter-grafi-cizmek',
     tag: 'Visualization',
     tagColor: '#ef4444',
-    title: '66 Karakterin Bağlarını Çizmek: Force-Directed Karakter Grafı',
+    title: 'One Piece Hub — Büyük Bir Evreni Yansıtmak',
     excerpt:
-      'One Piece Hub\'da karakter ilişkilerini fizik tabanlı bir grafla göstermek — d3-force ile React içinde sürüklenebilir, canlı bir görsel kurmanın pratiği.',
+      '66 karakter, yüzlerce ilişki. Koca bir anime evrenini tek sayfada yansıtırken d3-force ile React içinde sürüklenebilir, canlı bir karakter grafı kurmanın notları.',
     date: '2026-04-15',
     readTime: '10 dk',
     coverGradient: 'linear-gradient(135deg, #ef4444 0%, #f59e0b 50%, #eab308 100%)',

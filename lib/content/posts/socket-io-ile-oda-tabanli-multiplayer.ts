@@ -4,9 +4,9 @@ export const post: BlogPost = {
     slug: 'socket-io-ile-oda-tabanli-multiplayer',
     tag: 'Realtime',
     tagColor: '#22d3ee',
-    title: 'Socket.IO ile Oda Tabanlı Bir Multiplayer Oyunu Kurmak',
+    title: 'Karalama — Multiplayer Çizim Oyunu Kurmak',
     excerpt:
-      'Karalama\'yı yazarken oda sistemi, state senkronu ve disconnect yönetimi üstüne kafa yorduğum notlar. Teoriden çok sahada öğrendiklerim.',
+      'Oda sistemi, state senkronu ve disconnect yönetimi üstüne sahadan notlar. Teoriden çok geri dönüp düzelttiğim kararların özeti.',
     date: '2026-04-10',
     readTime: '9 dk',
     coverGradient: 'linear-gradient(135deg, #22d3ee 0%, #0ea5e9 50%, #6366f1 100%)',

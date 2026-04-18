@@ -77,7 +77,7 @@ export const projects: Project[] = [
     accent: '#ef4444',
     gradient: 'linear-gradient(135deg, #ef4444 0%, #f59e0b 100%)',
     badge: 'Canlı',
-    featured: false,
+    featured: true,
   },
   {
     id: 7,
