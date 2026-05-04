@@ -13,8 +13,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const content = await getSiteContent()
   const post = content.blogPosts.find((p) => p.slug === params.slug)
   if (!post) return {}
+
   return {
-    title: `${post.title} — Ahmet Akyapı`,
+    title: `${post.title} | Ahmet Akyapı`,
     description: post.excerpt,
   }
 }

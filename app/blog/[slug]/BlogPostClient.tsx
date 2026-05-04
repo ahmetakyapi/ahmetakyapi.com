@@ -21,21 +21,23 @@ export default function BlogPostClient({ post, allPosts }: { post: BlogPost; all
     void trackView(`/blog/${post.slug}`)
   }, [post.slug])
 
-  const others = allPosts.filter(p => p.slug !== post.slug).slice(0, 2)
+  const others = allPosts.filter((p) => p.slug !== post.slug).slice(0, 2)
   const sections = post.content.flatMap((block, index) =>
     block.type === 'h2' ? [{ id: getSectionId(index), text: block.text }] : [],
   )
-  const publishedDate = new Date(post.date).toLocaleDateString('tr-TR', { year: 'numeric', month: 'long', day: 'numeric' })
+  const publishedDate = new Date(post.date).toLocaleDateString('tr-TR', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
 
   return (
     <div className="relative min-h-screen overflow-x-clip bg-[#f8f9fc] text-gray-900 transition-colors duration-300 dark:bg-[#060811] dark:text-gray-100">
-      {/* Progress bar */}
       <motion.div
         className="fixed top-0 left-0 right-0 h-[3px] z-50"
         style={{ scaleX, background: 'linear-gradient(90deg,#6366f1,#a855f7,#ec4899)', transformOrigin: '0%' }}
       />
 
-      {/* Header */}
       <header className="fixed top-0 inset-x-0 z-40 h-14 glass border-b dark:border-white/5 border-gray-200/80">
         <div className="mx-auto flex h-full max-w-5xl items-center justify-between px-6">
           <Link
@@ -43,7 +45,7 @@ export default function BlogPostClient({ post, allPosts }: { post: BlogPost; all
             className="flex items-center gap-2 text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors text-sm font-medium"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span className="hidden sm:inline">Blog'a Dön</span>
+            <span className="hidden sm:inline">Bloga Dön</span>
             <span className="sm:hidden">Geri</span>
           </Link>
 
@@ -56,17 +58,14 @@ export default function BlogPostClient({ post, allPosts }: { post: BlogPost; all
             <button
               onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
               className="p-2 glass rounded-lg text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors border border-white/10"
-              aria-label="Toggle theme"
+              aria-label="Temayı değiştir"
             >
-              {resolvedTheme === 'dark'
-                ? <Sun className="w-4 h-4" />
-                : <Moon className="w-4 h-4" />}
+              {resolvedTheme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
           )}
         </div>
       </header>
 
-      {/* Hero */}
       <section className="relative isolate overflow-hidden bg-[linear-gradient(180deg,#f8fbff_0%,#f8f9fc_72%,transparent_100%)] dark:bg-[linear-gradient(180deg,#09121f_0%,#060811_76%,#060811_100%)]">
         <div
           className="absolute inset-0 opacity-95 dark:opacity-100"
@@ -77,7 +76,8 @@ export default function BlogPostClient({ post, allPosts }: { post: BlogPost; all
         <div
           className="absolute inset-0 opacity-[0.18] dark:opacity-[0.1]"
           style={{
-            backgroundImage: 'linear-gradient(rgba(15,23,42,0.08) 1px,transparent 1px),linear-gradient(90deg,rgba(15,23,42,0.08) 1px,transparent 1px)',
+            backgroundImage:
+              'linear-gradient(rgba(15,23,42,0.08) 1px,transparent 1px),linear-gradient(90deg,rgba(15,23,42,0.08) 1px,transparent 1px)',
             backgroundSize: '64px 64px',
             maskImage: 'linear-gradient(to bottom, rgba(0,0,0,0.85), rgba(0,0,0,0.18))',
           }}
@@ -157,21 +157,17 @@ export default function BlogPostClient({ post, allPosts }: { post: BlogPost; all
         </div>
       </section>
 
-      {/* Content */}
       <main className="relative mx-auto max-w-5xl px-6 pb-24 pt-1 sm:pt-2">
         <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_260px] lg:gap-12">
           <div className="lg:max-w-3xl">
-            {/* Article blocks */}
             <article className="border-t border-slate-300/90 pt-5 dark:border-white/[0.14] sm:pt-6">
               {post.content.map((block, i) => (
                 <BlockRenderer key={i} block={block} index={i} />
               ))}
             </article>
 
-            {/* Comments */}
             <GiscusComments />
 
-            {/* Other posts */}
             {others.length > 0 && (
               <div className="mt-16 pt-10 border-t border-gray-100 dark:border-white/5">
                 <p className="font-mono text-[11px] text-gray-400 dark:text-gray-600 uppercase tracking-widest mb-5">
@@ -221,7 +217,6 @@ function getSectionId(index: number) {
   return `section-${index}`
 }
 
-/* ─── Block renderer ─────────────────────────────────────────────────────── */
 function BlockRenderer({ block, index }: { block: Block; index: number }) {
   switch (block.type) {
     case 'h2':
@@ -240,11 +235,7 @@ function BlockRenderer({ block, index }: { block: Block; index: number }) {
       )
 
     case 'h3':
-      return (
-        <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mt-7 mb-3">
-          {block.text}
-        </h3>
-      )
+      return <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mt-7 mb-3">{block.text}</h3>
 
     case 'p':
       return (
@@ -276,10 +267,11 @@ function BlockRenderer({ block, index }: { block: Block; index: number }) {
 
     case 'callout': {
       const s = {
-        tip:     { border: 'border-emerald-500/30', bg: 'dark:bg-emerald-500/5 bg-emerald-50',  text: 'dark:text-emerald-400 text-emerald-600', label: '💡 İpucu' },
-        info:    { border: 'border-sky-500/30',     bg: 'dark:bg-sky-500/5 bg-sky-50',         text: 'dark:text-sky-400 text-sky-600',         label: 'ℹ️ Bilgi' },
-        warning: { border: 'border-amber-500/30',   bg: 'dark:bg-amber-500/5 bg-amber-50',     text: 'dark:text-amber-400 text-amber-600',     label: '⚠️ Dikkat' },
+        tip: { border: 'border-emerald-500/30', bg: 'dark:bg-emerald-500/5 bg-emerald-50', text: 'dark:text-emerald-400 text-emerald-600', label: 'İpucu' },
+        info: { border: 'border-sky-500/30', bg: 'dark:bg-sky-500/5 bg-sky-50', text: 'dark:text-sky-400 text-sky-600', label: 'Bilgi' },
+        warning: { border: 'border-amber-500/30', bg: 'dark:bg-amber-500/5 bg-amber-50', text: 'dark:text-amber-400 text-amber-600', label: 'Dikkat' },
       }[block.variant]
+
       return (
         <div className={`my-6 rounded-xl border ${s.border} ${s.bg} p-4`}>
           <p className={`text-xs font-semibold font-mono mb-1.5 ${s.text}`}>{s.label}</p>
@@ -327,19 +319,13 @@ function CodeBlock({ lang, text }: { lang: string; text: string }) {
           className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-semibold text-slate-600 transition-colors hover:border-slate-300 hover:text-slate-900 dark:border-white/[0.08] dark:bg-white/[0.05] dark:text-slate-300 dark:hover:border-white/[0.16] dark:hover:text-white"
           aria-label={copyState === 'copied' ? 'Kod kopyalandı' : 'Kodu kopyala'}
         >
-          {copyState === 'copied' ? (
-            <Check className="h-3.5 w-3.5" />
-          ) : (
-            <Copy className="h-3.5 w-3.5" />
-          )}
+          {copyState === 'copied' ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
           <span>{copyState === 'copied' ? 'Kopyalandı' : copyState === 'error' ? 'Tekrar dene' : 'Kopyala'}</span>
         </button>
       </div>
 
       <pre className="overflow-x-auto bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.08),transparent_30%),linear-gradient(180deg,#f8fbff_0%,#f3f7fb_100%)] p-5 dark:bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.08),transparent_28%),linear-gradient(180deg,#0d1117_0%,#081019_100%)]">
-        <code className="font-mono text-[13px] leading-[1.85] text-slate-800 dark:text-slate-300">
-          {text}
-        </code>
+        <code className="font-mono text-[13px] leading-[1.85] text-slate-800 dark:text-slate-300">{text}</code>
       </pre>
     </motion.div>
   )

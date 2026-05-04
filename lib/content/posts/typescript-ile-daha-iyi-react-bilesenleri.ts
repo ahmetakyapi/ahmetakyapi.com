@@ -1,21 +1,29 @@
 import type { BlogPost } from '../types'
 
 export const post: BlogPost = {
-    slug: 'typescript-ile-daha-iyi-react-bilesenleri',
-    tag: 'TypeScript',
-    tagColor: '#3178c6',
-    title: 'TypeScript ile Daha İyi React Bileşenleri',
-    excerpt:
-      'TypeScript kullanarak React bileşenlerinizi tip güvenli, bakımı kolay ve daha güçlü hale getirmenin pratik yolları.',
-    date: '2024-02-20',
-    readTime: '8 dk',
-    coverGradient: 'linear-gradient(135deg, #3178c6 0%, #235a97 100%)',
-    content: [
-      { type: 'p', text: 'JavaScript\'te bir bileşene yanlış prop geçtiğinizde hatayı çalışma zamanında öğrenirsiniz — muhtemelen production\'da. TypeScript ile bu hata derleme anında, kodunuzu yazdığınız anda yakalanır.' },
-      { type: 'h2', text: 'Props Tanımlamak: interface mi type mı?' },
-      { type: 'p', text: 'İkisi de çalışır, ancak bileşen props\'ları için interface tercih edilir — daha okunabilir hata mesajları üretir ve declaration merging destekler.' },
-      { type: 'code', lang: 'tsx', text: `// ✅ Tercih edilen
-interface ButtonProps {
+  slug: 'typescript-ile-daha-iyi-react-bilesenleri',
+  tag: 'TypeScript',
+  tagColor: '#3178c6',
+  title: 'TypeScript ile Daha İyi React Bileşenleri',
+  excerpt:
+    'React bileşenlerini sadece tip güvenli hale getirmek değil, daha anlaşılır ve daha derli toplu yazmak için işime en çok yarayan TypeScript alışkanlıkları.',
+  date: '2024-02-20',
+  readTime: '8 dk',
+  coverGradient: 'linear-gradient(135deg, #3178c6 0%, #235a97 100%)',
+  content: [
+    {
+      type: 'p',
+      text: 'TypeScript’in React tarafındaki asıl güzelliği sadece hata yakalaması değil. Bileşenin ne istediğini açık açık göstermesi. İyi yazılmış tipler, bileşenin yanına konmuş kısa bir açıklama gibi çalışıyor. Özellikle birkaç ay sonra koda geri döndüğünde bunun rahatlığını net hissediyorsun.',
+    },
+    { type: 'h2', text: 'Props Tanımlarken interface mi, type mı?' },
+    {
+      type: 'p',
+      text: 'Bu konuda tek doğru yok. Ama bileşen propslarında çoğu zaman `interface` bana daha okunur geliyor. Özellikle ekip içinde çalışırken hata mesajlarının daha düzgün görünmesi ve genişletmenin kolay olması günlük kullanımda fark yaratıyor.',
+    },
+    {
+      type: 'code',
+      lang: 'tsx',
+      text: `interface ButtonProps {
   label: string
   variant?: 'primary' | 'outline' | 'ghost'
   size?: 'sm' | 'md' | 'lg'
@@ -25,25 +33,38 @@ interface ButtonProps {
 
 export function Button({ label, variant = 'primary', size = 'md', ...rest }: ButtonProps) {
   return <button className={cn(base, variants[variant], sizes[size])} {...rest}>{label}</button>
-}` },
-      { type: 'h2', text: 'children\'ı Doğru Tipler' },
-      { type: 'p', text: 'React.PropsWithChildren kullanmak yerine children\'ı açıkça tanımlamak daha esnektir — ne tür children\'a izin verdiğinizi net gösterir.' },
-      { type: 'code', lang: 'tsx', text: `import { ReactNode } from 'react'
+}`,
+    },
+    { type: 'h2', text: 'children Alanını Bilinçli Yazmak' },
+    {
+      type: 'p',
+      text: 'Birçok projede `PropsWithChildren` otomatik alışkanlık olmuş durumda. Ama children alanını açıkça yazmak, bileşenin gerçekten ne kadar esnek olması gerektiğini düşünmeye zorluyor. Bu da bileşen arayüzünü daha temiz kurmana yardım ediyor.',
+    },
+    {
+      type: 'code',
+      lang: 'tsx',
+      text: `import { ReactNode } from 'react'
 
 interface CardProps {
   title: string
-  children: ReactNode        // herhangi bir render edilebilir içerik
-  footer?: ReactNode         // opsiyonel slot
+  children: ReactNode
+  footer?: ReactNode
   className?: string
 }
 
-// Sadece string kabul eden bileşen için:
 interface LabelProps {
   children: string
-}` },
-      { type: 'h2', text: 'Generic Bileşenler' },
-      { type: 'p', text: 'Bir liste bileşeni düşünün: her veri tipiyle çalışması gerekiyor ama tip güvenliğini kaybetmek istemiyorsunuz. Generics tam bu durumda devreye girer.' },
-      { type: 'code', lang: 'tsx', text: `interface ListProps<T> {
+}`,
+    },
+    { type: 'h2', text: 'Generic Bileşenler' },
+    {
+      type: 'p',
+      text: 'Aynı yapıyı farklı veri tipleriyle tekrar tekrar kullanacaksan generics ciddi rahatlık sağlıyor. Liste, tablo ya da seçim bileşeni gibi tekrar eden yerlerde hem kod tekrarını azaltıyor hem de tip güvenliğini kaybetmiyorsun.',
+    },
+    {
+      type: 'code',
+      lang: 'tsx',
+      text: `interface ListProps<T> {
   items: T[]
   renderItem: (item: T, index: number) => ReactNode
   keyExtractor: (item: T) => string
@@ -59,17 +80,18 @@ export function List<T>({ items, renderItem, keyExtractor, emptyText = 'Sonuç y
       ))}
     </ul>
   )
-}
-
-// Kullanım — tip otomatik çıkarılır:
-<List
-  items={users}
-  keyExtractor={(u) => u.id}
-  renderItem={(u) => <UserCard user={u} />}
-/>` },
-      { type: 'callout', variant: 'tip', text: 'as const kullanarak sabit değerleri tuple/literal olarak daraltın. Bu sayede "primary" | "outline" gibi union tipler otomatik oluşur, ayrı tanımlamaya gerek kalmaz.' },
-      { type: 'h2', text: 'Custom Hook Tipleri' },
-      { type: 'code', lang: 'tsx', text: `function useLocalStorage<T>(key: string, initial: T) {
+}`,
+    },
+    {
+      type: 'callout',
+      variant: 'tip',
+      text: '`as const` küçük bir ayrıntı gibi görünür ama özellikle varyant ve boyut gibi sınırlı seçeneklerde işi çok toparlar.',
+    },
+    { type: 'h2', text: 'Custom Hook Tipleri' },
+    {
+      type: 'code',
+      lang: 'tsx',
+      text: `function useLocalStorage<T>(key: string, initial: T) {
   const [value, setValue] = useState<T>(() => {
     if (typeof window === 'undefined') return initial
     try {
@@ -86,18 +108,26 @@ export function List<T>({ items, renderItem, keyExtractor, emptyText = 'Sonuç y
   }
 
   return [value, set] as const
-  //                    ^ tuple döndürür, [T, Dispatch<...>] çıkarımı doğru olur
-}` },
-      { type: 'h2', text: 'Discriminated Union ile Conditional Props' },
-      { type: 'p', text: 'Bir bileşenin farklı modlarda farklı prop seti alması gerektiğinde discriminated union\'lar hayat kurtarır.' },
-      { type: 'code', lang: 'tsx', text: `type AlertProps =
+}`,
+    },
+    {
+      type: 'p',
+      text: 'Hook döndürürken tuple yapısını korumak küçük bir ayrıntı gibi görünür ama kullanım tarafını doğrudan etkiler. Yanlış çıkarım olduğunda, hook’u kullanan yerde gereksiz kontrol yazmak zorunda kalıyorsun.',
+    },
+    { type: 'h2', text: 'Koşullu Props İçin Discriminated Union' },
+    {
+      type: 'p',
+      text: 'Bazı bileşenler tek bir modda yaşamıyor. Bilgi, onay ve hata gibi farklı halleri oluyor. Böyle durumlarda discriminated union yaklaşımı çok temiz çalışıyor. Yanlış prop kombinasyonları daha kodu yazarken önüne düşüyor.',
+    },
+    {
+      type: 'code',
+      lang: 'tsx',
+      text: `type AlertProps =
   | { variant: 'info';    message: string }
   | { variant: 'confirm'; message: string; onConfirm: () => void; onCancel: () => void }
-  | { variant: 'error';   message: string; error: Error }
-
-// variant='confirm' seçilince TypeScript onConfirm ve onCancel'ı zorunlu kılar.
-// variant='info' seçilince bu prop'lar mevcut bile değildir.` },
-    ],
-  }
+  | { variant: 'error';   message: string; error: Error }`,
+    },
+  ],
+}
 
 export default post

@@ -5,7 +5,8 @@ export const projects: Project[] = [
     id: 1,
     category: 'Portfolio & Showcase',
     title: 'ahmetakyapi.com',
-    description: 'Bu sitenin kendisi. Next.js App Router, TailwindCSS ve Framer Motion ile sıfırdan tasarlayıp geliştirdiğim kişisel portfolio ve blog sitesi. Dark/light tema, Giscus yorum sistemi ve teknik blog yazıları içeriyor.',
+    description:
+      'Kişisel portfolyo ve teknik blogumu tek çatı altında topladığım, görsel dengeye ve etkileşim kalitesine özellikle odaklandığım vitrin sitesi. Next.js App Router, TailwindCSS ve Framer Motion ile sıfırdan kuruldu; tema geçişleri, yorum sistemi ve içerik akışı birlikte çalışıyor.',
     tags: ['Next.js', 'TypeScript', 'TailwindCSS', 'Framer Motion'],
     link: 'https://ahmetakyapi.com',
     github: 'https://github.com/ahmetakyapi/ahmetakyapi.me',
@@ -18,7 +19,8 @@ export const projects: Project[] = [
     id: 2,
     category: 'Productivity',
     title: 'DigyNotes',
-    description: 'Minimalist dijital not alma uygulaması. Notları başlık ve içerikle hızlıca oluşturup kategorilere göre düzenleyebilir, anlık arama yapabilirsin. TypeScript ile tip güvenli geliştirildi.',
+    description:
+      'Sade ama işlevli bir dijital not alma uygulaması. Notları hızlıca oluşturup kategorilere ayırabiliyor, içerik içinde anlık arama yapabiliyor ve günlük kullanımda dikkat dağıtmayan temiz bir akış sunuyor.',
     tags: ['TypeScript', 'React', 'TailwindCSS'],
     link: 'https://digy-notes.vercel.app',
     github: 'https://github.com/ahmetakyapi/DigyNotes',
@@ -31,7 +33,8 @@ export const projects: Project[] = [
     id: 3,
     category: 'Finance',
     title: 'Keşke Alsaydım',
-    description: '"Keşke o zaman o hisseyi alsaydım" hissini sayıya döken araç. Geçmişe dönüp seçtiğin varlığa yatırım yapsaydın bugün ne kadar olurdu sorusunu yanıtlıyor.',
+    description:
+      '"O gün alsaydım bugün ne olurdu?" sorusunu sayıya döken küçük ama merak uyandıran bir araç. Seçtiğin varlığa geçmişte yatırım yapmış olsaydın bugünkü karşılığını hızlı ve anlaşılır bir arayüzle gösteriyor.',
     tags: ['TypeScript', 'React', 'TailwindCSS'],
     link: 'https://keskealsaydim.vercel.app',
     github: 'https://github.com/ahmetakyapi/keskealsaydim',
@@ -44,7 +47,8 @@ export const projects: Project[] = [
     id: 4,
     category: 'Utility',
     title: 'Ramazan Vakitleri',
-    description: "Türkiye'nin 81 ili için güncel iftar ve sahur vakitlerini listeleyen sade web uygulaması. İl seçimine göre otomatik filtreleme.",
+    description:
+      "Türkiye'nin 81 ili için iftar ve sahur vakitlerini hızlıca gösteren hafif bir web uygulaması. İl seçimine göre anında filtreleniyor ve özellikle mobil kullanımda sade, doğrudan bir deneyim sunuyor.",
     tags: ['JavaScript', 'HTML', 'CSS'],
     link: 'https://ramazan-vakitleri.vercel.app',
     github: 'https://github.com/ahmetakyapi/ramazan-vakitleri',
@@ -57,7 +61,8 @@ export const projects: Project[] = [
     id: 5,
     category: 'Clinical SaaS',
     title: 'Mimio',
-    description: 'Ergoterapistlerin klinik sürecini dijitalleştiren bir platform. Danışan profili, haftalık program, altı farklı terapi oyunu ve ilerleme grafiği tek panelde toplanıyor. AOTA çerçevesine uygun hazırlandı, Neon Postgres üstünde koşuyor.',
+    description:
+      'Ergoterapistlerin danışan takibini, seans planlamasını ve terapi sürecini tek panelde yönetmesini hedefleyen bir klinik platform. Danışan profilleri, haftalık akış, terapi oyunları ve ilerleme grafikleri aynı sistem içinde birleşiyor.',
     tags: ['Next.js 15', 'TypeScript', 'Tailwind v4', 'Neon', 'Framer Motion'],
     link: 'https://mimios.vercel.app',
     github: 'https://github.com/ahmetakyapi/Mimio',
@@ -70,7 +75,8 @@ export const projects: Project[] = [
     id: 6,
     category: 'Fan Platform',
     title: 'One Piece Hub',
-    description: 'OnePaceTR bölüm numaralarını ark tabanlı bir izleme sistemine çeviren Türkçe fan platformu. 463 bölüm 36 arka bölünüyor, 66 karakter için ilişki grafı, arka göre quiz modu ve Cmd+K arama var. Koyu temalı sinematik bir wiki hissi hedefledim.',
+    description:
+      'One Piece evrenini Türkçe içerikle daha düzenli ve keşfedilebilir hale getiren bir fan platformu. Ark takibi, karakter ilişkileri, quiz modu ve hızlı arama gibi parçaları tek bir sinematik wiki deneyiminde bir araya getiriyor.',
     tags: ['Next.js 14', 'TypeScript', 'Drizzle', 'Neon', 'JWT'],
     link: 'https://onepiece-hub.vercel.app',
     github: 'https://github.com/ahmetakyapi/onepiece-hub',
@@ -83,7 +89,8 @@ export const projects: Project[] = [
     id: 7,
     category: 'Multiplayer Game',
     title: 'Karalama',
-    description: 'Kayıt gerektirmeyen, Türkçe kelime havuzuyla oynanan bir çok oyunculu çizim oyunu. 18 kategoride 1070+ kelime, Socket.io ile gerçek zamanlı çizim ve tahmin akışı, mobil uyumlu sahne. Bir bağlantı paylaş, oynamaya başla.',
+    description:
+      'Kayıt gerektirmeden arkadaşlarla hızlıca oynanabilen çok oyunculu bir çizim oyunu. Türkçe kelime havuzu, oda tabanlı gerçek zamanlı akış ve mobil uyumlu sahnesiyle bağlantıyı paylaşır paylaşmaz oyunu başlatabiliyorsun.',
     tags: ['Next.js 14', 'Socket.io', 'Zustand', 'TypeScript', 'Monorepo'],
     link: 'https://karalama.vercel.app',
     github: 'https://github.com/ahmetakyapi/karalama',
@@ -96,7 +103,8 @@ export const projects: Project[] = [
     id: 8,
     category: 'Multiplayer Game',
     title: 'Dungeon Mates',
-    description: '2-4 kişilik kooperatif zindan macerası. Tarayıcı üstünde koşuyor, yükleme yok. BSP algoritmasıyla üretilen prosedürel haritalar, üç karakter sınıfı, dokuz düşman tipi ve 2600 satırlık prosedürel sprite kodu. Sunucu otoriter, hile korumalı.',
+    description:
+      'Tarayıcı üstünde çalışan, 2-4 kişilik kooperatif bir zindan oyunu. Prosedürel haritalar, farklı sınıflar ve sunucu otoriteli yapı sayesinde her turda yeniden oynama isteği uyandıran daha kontrollü bir aksiyon akışı sunuyor.',
     tags: ['Next.js 14', 'Canvas', 'Socket.io', 'WebAudio', 'TypeScript'],
     link: 'https://dungeon-mates.vercel.app',
     github: 'https://github.com/ahmetakyapi/dungeon-mates',
