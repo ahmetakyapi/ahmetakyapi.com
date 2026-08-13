@@ -4,7 +4,7 @@ export const post: BlogPost = {
   slug: 'bsp-ile-prosedurel-zindan-uretmek',
   tag: 'Oyun',
   tagColor: '#a855f7',
-  title: 'Dungeon Mates: Her Seferinde Farklı Ama Bozuk Olmayan Harita',
+  title: "Dungeon Mates: Her Kat Farklı, Hiçbiri Bozuk Değil",
   excerpt:
     'Prosedürel zindan üretmek kolay. Zor olan, üretilen zindanın gezilebilir olduğundan emin olmak. BSP ile nasıl çözdüğüme ve yol boyunca neyi patlattığıma dair notlar.',
   date: '2026-02-14',

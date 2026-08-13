@@ -4,7 +4,7 @@ export const post: BlogPost = {
   slug: 'bilmedigim-meslege-arac-yazmak',
   tag: 'Ürün',
   tagColor: '#2b62f5',
-  title: 'Bilmediğim Bir Mesleğe Araç Yazmak',
+  title: "Mimio: Seansı Kaydet, İlerlemeyi Gör",
   excerpt:
     'Mimio ergoterapistler için bir panel. Ergoterapi hakkında hiçbir şey bilmiyordum ve öğrendiğim ilk şey şu oldu: kendi kavramlarını uydurma, mesleğin zaten bir dili var.',
   date: '2026-03-22',

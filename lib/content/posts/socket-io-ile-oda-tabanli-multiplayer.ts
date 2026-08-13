@@ -4,7 +4,7 @@ export const post: BlogPost = {
   slug: 'socket-io-ile-oda-tabanli-multiplayer',
   tag: 'Realtime',
   tagColor: '#22d3ee',
-  title: 'Karalama: Türkçe Bir Çizim Oyununda Tahmini Kim Doğruluyor?',
+  title: "Karalama: “İSTANBUL” Yazan Doğru Bildi mi?",
   excerpt:
     'Çok oyunculu bir çizim oyunu yazdım. En zor kısmı çizimi senkronlamak değildi — "İSTANBUL" yazan birinin doğru tahmin ettiğini anlamaktı.',
   date: '2026-05-15',

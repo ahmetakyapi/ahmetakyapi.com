@@ -4,7 +4,7 @@ export const post: BlogPost = {
   slug: 'spoiler-vermeyen-wiki',
   tag: 'Ürün',
   tagColor: '#ef4444',
-  title: 'One Piece Hub: Spoiler Vermeden Wiki Yazmak',
+  title: "One Piece Hub: Spoiler'a Girmeden Gez",
   excerpt:
     '1000 bölümlük bir seriyi 300. bölümden takip eden birine site nasıl görünmeli? Asıl problem içerik toplamak değil, o içeriği okuyucunun nerede olduğuna göre saklamaktı.',
   date: '2026-04-15',

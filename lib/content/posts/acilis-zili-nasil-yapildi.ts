@@ -4,7 +4,7 @@ export const post: BlogPost = {
   slug: 'acilis-zili-nasil-yapildi',
   tag: 'Ürün',
   tagColor: '#0d74c4',
-  title: 'Açılış Zili: Piyasayı Tek Ekrana İndirdim',
+  title: "Açılış Zili: Piyasayı Tek Yerden Takip Et",
   excerpt:
     'Bilanço takvimi bir sitede, makro veriler başka sitede, notlarım bir metin dosyasındaydı. En çok uğraştığım şey veri çekmek değil, bir sayının ne zaman yalan söylemeye başladığını anlamak oldu.',
   date: '2026-08-12',
