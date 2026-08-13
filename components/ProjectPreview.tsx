@@ -52,7 +52,13 @@ export default function ProjectPreview({
             fill
             priority={priority}
             loading={priority ? undefined : 'lazy'}
-            /* Öne çıkan kart yarım ekran, ızgara kartları üçte bir. */
+            /* Kaynak zaten WebP ve gösterilecek ölçüde (1280×800) — Next'in
+               optimizer'ından geçirmenin kazancı yok, riski var: sharp
+               kurulu değilse WebP'yi JPEG'e çeviriyor, imageSizes yanlış
+               yapılandırılırsa üretimde srcset hiç üretilmiyor. Statik
+               dosya olarak servis edilince bu sınıfın tamamı ortadan
+               kalkıyor; lazy yükleme ve oran korumasını yine alıyoruz. */
+            unoptimized
             sizes={size === 'lg' ? '(max-width: 1024px) 90vw, 560px' : '(max-width: 640px) 90vw, 380px'}
             className="object-cover object-top"
           />

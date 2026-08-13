@@ -34,13 +34,6 @@ const securityHeaders = [
 const nextConfig = {
   poweredByHeader: false,
   compress: true,
-  images: {
-    // Proje ekran görüntüleri 1280×800; kartlar en fazla yarım ekran.
-    imageSizes: [256, 384, 480, 640],
-    deviceSizes: [640, 828, 1080, 1200],
-    formats: ['image/webp'],
-    minimumCacheTTL: 2592000,
-  },
   async redirects() {
     return [
       {

@@ -82,7 +82,8 @@ export default function Blog({ blogPosts }: { blogPosts: BlogPost[] }) {
           </article>
         )}
 
-        <div className="grid gap-3 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
+        {/* Üç sütunda kartlar sıkışıyordu; iki sütunda özet üç satır rahat sığıyor. */}
+        <div className="grid gap-4 sm:gap-5 md:grid-cols-2">
           {rest.map((post, i) => (
             <article data-reveal
               key={post.slug}
@@ -106,11 +107,11 @@ export default function Blog({ blogPosts }: { blogPosts: BlogPost[] }) {
                     {post.tag}
                   </span>
 
-                  <h2 className="text-[16px] font-bold leading-snug tracking-[-0.02em] text-slate-900 transition-colors group-hover:text-slate-700 sm:text-[18px] dark:text-white dark:group-hover:text-slate-200">
+                  <h2 className="text-[17px] font-bold leading-snug tracking-[-0.02em] text-slate-900 transition-colors group-hover:text-slate-700 sm:text-[19px] dark:text-white dark:group-hover:text-slate-200">
                     {post.title}
                   </h2>
 
-                  <p className="mt-2 line-clamp-2 flex-1 text-[13px] leading-[1.75] text-slate-600 sm:mt-3 sm:line-clamp-3 dark:text-slate-400">
+                  <p className="mt-2 line-clamp-3 flex-1 text-[14px] leading-[1.8] text-slate-600 sm:mt-3 dark:text-slate-400">
                     {post.excerpt}
                   </p>
 
