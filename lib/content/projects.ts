@@ -6,9 +6,9 @@ export const projects: Project[] = [
     category: 'Finansal Takip',
     title: 'Açılış Zili',
     description:
-      'ABD borsaları için günlük takip platformu. Ekonomik takvim, bilanço tarihleri, haberler ve makro göstergeler tek ekranda — ve hepsi okuyanın kendi saatiyle yazılıyor. Türkçe okuyorsan saatler Türkiye saatiyle çıkıyor, New York saati künyede duruyor; İngilizceye geçince sıra tersine dönüyor.',
+      'ABD piyasasını kendi takibim için tek ekrana indiren site. Bilanço takvimi ve her bilanço için yazılan analizler, 500\'ü aşkın şirketlik dizin, makro göstergeler, haberler ve takip listesi bir arada. Üstüne her gün yazılan bülten ve olay bazlı uzun yazılar.',
     detail:
-      'Seans durumuna göre değişen önbellek, dört sağlayıcılı veri katmanı ve "uydurma veri yok" ilkesi: her kartın altında kaynak ve saat damgası var.',
+      'Analizlerde oran değil oranın böleni saklanıyor: F/K\'nin payı fiyat olduğu için kaydedilen oran ertesi gün yanlış olmaya başlıyor. Her kartın altında kaynak ve saat damgası var; veri yoksa kart boş kalıyor.',
     tags: ['Next.js 16', 'React 19', 'Tailwind v4', 'Drizzle', 'Neon', 'next-auth v5'],
     link: 'https://acilis-zili.vercel.app',
     github: 'https://github.com/ahmetakyapi/acilis-zili',
