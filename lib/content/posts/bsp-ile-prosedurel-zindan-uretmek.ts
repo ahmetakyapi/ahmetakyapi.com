@@ -2,113 +2,181 @@ import type { BlogPost } from '../types'
 
 export const post: BlogPost = {
   slug: 'bsp-ile-prosedurel-zindan-uretmek',
-  tag: 'Gamedev',
+  tag: 'Oyun',
   tagColor: '#a855f7',
-  title: 'Dungeon Mates: BSP ile Prosedürel Zindan Üretmek',
+  title: 'Dungeon Mates: Her Seferinde Farklı Ama Bozuk Olmayan Harita',
   excerpt:
-    'Her oyunda farklı ama bozuk olmayan bir zindan üretmek için BSP yaklaşımını nasıl kullandığıma dair, oyun hissini de düşünen sade notlar.',
+    'Prosedürel zindan üretmek kolay. Zor olan, üretilen zindanın gezilebilir olduğundan emin olmak. BSP ile nasıl çözdüğüme ve yol boyunca neyi patlattığıma dair notlar.',
   date: '2026-02-14',
-  readTime: '11 dk',
   coverGradient: 'linear-gradient(135deg, #a855f7 0%, #6366f1 50%, #0ea5e9 100%)',
   content: [
     {
-      type: 'p',
-      text: 'Dungeon Mates için en başta çözmem gereken soru şuydu: Her oyunda farklı görünen ama yine de düzgün gezilebilen bir zindan nasıl çıkar? Tamamen rastgele denemeler kısa sürede dağıldı. Odalar üst üste bindi, koridorlar yarım kaldı, bazı yerler de anlamsız boşluklara dönüştü.',
+      type: 'lead',
+      text: 'İlk çalışan sürümde arkadaşımla oyuna girdik ve iki dakika boyunca bir koridorda dönüp durduk. Harita üretilmişti, odalar vardı, canavarlar vardı — ama merdivenin bulunduğu odaya giden hiçbir yol yoktu. Rastgeleliğin sorunu tam olarak bu: çoğu zaman çalışıyor.',
     },
     {
       type: 'p',
-      text: 'BSP burada çok dengeli bir çözüm verdi. Rastgelelik var ama başıboş değil. Önce haritayı parçalara ayırıyor, sonra odaları ve bağlantıları bu iskelet üstüne kuruyorsun. Böylece hem tekrar oynama hissi geliyor hem de kırık harita üretme ihtimali ciddi biçimde azalıyor.',
+      text: 'Dungeon Mates tarayıcıda çalışan, 2-4 kişilik kooperatif bir zindan oyunu. Her kat yeniden üretiliyor. Bu yazı, "her seferinde farklı" ile "her seferinde oynanabilir" arasındaki gerilimi nasıl çözdüğüme dair.',
     },
-    { type: 'h2', text: 'BSP Mantığı' },
+
+    { type: 'h2', text: 'Neden Tamamen Rastgele Olmuyor' },
     {
       type: 'p',
-      text: 'Temel fikir büyük bir alanı adım adım daha küçük parçalara bölmek. En küçük yapraklara odalar yerleştiriliyor, sonra bu odalar birbirine bağlanıyor. Güzel tarafı şu: Harita rastgele görünse bile kendi içinde düzenli kalıyor.',
+      text: 'İlk yaklaşımım şuydu: rastgele yerlere rastgele boyutta dikdörtgenler koy, sonra hepsini birbirine bağla. İki sorun çıktı.',
+    },
+    {
+      type: 'ul',
+      items: [
+        'Odalar üst üste biniyordu. Çakışma kontrolü ekledim; bu sefer 40 denemede yerleştirilemeyen odalar oldu ve harita boş kaldı.',
+        'Bağlantı grafiği garanti bağlı değildi. İki oda kümesi oluşup birbirine hiç bağlanmayabiliyordu — yukarıdaki koridor hikâyesi tam olarak buydu.',
+      ],
+    },
+    {
+      type: 'p',
+      text: 'BSP bu iki sorunu birden çözüyor. Alanı ikiye böl, her yarıyı yine ikiye böl, en alttaki parçalara birer oda koy. Odalar aynı parçanın içinde olduğu için asla çakışmıyor. Ve bağlarken ağacın kendisini takip ediyorsun, yani bağlılık yapıdan geliyor.',
+    },
+
+    { type: 'h2', text: 'Bölme Yönünü Kim Seçiyor' },
+    {
+      type: 'p',
+      text: 'Yönü tamamen rastgele seçince haritada 4×60 boyutunda koridor gibi parçalar çıkıyor. İçine oda sığmıyor. Çözüm basit: parçanın oranına bak, uzun kenarı böl.',
     },
     {
       type: 'code',
       lang: 'ts',
-      text: `export interface Rect {
-  x: number
-  y: number
-  w: number
-  h: number
-}
+      file: 'server/dungeon/DungeonGenerator.ts',
+      text: `private splitNode(node: BSPNode, depth: number): void {
+  if (depth > 5) return
 
-export class Leaf {
-  rect: Rect
-  left: Leaf | null = null
-  right: Leaf | null = null
-  room: Rect | null = null
+  const canSplitH = node.height >= this.minBspSize * 2
+  const canSplitV = node.width  >= this.minBspSize * 2
+  if (!canSplitH && !canSplitV) return
+
+  let splitHorizontally: boolean
+  if (canSplitH && canSplitV) {
+    // Kare değilse uzun kenarı böl; kareyse yazı tura.
+    splitHorizontally =
+      node.height > node.width ? true
+      : node.width > node.height ? false
+      : Math.random() > 0.5
+  } else {
+    splitHorizontally = canSplitH
+  }
+  // ...
 }`,
     },
-    { type: 'h2', text: 'Yatay mı, Dikey mi?' },
     {
       type: 'p',
-      text: 'Bu karar haritanın karakterini doğrudan etkiliyor. Tamamen rastgele bölünce bazı parçalar çok ince ve uzun kalıyor. O yüzden dikdörtgenin oranına bakıp yön seçmek bana daha dengeli sonuç verdi.',
+      text: 'Buradaki `depth > 5` sınırı deneme yanılmayla oturdu. 7\'de harita hücre gibi görünüyordu — çok fazla küçük oda, hepsi birbirinin aynı. 4\'te ise oda sayısı yetersizdi. 5 iyi bir denge verdi.',
+    },
+    {
+      type: 'p',
+      text: 'Bir de `minBspSize` var ve tanımı ilginç:',
     },
     {
       type: 'code',
       lang: 'ts',
-      text: `const ratio = leaf.rect.w / leaf.rect.h
-let horizontal: boolean
-if (ratio > 1.25)      horizontal = false
-else if (ratio < 0.75) horizontal = true
-else                   horizontal = rng() < 0.5`,
+      file: 'server/dungeon/DungeonGenerator.ts',
+      text: `// Oda maksimum boyutu + 4: bir parçaya oda konduğunda kenarlarda
+// koridorların geçebileceği en az 2'şer birim boşluk kalsın.
+this.minBspSize = this.roomMaxSize + 4`,
+    },
+    {
+      type: 'p',
+      text: 'Bu satır olmadan odalar parçanın kenarına yapışıyordu ve koridorlar duvarların içinden geçmek zorunda kalıyordu. Zindan "yanlış" görünüyordu ama nedenini uzun süre bulamadım.',
+    },
+
+    { type: 'h2', text: 'Oyuncu Sayısı Haritayı Değiştiriyor' },
+    {
+      type: 'p',
+      text: 'Tek kişilik oyunda 72×72\'lik bir harita çok büyük — dakikalarca boş koridorda yürüyorsun. Dört kişide 48×48 çok küçük, herkes birbirinin üstünde. Bu yüzden harita boyutu oyuncu sayısına bağlı.',
+    },
+    {
+      type: 'table',
+      head: ['Oyuncu', 'Harita', 'Oda boyutu'],
+      rows: [
+        ['1', '48 × 48', '6 – 11'],
+        ['2', '56 × 56', '7 – 12'],
+        ['3', '64 × 64', '7 – 13'],
+        ['4', '72 × 72', '8 – 14'],
+      ],
+    },
+    {
+      type: 'p',
+      text: 'Kat numarası da ayrı bir katman: yukarı çıktıkça oda sayısı, canavar canı ve saldırı gücü artıyor. Patronlar 3, 5, 7, 8 ve 10. katlarda. Bu sayıları bir tabloya yazdım ve oynadıkça birkaç kere değiştirdim — özellikle 4. kat uzun süre kolaydı.',
+    },
+
+    { type: 'h2', text: 'Fazla Oda Üretince Ne Oluyor' },
+    {
+      type: 'p',
+      text: 'Bu bölüm koddaki en sinsi hatanın hikâyesi. BSP ağacı bazen hedeflenenden fazla oda üretiyor. Fazlalıkları listeden çıkarmak yetmedi.',
+    },
+    {
+      type: 'code',
+      lang: 'ts',
+      file: 'server/dungeon/DungeonGenerator.ts',
+      text: `// Fazla odaları listeden çıkarmak YETMİYOR: tile'lar zaten açılmıştı.
+// Sadece diziden silince haritada sahipsiz boşluklar kalıyor —
+// oyuncu oraya girebiliyor ama orası hiçbir odanın parçası değil.
+for (let i = this.rooms.length - 1; i >= targetMax; i--) {
+  this.uncarveRoom(this.rooms[i])
+}`,
+    },
+    {
+      type: 'p',
+      text: 'Semptom şuydu: bazı oyunlarda haritada canavarsız, eşyasız, çıkışsız bir boşluk oluyordu. Oyuncular oraya düşünce "burası bug mı" diye soruyordu. Evet, bug\'dı. Açılan alanı geri kapatan bir fonksiyon yazmak zorunda kaldım.',
+    },
+
+    { type: 'h2', text: 'Koridorlar' },
+    {
+      type: 'p',
+      text: 'Bağlama işi ağacın iç düğümlerinde yapılıyor: sol alt ağacın bir odasıyla sağ alt ağacın bir odasını birleştir. Kök düğüme kadar çıkınca bütün harita bağlanmış oluyor.',
+    },
+    {
+      type: 'p',
+      text: 'Koridorların şekli L biçimli — önce yatay, sonra dikey (ya da tersi). Diagonal denedim, çok daha hoş görünüyordu ama çarpışma kontrolü ve görüş hattı hesabı iki katına çıktı. Geri aldım.',
     },
     {
       type: 'callout',
       variant: 'tip',
-      text: 'Rastgele sayı üreten fonksiyonu dışarıdan vermek, seed desteğini neredeyse bedavaya getiriyor. Hata ayıklarken çok rahatlatıyor.',
+      text: 'L biçimli koridorda hangi kolun önce çizildiğini rastgele seçmek, tek satırlık bir değişiklik ama haritanın karakterini belirgin şekilde çeşitlendiriyor. Aynı oda çiftini bağlayan iki farklı yol çıkıyor.',
     },
-    { type: 'h2', text: 'Odaları Yerleştirmek' },
-    {
-      type: 'p',
-      text: 'En alttaki yaprakları odalar için güvenli alan gibi düşünebilirsin. Odayı kenarlardan biraz boşluk bırakarak yerleştirmek, hem koridorlara yer açıyor hem de sonuçta daha doğal bir görünüm veriyor.',
-    },
-    {
-      type: 'code',
-      lang: 'ts',
-      text: `const w = Math.floor(minW + rng() * (leaf.rect.w - minW - 2))
-const h = Math.floor(minH + rng() * (leaf.rect.h - minH - 2))
-const x = leaf.rect.x + 1 + Math.floor(rng() * (leaf.rect.w - w - 1))
-const y = leaf.rect.y + 1 + Math.floor(rng() * (leaf.rect.h - h - 1))`,
-    },
-    { type: 'h2', text: 'Koridorları Bağlamak' },
-    {
-      type: 'p',
-      text: 'Haritanın hissi büyük ölçüde burada oluşuyor. İç düğümlerde alt dallardaki odaları birbirine bağlayınca zindan sadece çalışır hale gelmiyor, aynı zamanda okunur hale de geliyor. L biçimli koridorlar basit ama yeterince güçlü bir çözüm oldu.',
-    },
-    {
-      type: 'code',
-      lang: 'ts',
-      text: `if (rng() < 0.5) {
-  drawHLine(ax, bx, ay)
-  drawVLine(ay, by, bx)
-} else {
-  drawVLine(ay, by, ax)
-  drawHLine(ax, bx, by)
-}`,
-    },
-    { type: 'h2', text: 'Çok Oyunculu Tarafta Tek Kaynak' },
-    {
-      type: 'p',
-      text: 'Harita üretimi çok oyunculu oyunda mutlaka sunucuda yapılmalı. Her istemci kendi seed’iyle kendi zindanını üretirse küçük bir fark bile bütün koşuyu dağıtabiliyor. O yüzden haritayı sunucu üretip herkese aynı sonucu göndermek en temiz yol oldu.',
-    },
-    {
-      type: 'code',
-      lang: 'ts',
-      text: `function startRun(roomId: string, seed: number) {
-  const rng  = mulberry32(seed)
-  const grid = generateDungeon(rng)
-  const { spawn, boss, enemies } = populate(grid, rng)
 
-  io.to(roomId).emit('run:start', { seed, grid, spawn, boss, enemies })
-}`,
+    { type: 'h2', text: 'Haritayı Kim Üretiyor' },
+    {
+      type: 'p',
+      text: 'Bu, çok oyunculu tarafta pazarlık edilemez bir karar. Harita sunucuda üretiliyor ve herkese aynı sonuç gönderiliyor.',
     },
     {
-      type: 'callout',
-      variant: 'warning',
-      text: 'Sadece seed paylaşmak ilk bakışta cazip gelebilir ama istemci tarafında fazla öngörülebilirlik yaratabilir. Oyun mantığında gereğinden fazla bilgi vermemek daha sağlıklı.',
+      type: 'p',
+      text: 'Sadece seed\'i paylaşıp herkesin kendi haritasını üretmesi cazip geliyor — ağ trafiği neredeyse sıfır. Ama `Math.random()` uygulamaları arasında fark yaratabiliyor ve daha kötüsü, istemcinin elinde tüm haritanın olması demek: nerede patron var, nerede sandık var, hepsi belli.',
+    },
+    {
+      type: 'quote',
+      text: 'Sunucu haritayı üretir, oyuncular yalnızca gördükleri kadarını bilir. Bu kural olmadan keşif diye bir şey kalmıyor.',
+    },
+
+    { type: 'h2', text: 'Rakamlarla' },
+    {
+      type: 'stats',
+      label: 'Dungeon Mates · harita üretimi',
+      items: [
+        { value: '643', note: 'satırlık üretici' },
+        { value: '5', note: 'maksimum BSP derinliği' },
+        { value: '10', note: 'kat, her biri farklı ayarlı' },
+        { value: '5', note: 'patron katı' },
+        { value: '4', note: 'oyuncuya kadar' },
+      ],
+    },
+
+    { type: 'h2', text: 'Geriye Dönüp Bakınca' },
+    {
+      type: 'p',
+      text: 'BSP\'yi seçtiğim için memnunum. Ama bugün başlasam üretimden hemen sonra bir doğrulama adımı koyardım: her odadan merdivene ulaşılabiliyor mu diye basit bir dolaşma. Ağaç yapısı bunu garanti ediyor teorik olarak, ama "uncarve" hatasında gördüğüm gibi teori kodun tamamını kapsamıyor.',
+    },
+    {
+      type: 'p',
+      text: 'Hâlâ emin olmadığım şey oda boyutlarının oyuncu sayısına bağlanması. Mantıklı geliyor ama tek kişilik oyun ile dört kişilik oyun artık farklı hissettiriyor — aynı oyun olmalı mıydı, bilmiyorum.',
     },
   ],
 }
