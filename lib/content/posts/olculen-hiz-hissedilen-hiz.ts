@@ -4,7 +4,7 @@ export const post: BlogPost = {
   slug: 'olculen-hiz-hissedilen-hiz',
   tag: 'Performans',
   tagColor: '#8b5cf6',
-  title: "Hızlı Ölçüldü, Yavaş Hissedildi",
+  title: "ahmetakyapi.com: Hızlı Ölçüldü, Yavaş Hissedildi",
   excerpt:
     '"Windows\'ta kasıyor" dediler. Profilleyiciyi açtım: 60 kare, sıfır uzun görev, tertemiz. Sorun ölçtüğüm yerde değildi. Bulunca animasyon kütüphanesini de sildim.',
   date: '2026-03-15',

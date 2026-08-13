@@ -4,7 +4,7 @@ export const post: BlogPost = {
   slug: 'typescript-ile-daha-iyi-react-bilesenleri',
   tag: 'TypeScript',
   tagColor: '#3178c6',
-  title: "Bu Blogu Tek Bir Union Tipi Ayakta Tutuyor",
+  title: "ahmetakyapi.com: İçeriği Tek Bir Union Tipi Ayakta Tutuyor",
   excerpt:
     'Şu an okuduğunuz yazı bir dizi. Her blok bir union üyesi ve renderer eksik bir durumu unutursa TypeScript derlemeyi durduruyor. Bu yapının nasıl kurulduğu ve nerede yanlış yaptığım.',
   date: '2026-02-20',

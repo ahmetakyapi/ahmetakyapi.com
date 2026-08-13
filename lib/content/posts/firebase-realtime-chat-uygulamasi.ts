@@ -4,7 +4,7 @@ export const post: BlogPost = {
   slug: 'firebase-realtime-chat-uygulamasi',
   tag: 'Realtime',
   tagColor: '#f59e0b',
-  title: "Gerçek Zamanlıda Otorite Kimde?",
+  title: "İlk Sohbet Uygulamam: Gerçek Zamanlıda Otorite Kimde?",
   excerpt:
     'İlk gerçek zamanlı uygulamamı Firebase ile yazdım, yıllar sonra aynı problemi kendi sunucumla çözdüm. İkisi arasındaki farkı en net gösteren şey, kimin karar verdiği sorusu.',
   date: '2026-01-05',

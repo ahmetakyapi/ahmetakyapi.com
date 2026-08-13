@@ -231,5 +231,6 @@ export const projects: Project[] = [
     badge: 'Canlı',
     featured: false,
     preview: 'browser',
+    postSlug: 'olculen-hiz-hissedilen-hiz',
   },
 ]
