@@ -50,6 +50,18 @@ const nextConfig = {
         destination: '/blog/olculen-hiz-hissedilen-hiz',
         permanent: true,
       },
+      {
+        /* Yazı ORM karşılaştırmasından Mimio'nun kendi hikâyesine döndü. */
+        source: '/blog/neon-drizzle-serverless-db-katmani',
+        destination: '/blog/bilmedigim-meslege-arac-yazmak',
+        permanent: true,
+      },
+      {
+        /* Yazının konusu graf yerleşiminden spoiler korumasına taşındı. */
+        source: '/blog/force-directed-karakter-grafi-cizmek',
+        destination: '/blog/spoiler-vermeyen-wiki',
+        permanent: true,
+      },
     ]
   },
   async headers() {

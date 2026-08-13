@@ -33,7 +33,7 @@ export const projects: Project[] = [
     description:
       'Ergoterapistlerin danışan takibini, seans planlamasını ve terapi sürecini tek panelde yönetmesi için kurulan klinik platform. Danışan profilleri, haftalık akış, terapi oyunları ve ilerleme grafikleri aynı sistemin içinde.',
     detail:
-      'Kendi tasarım dili var: üç katmanlı zemin, imza mavi→cyan degradesi ve varsayılan açık tema.',
+      'Seans notları SOAP standardında tutuluyor — kendi alanlarımı uydurmak yerine mesleğin zaten kullandığı formatı aldım. Yedi terapi oyununun skorları danışan dosyasına düşüyor.',
     tags: ['Next.js 15', 'TypeScript', 'Tailwind v4', 'Neon', 'Framer Motion'],
     link: 'https://mimios.vercel.app',
     github: 'https://github.com/ahmetakyapi/Mimio',
@@ -42,6 +42,7 @@ export const projects: Project[] = [
     badge: 'Canlı',
     featured: true,
     preview: 'board',
+    postSlug: 'bilmedigim-meslege-arac-yazmak',
   },
   {
     id: 3,
@@ -51,7 +52,7 @@ export const projects: Project[] = [
     description:
       'One Piece evrenini Türkçe içerikle düzenli ve keşfedilebilir hale getiren fan platformu. Ark takibi, karakter ilişkileri, quiz modu ve hızlı arama tek bir sinematik wiki deneyiminde birleşiyor.',
     detail:
-      'Karakter ilişkileri force-directed bir grafla çiziliyor — düzeni sabit değil, her açılışta kendi kendine oturuyor.',
+      'Spoiler kapısı var: hangi arkta olduğunu söylüyorsun, sonrasına ait her şey bulanıklaşıyor. Ekran okuyucuya da içerik sızmıyor.',
     tags: ['Next.js 14', 'TypeScript', 'Drizzle', 'Neon', 'JWT'],
     link: 'https://onepiece-hub.vercel.app',
     github: 'https://github.com/ahmetakyapi/onepiece-hub',
@@ -60,7 +61,7 @@ export const projects: Project[] = [
     badge: 'Canlı',
     featured: true,
     preview: 'grid',
-    postSlug: 'force-directed-karakter-grafi-cizmek',
+    postSlug: 'spoiler-vermeyen-wiki',
   },
   {
     id: 4,
