@@ -79,6 +79,56 @@ const ARCS: Arc[] = [
 
 const STAR_COUNT = 140
 
+/**
+ * Yay geometrisi bir kere hesaplanıyor.
+ *
+ * Her karede 13 yay × 41 nokta = 533 slerp çağrısı yapılıyordu; her biri
+ * acos dahil ~15 trigonometrik işlem, yani kare başına ~8000 işlem. Oysa
+ * iki şehir arasındaki büyük daire yolu hiç değişmiyor — değişen tek şey
+ * kürenin dönüş açısı.
+ *
+ * Burada noktanın küre üstündeki sabit yeri saklanıyor. Dönüş, açı toplama
+ * formülüyle uygulanıyor:
+ *   cos(θ₀ + rotY) = cosθ₀·cos(rotY) − sinθ₀·sin(rotY)
+ * cos(rotY) ve sin(rotY) kare başına bir kez hesaplandığı için nokta başına
+ * hiç trigonometri kalmıyor.
+ */
+const ARC_STEPS = 41
+
+type ArcPointGeometry = {
+  sinPhi: number
+  cosPhi: number
+  cosT0: number
+  sinT0: number
+  /** Yarıçap çarpanı — yayın ortası küreden hafifçe yükseliyor. */
+  rFactor: number
+}
+
+const ARC_GEOMETRY: ArcPointGeometry[][] = ARCS.map((arc) => {
+  const a = CITIES[arc.from]
+  const b = CITIES[arc.to]
+
+  return Array.from({ length: ARC_STEPS }, (_, i) => {
+    const st = i / (ARC_STEPS - 1)
+    const [lat, lng] = slerp(a.lat, a.lng, b.lat, b.lng, st)
+    const phi = toRad(90 - lat)
+    const theta0 = toRad(lng)
+
+    return {
+      sinPhi: Math.sin(phi),
+      cosPhi: Math.cos(phi),
+      cosT0: Math.cos(theta0),
+      sinT0: Math.sin(theta0),
+      rFactor: 1 + Math.sin(st * Math.PI) * 0.09,
+    }
+  })
+})
+
+/** Kare başına yeniden ayrılmasın diye tek sefer ayrılan ekran tamponu. */
+const ARC_SCREEN: { x: number; y: number; z: number }[][] = ARC_GEOMETRY.map((points) =>
+  points.map(() => ({ x: 0, y: 0, z: 0 })),
+)
+
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 function toRad(deg: number) {
   return (deg * Math.PI) / 180
@@ -222,6 +272,10 @@ export default function InteractiveGlobe() {
 
     const cosRx = Math.cos(s.rotX)
     const sinRx = Math.sin(s.rotX)
+    /* Dönüş açısının sinüs/kosinüsü kare başına bir kez — yay noktaları
+       bunları açı toplama formülüyle kullanıyor. */
+    const cosRotY = Math.cos(s.rotY)
+    const sinRotY = Math.sin(s.rotY)
 
     ctx.clearRect(0, 0, sz, sz)
 
@@ -354,29 +408,32 @@ export default function InteractiveGlobe() {
     for (let ai = 0; ai < ARCS.length; ai++) {
       const arc = ARCS[ai]
       const cityA = CITIES[arc.from]
-      const cityB = CITIES[arc.to]
 
       ctx.beginPath()
       let arcStarted = false
-      const arcPoints: { x: number; y: number; z: number }[] = []
+      const geometry = ARC_GEOMETRY[ai]
+      const arcPoints = ARC_SCREEN[ai]
 
-      for (let st = 0; st <= 1; st += 0.025) {
-        const [lat, lng] = slerp(cityA.lat, cityA.lng, cityB.lat, cityB.lng, st)
-        const elev = Math.sin(st * Math.PI) * RADIUS * 0.09
-        const phi = toRad(90 - lat)
-        const theta = toRad(lng) + s.rotY
-        const r = RADIUS + elev
+      for (let i = 0; i < geometry.length; i++) {
+        const g = geometry[i]
+        // Açı toplama: nokta başına tek bir trigonometri bile yok.
+        const cosT = g.cosT0 * cosRotY - g.sinT0 * sinRotY
+        const sinT = g.sinT0 * cosRotY + g.cosT0 * sinRotY
+        const r = RADIUS * g.rFactor
 
-        let x = r * Math.sin(phi) * Math.cos(theta)
-        let y = r * Math.cos(phi)
-        const z0 = r * Math.sin(phi) * Math.sin(theta)
-        const y2 = y * cosRx - z0 * sinRx
-        const z = y * sinRx + z0 * cosRx
-        y = y2
+        const x = r * g.sinPhi * cosT
+        const yBase = r * g.cosPhi
+        const zBase = r * g.sinPhi * sinT
+        const y = yBase * cosRx - zBase * sinRx
+        const z = yBase * sinRx + zBase * cosRx
 
         const px = CENTER + x
         const py = CENTER - y
-        arcPoints.push({ x: px, y: py, z })
+
+        const slot = arcPoints[i]
+        slot.x = px
+        slot.y = py
+        slot.z = z
 
         if (z > 0) {
           if (!arcStarted) { ctx.moveTo(px, py); arcStarted = true }
