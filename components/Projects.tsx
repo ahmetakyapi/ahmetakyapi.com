@@ -126,7 +126,7 @@ function FeaturedCard({ project }: { project: Project }) {
 
           <div className="grid grid-cols-1 md:grid-cols-[1fr_1.6fr]">
             <div
-              className="relative flex items-center justify-center overflow-hidden p-6 md:p-8"
+              className="relative flex items-center justify-center overflow-hidden p-5 md:p-7"
               style={{ background: `linear-gradient(145deg, ${project.accent}14, ${project.accent}06)` }}
             >
               <div
@@ -134,7 +134,7 @@ function FeaturedCard({ project }: { project: Project }) {
                 style={{ background: `radial-gradient(ellipse at 50% 60%, ${project.accent}33 0%, transparent 70%)` }}
                 aria-hidden="true"
               />
-              <div className="relative w-full max-w-[280px] transition-transform duration-500 group-hover:scale-[1.03]">
+              <div className="relative w-full max-w-[420px] transition-transform duration-500 group-hover:scale-[1.02]">
                 <ProjectPreview project={project} size="lg" />
               </div>
             </div>

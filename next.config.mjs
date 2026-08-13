@@ -34,6 +34,24 @@ const securityHeaders = [
 const nextConfig = {
   poweredByHeader: false,
   compress: true,
+  images: {
+    // Proje ekran görüntüleri 1280×800; kartlar en fazla yarım ekran.
+    imageSizes: [256, 384, 480, 640],
+    deviceSizes: [640, 828, 1080, 1200],
+    formats: ['image/webp'],
+    minimumCacheTTL: 2592000,
+  },
+  async redirects() {
+    return [
+      {
+        /* Yazı framer-motion kullanmayı değil, kütüphaneyi KALDIRMAYI
+           anlatır hâle geldi; eski slug yanıltıcı olduğu için taşındı. */
+        source: '/blog/framer-motion-sayfa-gecis-animasyonlari',
+        destination: '/blog/olculen-hiz-hissedilen-hiz',
+        permanent: true,
+      },
+    ]
+  },
   async headers() {
     return [
       {

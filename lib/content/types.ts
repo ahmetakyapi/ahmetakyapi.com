@@ -26,6 +26,8 @@ export interface Project {
   badge: 'Canlı' | 'GitHub'
   featured: boolean
   preview?: ProjectPreview
+  /** public/projects/ altındaki gerçek ekran görüntüsü (uzantısız ad). */
+  shot?: string
   /** Bu projeyi anlatan blog yazısının slug'ı. */
   postSlug?: string
   /** Kart üzerinde gösterilen kısa öne çıkan rakamlar. */

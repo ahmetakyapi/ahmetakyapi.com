@@ -55,7 +55,7 @@ export default function Footer() {
         <p data-reveal
           className="text-[11px] dark:text-gray-600 text-gray-400 font-mono"
         >
-          Next.js · TailwindCSS · Framer Motion
+          Next.js · TailwindCSS · TypeScript
         </p>
       </div>
     </footer>

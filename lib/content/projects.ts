@@ -5,6 +5,7 @@ export const projects: Project[] = [
     id: 1,
     category: 'Finansal Takip',
     title: 'Açılış Zili',
+    shot: 'acilis-zili',
     description:
       'ABD piyasasını kendi takibim için tek ekrana indiren site. Bilanço takvimi ve her bilanço için yazılan analizler, 500\'ü aşkın şirketlik dizin, makro göstergeler, haberler ve takip listesi bir arada. Üstüne her gün yazılan bülten ve olay bazlı uzun yazılar.',
     detail:
@@ -28,6 +29,7 @@ export const projects: Project[] = [
     id: 2,
     category: 'Klinik SaaS',
     title: 'Mimio',
+    shot: 'mimio',
     description:
       'Ergoterapistlerin danışan takibini, seans planlamasını ve terapi sürecini tek panelde yönetmesi için kurulan klinik platform. Danışan profilleri, haftalık akış, terapi oyunları ve ilerleme grafikleri aynı sistemin içinde.',
     detail:
@@ -45,6 +47,7 @@ export const projects: Project[] = [
     id: 3,
     category: 'Fan Platformu',
     title: 'One Piece Hub',
+    shot: 'onepiece-hub',
     description:
       'One Piece evrenini Türkçe içerikle düzenli ve keşfedilebilir hale getiren fan platformu. Ark takibi, karakter ilişkileri, quiz modu ve hızlı arama tek bir sinematik wiki deneyiminde birleşiyor.',
     detail:
@@ -63,6 +66,7 @@ export const projects: Project[] = [
     id: 4,
     category: 'Günlük Oyun',
     title: 'Harfiyen',
+    shot: 'harfiyen',
     description:
       'Her gün saat 09:00\'da üç yeni Türkçe kare bulmaca: 6×6 kolay, 8×8 orta, 10×10 zor. Süre bazlı liderlik tablosu, seri takibi ve geçmiş günlere dönebildiğin bir arşiv var.',
     detail:
@@ -80,6 +84,7 @@ export const projects: Project[] = [
     id: 5,
     category: 'Çok Oyunculu Oyun',
     title: 'ElevenForge',
+    shot: 'elevenforge',
     description:
       '16 arkadaşın aynı ligde yarıştığı Türkçe futbol menajerlik oyunu. Davet koduyla katılıyorsun, boş kalan yerleri bot dolduruyor ve maçlar ligi kuran kişinin seçtiği saatte simüle ediliyor.',
     detail:
@@ -97,6 +102,7 @@ export const projects: Project[] = [
     id: 6,
     category: 'Üretkenlik',
     title: 'DigyNotes',
+    shot: 'digynotes',
     description:
       'Sade ama işlevli bir dijital not uygulaması. Notları hızlıca oluşturup kategorilere ayırıyor, içerik içinde anlık arama yapıyor ve günlük kullanımda dikkat dağıtmayan bir akış sunuyor.',
     tags: ['TypeScript', 'React', 'TailwindCSS'],
@@ -112,6 +118,7 @@ export const projects: Project[] = [
     id: 7,
     category: 'Çok Oyunculu Oyun',
     title: 'Karalama',
+    shot: 'karalama',
     description:
       'Kayıt olmadan arkadaşlarla hızlıca oynanan çok oyunculu çizim oyunu. Türkçe kelime havuzu, oda tabanlı gerçek zamanlı akış ve mobil uyumlu bir sahne — bağlantıyı paylaşır paylaşmaz oyun başlıyor.',
     detail: 'Socket.io üzerinde oda tabanlı durum yönetimi; sunucu otoriteli tur akışı.',
@@ -129,6 +136,7 @@ export const projects: Project[] = [
     id: 8,
     category: 'Çok Oyunculu Oyun',
     title: 'Dungeon Mates',
+    shot: 'dungeon-mates',
     description:
       'Tarayıcıda çalışan, 2-4 kişilik kooperatif zindan oyunu. Prosedürel haritalar, farklı sınıflar ve sunucu otoriteli yapı sayesinde her tur yeniden oynanmak isteniyor.',
     detail: 'Haritalar BSP ile üretiliyor ve sunucuda tek yerden dağıtılıyor — istemciler kendi zindanını üretmiyor.',
@@ -146,6 +154,7 @@ export const projects: Project[] = [
     id: 9,
     category: 'Klinik Panel',
     title: 'Derinay',
+    shot: 'derinay',
     description:
       'Tek kişilik bir klinik pratiğin yönetim paneli: gelir-gider, danışan, seans, fatura, ödeme ve vergi takibi tek sakin arayüzde toplanıyor.',
     detail:
@@ -163,6 +172,7 @@ export const projects: Project[] = [
     id: 10,
     category: 'Finans',
     title: 'Keşke Alsaydım',
+    shot: 'keskealsaydim',
     description:
       '"O gün alsaydım bugün ne olurdu?" sorusunu sayıya döken küçük ama merak uyandıran bir araç. Seçtiğin varlığa geçmişte yatırım yapsaydın bugünkü karşılığını hızlı ve anlaşılır biçimde gösteriyor.',
     tags: ['TypeScript', 'React', 'TailwindCSS'],
@@ -194,6 +204,7 @@ export const projects: Project[] = [
     id: 12,
     category: 'Yardımcı Araç',
     title: 'Ramazan Vakitleri',
+    shot: 'ramazan-vakitleri',
     description:
       "Türkiye'nin 81 ili için iftar ve sahur vakitlerini gösteren hafif bir web uygulaması. İl seçimine göre anında filtreleniyor; özellikle mobilde sade ve doğrudan bir deneyim sunuyor.",
     tags: ['JavaScript', 'HTML', 'CSS'],
@@ -210,8 +221,8 @@ export const projects: Project[] = [
     category: 'Portfolyo',
     title: 'ahmetakyapi.com',
     description:
-      'Bu site. Portfolyo ve teknik blog tek çatı altında; görsel dengeye ve etkileşim kalitesine özellikle odaklandığım vitrin. Next.js App Router, TailwindCSS ve Framer Motion ile sıfırdan kuruldu.',
-    tags: ['Next.js', 'TypeScript', 'TailwindCSS', 'Framer Motion'],
+      'Bu site. Portfolyo ve teknik blog tek çatı altında. Animasyon kütüphanesi yok — geçişler, kart eğimi ve görünüme girme animasyonlarının tamamı CSS ile yazıldı; ilk yükleme JavaScript\'i 104 KB.',
+    tags: ['Next.js', 'TypeScript', 'TailwindCSS', 'Satori OG'],
     link: 'https://ahmetakyapi.com',
     github: 'https://github.com/ahmetakyapi/ahmetakyapi.com',
     accent: '#8b5cf6',

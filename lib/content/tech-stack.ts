@@ -44,11 +44,11 @@ export const techStack: TechStackItem[] = [
     border: 'rgba(6,182,212,0.18)',
   },
   {
-    name: 'Framer Motion',
-    tagline: 'Akıcı animasyon & geçişler',
-    color: '#bb4ade',
-    bg: 'rgba(187,74,222,0.06)',
-    border: 'rgba(187,74,222,0.18)',
+    name: 'PostgreSQL',
+    tagline: 'Neon + Drizzle ile veri katmanı',
+    color: '#4f9bd9',
+    bg: 'rgba(79,155,217,0.07)',
+    border: 'rgba(79,155,217,0.2)',
   },
   {
     name: 'Flutter',

@@ -20,7 +20,7 @@ const InteractiveGlobe = dynamic(() => import('@/components/InteractiveGlobe'), 
   loading: () => <div className="aspect-square w-full" aria-hidden="true" />,
 })
 
-const FEATURED_STACK = ['Angular', 'React', 'Next.js', 'TypeScript', 'Node.js', 'TailwindCSS', 'Framer Motion']
+const FEATURED_STACK = ['Angular', 'React', 'Next.js', 'TypeScript', 'Node.js', 'TailwindCSS', 'PostgreSQL']
 const featuredStack = techStack.filter((tech) => FEATURED_STACK.includes(tech.name))
 
 /**
@@ -303,7 +303,7 @@ export default function Hero({
               <div className="absolute inset-0 bg-gradient-to-t from-card via-card/75 to-transparent" aria-hidden="true" />
 
               <div className="relative z-10 flex h-full flex-col p-5 sm:p-7 lg:p-8">
-                <div className="mb-auto flex items-center justify-between">
+                <div className="flex items-center justify-between">
                   <span className="rounded-full border border-slate-400/50 bg-slate-100 px-3 py-1 text-[11px] font-semibold text-slate-700 backdrop-blur-sm dark:border-white/15 dark:bg-white/[0.08] dark:text-white/80">
                     {featuredProject.category}
                   </span>
@@ -312,7 +312,7 @@ export default function Hero({
                   </span>
                 </div>
 
-                <ProjectPreview project={featuredProject} size="lg" className="mt-5" />
+                <ProjectPreview project={featuredProject} size="lg" className="mt-5" priority />
 
                 <div className="mt-6">
                   <h3 className="text-[22px] font-bold leading-tight tracking-[-0.03em] text-slate-900 sm:text-[28px] lg:text-[32px] dark:text-white">

@@ -428,8 +428,8 @@ html.cursor-custom [contenteditable='true'] {
 
 /* ── Hareket azaltma ──────────────────────────────────────────────────
    Sistem ayarı "hareketi azalt" ise sonsuz döngüler ve geçişler durur.
-   Framer Motion'ın kendi `useReducedMotion` desteği bileşen bazında;
-   burası CSS animasyonlarını (shimmer, gradient, ping) kapatıyor. */
+   Sitede animasyon kütüphanesi yok; hareketin tamamı CSS olduğu için
+   tek kural her şeyi kapsıyor. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
