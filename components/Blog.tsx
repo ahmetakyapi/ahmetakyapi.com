@@ -1,6 +1,5 @@
 'use client'
 
-import { motion } from 'framer-motion'
 import { Calendar, Clock, ArrowUpRight } from 'lucide-react'
 import Link from 'next/link'
 import type { BlogPost } from '@/lib/data'
@@ -17,10 +16,7 @@ export default function Blog({ blogPosts }: { blogPosts: BlogPost[] }) {
       </div>
 
       <div className="mx-auto max-w-6xl px-6 py-12 sm:py-20">
-        <motion.header
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+        <header data-reveal
           className="mb-8 sm:mb-12"
         >
           <p className="eyebrow-label mb-2 text-[11px] text-cyan-700 sm:mb-3 dark:text-cyan-400/90">Yazılar</p>
@@ -33,14 +29,10 @@ export default function Blog({ blogPosts }: { blogPosts: BlogPost[] }) {
           <p className="mt-4 max-w-2xl text-[15px] leading-[1.8] text-slate-600 sm:text-[16px] dark:text-slate-400">
             Yazdığım projelerden çıkan notlar. Çoğu bir şeyin neden çalışmadığıyla başlıyor.
           </p>
-        </motion.header>
+        </header>
 
         {featured && (
-          <motion.article
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-60px' }}
-            transition={{ duration: 0.55 }}
+          <article data-reveal
             className="group relative mb-8 overflow-hidden rounded-[28px] border border-slate-300/80 bg-card dark:border-white/[0.06]"
           >
             <div className="absolute inset-0 opacity-20 dark:opacity-30" style={{ background: featured.coverGradient }} aria-hidden="true" />
@@ -87,17 +79,13 @@ export default function Blog({ blogPosts }: { blogPosts: BlogPost[] }) {
                 </div>
               </div>
             </Link>
-          </motion.article>
+          </article>
         )}
 
         <div className="grid gap-3 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
           {rest.map((post, i) => (
-            <motion.article
+            <article data-reveal
               key={post.slug}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-60px' }}
-              transition={{ delay: Math.min(i, 3) * 0.08, duration: 0.5 }}
             >
               <Link href={`/blog/${post.slug}`} className="group block h-full">
                 <div className="relative flex h-full flex-col overflow-hidden rounded-[18px] border border-slate-300/80 bg-card p-5 transition-all hover:border-slate-400/80 hover:shadow-sm active:scale-[0.99] sm:rounded-[22px] sm:p-6 dark:border-white/[0.06] dark:hover:border-white/[0.12]">
@@ -138,7 +126,7 @@ export default function Blog({ blogPosts }: { blogPosts: BlogPost[] }) {
                   </div>
                 </div>
               </Link>
-            </motion.article>
+            </article>
           ))}
         </div>
       </div>

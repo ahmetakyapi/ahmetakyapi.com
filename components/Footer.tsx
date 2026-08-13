@@ -1,6 +1,5 @@
 'use client'
 
-import { motion } from 'framer-motion'
 import { Github, Twitter, Linkedin, Mail } from 'lucide-react'
 
 const socials = [
@@ -15,10 +14,7 @@ export default function Footer() {
     <footer className="border-t border-gray-100 dark:border-white/[0.05] mt-8 footer-safe">
       <div className="max-w-6xl mx-auto px-6 py-6 sm:py-8 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
         {/* Left */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
+        <div data-reveal
           className="flex items-center gap-3"
         >
           <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-7 h-7 shrink-0">
@@ -35,13 +31,10 @@ export default function Footer() {
           <p className="text-xs dark:text-gray-600 text-gray-400 font-mono">
             © {new Date().getFullYear()} ahmetakyapi.com
           </p>
-        </motion.div>
+        </div>
 
         {/* Socials */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4 }}
+        <div data-reveal
           className="flex items-center gap-0.5"
         >
           {socials.map(({ icon: Icon, href, label }) => (
@@ -56,17 +49,14 @@ export default function Footer() {
               <Icon className="w-4 h-4" />
             </a>
           ))}
-        </motion.div>
+        </div>
 
         {/* Right */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
+        <p data-reveal
           className="text-[11px] dark:text-gray-600 text-gray-400 font-mono"
         >
           Next.js · TailwindCSS · Framer Motion
-        </motion.p>
+        </p>
       </div>
     </footer>
   )

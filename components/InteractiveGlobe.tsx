@@ -77,7 +77,7 @@ const ARCS: Arc[] = [
   { from: 11, to: 12 }, // Johannesburg-Lagos
 ]
 
-const STAR_COUNT = 140
+const STAR_COUNT = 80
 
 /**
  * Yay geometrisi bir kere hesaplanıyor.
@@ -211,7 +211,8 @@ export default function InteractiveGlobe() {
     if (!el) return
     const ro = new ResizeObserver((entries) => {
       const w = entries[0].contentRect.width
-      setSize(Math.min(480, Math.max(240, w)))
+      // Tavan 480'di; 2xl ekranlarda kap 620'ye çıkıyor, küre onu doldursun.
+      setSize(Math.min(620, Math.max(240, w)))
     })
     ro.observe(el)
     return () => ro.disconnect()
@@ -593,7 +594,10 @@ export default function InteractiveGlobe() {
     const canvas = canvasRef.current
     if (!canvas || size === 0) return
 
-    const dpr = Math.min(window.devicePixelRatio || 1, 2)
+    /* dpr 2'de 480px'lik küre 960×960 = 921k piksel demek ve bu her
+       karede yeniden çiziliyor. 1.25'te kenarlar hâlâ yumuşak ama
+       piksel işi ~%60 azalıyor. */
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.25)
     canvas.width = size * dpr
     canvas.height = size * dpr
     canvas.style.width = `${size}px`
@@ -717,7 +721,7 @@ export default function InteractiveGlobe() {
 
   return (
     <div ref={containerRef} className="relative flex w-full flex-col items-center">
-      <div className="relative aspect-square w-full max-w-[480px]">
+      <div className="relative aspect-square w-full max-w-[620px]">
         <div
           className="absolute inset-0 -m-8 rounded-full pointer-events-none"
           style={{

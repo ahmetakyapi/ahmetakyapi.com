@@ -1,17 +1,12 @@
-import dynamic from 'next/dynamic'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import CommandPalette from '@/components/CommandPalette'
 import ScrollToTop from '@/components/ScrollToTop'
 import NoiseTexture from '@/components/NoiseTexture'
 
-/* Dekoratif katman; ilk boyaya girmesin. */
-const AmbientBackdrop = dynamic(() => import('@/components/AmbientBackdrop'), { ssr: false })
-
 export default function SiteLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <AmbientBackdrop />
       <NoiseTexture />
       <CommandPalette />
       <ScrollToTop />

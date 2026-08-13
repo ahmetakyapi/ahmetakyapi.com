@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { NAV_ITEMS } from '@/lib/nav'
 import { ArrowLeft, Home } from 'lucide-react'
@@ -50,23 +49,16 @@ export default function NotFound() {
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_50%,rgba(99,102,241,0.10),transparent_65%)]" />
 
       {/* Ambient orbs */}
-      <motion.div
-        animate={{ scale: [1, 1.2, 1], opacity: [0.15, 0.25, 0.15] }}
-        transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+      <div data-reveal
         className="absolute top-1/4 left-1/4 w-96 h-96 dark:bg-indigo-600/20 bg-indigo-400/10 rounded-full blur-[100px] pointer-events-none"
       />
-      <motion.div
-        animate={{ scale: [1, 1.15, 1], opacity: [0.1, 0.18, 0.1] }}
-        transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 3 }}
+      <div data-reveal
         className="absolute bottom-1/4 right-1/4 w-80 h-80 dark:bg-violet-600/20 bg-violet-400/10 rounded-full blur-[100px] pointer-events-none"
       />
 
       <div className="relative z-10 text-center px-6 max-w-lg mx-auto">
         {/* 404 glitch */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+        <div data-reveal
           className="relative mb-2 select-none"
         >
           {/* Shadow layer */}
@@ -92,13 +84,10 @@ export default function NotFound() {
           >
             {heading}
           </h1>
-        </motion.div>
+        </div>
 
         {/* Subtitle */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.5 }}
+        <div data-reveal
         >
           <p className="font-mono dark:text-indigo-400/70 text-indigo-500/80 text-xs tracking-widest uppercase mb-3">
             sayfa bulunamadı
@@ -106,13 +95,10 @@ export default function NotFound() {
           <p className="dark:text-gray-400 text-slate-600 text-[15px] leading-relaxed mb-8">
             Aradığın sayfa silinmiş, taşınmış ya da hiç var olmamış olabilir.
           </p>
-        </motion.div>
+        </div>
 
         {/* Suggestions */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.45, duration: 0.5 }}
+        <div data-reveal
           className="glass rounded-2xl p-4 mb-7 text-left"
         >
           <p className="font-mono text-[11px] dark:text-gray-500 text-slate-400 mb-3 tracking-wide">
@@ -120,11 +106,8 @@ export default function NotFound() {
           </p>
           <ul className="space-y-1">
             {NAV_ITEMS.map((item, i) => (
-              <motion.li
+              <li data-reveal
                 key={item.href}
-                initial={{ opacity: 0, x: -8 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.55 + i * 0.08 }}
               >
                 <Link
                   href={item.href}
@@ -133,16 +116,13 @@ export default function NotFound() {
                   <span className="font-mono text-xs text-indigo-500" aria-hidden="true">→</span>
                   {item.label}
                 </Link>
-              </motion.li>
+              </li>
             ))}
           </ul>
-        </motion.div>
+        </div>
 
         {/* Actions */}
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7 }}
+        <div data-reveal
           className="flex items-center justify-center gap-3"
         >
           <Link
@@ -160,7 +140,7 @@ export default function NotFound() {
             <ArrowLeft className="w-4 h-4" />
             Geri
           </button>
-        </motion.div>
+        </div>
       </div>
     </div>
   )

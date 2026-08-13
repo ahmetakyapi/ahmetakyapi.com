@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect } from 'react'
-import { motion } from 'framer-motion'
 import { RefreshCw, Home } from 'lucide-react'
 
 export default function Error({
@@ -17,9 +16,7 @@ export default function Error({
 
   return (
     <div className="flex min-h-screen items-center justify-center px-6">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
+      <div data-reveal
         className="text-center max-w-md"
       >
         <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-red-500/10 border border-red-500/20 mb-6">
@@ -49,7 +46,7 @@ export default function Error({
             Ana Sayfa
           </a>
         </div>
-      </motion.div>
+      </div>
     </div>
   )
 }

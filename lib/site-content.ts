@@ -81,8 +81,4 @@ export function normalizeSiteContent(input?: Partial<SiteContent> | null): SiteC
   }
 }
 
-export function getOrderedProjects(projects: Project[]) {
-  const featured = projects.filter((project) => project.featured)
-  const rest = projects.filter((project) => !project.featured)
-  return [...featured, ...rest]
-}
+export { getOrderedProjects } from './project-order'

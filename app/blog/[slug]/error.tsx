@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect } from 'react'
-import { motion } from 'framer-motion'
 import { RefreshCw, ArrowLeft } from 'lucide-react'
 
 export default function BlogError({
@@ -17,9 +16,7 @@ export default function BlogError({
 
   return (
     <div className="flex min-h-screen items-center justify-center px-6">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
+      <div data-reveal
         className="text-center max-w-md"
       >
         <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
@@ -45,7 +42,7 @@ export default function BlogError({
             Geri Dön
           </a>
         </div>
-      </motion.div>
+      </div>
     </div>
   )
 }

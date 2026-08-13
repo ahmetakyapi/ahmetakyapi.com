@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState, useRef, useCallback, useMemo } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
 import { Search, Home, Layers, BookOpen, Github, Mail, Sun, Moon, ExternalLink, ArrowRight, MousePointer2 } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { useRouter } from 'next/navigation'
@@ -265,29 +264,21 @@ export default function CommandPalette() {
   }, [open])
 
   return (
-    <AnimatePresence>
+    <>
       {open && (
         <>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
-            className="fixed inset-0 z-[9990] bg-black/60 backdrop-blur-sm"
+          <div
+            className="overlay-in fixed inset-0 z-[9990] bg-black/60"
             onClick={close}
             aria-hidden="true"
           />
 
-          <motion.div
+          <div
             ref={panelRef}
             role="dialog"
             aria-modal="true"
             aria-label="Komut paleti"
-            initial={{ opacity: 0, scale: 0.96, y: -12 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.96, y: -12 }}
-            transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed top-[18%] left-1/2 -translate-x-1/2 z-[9991] w-full max-w-lg"
+            className="panel-in fixed top-[18%] left-1/2 z-[9991] w-full max-w-lg -translate-x-1/2"
           >
             <div className="mx-4 overflow-hidden rounded-2xl border border-slate-300 bg-white/95 shadow-2xl shadow-black/40 backdrop-blur-2xl dark:border-white/10 dark:bg-[#0e1117]/95">
               <div className="flex items-center gap-3 border-b border-slate-200 px-4 py-3.5 dark:border-white/[0.08]">
@@ -376,9 +367,9 @@ export default function CommandPalette() {
                 <span className="ml-auto">⌘K</span>
               </div>
             </div>
-          </motion.div>
+          </div>
         </>
       )}
-    </AnimatePresence>
+    </>
   )
 }

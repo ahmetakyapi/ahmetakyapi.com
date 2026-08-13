@@ -1,49 +1,55 @@
 'use client'
 
-import { useRef, useCallback } from 'react'
-import { motion, useMotionValue, useSpring, useMotionTemplate, useTransform, useReducedMotion } from 'framer-motion'
+import { useRef, useCallback, useEffect } from 'react'
 import { Github, ExternalLink, ArrowUpRight, BookOpen } from 'lucide-react'
 import Link from 'next/link'
 import type { Project } from '@/lib/data'
-import { getOrderedProjects } from '@/lib/site-content'
+import { getOrderedProjects } from '@/lib/project-order'
 import ProjectPreview from '@/components/ProjectPreview'
 
-/** Karta 3B eğim ve imleci takip eden parlaklık. Hareket azaltmada kapalı. */
+/**
+ * Karta 3B eğim ve imleci takip eden parlaklık.
+ *
+ * Önceden Framer Motion'ın motion value + spring zinciriyle yapılıyordu:
+ * kart başına dört değer, sayfada 13 kart. Aynı görüntü doğrudan style
+ * yazarak elde ediliyor — React render'ı yok, kütüphane yok.
+ * Yumuşatmayı CSS transition yapıyor.
+ */
 function useCardTilt(intensity = 8) {
-  const reduced = useReducedMotion()
-  const ref = useRef<HTMLDivElement>(null)
-  const rx = useSpring(useMotionValue(0), { stiffness: 300, damping: 30 })
-  const ry = useSpring(useMotionValue(0), { stiffness: 300, damping: 30 })
-  const mouseX = useMotionValue(0.5)
-  const mouseY = useMotionValue(0.5)
+  const ref = useRef<HTMLElement>(null)
+  const reduced = useRef(false)
+
+  useEffect(() => {
+    const q = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const apply = () => { reduced.current = q.matches }
+    apply()
+    q.addEventListener('change', apply)
+    return () => q.removeEventListener('change', apply)
+  }, [])
 
   const onMove = useCallback(
     (e: React.MouseEvent) => {
-      if (!ref.current || reduced) return
-      const r = ref.current.getBoundingClientRect()
+      const el = ref.current
+      if (!el || reduced.current) return
+      const r = el.getBoundingClientRect()
       const nx = (e.clientY - r.top) / r.height - 0.5
       const ny = (e.clientX - r.left) / r.width - 0.5
-      rx.set(-nx * intensity)
-      ry.set(ny * intensity)
-      mouseX.set((e.clientX - r.left) / r.width)
-      mouseY.set((e.clientY - r.top) / r.height)
+      el.style.transform = `perspective(1000px) rotateX(${(-nx * intensity).toFixed(2)}deg) rotateY(${(ny * intensity).toFixed(2)}deg)`
+      el.style.setProperty('--mx', `${(((e.clientX - r.left) / r.width) * 100).toFixed(1)}%`)
+      el.style.setProperty('--my', `${(((e.clientY - r.top) / r.height) * 100).toFixed(1)}%`)
     },
-    [rx, ry, mouseX, mouseY, intensity, reduced],
+    [intensity],
   )
 
   const onLeave = useCallback(() => {
-    rx.set(0)
-    ry.set(0)
-    mouseX.set(0.5)
-    mouseY.set(0.5)
-  }, [rx, ry, mouseX, mouseY])
+    const el = ref.current
+    if (!el) return
+    el.style.transform = ''
+    el.style.setProperty('--mx', '50%')
+    el.style.setProperty('--my', '50%')
+  }, [])
 
-  const shineX = useTransform(mouseX, [0, 1], ['0%', '100%'])
-  const shineY = useTransform(mouseY, [0, 1], ['0%', '100%'])
-  const shine = useMotionTemplate`radial-gradient(400px circle at ${shineX} ${shineY}, rgba(99,102,241,0.12), rgba(139,92,246,0.06), transparent 70%)`
-  const borderShine = useMotionTemplate`radial-gradient(300px circle at ${shineX} ${shineY}, rgba(99,102,241,0.5), rgba(139,92,246,0.2), transparent 70%)`
-
-  return { ref, rotateX: rx, rotateY: ry, shine, borderShine, onMove, onLeave }
+  return { ref, onMove, onLeave }
 }
 
 export default function Projects({ projects }: { projects: Project[] }) {
@@ -58,12 +64,7 @@ export default function Projects({ projects }: { projects: Project[] }) {
         <div className="absolute bottom-[10%] left-[-5%] h-[400px] w-[400px] rounded-full bg-[radial-gradient(circle,rgba(34,211,238,0.07),transparent_60%)] opacity-50 dark:opacity-100" />
       </div>
 
-      <motion.header
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="mb-8 sm:mb-12"
-      >
+      <header data-reveal className="mb-8 sm:mb-12">
         <p className="eyebrow-label mb-2 text-[11px] text-violet-700 sm:mb-3 dark:text-violet-400/90">
           Seçilmiş Çalışmalar
         </p>
@@ -73,32 +74,24 @@ export default function Projects({ projects }: { projects: Project[] }) {
         <p className="mt-4 max-w-2xl text-[15px] leading-[1.8] text-slate-600 sm:text-[16px] dark:text-slate-400">
           {projects.length} proje, {liveCount} tanesi canlı. Hepsinin kodu açık; çoğunun arkasında bir yazı var.
         </p>
-      </motion.header>
+      </header>
 
       {featured && (
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
-          transition={{ duration: 0.55 }}
-          className="mb-5"
-        >
+        <div data-reveal className="mb-5">
           <FeaturedCard project={featured} />
-        </motion.div>
+        </div>
       )}
 
       <div className="grid grid-cols-1 items-stretch gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
         {rest.map((project, i) => (
-          <motion.div
+          <div
             key={project.id}
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-60px' }}
-            transition={{ delay: Math.min(i, 3) * 0.08, duration: 0.5 }}
+            data-reveal
+            style={{ ["--reveal-delay" as string]: `${Math.min(i, 5) * 60}ms` }}
             className="h-full"
           >
             <ProjectCard project={project} />
-          </motion.div>
+          </div>
         ))}
       </div>
     </section>
@@ -109,17 +102,15 @@ function FeaturedCard({ project }: { project: Project }) {
   const tilt = useCardTilt(6)
 
   return (
-    <div style={{ perspective: 1200 }}>
-      <motion.article
-        ref={tilt.ref}
-        style={{ rotateX: tilt.rotateX, rotateY: tilt.rotateY, transformStyle: 'preserve-3d' }}
+    <div >
+      <article
+        ref={tilt.ref as React.RefObject<HTMLElement>}
         onMouseMove={tilt.onMove}
         onMouseLeave={tilt.onLeave}
-        className="group relative overflow-hidden rounded-2xl"
+        className="tilt group relative overflow-hidden rounded-2xl"
       >
-        <motion.div
-          className="absolute -inset-[1px] rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-          style={{ background: tilt.borderShine }}
+        <div
+          className="card-border-shine absolute -inset-[1px] rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
           aria-hidden="true"
         />
         <div
@@ -128,9 +119,8 @@ function FeaturedCard({ project }: { project: Project }) {
         />
 
         <div className="relative overflow-hidden rounded-2xl border border-slate-300/70 bg-card dark:border-white/[0.06]">
-          <motion.div
-            className="pointer-events-none absolute inset-0 z-10 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-            style={{ background: tilt.shine }}
+          <div
+            className="card-shine pointer-events-none absolute inset-0 z-10 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
             aria-hidden="true"
           />
 
@@ -203,7 +193,7 @@ function FeaturedCard({ project }: { project: Project }) {
             </div>
           </div>
         </div>
-      </motion.article>
+      </article>
     </div>
   )
 }
@@ -212,24 +202,21 @@ function ProjectCard({ project }: { project: Project }) {
   const tilt = useCardTilt(10)
 
   return (
-    <div style={{ perspective: 1000 }} className="h-full">
-      <motion.article
-        ref={tilt.ref}
-        style={{ rotateX: tilt.rotateX, rotateY: tilt.rotateY, transformStyle: 'preserve-3d' }}
+    <div  className="h-full">
+      <article
+        ref={tilt.ref as React.RefObject<HTMLElement>}
         onMouseMove={tilt.onMove}
         onMouseLeave={tilt.onLeave}
-        className="group relative h-full overflow-visible rounded-2xl"
+        className="tilt group relative h-full overflow-visible rounded-2xl"
       >
-        <motion.div
-          className="absolute -inset-[1px] rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-          style={{ background: tilt.borderShine }}
+        <div
+          className="card-border-shine absolute -inset-[1px] rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
           aria-hidden="true"
         />
 
         <div className="relative flex h-full flex-col overflow-hidden rounded-2xl border border-slate-300/70 bg-card transition-colors duration-300 group-hover:border-transparent dark:border-white/[0.06]">
-          <motion.div
-            className="pointer-events-none absolute inset-0 z-10 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-            style={{ background: tilt.shine }}
+          <div
+            className="card-shine pointer-events-none absolute inset-0 z-10 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
             aria-hidden="true"
           />
 
@@ -312,7 +299,7 @@ function ProjectCard({ project }: { project: Project }) {
             </div>
           </div>
         </div>
-      </motion.article>
+      </article>
     </div>
   )
 }

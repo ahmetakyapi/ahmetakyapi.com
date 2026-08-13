@@ -1,13 +1,15 @@
 'use client'
 
-import { useCallback, useState, useEffect } from 'react'
-import { motion, useMotionValue, useSpring, useReducedMotion } from 'framer-motion'
+import { useCallback, useState, useEffect, useRef } from 'react'
 import { ArrowRight, ArrowUpRight, Github, Calendar, Clock } from 'lucide-react'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
-import { techStack } from '@/lib/data'
+/* DOĞRUDAN kaynağından — '@/lib/data' üzerinden alınırsa o barrel
+   blogPosts'u da dışa verdiği için dokuz makalenin tam metni (124 KB)
+   istemci paketine giriyor. Tip importları erildiği için zararsız. */
+import { techStack } from '@/lib/content/tech-stack'
 import type { BlogPost, Project } from '@/lib/data'
-import { getOrderedProjects } from '@/lib/site-content'
+import { getOrderedProjects } from '@/lib/project-order'
 import type { HomeContent } from '@/lib/site-content'
 import ProjectPreview from '@/components/ProjectPreview'
 import { formatPostDate, readingTime } from '@/lib/reading-time'
@@ -21,28 +23,39 @@ const InteractiveGlobe = dynamic(() => import('@/components/InteractiveGlobe'), 
 const FEATURED_STACK = ['Angular', 'React', 'Next.js', 'TypeScript', 'Node.js', 'TailwindCSS', 'Framer Motion']
 const featuredStack = techStack.filter((tech) => FEATURED_STACK.includes(tech.name))
 
-/** İmleci takip eden hafif çekim — düğme fareye doğru kayar. */
-function useMagnetic(strength = 0.26) {
-  const reduced = useReducedMotion()
-  const mx = useSpring(useMotionValue(0), { stiffness: 160, damping: 18 })
-  const my = useSpring(useMotionValue(0), { stiffness: 160, damping: 18 })
+/**
+ * İmleci takip eden hafif çekim — düğme fareye doğru kayar.
+ * Spring yerine doğrudan transform + CSS geçişi; React render'ı yok.
+ */
+function useMagnetic(strength = 0.24) {
+  const ref = useRef<HTMLDivElement>(null)
+  const reduced = useRef(false)
+
+  useEffect(() => {
+    const q = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const apply = () => { reduced.current = q.matches }
+    apply()
+    q.addEventListener('change', apply)
+    return () => q.removeEventListener('change', apply)
+  }, [])
 
   const onMove = useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
-      if (reduced) return
+      const el = ref.current
+      if (!el || reduced.current) return
       const rect = event.currentTarget.getBoundingClientRect()
-      mx.set((event.clientX - rect.left - rect.width / 2) * strength)
-      my.set((event.clientY - rect.top - rect.height / 2) * strength)
+      const x = (event.clientX - rect.left - rect.width / 2) * strength
+      const y = (event.clientY - rect.top - rect.height / 2) * strength
+      el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`
     },
-    [mx, my, strength, reduced],
+    [strength],
   )
 
   const onLeave = useCallback(() => {
-    mx.set(0)
-    my.set(0)
-  }, [mx, my])
+    if (ref.current) ref.current.style.transform = ''
+  }, [])
 
-  return { mx, my, onMove, onLeave }
+  return { ref, onMove, onLeave }
 }
 
 export default function Hero({
@@ -71,18 +84,16 @@ export default function Hero({
       </div>
 
       {/* ── Giriş ───────────────────────────────────────────────────────── */}
-      <section className="mx-auto min-h-[calc(100svh-64px)] max-w-6xl px-6 py-12 sm:min-h-[calc(100vh-64px)] sm:py-16 lg:py-20 xl:py-24">
-        <div className="grid items-center gap-8 xl:grid-cols-[minmax(0,1fr)_minmax(440px,520px)] xl:gap-14 2xl:grid-cols-[minmax(0,1fr)_minmax(520px,640px)] 2xl:gap-12">
-          <motion.div
-            initial={false}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-            className="max-w-[34rem] pt-2 sm:pt-8 xl:pt-0"
+      {/* Bölüm dikeyde ortalanıyor: 1440px'te dolu görünen düzen, 2560px'te
+          içeriği yukarı yapıştırıp altta yarım ekran boşluk bırakıyordu.
+          Yükseklik min() ile tavanlı: max-height min-height'ı ezemediği
+          için sınır doğrudan min-height'ın içinde. */}
+      <section className="mx-auto flex min-h-[min(calc(100svh-4rem),54rem)] w-full max-w-6xl items-center px-6 py-12 sm:py-16 lg:py-20 2xl:max-w-[86rem] 2xl:px-10">
+        <div className="grid w-full items-center gap-8 xl:grid-cols-[minmax(0,1fr)_minmax(440px,520px)] xl:gap-14 2xl:grid-cols-[minmax(0,1fr)_minmax(560px,660px)] 2xl:gap-20">
+          <div
+            className="max-w-[34rem] pt-2 sm:pt-8 xl:pt-0 2xl:max-w-[40rem]"
           >
-            <motion.p
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1, duration: 0.5 }}
+            <p
               className="mb-5 inline-flex items-center gap-2.5 rounded-full border border-emerald-600/30 bg-emerald-50 px-4 py-2 sm:mb-6 dark:border-emerald-400/25 dark:bg-emerald-400/[0.07]"
             >
               <span className="relative flex h-2 w-2" aria-hidden="true">
@@ -92,24 +103,24 @@ export default function Hero({
               <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-800 dark:text-emerald-300/90">
                 {home.roleLabel}
               </span>
-            </motion.p>
+            </p>
 
             <h1 className="display-heading max-w-[620px] overflow-visible pb-4 text-[52px] leading-[1.02] text-slate-900 sm:pb-6 sm:text-[76px] lg:text-[88px] xl:text-[96px] 2xl:text-[110px] dark:text-white">
               <span className="block">{home.firstName}</span>
               <span className="hero-name-gradient block pb-[0.08em]">{home.lastName}</span>
             </h1>
 
-            <div className="mt-4 max-w-[30rem] space-y-3 text-[15px] leading-[1.75] text-slate-600 sm:mt-5 sm:space-y-4 sm:text-[16px] sm:leading-[1.8] lg:text-[17px] xl:text-[16px] 2xl:text-[18px] dark:text-slate-400">
+            <div className="mt-4 max-w-[30rem] space-y-3 2xl:max-w-[34rem] text-[15px] leading-[1.75] text-slate-600 sm:mt-5 sm:space-y-4 sm:text-[16px] sm:leading-[1.8] lg:text-[17px] xl:text-[16px] 2xl:text-[18px] dark:text-slate-400">
               <p className="[text-wrap:balance]">{home.introPrimary}</p>
               <p className="[text-wrap:balance]">{home.introSecondary}</p>
             </div>
 
             <div className="mt-6 flex flex-wrap items-center gap-3 sm:mt-8 sm:gap-4 xl:mt-7">
-              <motion.div
-                style={{ x: magnetic.mx, y: magnetic.my }}
+              <div
+                ref={magnetic.ref}
                 onMouseMove={magnetic.onMove}
                 onMouseLeave={magnetic.onLeave}
-                className="inline-flex"
+                className="magnetic inline-flex"
               >
                 <Link href="/projeler" className="btn-primary group relative overflow-hidden">
                   <span
@@ -121,7 +132,7 @@ export default function Hero({
                     <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
                   </span>
                 </Link>
-              </motion.div>
+              </div>
 
               <a href="https://github.com/ahmetakyapi" target="_blank" rel="noopener noreferrer" className="btn-outline">
                 <Github className="h-4 w-4" aria-hidden="true" />
@@ -144,43 +155,38 @@ export default function Hero({
                 ))}
               </ul>
             </div>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={false}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.08, duration: 0.55 }}
-            className="relative mx-auto w-full max-w-[310px] sm:max-w-[320px] md:max-w-[400px] lg:max-w-[460px] xl:max-w-none xl:justify-self-end"
+          <div
+            className="relative mx-auto w-full max-w-[310px] sm:max-w-[320px] md:max-w-[400px] lg:max-w-[460px] xl:max-w-[520px] 2xl:max-w-[620px] xl:justify-self-end"
           >
-            <div className="absolute inset-0 -z-10 opacity-40 blur-3xl" aria-hidden="true">
-              <div className="absolute inset-0 rounded-full bg-gradient-to-b from-violet-500/30 via-cyan-500/20 to-transparent" />
-            </div>
+            {/* Gradyanın kendisi zaten yumuşak; üstüne 64px blur filtresi
+                koymak ayrı bir raster katmanı demekti. Kaldırıldı. */}
+            <div
+              className="absolute inset-0 -z-10 rounded-full opacity-60"
+              aria-hidden="true"
+              style={{
+                background:
+                  'radial-gradient(circle at 50% 45%, rgba(139,92,246,0.28), rgba(34,211,238,0.14) 45%, transparent 70%)',
+              }}
+            />
             <InteractiveGlobe />
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* ── Değer önermeleri + teknoloji ────────────────────────────────── */}
-      <section aria-labelledby="calisma-bicimi" className="mx-auto max-w-6xl px-6 pb-6 sm:pb-10">
+      <section aria-labelledby="calisma-bicimi" className="mx-auto max-w-6xl px-6 pb-6 sm:pb-10 2xl:max-w-[86rem] 2xl:px-10">
         <h2 id="calisma-bicimi" className="sr-only">
           Çalışma Biçimim
         </h2>
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
-          transition={{ duration: 0.5 }}
+        <div
           className="hero-surface mb-6 rounded-[28px] px-4 py-5 sm:mb-10 sm:rounded-[34px] sm:px-6 sm:py-7"
         >
           <div className="grid gap-3 sm:grid-cols-3 sm:gap-4">
             {home.valueProps.map((item, index) => (
-              <motion.article
+              <article
                 key={item.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.08 + index * 0.08, duration: 0.45 }}
-                whileHover={{ y: -4 }}
                 className="group relative overflow-hidden rounded-[22px] border border-slate-300/70 bg-white/70 p-5 transition-all duration-300 hover:border-slate-400/70 hover:bg-white/90 hover:shadow-sm sm:rounded-[26px] sm:p-6 dark:border-white/[0.07] dark:bg-white/[0.025] dark:hover:border-white/[0.14]"
               >
                 <div
@@ -216,7 +222,7 @@ export default function Hero({
                 <p className="relative mt-2 max-w-xs text-[14px] leading-[1.75] text-slate-600 sm:mt-3 sm:text-[15px] sm:leading-[1.85] dark:text-slate-400">
                   {item.description}
                 </p>
-              </motion.article>
+              </article>
             ))}
           </div>
 
@@ -241,10 +247,8 @@ export default function Hero({
               const bg = light && isNext ? 'rgba(23,23,23,0.06)' : tech.bg
               const border = light && isNext ? 'rgba(23,23,23,0.18)' : tech.border
               return (
-                <motion.li
+                <li
                   key={tech.name}
-                  whileHover={{ scale: 1.06, y: -1 }}
-                  whileTap={{ scale: 0.97 }}
                   className="flex items-center gap-1.5 rounded-full px-3 py-1.5"
                   style={{ background: bg, border: `1px solid ${border}` }}
                 >
@@ -252,22 +256,18 @@ export default function Hero({
                   <span className="text-[12px] font-medium" style={{ color }}>
                     {tech.name}
                   </span>
-                </motion.li>
+                </li>
               )
             })}
           </ul>
-        </motion.div>
+        </div>
       </section>
 
       {/* ── Öne çıkan projeler ──────────────────────────────────────────── */}
       {featuredProject && (
-        <section aria-labelledby="one-cikan-projeler" className="mx-auto max-w-6xl px-6 py-10 sm:py-20">
+        <section aria-labelledby="one-cikan-projeler" className="mx-auto max-w-6xl px-6 py-10 sm:py-20 2xl:max-w-[86rem] 2xl:px-10">
           <div className="mb-8 flex items-end justify-between sm:mb-12">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-60px' }}
-              transition={{ duration: 0.5 }}
+            <div
             >
               <p className="eyebrow-label mb-2 text-[11px] text-violet-700 sm:mb-3 dark:text-violet-400/90">
                 Seçili Çalışmalar
@@ -281,7 +281,7 @@ export default function Hero({
                   Projeler
                 </span>
               </h2>
-            </motion.div>
+            </div>
 
             <Link
               href="/projeler"
@@ -296,11 +296,7 @@ export default function Hero({
           </div>
 
           <div className="grid gap-4 sm:gap-5 lg:grid-cols-[1.3fr_1fr]">
-            <motion.article
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-60px' }}
-              transition={{ duration: 0.55 }}
+            <article
               className="group relative overflow-hidden rounded-[28px] border border-slate-300/80 bg-card shadow-sm dark:border-white/[0.06]"
             >
               <div className="absolute inset-0 opacity-20 dark:opacity-30" style={{ background: featuredProject.gradient }} aria-hidden="true" />
@@ -374,16 +370,12 @@ export default function Hero({
                   )}
                 </div>
               </div>
-            </motion.article>
+            </article>
 
             <div className="flex flex-col gap-4 sm:gap-5">
               {sideProjects.map((project, i) => (
-                <motion.article
+                <article
                   key={project.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, margin: '-60px' }}
-                  transition={{ delay: 0.1 + i * 0.1, duration: 0.55 }}
                   className="group relative flex-1 overflow-hidden rounded-[20px] border border-slate-300/80 bg-card shadow-sm sm:rounded-[24px] dark:border-white/[0.06]"
                 >
                   <div
@@ -428,7 +420,7 @@ export default function Hero({
                       ))}
                     </ul>
                   </div>
-                </motion.article>
+                </article>
               ))}
             </div>
           </div>
@@ -446,18 +438,14 @@ export default function Hero({
       )}
 
       {/* ── Blog önizlemesi ─────────────────────────────────────────────── */}
-      <section aria-labelledby="son-yazilar" className="mx-auto max-w-6xl px-6 pb-14 pt-6 sm:pb-24 sm:pt-10">
+      <section aria-labelledby="son-yazilar" className="mx-auto max-w-6xl px-6 pb-14 pt-6 sm:pb-24 sm:pt-10 2xl:max-w-[86rem] 2xl:px-10">
         <div
           className="mb-10 h-px bg-gradient-to-r from-transparent via-slate-300/80 to-transparent sm:mb-20 dark:via-white/[0.06]"
           aria-hidden="true"
         />
 
         <div className="mb-8 flex items-end justify-between sm:mb-12">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-60px' }}
-            transition={{ duration: 0.5 }}
+          <div
           >
             <p className="eyebrow-label mb-2 text-[11px] text-cyan-700 sm:mb-3 dark:text-cyan-400/90">Yazılar</p>
             <h2 id="son-yazilar" className="text-[clamp(1.9rem,5vw,3.5rem)] font-extrabold leading-[1.1] tracking-[-0.04em]">
@@ -466,7 +454,7 @@ export default function Hero({
                 Notlar
               </span>
             </h2>
-          </motion.div>
+          </div>
 
           <Link
             href="/blog"
@@ -482,12 +470,8 @@ export default function Hero({
 
         <div className="grid gap-3 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
           {previewPosts.map((post, i) => (
-            <motion.article
+            <article
               key={post.slug}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-60px' }}
-              transition={{ delay: i * 0.1, duration: 0.55 }}
               className="group relative overflow-hidden rounded-[18px] border border-slate-300/80 bg-card transition-all hover:border-slate-400/80 hover:shadow-sm active:scale-[0.99] sm:rounded-[22px] dark:border-white/[0.06] dark:hover:border-white/[0.12]"
             >
               {/* Gerçek bağlantı: hem klavye hem tarama motoru için. */}
@@ -530,7 +514,7 @@ export default function Hero({
                   </span>
                 </span>
               </Link>
-            </motion.article>
+            </article>
           ))}
         </div>
 

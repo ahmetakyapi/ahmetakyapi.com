@@ -1,7 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { motion, useScroll, useSpring } from 'framer-motion'
+import { useEffect, useState, useRef } from 'react'
 import { useTheme } from 'next-themes'
 import { ArrowLeft, Calendar, Clock, Sun, Moon, ArrowRight, Copy, Check } from 'lucide-react'
 import Link from 'next/link'
@@ -14,8 +13,33 @@ import { formatPostDate, readingTime } from '@/lib/reading-time'
 export default function BlogPostClient({ post, allPosts }: { post: BlogPost; allPosts: BlogPost[] }) {
   const { setTheme, resolvedTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
-  const { scrollYProgress } = useScroll()
-  const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30, restDelta: 0.001 })
+  const progressRef = useRef<HTMLDivElement>(null)
+
+  /* Okuma ilerlemesi: Framer Motion'ın useScroll + useSpring zinciri yerine
+     tek bir passive scroll dinleyicisi. Yalnızca scaleX yazıyor, yani
+     düzen hesabı tetiklemiyor. */
+  useEffect(() => {
+    let raf = 0
+    function update() {
+      raf = 0
+      const el = progressRef.current
+      if (!el) return
+      const max = document.documentElement.scrollHeight - window.innerHeight
+      const ratio = max > 0 ? Math.min(1, window.scrollY / max) : 0
+      el.style.transform = `scaleX(${ratio.toFixed(4)})`
+    }
+    function onScroll() {
+      if (!raf) raf = requestAnimationFrame(update)
+    }
+    update()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+      if (raf) cancelAnimationFrame(raf)
+    }
+  }, [])
 
   useEffect(() => setMounted(true), [])
 
@@ -31,9 +55,11 @@ export default function BlogPostClient({ post, allPosts }: { post: BlogPost; all
 
   return (
     <div className="relative min-h-screen overflow-x-clip bg-page text-slate-900 transition-colors duration-300 dark:text-slate-100">
-      <motion.div
-        className="fixed top-0 left-0 right-0 h-[3px] z-50"
-        style={{ scaleX, background: 'linear-gradient(90deg,#6366f1,#a855f7,#ec4899)', transformOrigin: '0%' }}
+      <div
+        ref={progressRef}
+        aria-hidden="true"
+        className="fixed left-0 right-0 top-0 z-50 h-[3px] origin-left"
+        style={{ background: 'linear-gradient(90deg,#6366f1,#a855f7,#ec4899)', transform: 'scaleX(0)' }}
       />
 
       <header className="fixed top-0 inset-x-0 z-40 h-14 glass border-b dark:border-white/5 border-gray-200/80">
@@ -55,7 +81,7 @@ export default function BlogPostClient({ post, allPosts }: { post: BlogPost; all
           {mounted && (
             <button
               onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
-              className="p-2 glass rounded-lg text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors border border-white/10"
+              className="p-2 glass-flat rounded-lg text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors border border-white/10"
               aria-label="Temayı değiştir"
             >
               {resolvedTheme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
@@ -85,10 +111,7 @@ export default function BlogPostClient({ post, allPosts }: { post: BlogPost; all
 
         <div className="relative mx-auto max-w-5xl px-6 pb-4 pt-24 sm:pb-6 sm:pt-28">
           <div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+            <div
               className="max-w-3xl"
             >
               <div className="flex flex-wrap items-center gap-3">
@@ -122,7 +145,7 @@ export default function BlogPostClient({ post, allPosts }: { post: BlogPost; all
                   {readingTime(post)} okuma
                 </span>
               </div>
-            </motion.div>
+            </div>
 
           </div>
         </div>
@@ -146,12 +169,8 @@ export default function BlogPostClient({ post, allPosts }: { post: BlogPost; all
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {others.map((other, i) => (
-                    <motion.div
+                    <div
                       key={other.slug}
-                      initial={{ opacity: 0, y: 16 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: i * 0.07 }}
                     >
                       <Link href={`/blog/${other.slug}`} className="block group">
                         <div className="rounded-2xl border border-gray-200 dark:border-white/[0.08] bg-white dark:bg-white/[0.03] hover:border-indigo-300 dark:hover:border-indigo-500/40 hover:shadow-md dark:hover:shadow-indigo-500/5 transition-all duration-300 p-4">
@@ -172,7 +191,7 @@ export default function BlogPostClient({ post, allPosts }: { post: BlogPost; all
                           </div>
                         </div>
                       </Link>
-                    </motion.div>
+                    </div>
                   ))}
                 </div>
               </div>
@@ -221,17 +240,13 @@ function BlockRenderer({ block, index }: { block: Block; index: number }) {
   switch (block.type) {
     case 'h2':
       return (
-        <motion.h2
+        <h2
           id={getSectionId(index)}
-          initial={{ opacity: 0, x: -8 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.4 }}
           className="mt-14 mb-5 flex scroll-mt-24 items-start gap-3 text-[22px] font-bold tracking-[-0.025em] text-slate-900 dark:text-white sm:text-[26px]"
         >
           <span className="mt-[0.42em] h-[0.62em] w-1 flex-shrink-0 rounded-full bg-gradient-to-b from-indigo-400 to-violet-400" />
           <span className="[text-wrap:balance]">{block.text}</span>
-        </motion.h2>
+        </h2>
       )
 
     case 'h3':
@@ -243,28 +258,20 @@ function BlockRenderer({ block, index }: { block: Block; index: number }) {
 
     case 'lead':
       return (
-        <motion.p
-          initial={{ opacity: 0, y: 8 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.45 }}
+        <p
           className="mb-8 border-l-2 border-indigo-400/50 pl-5 text-[18px] leading-[1.72] text-slate-700 dark:border-indigo-400/40 dark:text-slate-300 sm:text-[19px]"
         >
           {block.text}
-        </motion.p>
+        </p>
       )
 
     case 'p':
       return (
-        <motion.p
-          initial={{ opacity: 0, y: 8 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.4 }}
+        <p
           className={`mb-5 ${BODY}`}
         >
           {block.text}
-        </motion.p>
+        </p>
       )
 
     case 'code':
@@ -298,26 +305,18 @@ function BlockRenderer({ block, index }: { block: Block; index: number }) {
 
     case 'quote':
       return (
-        <motion.blockquote
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.45 }}
+        <blockquote
           className="my-9 rounded-r-2xl border-l-[3px] border-indigo-400 bg-gradient-to-r from-indigo-500/[0.07] to-transparent py-5 pl-6 pr-5 dark:border-indigo-400/70 dark:from-indigo-400/[0.09]"
         >
           <p className="text-[17px] font-medium leading-[1.65] text-slate-800 [text-wrap:balance] dark:text-slate-200 sm:text-[18px]">
             {block.text}
           </p>
-        </motion.blockquote>
+        </blockquote>
       )
 
     case 'table':
       return (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.45 }}
+        <div
           className="my-8 overflow-x-auto rounded-2xl border border-slate-200 dark:border-white/[0.08]"
         >
           <table className="w-full min-w-[420px] border-collapse text-left">
@@ -353,16 +352,12 @@ function BlockRenderer({ block, index }: { block: Block; index: number }) {
               ))}
             </tbody>
           </table>
-        </motion.div>
+        </div>
       )
 
     case 'stats':
       return (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.45 }}
+        <div
           className="my-8 rounded-2xl border border-slate-200 bg-slate-50/70 p-5 dark:border-white/[0.08] dark:bg-white/[0.02] sm:p-6"
         >
           {block.label && (
@@ -380,16 +375,12 @@ function BlockRenderer({ block, index }: { block: Block; index: number }) {
               </div>
             ))}
           </dl>
-        </motion.div>
+        </div>
       )
 
     case 'compare':
       return (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.45 }}
+        <div
           className="my-8 rounded-2xl border border-slate-200 bg-slate-50/70 p-5 dark:border-white/[0.08] dark:bg-white/[0.02] sm:p-6"
         >
           {block.label && (
@@ -421,7 +412,7 @@ function BlockRenderer({ block, index }: { block: Block; index: number }) {
           {block.note && (
             <p className="mt-4 text-[13px] leading-relaxed text-slate-500 dark:text-slate-400">{block.note}</p>
           )}
-        </motion.div>
+        </div>
       )
 
     case 'steps':
@@ -498,10 +489,7 @@ function CodeBlock({ lang, text, file }: { lang: string; text: string; file?: st
   }
 
   return (
-    <motion.figure
-      initial={{ opacity: 0, y: 8 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
+    <figure
       className="my-8 overflow-hidden rounded-[20px] border border-slate-300/80 bg-white shadow-[0_28px_80px_-56px_rgba(15,23,42,0.4)] dark:border-white/[0.08] dark:bg-[#0b0f1a]"
     >
       <figcaption className="flex items-center justify-between gap-3 border-b border-slate-200 bg-slate-50 px-4 py-2.5 dark:border-white/[0.05] dark:bg-white/[0.03]">
@@ -536,7 +524,7 @@ function CodeBlock({ lang, text, file }: { lang: string; text: string; file?: st
           <CodeHighlight code={text} lang={lang} />
         </code>
       </pre>
-    </motion.figure>
+    </figure>
   )
 }
 
