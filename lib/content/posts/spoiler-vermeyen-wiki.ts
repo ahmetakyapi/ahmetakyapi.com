@@ -87,11 +87,11 @@ const isSpoiler = useCallback((arcSlug: string | undefined) => {
     { type: 'h2', text: 'Kullanıcıya "Neredesin" Diye Sormanın Yolu' },
     {
       type: 'p',
-      text: 'Doğru sorunun ne olduğunu bulmak da ayrı bir işti. İlk denemem "kaçıncı bölümdesin?" diye bir sayı kutusuydu. Kimse doldurmadı. İnsanlar kaçıncı bölümde olduklarını hatırlamıyor — ama hangi olayda olduklarını gayet iyi biliyorlar.',
+      text: 'Doğru sorunun ne olduğunu bulmak da ayrı bir işti. İlk denemem "kaçıncı bölümdesin?" diye bir sayı kutusuydu ve kendim bile dolduramadım. İnsanlar kaçıncı bölümde olduklarını hatırlamıyor — ama hangi olayda olduklarını gayet iyi biliyorlar.',
     },
     {
       type: 'p',
-      text: 'Ark seçtirmeye geçtim ve kullanım belirgin şekilde arttı. Arkları saga başlıkları altında gruplayınca da liste gezilebilir hâle geldi; 36 ark düz bir liste olarak korkutucu görünüyor, 10 saga altında toplanınca değil.',
+      text: 'Ark seçtirmeye geçince kendi kullandığım bir şeye dönüştü. Arkları saga başlıkları altında gruplamak da gerekliydi; 36 ark düz bir liste olarak korkutucu görünüyor, 10 saga altında toplanınca değil.',
     },
     {
       type: 'p',
