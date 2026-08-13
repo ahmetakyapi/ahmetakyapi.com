@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import { NAV_ITEMS } from '@/lib/nav'
 import { ArrowLeft, Home } from 'lucide-react'
 
 const GLITCH_CHARS = '!<>-_\\/[]{}—=+*^?#________'
@@ -37,14 +38,11 @@ export default function NotFound() {
     return () => clearTimeout(t)
   }, [])
 
-  const items = [
-    'Ana Sayfa',
-    'Projeler',
-    'Blog yazıları',
-  ]
+  /* Öneriler düz metindi — tıklanamıyordu. Artık gerçek bağlantı ve
+     liste tek kaynaktan (lib/nav.ts) geliyor. */
 
   return (
-    <div className="min-h-screen dark:bg-[#060811] bg-[#f4f6fb] flex items-center justify-center relative overflow-hidden transition-colors duration-300">
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-page transition-colors duration-300">
       {/* Background grid */}
       <div className="absolute inset-0 bg-grid" />
 
@@ -84,7 +82,7 @@ export default function NotFound() {
             {heading}
           </div>
           {/* Main */}
-          <div
+          <h1
             className="text-[160px] sm:text-[200px] font-black leading-none"
             style={{
               background: 'linear-gradient(135deg,#818cf8,#a78bfa,#c084fc)',
@@ -93,7 +91,7 @@ export default function NotFound() {
             }}
           >
             {heading}
-          </div>
+          </h1>
         </motion.div>
 
         {/* Subtitle */}
@@ -120,20 +118,24 @@ export default function NotFound() {
           <p className="font-mono text-[11px] dark:text-gray-500 text-slate-400 mb-3 tracking-wide">
             <span className="dark:text-gray-600 text-slate-500">// </span>belki bunlara bakmak ister misin?
           </p>
-          <div className="space-y-1">
-            {items.map((item, i) => (
-              <motion.div
-                key={item}
+          <ul className="space-y-1">
+            {NAV_ITEMS.map((item, i) => (
+              <motion.li
+                key={item.href}
                 initial={{ opacity: 0, x: -8 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.55 + i * 0.08 }}
-                className="flex items-center gap-2 text-sm dark:text-gray-400 text-slate-600"
               >
-                <span className="text-indigo-500 font-mono text-xs">→</span>
-                {item}
-              </motion.div>
+                <Link
+                  href={item.href}
+                  className="flex items-center gap-2 rounded-lg px-1 py-1.5 text-sm text-slate-600 transition-colors hover:text-slate-900 dark:text-slate-400 dark:hover:text-white"
+                >
+                  <span className="font-mono text-xs text-indigo-500" aria-hidden="true">→</span>
+                  {item.label}
+                </Link>
+              </motion.li>
             ))}
-          </div>
+          </ul>
         </motion.div>
 
         {/* Actions */}

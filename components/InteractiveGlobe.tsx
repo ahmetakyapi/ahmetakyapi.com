@@ -148,7 +148,12 @@ function slerp(
 export default function InteractiveGlobe() {
   const containerRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const [size, setSize] = useState(480)
+  /* Baslangic 480 idi: mobilde once 480px cizilip sonra ~310'a
+     dusuyordu, yani her yuklemede gorunur bir sicrama vardi.
+     Artik olculene kadar 0; kap kare oranini kendisi tutuyor. */
+  const [size, setSize] = useState(0)
+  const [visible, setVisible] = useState(false)
+  const [reducedMotion, setReducedMotion] = useState(false)
 
   // Responsive size
   useEffect(() => {
@@ -178,6 +183,26 @@ export default function InteractiveGlobe() {
     packetPhases: ARCS.map(() => Math.random()),
     lastFrameTime: 0,
   })
+
+  /* Ekranda degilken cizmenin anlami yok — kure sayfanin ustunde ama
+     kullanici asagi kaydirinca hala 30 FPS harciyordu. */
+  useEffect(() => {
+    const el = containerRef.current
+    if (!el) return
+    const io = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting), {
+      rootMargin: '120px',
+    })
+    io.observe(el)
+    return () => io.disconnect()
+  }, [])
+
+  useEffect(() => {
+    const q = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const apply = () => setReducedMotion(q.matches)
+    apply()
+    q.addEventListener('change', apply)
+    return () => q.removeEventListener('change', apply)
+  }, [])
 
   useEffect(() => {
     const s = stateRef.current
@@ -509,7 +534,7 @@ export default function InteractiveGlobe() {
   // ─── Canvas setup & animation loop ──────────────────────────────────────
   useEffect(() => {
     const canvas = canvasRef.current
-    if (!canvas) return
+    if (!canvas || size === 0) return
 
     const dpr = Math.min(window.devicePixelRatio || 1, 2)
     canvas.width = size * dpr
@@ -549,9 +574,18 @@ export default function InteractiveGlobe() {
       draw(ctx!, size)
     }
 
+    if (reducedMotion) {
+      // Hareket yok ama kure de bos kalmasin: tek kare cizilir.
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      draw(ctx, size)
+      return
+    }
+
+    if (!visible) return
+
     raf = requestAnimationFrame(loop)
     return () => cancelAnimationFrame(raf)
-  }, [draw, size])
+  }, [draw, size, visible, reducedMotion])
 
   // ─── Pointer handlers ────────────────────────────────────────────────────
   const handlePointerDown = useCallback((e: React.PointerEvent) => {
@@ -626,7 +660,7 @@ export default function InteractiveGlobe() {
 
   return (
     <div ref={containerRef} className="relative flex w-full flex-col items-center">
-      <div className="relative">
+      <div className="relative aspect-square w-full max-w-[480px]">
         <div
           className="absolute inset-0 -m-8 rounded-full pointer-events-none"
           style={{
@@ -635,7 +669,9 @@ export default function InteractiveGlobe() {
         />
         <canvas
           ref={canvasRef}
-          className="relative z-10"
+          aria-label="Dünya haritası üzerinde şehirler ve bağlantılar — dekoratif"
+          role="img"
+          className="relative z-10 mx-auto"
           style={{
             width: size,
             height: size,

@@ -1,9 +1,11 @@
 'use client'
 
-import { useEffect, useState, useRef, useCallback } from 'react'
+import { useEffect, useState, useRef, useCallback, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Search, Home, Layers, BookOpen, Github, Mail, Sun, Moon, ExternalLink, ArrowRight } from 'lucide-react'
+import { Search, Home, Layers, BookOpen, Github, Mail, Sun, Moon, ExternalLink, ArrowRight, MousePointer2 } from 'lucide-react'
 import { useTheme } from 'next-themes'
+import { useRouter } from 'next/navigation'
+import { CURSOR_PREFERENCE_EVENT, isCustomCursorEnabled, setCustomCursorEnabled } from '@/lib/cursor-preference'
 
 interface Command {
   id: string
@@ -15,16 +17,16 @@ interface Command {
   shortcut?: string
 }
 
-interface Props {
-  onNavigate: (tab: string) => void
-}
-
-export default function CommandPalette({ onNavigate }: Props) {
+export default function CommandPalette() {
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
   const [selected, setSelected] = useState(0)
+  const [cursorOn, setCursorOn] = useState(true)
   const inputRef = useRef<HTMLInputElement>(null)
+  const panelRef = useRef<HTMLDivElement>(null)
+  const restoreFocusRef = useRef<HTMLElement | null>(null)
   const { resolvedTheme, setTheme } = useTheme()
+  const router = useRouter()
 
   const close = useCallback(() => {
     setOpen(false)
@@ -32,125 +34,220 @@ export default function CommandPalette({ onNavigate }: Props) {
     setSelected(0)
   }, [])
 
-  const commands: Command[] = [
-    {
-      id: 'nav-home',
-      label: 'Ana Sayfa',
-      description: 'Profil ve hakkımda',
-      icon: <Home className="w-4 h-4" />,
-      category: 'Navigasyon',
-      action: () => { onNavigate('home'); close() },
-      shortcut: 'G H',
-    },
-    {
-      id: 'nav-projects',
-      label: 'Projeler',
-      description: 'Geliştirdiğim uygulamalar',
-      icon: <Layers className="w-4 h-4" />,
-      category: 'Navigasyon',
-      action: () => { onNavigate('projects'); close() },
-      shortcut: 'G P',
-    },
-    {
-      id: 'nav-blog',
-      label: 'Blog',
-      description: 'Teknik yazılar',
-      icon: <BookOpen className="w-4 h-4" />,
-      category: 'Navigasyon',
-      action: () => { onNavigate('blog'); close() },
-      shortcut: 'G B',
-    },
-    {
-      id: 'social-github',
-      label: 'GitHub',
-      description: 'github.com/ahmetakyapi',
-      icon: <Github className="w-4 h-4" />,
-      category: 'Sosyal',
-      action: () => { window.open('https://github.com/ahmetakyapi', '_blank'); close() },
-    },
-    {
-      id: 'social-mail',
-      label: 'E-posta Gönder',
-      description: 'ahmet@ahmetakyapi.com',
-      icon: <Mail className="w-4 h-4" />,
-      category: 'Sosyal',
-      action: () => { window.location.href = 'mailto:ahmet@ahmetakyapi.com'; close() },
-    },
-    {
-      id: 'social-site',
-      label: 'ahmetakyapi.com',
-      description: 'Bu site',
-      icon: <ExternalLink className="w-4 h-4" />,
-      category: 'Sosyal',
-      action: () => { window.open('https://ahmetakyapi.com', '_blank'); close() },
-    },
-    {
-      id: 'theme-toggle',
-      label: resolvedTheme === 'dark' ? 'Açık Temaya Geç' : 'Koyu Temaya Geç',
-      description: 'Tema değiştir',
-      icon: resolvedTheme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />,
-      category: 'Ayarlar',
-      action: () => { setTheme(resolvedTheme === 'dark' ? 'light' : 'dark'); close() },
-      shortcut: '⌥ T',
-    },
-  ]
+  useEffect(() => {
+    setCursorOn(isCustomCursorEnabled())
+  }, [])
 
-  const filtered = query
-    ? commands.filter(c =>
-        c.label.toLowerCase().includes(query.toLowerCase()) ||
-        c.description?.toLowerCase().includes(query.toLowerCase()) ||
-        c.category.toLowerCase().includes(query.toLowerCase())
-      )
-    : commands
+  const commands: Command[] = useMemo(() => {
+    const go = (href: string) => () => {
+      router.push(href)
+      close()
+    }
 
-  /* Group by category */
-  const grouped = filtered.reduce<Record<string, Command[]>>((acc, cmd) => {
-    if (!acc[cmd.category]) acc[cmd.category] = []
-    acc[cmd.category].push(cmd)
-    return acc
-  }, {})
+    return [
+      {
+        id: 'nav-home',
+        label: 'Ana Sayfa',
+        description: 'Profil ve öne çıkanlar',
+        icon: <Home className="w-4 h-4" />,
+        category: 'Gezinme',
+        action: go('/'),
+        shortcut: 'G H',
+      },
+      {
+        id: 'nav-projects',
+        label: 'Projeler',
+        description: 'Geliştirdiğim uygulamalar',
+        icon: <Layers className="w-4 h-4" />,
+        category: 'Gezinme',
+        action: go('/projeler'),
+        shortcut: 'G P',
+      },
+      {
+        id: 'nav-blog',
+        label: 'Blog',
+        description: 'Teknik yazılar',
+        icon: <BookOpen className="w-4 h-4" />,
+        category: 'Gezinme',
+        action: go('/blog'),
+        shortcut: 'G B',
+      },
+      {
+        id: 'social-github',
+        label: 'GitHub',
+        description: 'github.com/ahmetakyapi',
+        icon: <Github className="w-4 h-4" />,
+        category: 'Bağlantılar',
+        action: () => {
+          window.open('https://github.com/ahmetakyapi', '_blank', 'noopener,noreferrer')
+          close()
+        },
+      },
+      {
+        id: 'social-mail',
+        label: 'E-posta Gönder',
+        description: 'ahmet@ahmetakyapi.com',
+        icon: <Mail className="w-4 h-4" />,
+        category: 'Bağlantılar',
+        action: () => {
+          window.location.href = 'mailto:ahmet@ahmetakyapi.com'
+          close()
+        },
+      },
+      {
+        id: 'feed-rss',
+        label: 'RSS Beslemesi',
+        description: 'Yeni yazılardan haberdar ol',
+        icon: <ExternalLink className="w-4 h-4" />,
+        category: 'Bağlantılar',
+        action: () => {
+          window.open('/rss.xml', '_blank', 'noopener,noreferrer')
+          close()
+        },
+      },
+      {
+        id: 'theme-toggle',
+        label: resolvedTheme === 'dark' ? 'Açık Temaya Geç' : 'Koyu Temaya Geç',
+        description: 'Tema değiştir',
+        icon: resolvedTheme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />,
+        category: 'Ayarlar',
+        action: () => {
+          setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')
+          close()
+        },
+      },
+      {
+        id: 'cursor-toggle',
+        label: cursorOn ? 'Özel İmleci Kapat' : 'Özel İmleci Aç',
+        description: 'Sistem imlecine dön',
+        icon: <MousePointer2 className="w-4 h-4" />,
+        category: 'Ayarlar',
+        action: () => {
+          const next = !cursorOn
+          setCustomCursorEnabled(next)
+          setCursorOn(next)
+          close()
+        },
+      },
+    ]
+  }, [resolvedTheme, setTheme, close, router, cursorOn])
 
-  /* Flat list for keyboard nav */
-  const flat = filtered
+  const filtered = useMemo(() => {
+    if (!query) return commands
+    const q = query.toLocaleLowerCase('tr')
+    return commands.filter(
+      (c) =>
+        c.label.toLocaleLowerCase('tr').includes(q) ||
+        c.description?.toLocaleLowerCase('tr').includes(q) ||
+        c.category.toLocaleLowerCase('tr').includes(q),
+    )
+  }, [commands, query])
+
+  const grouped = useMemo(
+    () =>
+      filtered.reduce<Record<string, Command[]>>((acc, cmd) => {
+        ;(acc[cmd.category] ||= []).push(cmd)
+        return acc
+      }, {}),
+    [filtered],
+  )
 
   useEffect(() => {
     setSelected(0)
   }, [query])
 
+  /* Açılış: ⌘K, başlıktaki düğme (custom event) ve g+h/g+p/g+b kısayolları. */
   useEffect(() => {
+    let lastKey = ''
+    let lastKeyAt = 0
+
     function onKey(e: KeyboardEvent) {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault()
-        setOpen(v => !v)
+        setOpen((v) => !v)
+        return
       }
-      if (!open) return
-      if (e.key === 'Escape') close()
-      if (e.key === 'ArrowDown') { e.preventDefault(); setSelected(v => Math.min(v + 1, flat.length - 1)) }
-      if (e.key === 'ArrowUp')   { e.preventDefault(); setSelected(v => Math.max(v - 1, 0)) }
-      if (e.key === 'Enter' && flat[selected]) { flat[selected].action() }
+
+      if (open) {
+        if (e.key === 'Escape') {
+          e.preventDefault()
+          close()
+        }
+        if (e.key === 'ArrowDown') {
+          e.preventDefault()
+          setSelected((v) => Math.min(v + 1, filtered.length - 1))
+        }
+        if (e.key === 'ArrowUp') {
+          e.preventDefault()
+          setSelected((v) => Math.max(v - 1, 0))
+        }
+        if (e.key === 'Enter' && filtered[selected]) {
+          e.preventDefault()
+          filtered[selected].action()
+        }
+        return
+      }
+
+      const target = e.target as HTMLElement | null
+      const tag = target?.tagName
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || target?.isContentEditable) return
+      if (e.metaKey || e.ctrlKey || e.altKey) return
+
+      // İki tuşluk dizi: 800 ms içinde tamamlanmazsa sıfırlanır.
+      const now = Date.now()
+      if (lastKey === 'g' && now - lastKeyAt < 800) {
+        const map: Record<string, string> = { h: '/', p: '/projeler', b: '/blog' }
+        const href = map[e.key.toLowerCase()]
+        if (href) {
+          e.preventDefault()
+          router.push(href)
+        }
+        lastKey = ''
+        return
+      }
+      lastKey = e.key.toLowerCase() === 'g' ? 'g' : ''
+      lastKeyAt = now
     }
+
+    function onOpenRequest() {
+      setOpen(true)
+    }
+
     window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [open, flat, selected, close])
+    window.addEventListener('command-palette:open', onOpenRequest)
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      window.removeEventListener('command-palette:open', onOpenRequest)
+    }
+  }, [open, filtered, selected, close, router])
 
-  const panelRef = useRef<HTMLDivElement>(null)
-
+  /* Odak yönetimi: açılışta input'a git, kapanışta geldiğin yere dön. */
   useEffect(() => {
-    if (open) setTimeout(() => inputRef.current?.focus(), 50)
+    if (open) {
+      restoreFocusRef.current = document.activeElement as HTMLElement
+      const t = setTimeout(() => inputRef.current?.focus(), 40)
+      return () => clearTimeout(t)
+    }
+    restoreFocusRef.current?.focus?.()
   }, [open])
 
-  // Focus trap: keep Tab cycling within the panel
+  useEffect(() => {
+    if (!open) return
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [open])
+
   useEffect(() => {
     if (!open) return
 
     function onTab(e: KeyboardEvent) {
       if (e.key !== 'Tab' || !panelRef.current) return
-
       const focusable = panelRef.current.querySelectorAll<HTMLElement>(
-        'input, button, [tabindex]:not([tabindex="-1"])'
+        'input, button, [tabindex]:not([tabindex="-1"])',
       )
       if (focusable.length === 0) return
-
       const first = focusable[0]
       const last = focusable[focusable.length - 1]
 
@@ -168,115 +265,120 @@ export default function CommandPalette({ onNavigate }: Props) {
   }, [open])
 
   return (
-    <>
-      <AnimatePresence>
-        {open && (
-          <>
-            {/* Backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.15 }}
-              className="fixed inset-0 z-[9990] bg-black/60 backdrop-blur-sm"
-              onClick={close}
-            />
+    <AnimatePresence>
+      {open && (
+        <>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.15 }}
+            className="fixed inset-0 z-[9990] bg-black/60 backdrop-blur-sm"
+            onClick={close}
+            aria-hidden="true"
+          />
 
-            {/* Panel */}
-            <motion.div
-              ref={panelRef}
-              role="dialog"
-              aria-modal="true"
-              aria-label="Komut paleti"
-              initial={{ opacity: 0, scale: 0.96, y: -12 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.96, y: -12 }}
-              transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
-              className="fixed top-[18%] left-1/2 -translate-x-1/2 z-[9991] w-full max-w-lg"
-            >
-              <div className="mx-4 rounded-2xl overflow-hidden shadow-2xl shadow-black/50 border border-white/10 dark:border-white/10 border-gray-200 bg-white/95 dark:bg-[#0e1117]/95 backdrop-blur-2xl">
-
-                {/* Search input */}
-                <div className="flex items-center gap-3 px-4 py-3.5 border-b border-gray-100 dark:border-white/8">
-                  <Search className="w-4 h-4 text-gray-400 dark:text-gray-500 flex-shrink-0" />
-                  <input
-                    ref={inputRef}
-                    value={query}
-                    onChange={e => setQuery(e.target.value)}
-                    placeholder="Komut veya sayfa ara..."
-                    className="flex-1 bg-transparent text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 outline-none"
-                  />
-                  <kbd className="px-1.5 py-0.5 text-[10px] font-mono text-gray-400 dark:text-gray-600 bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded">
-                    ESC
-                  </kbd>
-                </div>
-
-                {/* Results */}
-                <div className="max-h-[340px] overflow-y-auto py-2">
-                  {Object.keys(grouped).length === 0 ? (
-                    <p className="px-4 py-8 text-center text-sm text-gray-400">Sonuç bulunamadı</p>
-                  ) : (
-                    Object.entries(grouped).map(([category, cmds]) => {
-                      return (
-                        <div key={category}>
-                          <p className="px-4 pt-3 pb-1.5 text-[10px] font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-widest font-mono">
-                            {category}
-                          </p>
-                          {cmds.map((cmd) => {
-                            const globalIdx = flat.indexOf(cmd)
-                            return (
-                              <button
-                                key={cmd.id}
-                                onClick={cmd.action}
-                                onMouseEnter={() => setSelected(globalIdx)}
-                                className={`w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors ${
-                                  selected === globalIdx
-                                    ? 'bg-indigo-500/15 text-gray-900 dark:text-white'
-                                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
-                                }`}
-                              >
-                                <span className={`flex-shrink-0 ${selected === globalIdx ? 'text-indigo-500 dark:text-indigo-400' : 'text-gray-400 dark:text-gray-600'}`}>
-                                  {cmd.icon}
-                                </span>
-                                <span className="flex-1 min-w-0">
-                                  <span className="block text-sm font-medium">{cmd.label}</span>
-                                  {cmd.description && (
-                                    <span className="block text-xs text-gray-400 dark:text-gray-600 mt-0.5">{cmd.description}</span>
-                                  )}
-                                </span>
-                                {cmd.shortcut && (
-                                  <span className="flex-shrink-0 flex gap-1">
-                                    {cmd.shortcut.split(' ').map((k, i) => (
-                                      <kbd key={i} className="px-1.5 py-0.5 text-[10px] font-mono text-gray-400 dark:text-gray-600 bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded">
-                                        {k}
-                                      </kbd>
-                                    ))}
-                                  </span>
-                                )}
-                                {selected === globalIdx && (
-                                  <ArrowRight className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400 flex-shrink-0" />
-                                )}
-                              </button>
-                            )
-                          })}
-                        </div>
-                      )
-                    })
-                  )}
-                </div>
-
-                {/* Footer */}
-                <div className="px-4 py-2.5 border-t border-gray-100 dark:border-white/5 flex items-center gap-4 text-[10px] text-gray-400 dark:text-gray-700 font-mono">
-                  <span>↑↓ seç</span>
-                  <span>↵ aç</span>
-                  <span>esc kapat</span>
-                  <span className="ml-auto">⌘K</span>
-                </div>
+          <motion.div
+            ref={panelRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Komut paleti"
+            initial={{ opacity: 0, scale: 0.96, y: -12 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.96, y: -12 }}
+            transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+            className="fixed top-[18%] left-1/2 -translate-x-1/2 z-[9991] w-full max-w-lg"
+          >
+            <div className="mx-4 overflow-hidden rounded-2xl border border-slate-300 bg-white/95 shadow-2xl shadow-black/40 backdrop-blur-2xl dark:border-white/10 dark:bg-[#0e1117]/95">
+              <div className="flex items-center gap-3 border-b border-slate-200 px-4 py-3.5 dark:border-white/[0.08]">
+                <Search className="w-4 h-4 flex-shrink-0 text-slate-400 dark:text-slate-500" aria-hidden="true" />
+                <input
+                  ref={inputRef}
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Komut veya sayfa ara…"
+                  aria-label="Komut ara"
+                  className="flex-1 bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400 dark:text-white dark:placeholder:text-slate-500"
+                />
+                <kbd className="rounded border border-slate-200 bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] text-slate-500 dark:border-white/10 dark:bg-white/5 dark:text-slate-500">
+                  ESC
+                </kbd>
               </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
-    </>
+
+              <div className="max-h-[340px] overflow-y-auto py-2">
+                {filtered.length === 0 ? (
+                  <p className="px-4 py-8 text-center text-sm text-slate-500 dark:text-slate-400">Sonuç bulunamadı</p>
+                ) : (
+                  Object.entries(grouped).map(([category, cmds]) => (
+                    <div key={category}>
+                      <p className="px-4 pt-3 pb-1.5 font-mono text-[10px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                        {category}
+                      </p>
+                      {cmds.map((cmd) => {
+                        const idx = filtered.indexOf(cmd)
+                        const active = selected === idx
+                        return (
+                          <button
+                            key={cmd.id}
+                            type="button"
+                            onClick={cmd.action}
+                            onMouseEnter={() => setSelected(idx)}
+                            className={`flex w-full items-center gap-3 px-4 py-2.5 text-left transition-colors ${
+                              active
+                                ? 'bg-indigo-500/15 text-slate-900 dark:text-white'
+                                : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white'
+                            }`}
+                          >
+                            <span
+                              className={`flex-shrink-0 ${active ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400 dark:text-slate-500'}`}
+                              aria-hidden="true"
+                            >
+                              {cmd.icon}
+                            </span>
+                            <span className="min-w-0 flex-1">
+                              <span className="block text-sm font-medium">{cmd.label}</span>
+                              {cmd.description && (
+                                <span className="mt-0.5 block text-xs text-slate-500 dark:text-slate-500">
+                                  {cmd.description}
+                                </span>
+                              )}
+                            </span>
+                            {cmd.shortcut && (
+                              <span className="flex flex-shrink-0 gap-1">
+                                {cmd.shortcut.split(' ').map((k) => (
+                                  <kbd
+                                    key={k}
+                                    className="rounded border border-slate-200 bg-slate-100 px-1.5 py-0.5 font-mono text-[10px] text-slate-500 dark:border-white/10 dark:bg-white/5 dark:text-slate-500"
+                                  >
+                                    {k}
+                                  </kbd>
+                                ))}
+                              </span>
+                            )}
+                            {active && (
+                              <ArrowRight
+                                className="h-3.5 w-3.5 flex-shrink-0 text-indigo-600 dark:text-indigo-400"
+                                aria-hidden="true"
+                              />
+                            )}
+                          </button>
+                        )
+                      })}
+                    </div>
+                  ))
+                )}
+              </div>
+
+              <div className="flex items-center gap-4 border-t border-slate-200 px-4 py-2.5 font-mono text-[10px] text-slate-400 dark:border-white/[0.06] dark:text-slate-600">
+                <span>↑↓ seç</span>
+                <span>↵ aç</span>
+                <span>esc kapat</span>
+                <span className="ml-auto">⌘K</span>
+              </div>
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
   )
 }

@@ -8,6 +8,18 @@
     --bg-dark: #04070d;
     --bg-light: #f3f1eb;
 
+    /* ── Yüzey ölçeği ───────────────────────────────────────────────────
+       Tek kaynak. Önceden 13 ayrı koyu hex bileşenlerin içine elle
+       yazılmıştı (#0c0b18, #0c0e17, #0a0a12, #07060f…) ve aynı hiyerarşi
+       seviyesindeki kartlar farklı renklerde çiziliyordu.
+       Kademe: page (zemin) → card (kart) → raised (kart üstü) → sunken (oyuk) */
+    --surface-page: #f3f1eb;
+    --surface-card: #fdfcf9;
+    --surface-raised: #ffffff;
+    --surface-sunken: #eceae3;
+    --line: rgba(120, 110, 90, 0.22);
+    --line-strong: rgba(120, 110, 90, 0.34);
+
     /* Cursor — light theme */
     --cursor-dot-color: rgba(15, 23, 42, 0.85);
     --cursor-ring-color: rgba(79, 70, 229, 0.35);
@@ -123,6 +135,31 @@
     --cursor-dot-color: #ffffff;
     --cursor-ring-color: rgba(255, 255, 255, 0.45);
     --cursor-ring-bg: transparent;
+
+    --surface-page: #04070d;
+    --surface-card: #0b0e18;
+    --surface-raised: #121726;
+    --surface-sunken: #06090f;
+    --line: rgba(148, 163, 184, 0.13);
+    --line-strong: rgba(148, 163, 184, 0.22);
+  }
+
+  /* ── Odak halkası ────────────────────────────────────────────────────
+     Projede tek bir focus stili yoktu; klavyeyle gezen biri nerede
+     olduğunu göremiyordu. Tek kural, her yerde. */
+  :focus-visible {
+    outline: 2px solid #6366f1;
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  html.dark :focus-visible {
+    outline-color: #818cf8;
+  }
+
+  /* Fare tıklamasında halka çıkmasın — yalnızca klavye. */
+  :focus:not(:focus-visible) {
+    outline: none;
   }
 
   button,
@@ -159,7 +196,7 @@
 
   html:not(.dark) .glass {
     background: linear-gradient(180deg, rgba(252, 250, 245, 0.97), rgba(248, 246, 240, 0.90));
-    border: 1px solid rgba(180, 170, 150, 0.2);
+    border: 1px solid rgba(122, 110, 88, 0.34);
     box-shadow: 0 4px 24px rgba(120, 110, 90, 0.1), 0 1px 3px rgba(120, 110, 90, 0.06);
   }
 
@@ -169,7 +206,7 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    animation: shimmer-text 7s ease-in-out infinite;
+    animation: shimmer-text 7s ease-in-out 2;
   }
 
   .display-heading {
@@ -185,7 +222,7 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    animation: shimmer-text 4s ease-in-out infinite;
+    animation: shimmer-text 4s ease-in-out 3;
   }
 
   .eyebrow-label {
@@ -200,7 +237,7 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    animation: shimmer-text 7s ease-in-out infinite;
+    animation: shimmer-text 7s ease-in-out 2;
   }
 
   html:not(.dark) .hero-name-gradient {
@@ -209,7 +246,7 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    animation: shimmer-text 4s ease-in-out infinite;
+    animation: shimmer-text 4s ease-in-out 3;
   }
 
   .bg-grid {
@@ -238,7 +275,7 @@
     overflow: hidden;
     background: linear-gradient(135deg, #2563eb 0%, #3b82f6 55%, #60a5fa 100%);
     background-size: 200% 200%;
-    animation: btn-gradient 4s ease infinite;
+    animation: btn-gradient 4s ease 3;
     box-shadow: 0 8px 24px rgba(37, 99, 235, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.16);
     transition: transform 0.22s ease, box-shadow 0.3s ease;
   }
@@ -287,7 +324,7 @@
 
   html:not(.dark) .btn-outline {
     background: rgba(252, 250, 245, 0.92);
-    border-color: rgba(180, 170, 150, 0.28);
+    border-color: rgba(122, 110, 88, 0.38);
     color: #1e293b;
     box-shadow: 0 2px 8px rgba(120, 110, 90, 0.09);
   }
@@ -311,7 +348,7 @@
 
   html:not(.dark) .hero-panel {
     background: linear-gradient(180deg, rgba(254, 252, 247, 0.98), rgba(250, 248, 242, 0.93));
-    border-color: rgba(180, 170, 150, 0.2);
+    border-color: rgba(122, 110, 88, 0.34);
     box-shadow: 0 8px 40px rgba(120, 110, 90, 0.09), 0 2px 8px rgba(120, 110, 90, 0.05);
   }
 
@@ -325,7 +362,7 @@
 
   html:not(.dark) .hero-surface {
     background: linear-gradient(180deg, rgba(254, 252, 247, 0.97), rgba(250, 248, 242, 0.92));
-    border-color: rgba(180, 170, 150, 0.2);
+    border-color: rgba(122, 110, 88, 0.34);
     box-shadow: 0 6px 32px rgba(120, 110, 90, 0.09), 0 2px 6px rgba(120, 110, 90, 0.05);
   }
 
@@ -347,7 +384,7 @@
 
   html:not(.dark) .hero-chip {
     background: rgba(252, 250, 245, 0.94);
-    border-color: rgba(180, 170, 150, 0.25);
+    border-color: rgba(122, 110, 88, 0.36);
     color: #1e293b;
     box-shadow: 0 2px 8px rgba(120, 110, 90, 0.09);
   }
@@ -358,9 +395,42 @@
   line-height: 1.8;
 }
 
-@media (pointer: fine) and (hover: hover) {
-  *, *::before, *::after {
-    cursor: none !important;
+/* ── Özel imleç ────────────────────────────────────────────────────────
+   Önceden bu kural `*` + `!important` idi ve CSS'ten geliyordu; imleç ise
+   JS ile geliyordu. Yani JS yüklenene kadar — ya da hiç yüklenmezse —
+   sitede HİÇ imleç olmuyordu. Artık sınıfı CustomCursor kendi mount
+   olduktan sonra <html>'e ekliyor: JS yoksa sistem imleci yerinde kalır. */
+html.cursor-custom,
+html.cursor-custom *,
+html.cursor-custom *::before,
+html.cursor-custom *::after {
+  cursor: none;
+}
+
+/* Metin girişi her zaman kendi imlecini gösterir — yazdığın yeri görmelisin. */
+html.cursor-custom input,
+html.cursor-custom textarea,
+html.cursor-custom select,
+html.cursor-custom [contenteditable='true'] {
+  cursor: auto;
+}
+
+/* ── Hareket azaltma ──────────────────────────────────────────────────
+   Sistem ayarı "hareketi azalt" ise sonsuz döngüler ve geçişler durur.
+   Framer Motion'ın kendi `useReducedMotion` desteği bileşen bazında;
+   burası CSS animasyonlarını (shimmer, gradient, ping) kapatıyor. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  html {
+    scroll-behavior: auto;
   }
 }
 

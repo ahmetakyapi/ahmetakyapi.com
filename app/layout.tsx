@@ -6,16 +6,18 @@ import './globals.css'
 
 const CustomCursor = dynamic(() => import('@/components/CustomCursor'), { ssr: false })
 
+/* Beş ağırlık × iki subset = 16 woff2 dosyası preload ediliyordu. Kullanılan
+   ağırlıklar 500/600/800; 400 ve 700 hiçbir yerde geçmiyordu. */
 const manrope = Manrope({
   subsets: ['latin', 'latin-ext'],
-  weight: ['400', '500', '600', '700', '800'],
+  weight: ['500', '600', '800'],
   variable: '--font-inter',
   display: 'swap',
 })
 
 const ibmPlexMono = IBM_Plex_Mono({
   subsets: ['latin', 'latin-ext'],
-  weight: ['400', '500', '600'],
+  weight: ['400', '600'],
   variable: '--font-mono',
   display: 'swap',
 })
@@ -31,8 +33,10 @@ export const metadata: Metadata = {
   authors: [{ name: 'Ahmet Akyapı', url: 'https://github.com/ahmetakyapi' }],
   creator: 'Ahmet Akyapı',
   metadataBase: new URL('https://ahmetakyapi.com'),
+  /* canonical burada TANIMLI DEĞİL — kökte '/' yazılıydı ve Next metadata'yı
+     alan bazında sığ birleştirdiği için her blog yazısı da ana sayfayı
+     canonical gösteriyordu. Her rota kendi canonical'ını veriyor. */
   alternates: {
-    canonical: '/',
     types: {
       'application/rss+xml': '/rss.xml',
     },
@@ -47,6 +51,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
+    site: '@ahmetakyapi',
+    creator: '@ahmetakyapi',
     title: 'Ahmet Akyapı | Fullstack Developer',
     description: 'React, TypeScript ve Next.js odaklı Fullstack Developer.',
   },

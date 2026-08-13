@@ -4,111 +4,111 @@ import { motion } from 'framer-motion'
 import { Calendar, Clock, ArrowUpRight } from 'lucide-react'
 import Link from 'next/link'
 import type { BlogPost } from '@/lib/data'
-
-function formatDate(dateStr: string) {
-  const d = new Date(dateStr)
-  return d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' })
-}
+import { formatPostDate, readingTime } from '@/lib/reading-time'
 
 export default function Blog({ blogPosts }: { blogPosts: BlogPost[] }) {
   const [featured, ...rest] = blogPosts
 
   return (
     <section className="relative overflow-hidden">
-      <div className="pointer-events-none absolute inset-0 -z-[1]">
-        <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle,rgba(139,92,246,0.12),transparent_60%)] dark:opacity-100 opacity-50" />
-        <div className="absolute bottom-[-10%] left-[-5%] w-[400px] h-[400px] rounded-full bg-[radial-gradient(circle,rgba(34,211,238,0.08),transparent_60%)] dark:opacity-100 opacity-50" />
+      <div className="pointer-events-none absolute inset-0 -z-[1]" aria-hidden="true">
+        <div className="absolute top-[-10%] right-[-5%] h-[500px] w-[500px] rounded-full bg-[radial-gradient(circle,rgba(139,92,246,0.12),transparent_60%)] opacity-50 dark:opacity-100" />
+        <div className="absolute bottom-[-10%] left-[-5%] h-[400px] w-[400px] rounded-full bg-[radial-gradient(circle,rgba(34,211,238,0.08),transparent_60%)] opacity-50 dark:opacity-100" />
       </div>
 
       <div className="mx-auto max-w-6xl px-6 py-12 sm:py-20">
-        <div className="flex items-end justify-between mb-8 sm:mb-12">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-60px' }}
-            transition={{ duration: 0.5 }}
-          >
-            <p className="eyebrow-label mb-2 sm:mb-3 text-[11px] text-cyan-600 dark:text-cyan-400/80">
-              Yazılar
-            </p>
-            <h2 className="text-[clamp(1.9rem,5vw,3.5rem)] font-extrabold tracking-[-0.04em] leading-[1.1]">
-              <span className="text-slate-900 dark:text-white">Düşünceler</span>{' '}
-              <span className="bg-gradient-to-r from-cyan-500 via-sky-500 to-blue-500 dark:from-cyan-400 dark:via-sky-400 dark:to-blue-400 bg-clip-text text-transparent">
-                ve Notlar
-              </span>
-            </h2>
-          </motion.div>
-        </div>
+        <motion.header
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mb-8 sm:mb-12"
+        >
+          <p className="eyebrow-label mb-2 text-[11px] text-cyan-700 sm:mb-3 dark:text-cyan-400/90">Yazılar</p>
+          <h1 className="text-[clamp(1.9rem,5vw,3.5rem)] font-extrabold leading-[1.1] tracking-[-0.04em]">
+            <span className="text-slate-900 dark:text-white">Düşünceler</span>{' '}
+            <span className="bg-gradient-to-r from-cyan-700 via-sky-700 to-blue-800 bg-clip-text text-transparent dark:from-cyan-400 dark:via-sky-400 dark:to-blue-400">
+              ve Notlar
+            </span>
+          </h1>
+          <p className="mt-4 max-w-2xl text-[15px] leading-[1.8] text-slate-600 sm:text-[16px] dark:text-slate-400">
+            Yazdığım projelerden çıkan notlar. Çoğu bir şeyin neden çalışmadığıyla başlıyor.
+          </p>
+        </motion.header>
 
         {featured && (
-          <motion.div
+          <motion.article
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-60px' }}
             transition={{ duration: 0.55 }}
-            className="group relative mb-8 overflow-hidden rounded-[28px] border border-slate-200 bg-white dark:border-white/[0.06] dark:bg-[#0c0b18]"
+            className="group relative mb-8 overflow-hidden rounded-[28px] border border-slate-300/80 bg-card dark:border-white/[0.06]"
           >
-            <div className="absolute inset-0 opacity-20 dark:opacity-30" style={{ background: featured.coverGradient }} />
-            <div className="absolute inset-0 bg-gradient-to-t from-white via-white/60 to-transparent dark:from-[#0c0b18] dark:via-[#0c0b18]/60" />
+            <div className="absolute inset-0 opacity-20 dark:opacity-30" style={{ background: featured.coverGradient }} aria-hidden="true" />
+            <div className="absolute inset-0 bg-gradient-to-t from-card via-card/70 to-transparent" aria-hidden="true" />
 
             <Link href={`/blog/${featured.slug}`} className="relative z-10 block p-5 sm:p-7 lg:p-8">
               <div className="mb-auto flex items-center justify-between pb-5 sm:pb-6">
-                <span className="rounded-full border border-slate-300 bg-slate-100 px-3 py-1 text-[11px] font-semibold text-slate-600 backdrop-blur-sm dark:border-white/15 dark:bg-white/[0.08] dark:text-white/80">
+                <span className="rounded-full border border-slate-400/60 bg-slate-100 px-3 py-1 text-[11px] font-semibold text-slate-700 backdrop-blur-sm dark:border-white/15 dark:bg-white/[0.08] dark:text-white/80">
                   Öne Çıkan
                 </span>
                 <span
                   className="rounded-full border px-3 py-1 text-[11px] font-semibold backdrop-blur-sm"
-                  style={{ color: featured.tagColor, borderColor: `${featured.tagColor}40`, background: `${featured.tagColor}15` }}
+                  style={{
+                    color: featured.tagColor,
+                    borderColor: `${featured.tagColor}40`,
+                    background: `${featured.tagColor}15`,
+                  }}
                 >
                   {featured.tag}
                 </span>
               </div>
 
               <div className="mt-10 sm:mt-16 lg:mt-24">
-                <h3 className="text-[22px] font-bold leading-tight tracking-[-0.03em] text-slate-900 transition-colors dark:text-white sm:text-[28px] lg:text-[32px]">
+                <h2 className="text-[22px] font-bold leading-tight tracking-[-0.03em] text-slate-900 sm:text-[28px] lg:text-[32px] dark:text-white">
                   {featured.title}
-                </h3>
-                <p className="mt-3 max-w-lg text-[14px] leading-[1.75] text-slate-500 line-clamp-3 dark:text-slate-400 sm:mt-4 sm:text-[15px] sm:leading-[1.8] sm:line-clamp-none">
+                </h2>
+                <p className="mt-3 max-w-lg text-[14px] leading-[1.75] text-slate-600 sm:mt-4 sm:text-[15px] sm:leading-[1.8] dark:text-slate-400">
                   {featured.excerpt}
                 </p>
 
-                <div className="mt-5 flex items-center gap-4 border-t border-slate-200 pt-4 text-[11px] text-slate-500 dark:border-white/[0.06] sm:mt-8 sm:gap-6 sm:pt-6 sm:text-[12px]">
+                <div className="mt-5 flex items-center gap-4 border-t border-slate-300/70 pt-4 text-[11px] text-slate-600 sm:mt-8 sm:gap-6 sm:pt-6 sm:text-[12px] dark:border-white/[0.06] dark:text-slate-400">
                   <span className="flex items-center gap-1.5">
-                    <Calendar className="h-3 w-3" />
-                    {formatDate(featured.date)}
+                    <Calendar className="h-3 w-3" aria-hidden="true" />
+                    {formatPostDate(featured.date)}
                   </span>
                   <span className="flex items-center gap-1.5">
-                    <Clock className="h-3 w-3" />
-                    {featured.readTime}
+                    <Clock className="h-3 w-3" aria-hidden="true" />
+                    {readingTime(featured)}
                   </span>
-                  <span className="ml-auto flex items-center gap-2 font-medium text-slate-500 transition-colors group-hover:text-slate-900 dark:text-slate-400 dark:group-hover:text-white">
+                  <span className="ml-auto flex items-center gap-2 font-medium transition-colors group-hover:text-slate-900 dark:group-hover:text-white">
                     Oku
-                    <ArrowUpRight className="h-3.5 w-3.5" />
+                    <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
                   </span>
                 </div>
               </div>
             </Link>
-          </motion.div>
+          </motion.article>
         )}
 
-        <div className="grid gap-3 sm:gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-3 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
           {rest.map((post, i) => (
             <motion.article
               key={post.slug}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-60px' }}
-              transition={{ delay: i * 0.1, duration: 0.55 }}
+              transition={{ delay: Math.min(i, 3) * 0.08, duration: 0.5 }}
             >
               <Link href={`/blog/${post.slug}`} className="group block h-full">
-                <div className="h-full relative overflow-hidden rounded-[18px] sm:rounded-[22px] border border-slate-200 dark:border-white/[0.06] bg-white dark:bg-[#0c0e17] hover:border-slate-300 dark:hover:border-white/[0.12] transition-all active:scale-[0.99] p-5 sm:p-6 flex flex-col">
-                  <div
-                    className="absolute top-0 left-0 right-0 h-[2px]"
+                <div className="relative flex h-full flex-col overflow-hidden rounded-[18px] border border-slate-300/80 bg-card p-5 transition-all hover:border-slate-400/80 hover:shadow-sm active:scale-[0.99] sm:rounded-[22px] sm:p-6 dark:border-white/[0.06] dark:hover:border-white/[0.12]">
+                  <span
+                    className="absolute inset-x-0 top-0 h-[2px]"
                     style={{ background: `linear-gradient(90deg, ${post.tagColor}, ${post.tagColor}88)` }}
+                    aria-hidden="true"
                   />
 
                   <span
-                    className="inline-block rounded-full px-3 py-1 text-[11px] font-semibold mb-4 sm:mb-5 w-fit"
+                    className="mb-4 w-fit rounded-full px-3 py-1 text-[11px] font-semibold sm:mb-5"
                     style={{
                       color: post.tagColor,
                       background: `${post.tagColor}14`,
@@ -118,22 +118,22 @@ export default function Blog({ blogPosts }: { blogPosts: BlogPost[] }) {
                     {post.tag}
                   </span>
 
-                  <h3 className="text-[16px] sm:text-[18px] font-bold tracking-[-0.02em] text-slate-900 dark:text-white leading-snug group-hover:text-slate-700 dark:group-hover:text-slate-200 transition-colors">
+                  <h2 className="text-[16px] font-bold leading-snug tracking-[-0.02em] text-slate-900 transition-colors group-hover:text-slate-700 sm:text-[18px] dark:text-white dark:group-hover:text-slate-200">
                     {post.title}
-                  </h3>
+                  </h2>
 
-                  <p className="mt-2 sm:mt-3 text-[13px] leading-[1.75] text-slate-500 dark:text-slate-400 line-clamp-2 sm:line-clamp-3 flex-1">
+                  <p className="mt-2 line-clamp-2 flex-1 text-[13px] leading-[1.75] text-slate-600 sm:mt-3 sm:line-clamp-3 dark:text-slate-400">
                     {post.excerpt}
                   </p>
 
-                  <div className="mt-4 sm:mt-6 pt-3 sm:pt-4 border-t border-slate-100 dark:border-white/[0.04] flex items-center gap-3 sm:gap-4 text-[11px] sm:text-[12px] text-slate-400 dark:text-slate-500">
+                  <div className="mt-4 flex items-center gap-3 border-t border-slate-200 pt-3 text-[11px] text-slate-500 sm:mt-6 sm:gap-4 sm:pt-4 sm:text-[12px] dark:border-white/[0.05] dark:text-slate-500">
                     <span className="flex items-center gap-1.5">
-                      <Calendar className="h-3 w-3" />
-                      {formatDate(post.date)}
+                      <Calendar className="h-3 w-3" aria-hidden="true" />
+                      {formatPostDate(post.date)}
                     </span>
                     <span className="flex items-center gap-1.5">
-                      <Clock className="h-3 w-3" />
-                      {post.readTime}
+                      <Clock className="h-3 w-3" aria-hidden="true" />
+                      {readingTime(post)}
                     </span>
                   </div>
                 </div>

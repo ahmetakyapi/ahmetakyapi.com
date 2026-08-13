@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { readingTime } from '@/lib/reading-time'
 import {
   ChevronDown,
   ChevronUp,
@@ -57,7 +58,6 @@ function createPost(posts: BlogPost[]): BlogPost {
     title: 'Yeni Blog Yazısı',
     excerpt: 'Kısa özet girin.',
     date: new Date().toISOString().slice(0, 10),
-    readTime: '5 dk',
     coverGradient: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
     content: [createBlock('p')],
   }
@@ -433,7 +433,8 @@ function PostEditor({
                 <input type="date" value={post.date} onChange={(e) => onUpdate({ date: e.target.value })} className={inputCls} />
               </Field>
               <Field label="Okuma Süresi">
-                <input value={post.readTime} onChange={(e) => onUpdate({ readTime: e.target.value })} className={inputCls} placeholder="5 dk" />
+                {/* Elle girilmiyor: lib/reading-time.ts içerikten hesaplıyor. */}
+                <p className="px-3 py-2 text-sm opacity-60">{readingTime(post)} · otomatik</p>
               </Field>
             </div>
 
