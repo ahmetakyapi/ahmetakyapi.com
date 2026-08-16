@@ -102,7 +102,7 @@ export default function NotFound() {
           className="glass rounded-2xl p-4 mb-7 text-left"
         >
           <p className="font-mono text-[11px] dark:text-gray-500 text-slate-400 mb-3 tracking-wide">
-            <span className="dark:text-gray-600 text-slate-500">// </span>belki bunlara bakmak ister misin?
+            <span className="dark:text-gray-600 text-slate-500">{'// '}</span>belki bunlara bakmak ister misin?
           </p>
           <ul className="space-y-1">
             {NAV_ITEMS.map((item, i) => (
