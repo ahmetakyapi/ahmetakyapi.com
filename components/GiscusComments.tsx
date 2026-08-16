@@ -28,7 +28,7 @@ export default function GiscusComments() {
       <div className="mt-12 pt-10 border-t border-white/5">
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Yorumlar</h3>
         <div className="glass rounded-2xl p-6 text-center">
-          <p className="text-sm text-gray-500 font-mono mb-2">// giscus henüz yapılandırılmadı</p>
+          <p className="text-sm text-gray-500 font-mono mb-2">{'// '}giscus henüz yapılandırılmadı</p>
           <p className="text-xs text-gray-600">
             <a
               href="https://giscus.app"
@@ -39,7 +39,7 @@ export default function GiscusComments() {
               giscus.app
             </a>{' '}
             üzerinden repo bilgilerini alıp{' '}
-            <code className="text-indigo-400">.env.local</code>'a ekleyin.
+            <code className="text-indigo-400">.env.local</code>&apos;a ekleyin.
           </p>
         </div>
       </div>

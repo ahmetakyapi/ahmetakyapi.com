@@ -217,13 +217,57 @@
     box-shadow: 0 4px 24px rgba(120, 110, 90, 0.1), 0 1px 3px rgba(120, 110, 90, 0.06);
   }
 
-  .text-gradient {
-    background: linear-gradient(135deg, #f8fbff 0%, #cfe3ff 38%, #82cfff 100%);
-    background-size: 200% 200%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: shimmer-text 7s ease-in-out 2;
+  /* ── Degrade metin — marka imzası ────────────────────────────────────
+     `.text-gradient` ve `.hero-name-gradient` markanın imza yüzeyleridir;
+     degrade metin ekosistemde yalnızca burada yaşar. Bölüm başlıklarındaki
+     degradeler solid vurgu rengine çevrildi.
+
+     Her ikisi de ÖNCE solid rengini alır, kırpma `@supports` içinde:
+     `-webkit-text-fill-color: transparent` koşulsuz yazıldığında,
+     `background-clip: text` desteklenmeyen yerde harfin dolgusu şeffaf
+     kalıyor ama arkasına degrade basılmıyor — metin tamamen kayboluyordu.
+     Aynı desen `acilis-zili` ve `onepiece-hub`da da uygulandı. */
+  .text-gradient      { color: #82cfff; }
+  .hero-name-gradient { color: #93c5fd; }
+  html:not(.dark) .text-gradient      { color: #2563eb; }
+  html:not(.dark) .hero-name-gradient { color: #4f46e5; }
+
+  @supports (background-clip: text) or (-webkit-background-clip: text) {
+    .text-gradient {
+      background: linear-gradient(135deg, #f8fbff 0%, #cfe3ff 38%, #82cfff 100%);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shimmer-text 7s ease-in-out 2;
+    }
+
+    .hero-name-gradient {
+      background: linear-gradient(135deg, #bfdbfe 0%, #60a5fa 22%, #3b82f6 42%, #4f46e5 62%, #818cf8 80%, #93c5fd 100%);
+      background-size: 260% 260%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shimmer-text 4s ease-in-out 3;
+    }
+
+    html:not(.dark) .text-gradient {
+      background: linear-gradient(135deg, #4338ca 0%, #2563eb 48%, #0284c7 100%);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shimmer-text 7s ease-in-out 2;
+    }
+
+    html:not(.dark) .hero-name-gradient {
+      background: linear-gradient(135deg, #4338ca 0%, #4f46e5 22%, #2563eb 42%, #0369a1 62%, #4f46e5 80%, #3730a3 100%);
+      background-size: 260% 260%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shimmer-text 4s ease-in-out 3;
+    }
   }
 
   .display-heading {
@@ -233,37 +277,10 @@
     text-wrap: balance;
   }
 
-  .hero-name-gradient {
-    background: linear-gradient(135deg, #bfdbfe 0%, #60a5fa 22%, #3b82f6 42%, #4f46e5 62%, #818cf8 80%, #93c5fd 100%);
-    background-size: 260% 260%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: shimmer-text 4s ease-in-out 3;
-  }
-
   .eyebrow-label {
     font-family: var(--font-mono), monospace;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-  }
-
-  html:not(.dark) .text-gradient {
-    background: linear-gradient(135deg, #4338ca 0%, #2563eb 48%, #0284c7 100%);
-    background-size: 200% 200%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: shimmer-text 7s ease-in-out 2;
-  }
-
-  html:not(.dark) .hero-name-gradient {
-    background: linear-gradient(135deg, #4338ca 0%, #4f46e5 22%, #2563eb 42%, #0369a1 62%, #4f46e5 80%, #3730a3 100%);
-    background-size: 260% 260%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: shimmer-text 4s ease-in-out 3;
   }
 
   .bg-grid {

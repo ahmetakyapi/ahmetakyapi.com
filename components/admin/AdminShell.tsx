@@ -178,7 +178,7 @@ export default function AdminShell({
             <Link
               href="/"
               target="_blank"
-              className="flex items-center gap-1.5 rounded-lg border border-black/[0.09] bg-black/[0.02] dark:border-white/[0.06] dark:bg-white/[0.02] px-3 py-1.5 text-xs font-medium text-slate-500 transition hover:border-black/[0.14] dark:hover:border-white/[0.10] hover:text-slate-700 dark:hover:text-slate-300"
+              className="flex items-center gap-1.5 rounded-lg border border-black/[0.09] bg-black/[0.02] dark:border-white/[0.06] dark:bg-white/[0.02] px-3 py-1.5 text-xs font-medium text-slate-500 dark:text-slate-400 transition hover:border-black/[0.14] dark:hover:border-white/[0.10] hover:text-slate-700 dark:hover:text-slate-300"
             >
               <ExternalLink className="h-3 w-3" />
               Siteyi Gör
@@ -196,7 +196,7 @@ export default function AdminShell({
             <button
               type="button"
               onClick={onLogout}
-              className="flex items-center gap-1.5 rounded-lg border border-black/[0.09] bg-black/[0.02] dark:border-white/[0.06] dark:bg-white/[0.02] px-3 py-1.5 text-xs font-medium text-slate-500 transition hover:border-rose-500/30 hover:bg-rose-500/[0.05] hover:text-rose-500 dark:hover:border-rose-500/20 dark:hover:text-rose-400"
+              className="flex items-center gap-1.5 rounded-lg border border-black/[0.09] bg-black/[0.02] dark:border-white/[0.06] dark:bg-white/[0.02] px-3 py-1.5 text-xs font-medium text-slate-500 dark:text-slate-400 transition hover:border-rose-500/30 hover:bg-rose-500/[0.05] hover:text-rose-500 dark:hover:border-rose-500/20 dark:hover:text-rose-400"
             >
               <LogOut className="h-3 w-3" />
               Çıkış

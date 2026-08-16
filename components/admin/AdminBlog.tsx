@@ -401,7 +401,7 @@ function PostEditor({
               {count !== undefined && (
                 <span
                   className={`rounded-full px-1.5 py-0.5 text-[10px] font-bold tabular-nums ${
-                    tab === key ? 'bg-emerald-500/20 text-emerald-400' : 'bg-white/[0.06] text-slate-600'
+                    tab === key ? 'bg-emerald-500/20 text-emerald-400' : 'bg-white/[0.06] text-slate-600 dark:text-slate-400'
                   }`}
                 >
                   {count}

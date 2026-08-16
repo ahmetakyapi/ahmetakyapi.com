@@ -146,7 +146,7 @@ function project(
   const phi = toRad(90 - lat)
   const theta = toRad(lng) + rotY
 
-  let x = radius * Math.sin(phi) * Math.cos(theta)
+  const x = radius * Math.sin(phi) * Math.cos(theta)
   let y = radius * Math.cos(phi)
   const z0 = radius * Math.sin(phi) * Math.sin(theta)
 
@@ -172,7 +172,7 @@ function slerp(
   const y2 = Math.cos(p2)
   const z2 = Math.sin(p2) * Math.sin(t2)
 
-  let dot = Math.max(-1, Math.min(1, x1 * x2 + y1 * y2 + z1 * z2))
+  const dot = Math.max(-1, Math.min(1, x1 * x2 + y1 * y2 + z1 * z2))
   const omega = Math.acos(dot)
 
   if (omega < 0.001) {
