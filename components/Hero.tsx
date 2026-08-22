@@ -363,7 +363,13 @@ export default function Hero({
                   {featuredProject.postSlug && (
                     <Link
                       href={`/blog/${featuredProject.postSlug}`}
-                      className="text-[14px] font-medium text-violet-700 underline decoration-violet-300 underline-offset-4 transition-colors hover:text-violet-900 dark:text-violet-300 dark:decoration-violet-400/40 dark:hover:text-violet-200"
+                      /* Dokunma hedefi yalnızca satır kutusu kadardı (21px)
+                         ve WCAG 2.5.8'in 24 piksellik AA eşiğinin altındaydı;
+                         bu bağımsız bir bağlantı, cümle içi olmadığı için
+                         istisna kapsamına girmiyor. Dikey dolgu hedefi
+                         büyütüyor, negatif kenar boşluğu düzeni aynı
+                         bırakıyor. */
+                      className="-my-1.5 inline-block py-1.5 text-[14px] font-medium text-violet-700 underline decoration-violet-300 underline-offset-4 transition-colors hover:text-violet-900 dark:text-violet-300 dark:decoration-violet-400/40 dark:hover:text-violet-200"
                     >
                       Nasıl yapıldığını oku →
                     </Link>

@@ -162,6 +162,25 @@
     outline: none;
   }
 
+  /* KIRPAN KABIN İÇİNDE HALKA İÇERİ ALINIR.
+     `outline-offset: 3px` halkayı öğenin DIŞINA çiziyor ve taşmayı gizleyen
+     her ata onu kesiyor — cam kartlar, yuvarlatılmış kutular, kod blokları.
+     Klavyeyle gezen okuyucu odağın nerede olduğunu göremiyor (WCAG 2.4.11).
+     Ölçüldü: ana sayfada Tab ile gezilen 59 öğenin 6'sında, blog listesinde
+     ve yazı sayfasında 3'er öğede halka iki ya da daha çok kenardan
+     kesiliyordu. Negatif kaydırma halkayı öğenin İÇİNE çiziyor; hiçbir ata
+     kesemiyor, kırpılmayan yerlerde dış halka aynen kalıyor. */
+  :where(
+      .overflow-hidden,
+      .overflow-clip,
+      .overflow-auto,
+      .overflow-x-auto,
+      .overflow-y-auto
+    )
+    :focus-visible {
+    outline-offset: -2px;
+  }
+
   button,
   input,
   textarea,
