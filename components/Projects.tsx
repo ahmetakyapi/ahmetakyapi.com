@@ -262,7 +262,9 @@ function ProjectCard({ project }: { project: Project }) {
                 {project.postSlug && (
                   <Link
                     href={`/blog/${project.postSlug}`}
-                    className="ml-auto text-[11px] font-medium text-indigo-600 underline decoration-indigo-300 underline-offset-2 dark:text-indigo-400 dark:decoration-indigo-400/40"
+                    /* Aynı 24 piksel gerekçesi — 11px yazının satır kutusu
+                       tek başına 17 piksel kalıyordu. */
+                    className="-my-1.5 ml-auto inline-block py-1.5 text-[11px] font-medium text-indigo-600 underline decoration-indigo-300 underline-offset-2 dark:text-indigo-400 dark:decoration-indigo-400/40"
                   >
                     Yazısı
                   </Link>
