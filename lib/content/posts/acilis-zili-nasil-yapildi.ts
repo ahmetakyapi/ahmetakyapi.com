@@ -6,34 +6,34 @@ export const post: BlogPost = {
   tagColor: '#0d74c4',
   title: "Açılış Zili: Piyasayı Tek Yerden Takip Et",
   excerpt:
-    'ABD piyasasını beş sekme yerine tek sayfadan takip etmek için yazdım. Asıl iş veri çekmek değil, bir sayının ne zaman sessizce yanlışa döndüğünü yakalamak oldu.',
+    'ABD borsasını Türkiye saatiyle tek ekrandan izlemek için yazdım. Veriyi çekmek kolaydı; zor olan, bir sayının hata vermeden yanlışa döndüğü anı yakalamaktı.',
   date: '2026-08-12',
   coverGradient: 'linear-gradient(135deg, #0d74c4 0%, #0a5a9a 45%, #101c2b 100%)',
   content: [
     {
       type: 'lead',
-      text: 'Sabahları aynı beş sekmeyi açıyordum. Birinde o gün bilanço açıklayacak şirketler, birinde makro takvim, birinde haberler, birinde takip listem, bir de kendi notlarımın durduğu bir metin dosyası. Hiçbiri ötekinin ne dediğini bilmiyordu. Açılış Zili bu beş sekmeyi tek sayfaya indirme denemesi.',
+      text: 'ABD borsasını Türkiye\'den izleyen biri her gün aynı çeviriyi yapıyor. Kaynaklar New York saatiyle yayın yapıyor; bir bilanço "kapanış sonrası" açıklanıyor ve bunun Türkiye saatiyle kaç olduğunu herkes kendisi hesaplıyor. ABD yaz saatine geçince de hesap bir saat kayıyor. Açılış Zili bu çeviriyi bir kez ve doğru yapmak için var: bilanço takvimi, makro veriler, fiyatlar, haberler ve takip listesi, hepsi Türkiye saatiyle tek ekranda.',
     },
     {
       type: 'p',
-      text: 'Yatırım tavsiyesi veren bir site değil, kendi takibim için yazdığım bir araç. "Kendim için" olması işi kolaylaştırmadı. Tersine, her gün kendim bakacağım için her sayının doğru olmasını istedim ve bu yazının çoğu o istekten çıkan kararları anlatıyor.',
+      text: 'Yatırım tavsiyesi veren bir site değil; arkasında bir şirket, aracı kurum ya da sponsor yok. Bu yazının çoğu, ekrandaki her sayının doğru olması için verdiğim kararları anlatıyor.',
     },
 
     { type: 'h2', text: 'Sitede Ne Var' },
     {
       type: 'p',
-      text: 'Yirmi dört sayfa var ama omurga dört parça.',
+      text: 'Yirmi dört sayfa var, ama sitenin omurgası dört bölüm.',
     },
     {
       type: 'steps',
       items: [
         {
           title: 'Bugün',
-          text: 'Açılışa ne kaldı, bugün hangi şirketler bilanço açıklıyor, hangi makro veri saat kaçta geliyor, endeksler nerede. Günün özeti de burada.',
+          text: 'Açılışa ne kadar kaldı, bugün hangi şirketler bilanço açıklıyor, hangi makro veri saat kaçta geliyor, endeksler nerede. Günün özeti de burada.',
         },
         {
           title: 'Bilançolar',
-          text: 'Takvim, geçmiş dönemler ve her bilanço için yazılan analizler. En çok uğraştığım kısım burası.',
+          text: 'Takvim, geçmiş dönemler ve her bilanço için yazılan analizler.',
         },
         {
           title: 'Piyasa',
@@ -47,13 +47,13 @@ export const post: BlogPost = {
     },
     {
       type: 'p',
-      text: 'Takip listesi, favoriler ve hesap tarafı da var ama onlar standart iş. Anlatmaya değer olan bilanço analizleri.',
+      text: 'Takip listesi, favoriler ve hesap tarafı da var ama onlar her sitede olan işler. Burada anlatacağım kısım bilanço analizleri.',
     },
 
     { type: 'h2', text: 'Bir Bilanço Analizi Neyden Oluşuyor' },
     {
       type: 'p',
-      text: 'Her analiz veritabanında tek bir satır. O satır "şu şirket şunu açıkladı" demiyor; bir görüşü, görüşün gerekçesini ve gerekçenin dayandığı sayıları bir arada tutuyor.',
+      text: 'Her analiz veritabanında tek bir satır. Bu satır yalnızca "şu şirket şunu açıkladı" demiyor; bir görüşü, o görüşün gerekçesini ve gerekçenin dayandığı sayıları bir arada tutuyor.',
     },
     {
       type: 'code',
@@ -80,25 +80,25 @@ export const post: BlogPost = {
     },
     {
       type: 'p',
-      text: 'İki alan üzerinde uzun düşündüm. Birincisi `score`. "Bu ne kadar iyi bir yatırım" anlamına gelseydi, 100 üzerinden 73 vermenin neye dayandığını açıklayamazdım. Bu yüzden skor görüşü değil, gerekçenin ne kadar sağlam olduğunu ölçüyor: kaç veriye dayandığını, ne kadar dolu olduğunu.',
+      text: 'İki alanın tanımı ayrıca karar istedi. Birincisi `score`. "Bu ne kadar iyi bir yatırım" anlamına gelseydi, 100 üzerinden 73 vermenin neye dayandığını açıklayamazdım. Bu yüzden skor görüşü ölçmüyor; gerekçenin ne kadar sağlam olduğunu, yani kaç veriye dayandığını ve ne kadar dolu olduğunu ölçüyor.',
     },
     {
       type: 'p',
-      text: 'İkincisi `upcoming`. Finans yazılarında bu bölümün yerleşik adı "katalizörler" ve kelime "fiyatı yukarı itecek şey" diye okunuyor, yani tarafsız değil. Bölümün adını "Beklenen Gelişmeler" koydum ve her maddenin bir tarih taşımasını şart koştum. Tarihi olmayan bir beklenti, beklenti değil temenni.',
+      text: 'İkincisi `upcoming`. Finans yazılarında bu bölümün yerleşik adı "katalizörler" ve kelime "fiyatı yukarı itecek şey" diye okunuyor; yani tarafsız değil. Bölümün adını "Beklenen Gelişmeler" koydum ve her maddenin bir tarih taşımasını şart koştum. Tarihi olmayan bir beklenti, bir dilekten farksız.',
     },
 
-    { type: 'h2', text: 'Asıl Karar: Oran Değil, Oranın Böleni' },
+    { type: 'h2', text: 'Oranı Değil, Bölenini Saklamak' },
     {
       type: 'p',
-      text: 'Bu projede verdiğim en iyi karar buydu ve fark etmem epey sürdü.',
+      text: 'Projede en çok işe yarayan karar buydu.',
     },
     {
       type: 'p',
-      text: 'Bir analizin içine F/K oranını yazmak çok doğal görünüyor: sağlayıcı hazır veriyor, kaydedip geçiyorsun. Sorun üç hafta sonra çıkıyor. Analiz o günün fiyatıyla hesaplanmış F/K\'yi taşıyor, sayfanın en üstünde ise bugünün canlı fiyatı duruyor. Aynı sayfada iki fiyat dolaşıyor ve hangisinin hangisi olduğunu hiçbir yer söylemiyor.',
+      text: 'Bir analizin içine F/K oranını yazmak çok doğal görünüyor: sağlayıcı hazır veriyor, kaydedip geçiyorsun. Sorun haftalar sonra çıkıyor. Analiz o günün fiyatıyla hesaplanmış F/K\'yi taşıyor, sayfanın en üstünde ise bugünün canlı fiyatı duruyor. Aynı sayfada iki fiyat var ve hangisinin hangisi olduğunu hiçbir yer söylemiyor.',
     },
     {
       type: 'quote',
-      text: 'Bir oranın payı fiyattır ve fiyat her gün değişir. Kaydettiğin an doğru olan oran, ertesi gün sessizce yanlış olmaya başlar.',
+      text: 'Bir oranın payı fiyattır ve fiyat her gün değişir. Kaydettiğin an doğru olan oran, ertesi gün sessizce eskimeye başlar.',
     },
     {
       type: 'p',
@@ -121,11 +121,11 @@ growthBasis: text("growth_basis"),`,
     },
     {
       type: 'p',
-      text: 'Sağlayıcının hazır F/K değerini kendi hesabımla karşılaştırınca aynı derdi orada da gördüm: SNDK\'da %5,6 sapıyordu. Hazır oran, sayfadakinden farklı bir fiyatla kurulmuştu ve bunu hiçbir yerde söylemiyordu.',
+      text: 'Sağlayıcının hazır F/K değerini kendi hesabımla karşılaştırınca aynı sorun orada da çıktı: SNDK\'da fark %5,6\'ydı. Hazır oran, sayfadakinden farklı bir fiyatla hesaplanmıştı ve bunu hiçbir yerde söylemiyordu.',
     },
     {
       type: 'p',
-      text: '`growthBasis` alanı da aynı yerden doğdu. PEG\'in asıl sorunu, hangi büyümenin bölündüğünün söylenmemesi. Aynı gün aynı şirket için iki kaynağa baktım: biri ileriye dönük tahmini kullanıyordu, öteki son on iki ayı.',
+      text: '`growthBasis` alanı da aynı yerden çıktı. PEG\'in sorunu, hangi büyümeye bölündüğünün çoğu zaman yazılmaması. Aynı gün aynı şirket için iki kaynağa baktım: biri ileriye dönük tahmini kullanıyordu, öteki son on iki ayı.',
     },
     {
       type: 'compare',
@@ -137,17 +137,17 @@ growthBasis: text("growth_basis"),`,
     {
       type: 'callout',
       variant: 'tip',
-      text: 'Kural şu hâle geldi: türetilmiş sayıyı saklama, girdisini sakla. Girdi zamanla eskimeyen bir gerçek. Türetilmiş sayı bir anın fotoğrafı ve o an geçince kimseye haber vermeden yanlışa dönüyor.',
+      text: 'Kural şu oldu: hesaplanmış sayıyı saklama, girdisini sakla. Girdi zamanla eskimiyor. Hesaplanmış sayı ise bir anın fotoğrafı; o an geçince kimseye haber vermeden yanlışa dönüyor.',
     },
 
     { type: 'h3', text: 'Bir Metriği Kaldırmak da Bir Karar' },
     {
       type: 'p',
-      text: 'PD/DD oranının böleni bir süre şemada durdu, sonra migration 0012 ile geri aldım. Sebep teknik değildi. PD/DD sektöre bağlı bir ölçü: bankada ve gayrimenkul yatırım ortaklığında fiyatın kurulduğu yer, yarı iletkende neredeyse gürültü. "Bu şirkette anlamlı mı" sorusunu her analizde yeniden cevaplamak gerekiyordu. Doldurulup doldurulmayacağı her seferinde tartışma açan bir alan şemada durmamalı.',
+      text: 'PD/DD oranının böleni bir süre şemada durdu, sonra migration 0012 ile geri aldım. Sebep teknik değildi. PD/DD sektöre göre anlamı değişen bir ölçü: bankada ve gayrimenkul yatırım ortaklığında fiyatı belirleyen şeylerden biri, yarı iletken şirketinde neredeyse bir şey söylemiyor. "Bu şirkette anlamlı mı" sorusunu her analizde yeniden cevaplamak gerekiyordu. Doldurulup doldurulmayacağı her seferinde tartışma çıkaran bir alan şemada durmamalı.',
     },
     {
       type: 'p',
-      text: 'Brent petrol için iki kez denedim, iki kez de kaldırdım. İlk kaynak FRED\'in spot serisiydi ve o seri günlerce geriden yayımlanıyor: 4 Ağustos\'ta son gözlem 27 Temmuz\'du, 91,82 $. Arada varil 80 dolar civarına inmişti, yani ekrandaki sayı %14 yanlıştı. Tazelik için ABD\'de işlem gören bir Brent fonuna (BNO) geçtim; bu kez kartta 50,37 $ yazdı. O sırada gerçek Brent 89 dolar civarındaydı. "Brent Petrol" başlığının altındaki dolar rakamı varil fiyatı diye okunur ve karttaki "seviye fonun fiyatıdır" notu bunu kurtarmıyordu.',
+      text: 'Brent petrolü iki kez denedim, iki kez de kaldırdım. İlk kaynak FRED\'in spot serisiydi ve o seri günlerce geriden yayımlanıyor: 4 Ağustos\'ta son gözlem 27 Temmuz\'du, 91,82 $. Arada varil 80 dolar civarına inmişti, yani ekrandaki sayı %14 yanlıştı. Daha güncel veri için ABD\'de işlem gören bir Brent fonuna (BNO) geçtim; bu kez kartta 50,37 $ yazdı. O sırada gerçek Brent 89 dolar civarındaydı. "Brent Petrol" başlığının altındaki dolar rakamı varil fiyatı diye okunur ve karttaki "seviye fonun fiyatıdır" notu bunu düzeltmiyordu.',
     },
     {
       type: 'quote',
@@ -155,18 +155,18 @@ growthBasis: text("growth_basis"),`,
     },
     {
       type: 'p',
-      text: 'Ücretsiz sağlayıcıların hiçbirinde canlı emtia fiyatı yoktu. Metrik düştü.',
+      text: 'Ücretsiz sağlayıcıların hiçbirinde canlı emtia fiyatı yoktu. Kart kaldırıldı.',
     },
 
     { type: 'h2', text: 'Uydurma Veri Yok' },
     {
       type: 'p',
-      text: 'Yukarıdaki kararların hepsi tek bir ilkeden çıkıyor ve ilke sitenin her yerinde geçerli: bir sayı gösteriliyorsa, nereden geldiği ve ne zaman alındığı da gösterilir.',
+      text: 'Yukarıdaki kararların hepsi tek bir kuraldan çıkıyor ve kural sitenin her yerinde geçerli: bir sayı gösteriliyorsa, nereden geldiği ve ne zaman alındığı da gösterilir.',
     },
     {
       type: 'ul',
       items: [
-        'Her kartın altında `kaynak · saat` damgası var.',
+        'Her kartın altında `kaynak · saat` satırı var.',
         'Sağlayıcı kesin saat vermiyorsa ekranda `~` ile yaklaşık olduğu yazıyor. Bilanço saatleri hep böyle: sağlayıcı yalnızca "açılış öncesi" ya da "kapanış sonrası" diyor, dakika vermiyor.',
         'Fiyatlar Alpaca\'nın IEX beslemesinden geliyor. Konsolide fiyattan sapabileceği ekranda yazıyor.',
         'Endeksler ETF üzerinden izleniyor (QQQ, SPY, DIA, IWM) ve arayüz bunu söylüyor.',
@@ -175,7 +175,7 @@ growthBasis: text("growth_basis"),`,
     },
     {
       type: 'p',
-      text: 'İlke sağlayıcı katmanını da şekillendirdi. Dört API var (Alpaca, Finnhub, FRED, TCMB) ve dördü de farklı şekil döndürüyor, farklı biçimde hata veriyor. Hepsini tek bir sonuç tipine indirdim. Başarısızlık da bir değer olarak dönüyor, istisna fırlatılmıyor.',
+      text: 'Bu kural veri sağlayıcılarla konuşan katmanı da belirledi. Dört API var (Alpaca, Finnhub, FRED, TCMB) ve dördü de farklı biçimde veri döndürüyor, farklı biçimde hata veriyor. Hepsini tek bir sonuç tipine indirdim. Hata da bir değer olarak dönüyor; exception fırlatılmıyor.',
     },
     {
       type: 'code',
@@ -189,24 +189,24 @@ type FailReason = "missing-key" | "rate-limited" | "not-found" | "upstream-error
     },
     {
       type: 'p',
-      text: 'Sıra hep aynı: canlı kaynak, yedek kaynak, veritabanındaki son bilinen değer ("güncel değil" damgasıyla), en son hata. Bunun pratik bir faydası da var. Projeyi klonlayıp hiçbir anahtar girmeden `npm run dev` diyebiliyorsun; ilgili kartlar "veri alınamadı" gösteriyor, sayfanın geri kalanı çalışıyor.',
+      text: 'Sıra hep aynı: canlı kaynak, yedek kaynak, veritabanındaki son bilinen değer ("güncel değil" notuyla), en son hata. Bunun pratik bir faydası da var. Projeyi klonlayıp hiçbir API anahtarı girmeden `npm run dev` çalıştırabiliyorsun; ilgili kartlar "veri alınamadı" gösteriyor, sayfanın geri kalanı çalışıyor.',
     },
 
     { type: 'h2', text: 'Tek Sayfa, 513 İstek' },
     {
       type: 'p',
-      text: 'Şirketler dizini 513 sembol listeliyor ve tek bir görüntüleme veritabanına 513 istek atıyordu. Fiyat çağrısı tekti ve önbellekten geliyordu; sorun fiyatları veritabanına geri yazan koddaydı.',
+      text: 'Şirketler dizini 513 sembol listeliyor ve sayfanın tek bir açılışı veritabanına 513 istek atıyordu. Fiyat çağrısı tekti ve önbellekten geliyordu; sorun, fiyatları veritabanına geri yazan koddaydı.',
     },
     {
       type: 'p',
-      text: 'Her kotasyon ayrı bir `insert` ile yazılıyordu, hepsi `Promise.all` ile paralel. Masum görünüyor, ama `@neondatabase/serverless` HTTP üzerinden konuşuyor ve kalıcı bağlantı yok. Her `insert` ayrı bir gidiş-dönüş. Üstelik bu yazma, fiyat önbellekten gelse bile çalışıyordu, yani önbellek isabeti de aynı bedeli ödüyordu.',
+      text: 'Her kotasyon ayrı bir `insert` ile yazılıyordu, hepsi `Promise.all` ile paralel. Zararsız görünüyor, ama `@neondatabase/serverless` HTTP üzerinden konuşuyor ve kalıcı bağlantı yok. Her `insert` ayrı bir gidiş-dönüş. Üstelik bu yazma, fiyat önbellekten gelse bile çalışıyordu; yani cache\'ten dönen istek de aynı bedeli ödüyordu.',
     },
     {
       type: 'compare',
       label: 'Şirketler Dizini · Tek Sayfa Görüntüleme',
       before: { label: 'Satır Başına Insert', value: '513 İstek' },
       after: { label: 'Gruplu Tek Upsert', value: '2 İstek' },
-      note: 'Aynı düzeltmede bir şey daha çıktı: yazma `void` ile bırakılmıştı. Sunucusuz fonksiyon yanıt döndükten sonra donunca yazma yarıda kalabiliyordu. Artık bekleniyor; tek gidiş-dönüşün maliyeti o belirsizliğe değmez.',
+      note: 'Aynı düzeltmede bir şey daha çıktı: yazma işlemi `void` ile beklenmeden bırakılmıştı. Serverless fonksiyon yanıt döndükten sonra donunca yazma yarıda kalabiliyordu. Artık bekleniyor; tek bir gidiş-dönüşün maliyeti o belirsizliğe değmez.',
     },
     {
       type: 'code',
@@ -223,14 +223,14 @@ await db
   })`,
     },
 
-    { type: 'h2', text: 'Tazelik Sabit Değil, Duruma Bağlı' },
+    { type: 'h2', text: 'Önbellek Süresi Seansa Göre Değişiyor' },
     {
       type: 'p',
-      text: 'Bir süre endeksler yenilenmiyor gibi duruyordu. Kotasyon önbelleği seans içinde 60 saniyeydi ve sayfayı yenileyen biri çoğu zaman aynı fiyatı görüyordu.',
+      text: 'Bir süre endeksler yenilenmiyor gibi duruyordu. Fiyat önbelleği seans içinde 60 saniyeydi ve sayfayı yenileyen biri çoğu zaman aynı fiyatı görüyordu.',
     },
     {
       type: 'p',
-      text: 'Süreyi düşürmekten çekiniyordum, çünkü "her ziyaretçi bir istek demek" sanıyordum. Yanlışmış. Next.js\'in veri önbelleği sunucuda paylaşımlı; sağlayıcıya giden istek trafikle değil yalnızca süreyle artıyor. 15 saniyelik ömür, bir sembol kümesi için dakikada en fazla 4 istek demek. Alpaca\'nın ücretsiz katmanı dakikada 200 kabul ediyor.',
+      text: 'Süreyi düşürmeden önce sağlayıcı kotasına bakmak gerekiyordu. Next.js\'in veri önbelleği sunucuda ve bütün ziyaretçiler için ortak; sağlayıcıya giden istek sayısı trafikle değil, yalnızca bu süreyle artıyor. 15 saniyelik süre, bir sembol grubu için dakikada en fazla 4 istek demek. Alpaca\'nın ücretsiz katmanı dakikada 200 isteğe izin veriyor. 4 Ağustos\'ta süre 15 saniyeye indi.',
     },
     {
       type: 'code',
@@ -247,40 +247,40 @@ await db
     },
     {
       type: 'p',
-      text: 'Bu tablo da eksik çıktı. Süreleri "bu veri ne sıklıkla değişir" diye seçmiştim, günün neresinde olduğumuza hiç bakmıyordum. Gece yarısından önce yazılan 900 saniyelik bir kotasyon ertesi sabahın ön seansına sarkabiliyordu: sayfayı açan dünkü fotoğrafı görüyor, bir yenilemeden sonra bugünküne geçiyordu. Şimdi her kayıt en geç bir sonraki seans sınırında ölüyor. Bedeli sınır anlarında sağlayıcıya giden birkaç fazla istek.',
+      text: 'Piyasa kapalıyken fiyat hareket etmediği için süre 15 dakikaya çıkıyor; kotayı boşa harcamaya gerek yok.',
     },
 
     { type: 'h2', text: 'Bir de Saatler Vardı' },
     {
       type: 'p',
-      text: 'Bunu sona bıraktım, çünkü projenin özü değil. Ama beklediğimden çok vaktimi aldı.',
+      text: 'Saat dönüşümü projenin çıkış sebebi ama kodun küçük bir kısmı.',
     },
     {
       type: 'p',
-      text: 'Türkiye yaz saati uygulamıyor, ABD uyguluyor. New York ile aramızdaki fark bu yüzden sabit değil: yazın 7 saat, kışın 8. Borsa her zaman 09:30\'da açılıyor ama benim saatimde bu yazın 16:30, kışın 17:30.',
+      text: 'Türkiye yaz saati uygulamıyor, ABD uyguluyor. Bu yüzden New York ile aramızdaki fark sabit değil: yazın 7 saat, kışın 8. Borsa her zaman 09:30\'da açılıyor, ama Türkiye saatiyle bu yazın 16:30, kışın 17:30.',
     },
     {
       type: 'callout',
       variant: 'warning',
-      text: 'Bir yere `7` yazıp geçmek çok cazip. Yazsaydım, Kasım\'da ABD kış saatine döndüğü gün sitedeki bütün saatler bir saat kayacaktı. Uygulama çökmeyecekti; sessizce yanlış söyleyecekti.',
+      text: 'Bir yere `7` yazıp geçmek çok kolay. Yazsaydım, Kasım\'da ABD kış saatine döndüğü gün sitedeki bütün saatler bir saat kayacaktı. Uygulama çökmeyecek, sadece yanlış saat gösterecekti.',
     },
     {
       type: 'p',
-      text: 'Bu yüzden hiçbir yerde elle saat aritmetiği yok. Bütün dönüşümler tek dosyada, `Intl` üzerinden ve o günün tarihiyle hesaplanıyor. Seans durumu da göründüğünden karışık: ön seans, ana seans, akşam seansı, kapalı. Üstüne yarım günler var; Şükran Günü ertesi borsa 13:00\'te kapanıyor.',
+      text: 'Bu yüzden hiçbir yerde elle saat hesabı yok. Bütün dönüşümler tek dosyada, `Intl` ile ve o günün tarihine göre yapılıyor. Seans durumu da göründüğünden karışık: ön seans, ana seans, akşam seansı, kapalı. Üstüne yarım günler var; Şükran Günü\'nün ertesi günü borsa 13:00\'te kapanıyor.',
     },
     {
       type: 'p',
-      text: 'Bir ayrıntı daha: Türkçe okuyan biri için "09:30 açılış" doğru ama işe yaramaz bir cümle. TR arayüzde birincil saat İstanbul, künyedeki ikincil saat New York. İngilizceye geçince sıra tersine dönüyor.',
+      text: 'Bir ayrıntı daha: Türkiye\'den okuyan biri için "09:30 açılış" doğru ama işe yaramaz bir bilgi. Türkçe arayüzde öne çıkan saat İstanbul, yanında küçük yazılan saat New York. İngilizceye geçince sıra tersine dönüyor.',
     },
 
     { type: 'h2', text: 'Yazıları Kim Yazıyor' },
     {
       type: 'p',
-      text: 'Bültenleri ve analizleri bir dil modeli yazıyor ama sunucuda yazı üreten bir model çağrısı yok. Bir dönem vardı: günlük cron 13:30\'da kural tabanlı bir özet çıkarıyordu. Onu bilerek kaldırdım. Mekanik özet günün yerini dolduruyor, kart onu "bugün" diye gösteriyordu ve elle yazılmış dünkü bültenin eskidiğini kimse görmüyordu.',
+      text: 'Bültenleri ve analizleri bir dil modeli yazıyor, ama sunucuda yazı üreten bir model çağrısı yok. Bir dönem vardı: günlük cron 13:30\'da kurallara göre bir özet çıkarıyordu. 6 Ağustos\'ta onu kaldırdım. Makinenin çıkardığı özet günün yerini dolduruyor, kart onu "bugün" diye gösteriyordu ve dünkü bültenin eskidiği görünmüyordu.',
     },
     {
       type: 'p',
-      text: 'Şimdi düzen şöyle: claude.ai tarafında kurulmuş zamanlanmış görevler belli saatlerde uyanıyor, sitenin korumalı bir ucundan o günün verisini çekiyor, yazıyı yazıyor ve başka bir korumalı uca gönderiyor. Site yalnızca veritabanından okuyor.',
+      text: 'Şimdi düzen şöyle: claude.ai\'da kurulu zamanlanmış görevler belli saatlerde çalışıyor, sitenin korumalı bir API ucundan o günün verisini çekiyor, yazıyı yazıyor ve başka bir korumalı uca gönderiyor. Site yalnızca veritabanından okuyor.',
     },
     {
       type: 'table',
@@ -294,17 +294,17 @@ await db
     },
     {
       type: 'p',
-      text: 'Saatler de bir hatadan çıktı. Günlük bülten uzun süre sabah 09:00\'da koşuyordu, oysa veriyi veritabanına yazan senkron 13:30\'da çalışıyor. Bülten senkrondan dört buçuk saat önce yazılıyor ve her sabah bir önceki günün makro değerleriyle çıkıyordu.',
+      text: 'Saatler de bir hatadan çıktı. Günlük bülten bir süre sabah 09:00\'da çalışıyordu, oysa veriyi veritabanına yazan senkronizasyon 13:30\'da çalışıyor. Bülten verinin gelmesinden dört buçuk saat önce yazılıyor ve her sabah bir önceki günün makro değerleriyle çıkıyordu.',
     },
     {
       type: 'p',
-      text: 'Gövde doğrulaması başarısız olunca 400 ile birlikte beklenen şemayı da geri yazıyorum. Karşı taraf bir model ve hata mesajını okuyup kendini düzeltebiliyor.',
+      text: 'Gönderilen yazı doğrulamadan geçemezse uç 400 ile birlikte beklenen şemayı da geri yazıyor. Karşı taraf bir model; hata mesajını okuyup kendini düzeltebiliyor.',
     },
 
     { type: 'h2', text: 'Yazılara Görsel Koymadım, Çizdirdim' },
     {
       type: 'p',
-      text: 'Uzun yazıların görsele ihtiyacı vardı ama görsel demek telif, kaynak arama ve her yazı için ayrı iş demek. Onun yerine metinden çizim yapan bir blok ailesi yazdım.',
+      text: 'Uzun yazıların görsele ihtiyacı vardı, ama görsel demek telif, kaynak arama ve her yazı için ayrı iş demek. Onun yerine metinden çizim yapan bir blok ailesi yazdım.',
     },
     {
       type: 'code',
@@ -322,11 +322,11 @@ Diğerleri | 55
     },
     {
       type: 'p',
-      text: 'Site bunu yığılmış çubuk ve öncesi-sonrası karşılaştırması olarak çiziyor. `oncesi` bloğu aradaki yüzde değişimi kendisi hesaplıyor; yazan hesaplamadığı için yanlış da hesaplayamıyor. Yedi görsel blok var ve hepsinde satırlar `|` ile ayrılıyor.',
+      text: 'Site bunu yığılmış çubuk ve öncesi-sonrası karşılaştırması olarak çiziyor. `oncesi` bloğu aradaki yüzde değişimi kendisi hesaplıyor; yazan kişi hesaplamadığı için yanlış da hesaplayamıyor. Yedi görsel blok var ve hepsinde satırlar `|` ile ayrılıyor.',
     },
     {
       type: 'p',
-      text: 'Asıl kazancı estetik değil bakım. Hiçbir yerde görsel barındırmıyorum ve tema değişince çizimler de değişiyor. Bir PNG bunu yapamaz.',
+      text: 'Kazancı görüntüden çok bakımda. Hiçbir yerde görsel dosyası barındırmıyorum ve tema değişince çizimler de ona uyuyor. Bir PNG bunu yapamaz.',
     },
 
     { type: 'h2', text: 'Rakamlarla' },
@@ -350,15 +350,15 @@ Diğerleri | 55
     { type: 'h2', text: 'Geriye Dönüp Bakınca' },
     {
       type: 'p',
-      text: 'Bu projeye "borsa verisi çekmek zor olacak" diye başladım. Veri çekmek en kolay kısmıymış: dört API, birkaç `fetch`, bitti.',
+      text: 'Veri çekmek işin en kolay kısmıydı: dört API, birkaç `fetch`.',
     },
     {
       type: 'p',
-      text: 'Zor olan, o verinin dürüst biçimde ekrana çıkması. Yanlış bir sayı uygulamayı çökertmiyor, yalnızca güvenilmez yapıyor ve fark etmen günler sürebiliyor. Kaydedilen F/K\'nin ertesi gün yanlışa dönmesi, Brent kartının bir haftalık fiyatı bugünmüş gibi göstermesi, dünkü kotasyonun sabaha sarkması: üçü de hata vermeden oldu.',
+      text: 'Zor olan, o verinin doğru hâliyle ekrana çıkması. Yanlış bir sayı uygulamayı çökertmiyor, yalnızca güvenilmez yapıyor ve fark etmek günler sürebiliyor. Kaydedilen F/K\'nin ertesi gün eskimesi, Brent kartının bir haftalık fiyatı bugünmüş gibi göstermesi, 513 isteğin sessizce atılması: üçü de hiçbir hata vermeden oldu.',
     },
     {
       type: 'p',
-      text: '"Türetilmiş sayıyı saklama, girdisini sakla" cümlesini daha önce de duymuştum. Neden önemli olduğunu ancak kendi sayfamda birbiriyle çelişen iki fiyat görünce anladım. Şimdi merak ettiğim şey, henüz fark etmediğim üçüncü bir sayının nerede durduğu.',
+      text: '"Hesaplanmış sayıyı saklama, girdisini sakla" kuralı, kendi sayfamda birbiriyle çelişen iki fiyat çıkınca şemaya girdi. Şimdi aradığım şey, henüz fark etmediğim bir sonraki yanlış sayının nerede durduğu.',
     },
   ],
 }

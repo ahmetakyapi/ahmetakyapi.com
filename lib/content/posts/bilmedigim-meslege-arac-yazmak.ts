@@ -6,23 +6,23 @@ export const post: BlogPost = {
   tagColor: '#2b62f5',
   title: "Mimio: Seansı Kaydet, İlerlemeyi Gör",
   excerpt:
-    'Mimio ergoterapistler için bir panel ve ben ergoterapiyi bilmiyordum. İlk dersim şu oldu: kendi kavramlarını uydurma, mesleğin zaten oturmuş bir dili var.',
-  date: '2026-03-22',
+    'Mimio ergoterapistler için bir panel; başladığımda ergoterapiyi bilmiyordum. Seans notunu kafama göre kurdum, mesleğin oturmuş not biçimi altı gün sonra geldi.',
+  date: '2026-08-06',
   coverGradient: 'linear-gradient(135deg, #2b62f5 0%, #1d8ad4 55%, #17c2e0 100%)',
   content: [
     {
       type: 'lead',
-      text: 'Mimio\'yu yazmaya başladığımda ergoterapinin ne olduğunu tam bilmiyordum. Fikir şuydu: terapistin seansta oynattığı oyunlar ölçülebilir veri üretsin, o veri danışanın dosyasına düşsün ve zamanla bir ilerleme çizgisi çıksın. Kulağa temiz geliyordu. Seans notunu tasarlarken ilk hatamı yaptım.',
+      text: 'Mimio\'yu yazmaya başladığımda ergoterapinin ne olduğunu tam bilmiyordum. Fikir şuydu: terapistin seansta oynattığı oyunlar ölçülebilir veri üretsin, bu veri danışanın dosyasına düşsün ve zamanla bir ilerleme çizgisi çıksın. İlk hatayı seans notunda yaptım.',
     },
     {
       type: 'p',
-      text: 'İlk sürümde seans notu tek bir serbest metin kutusuydu: bir tarih, bir `content` alanı, o kadar. Bana yeterli görünüyordu. Sonra bu mesleğin onlarca yıldır kullandığı bir not biçimi olduğunu öğrendim ve altı gün sonra panele girdi.',
+      text: 'İlk sürümde seans notu tek bir serbest metin alanıydı: oyun kaydının yanında `session_note TEXT` sütunu, o kadar. Oysa bu mesleğin onlarca yıldır kullandığı bir not biçimi var. 14 Mart\'taki ilk commit\'ten altı gün sonra o biçim panele girdi.',
     },
 
     { type: 'h2', text: 'Mesleğin Kendi Dili Vardı: SOAP' },
     {
       type: 'p',
-      text: 'SOAP, sağlık alanında yaygın bir klinik not standardı. Dört harf, dört bölüm ve sıraları keyfi değil, bir düşünme sırası:',
+      text: 'SOAP, sağlıkta yaygın kullanılan bir klinik not biçimi. Dört harf, dört bölüm. Sıraları da bir düşünme sırasını izliyor:',
     },
     {
       type: 'table',
@@ -36,7 +36,7 @@ export const post: BlogPost = {
     },
     {
       type: 'p',
-      text: 'Bu sıra bir şey öğretiyor: önce ne duyduğunu yaz, sonra ne gördüğünü, ancak ondan sonra ne düşündüğünü. Yorumu gözlemden ayırıyor. Benim tek kutum bu ayrımı hiç yapmıyordu; gözlem ile yorum aynı paragrafta, aynı cümlede bile karışabiliyordu.',
+      text: 'Sıra şunu söylüyor: önce ne duyduğunu yaz, sonra ne gördüğünü, en son ne düşündüğünü. Yorum gözlemden ayrı duruyor. Benim tek kutumda bu ayrım yoktu; gözlem ile yorum aynı paragrafta, hatta aynı cümlede karışabiliyordu.',
     },
     {
       type: 'code',
@@ -53,17 +53,17 @@ export interface SoapNoteContent {
     },
     {
       type: 'quote',
-      text: 'Bir mesleğe araç yazıyorsan, o meslek kavramlarını çoktan adlandırmıştır. Senin işin yeni bir sözlük icat etmek değil, var olan sözlüğü ekrana doğru yerleştirmek.',
+      text: 'Bir mesleğe araç yazıyorsan, o meslek kendi kavramlarına çoktan ad vermiştir. Yeni bir sözlük icat etmene gerek yok; var olanı ekrana doğru yerleştirmen yeter.',
     },
     {
       type: 'p',
-      text: 'Serbest notu kaldırmadım; `NoteMode` iki seçenekli. Her seans dört bölümlük bir değerlendirmeyi hak etmiyor ve on dakikalık bir kontrol seansında SOAP yazmaya zorlanan biri büyük ihtimalle hiçbir şey yazmaz.',
+      text: 'Serbest notu kaldırmadım; `NoteMode` iki seçenekli. Her seans dört bölümlük bir not gerektirmiyor. On dakikalık bir kontrol seansında SOAP yazmaya zorlanan biri büyük ihtimalle hiçbir şey yazmaz.',
     },
 
-    { type: 'h2', text: 'Oyunlar Sadece Oyun Değil, Ölçüm' },
+    { type: 'h2', text: 'Her Oyun Bir Kayıt Bırakıyor' },
     {
       type: 'p',
-      text: 'Panelde yedi terapi oyunu var ve hepsinin adı Türkçe: Sıra Hafızası, Kart Eşle, Mavi Nabız, Komut Rotası, Fark Avcısı, Hedef Tarama, Dizi Mantık. Her biri farklı bir beceriye bakıyor: çalışma belleği, görsel tarama, tepki kontrolü, sıralı komut takibi. Ama asıl mesele oyunun kendisi değil, arkasında bıraktığı kayıt.',
+      text: 'Panelde yedi terapi oyunu var ve hepsinin adı Türkçe: Sıra Hafızası, Kart Eşle, Mavi Nabız, Komut Rotası, Fark Avcısı, Hedef Tarama, Dizi Mantık. Her biri başka bir beceriye bakıyor: çalışma belleği, görsel tarama, tepki kontrolü, sıralı komut takibi. Terapist için işe yarayan kısım, oyun bitince geride kalan kayıt.',
     },
     {
       type: 'code',
@@ -79,21 +79,21 @@ export interface SoapNoteContent {
     },
     {
       type: 'p',
-      text: '`best` ile `last` ayrımı küçük ama önemli. Yalnızca en iyiyi saklasan ilerleme hep yukarı gidiyor gibi görünür; yalnızca sonuncuyu saklasan kötü bir gün bütün tabloyu bozar. İkisi birlikte "iyi günü ne, bugünü ne" sorusunu cevaplıyor.',
+      text: '`best` ile `last` ayrımı küçük bir ayrıntı gibi duruyor. Yalnızca en iyiyi saklasan ilerleme hep yukarı gidiyor gibi görünür; yalnızca sonuncuyu saklasan kötü bir gün bütün tabloyu bozar. İkisi birlikte "iyi gününde ne yapıyor, bugün ne yaptı" sorusunu cevaplıyor.',
     },
 
     { type: 'h2', text: 'Şema Her Hafta Değişti, Migration Yazmadım' },
     {
       type: 'p',
-      text: 'Teknik tarafın en tartışmalı kararı buydu ve gerekçesi doğrudan yukarıdaki durumla ilgili.',
+      text: 'Teknik tarafta en çok itiraz alacak karar bu. Gerekçesi yukarıdaki durum.',
     },
     {
       type: 'p',
-      text: 'Alanı bilmiyordum, dolayısıyla şema tahminlerim yanlıştı ve öğrendikçe değişiyordu. İlk haftanın sonunda danışan tablosuna zorluk düzeyi, arşivleme tarihi, etiketler ve doğum tarihi eklenmişti. Her değişiklikte migration üretip uygulamak, tek kişilik bir projede kazandırdığından fazlasını alıyordu.',
+      text: 'Alanı bilmediğim için şemayla ilgili tahminlerim tutmuyordu ve öğrendikçe değişiyordu. İlk haftanın sonunda danışan tablosuna zorluk düzeyi, arşivleme tarihi, etiketler ve doğum tarihi eklenmişti. Tek kişilik bir projede her değişiklikte migration üretip uygulamak, kazandırdığından fazlasını götürüyordu.',
     },
     {
       type: 'p',
-      text: 'Bu yüzden şemayı idempotent ifadeler olarak tuttum. Liste Vercel\'de her derlemeden önce (`vercel-build` adımında) baştan sona koşuyor ve kaç kez çalıştırırsan çalıştır aynı sonuca varıyor.',
+      text: 'Bu yüzden şemayı, kaç kez çalışırsa çalışsın aynı sonucu veren (idempotent) SQL cümleleri olarak tuttum. Liste Vercel\'de her build\'den önce (`vercel-build` adımında) baştan sona çalışıyor.',
     },
     {
       type: 'code',
@@ -118,72 +118,72 @@ export interface SoapNoteContent {
     },
     {
       type: 'p',
-      text: 'Şu an 6 `CREATE TABLE` ve 12 `ALTER TABLE` var. ORM de yok. Sorgular `@neondatabase/serverless` üzerinden `sql.query` ile ve `$1`, `$2` yer tutucularıyla yazılıyor; parametreler ayrı gidiyor, işin içine metin birleştirme girmiyor.',
+      text: 'Şu an 6 `CREATE TABLE` ve 12 `ALTER TABLE` var. ORM de yok. Sorgular `@neondatabase/serverless` üzerinden `sql.query` ile, `$1`, `$2` yer tutucularıyla yazılıyor; parametreler ayrı gidiyor, SQL metni string birleştirerek kurulmuyor.',
     },
 
     { type: 'h3', text: 'Bunun Bedeli Ne' },
     {
       type: 'p',
-      text: 'Bedava değil. Dört şey kaybettim:',
+      text: 'Bunun karşılığında dört şeyden vazgeçtim:',
     },
     {
       type: 'ul',
       items: [
         'Tip güvenliği. Satırların tipini elle yazıyorum; kolon adını yanlış yazarsam derleme değil, çalışma zamanı hatası alıyorum.',
         '`ADD COLUMN IF NOT EXISTS` kolonu ekler ama silmez, tipini değiştirmez. Geri dönmek için elle SQL yazmam gerekiyor.',
-        'Yeniden adlandırma zahmetli. Editör yardım etmiyor, iş `grep`\'e kalıyor.',
-        'Liste iki yerde duruyor: uygulamanın içinde ve derlemede koşan `scripts/db-bootstrap.mjs` dosyasında. İkisini elle eş tutmak zorundayım.',
+        'Bir kolonun adını değiştirmek zahmetli. Editör yardım etmiyor, iş `grep`\'e kalıyor.',
+        'Liste iki yerde duruyor: uygulamanın içinde ve build sırasında çalışan `scripts/db-bootstrap.mjs` dosyasında. İkisini elle aynı tutmam gerekiyor.',
       ],
     },
     {
       type: 'p',
-      text: 'Altı tablolu, tek geliştiricili bir projede bu bedeli ödemeye değer buldum. Sonradan yazdığım Açılış Zili\'nde aynı kararı vermedim. Orada tablolar otuzu geçti ve aynı tabloyu birçok ekran okuyor. Drizzle\'ın orada verdiği şey ORM\'liğinden çok tip üretimi: şemaya kolon eklediğim an, onu eksik bırakan her yer derlemede kırmızıya dönüyor.',
+      text: 'Altı tablolu, tek geliştiricili bir projede bu bedeli ödemeye razıyım. Sonra yazdığım Açılış Zili\'nde aynı kararı vermedim. Orada ilk hafta içinde tablo sayısı 13\'e çıktı ve aynı tabloyu birçok ekran okuyor. Drizzle\'ın orada işime yarayan yanı ORM olması değil, tipleri şemadan üretmesi: şemaya kolon eklediğim an, onu eksik bırakan her yer build\'de hata veriyor.',
     },
     {
       type: 'compare',
       label: 'Aynı Geliştirici, Aynı Veritabanı, İki Farklı Karar',
       before: { label: 'Mimio · 6 Tablo', value: 'Ham SQL' },
-      after: { label: 'Açılış Zili · 30+ Tablo', value: 'Drizzle' },
-      note: 'Belirleyici soru "hangisi daha iyi" değil, "aynı tabloyu kaç yerden okuyorum". Bir yerden okuyorsan tipi elle yazmak sorun değil; birçok yerden okuyorsan tipin şemadan türemesi seni kurtarıyor.',
+      after: { label: 'Açılış Zili · 13 Tablo', value: 'Drizzle' },
+      note: 'Kararı veren soru şuydu: aynı tabloyu kaç yerden okuyorum? Bir yerden okuyorsan tipi elle yazmak sorun değil. Birçok yerden okuyorsan tipin şemadan türemesi hatayı build\'de yakalıyor.',
     },
 
     { type: 'h2', text: 'Serverless\'ta pg Kullanılmaz' },
     {
       type: 'p',
-      text: 'Bağlantı katmanı tercih değil, zorunluluktu. Vercel\'de her istek ayrı bir fonksiyonda çalışıyor ve yanıt döndükten sonra donuyor. Klasik bir bağlantı havuzu bu modelde işe yaramıyor: bağlantı açılıyor, fonksiyon donuyor, bağlantı açıkta kalıyor ve bir noktada Postgres "too many connections" diyor.',
+      text: 'Bağlantı katmanında seçme şansım yoktu. Vercel\'de her istek ayrı bir fonksiyonda çalışıyor ve yanıt döndükten sonra donuyor. Klasik bir bağlantı havuzu burada işe yaramıyor: bağlantı açılıyor, fonksiyon donuyor, bağlantı açıkta kalıyor ve bir noktada Postgres "too many connections" diyor.',
     },
     {
       type: 'p',
-      text: 'Neon\'un HTTP sürücüsünde kalıcı bağlantı yok, dolayısıyla sızdıracak bağlantı da yok. Görünmeyen bedeli şu: her sorgu ayrı bir HTTP gidiş-dönüşü. Yerelde gecikme o kadar küçük ki fark etmiyorsun; üretimde çok sayıda küçük sorgu atan bir sayfa birden yavaşlıyor.',
+      text: 'Neon\'un HTTP sürücüsünde kalıcı bağlantı yok, bu yüzden açıkta kalan bağlantı da yok. Bedeli ilk bakışta görünmüyor: her sorgu ayrı bir HTTP gidiş-dönüşü. Yerelde gecikme o kadar küçük ki fark etmiyorsun; canlıda çok sayıda küçük sorgu atan bir sayfa birden yavaşlıyor.',
     },
     {
       type: 'callout',
       variant: 'warning',
-      text: 'Bu tuzağa Açılış Zili\'nde tam olarak düştüm: şirketler dizini her kotasyonu `Promise.all` ile ayrı bir `insert` olarak yazıyordu. Kod paralel olduğu için masum görünüyordu. Tek bir çok satırlı upsert\'e çevirince sayfa başına 513 istek 2\'ye indi.',
+      text: 'Bu tuzağa Açılış Zili\'nde düştüm: şirketler dizini her kotasyonu `Promise.all` ile ayrı bir `insert` olarak yazıyordu. Kod paralel çalıştığı için zararsız görünüyordu. Tek bir çok satırlı upsert\'e çevirince sayfa başına 513 istek 2\'ye indi.',
     },
 
     { type: 'h2', text: 'Klinik Veri Olduğunu Unutmamak' },
     {
       type: 'p',
-      text: 'Panelde danışan adları, seans notları ve gelişim kayıtları var. Bu hobi projesi verisi değil.',
+      text: 'Panelde danışan adları, seans notları ve gelişim kayıtları duruyor. Bu, bir hobi projesinin verisi gibi ele alınamaz.',
     },
     {
       type: 'p',
-      text: 'Yaptıklarım mütevazı. Parolalar Postgres\'in pgcrypto eklentisiyle bcrypt olarak karılıyor (`crypt($5, gen_salt(\'bf\', 8))`); şema listesinin ilk satırındaki `CREATE EXTENSION` bu yüzden orada. Oturum, HMAC ile imzalanmış bir çerezde. Başlangıçtaki demo verisi ve tarayıcıda tutulan yerel profiller tamamen kaldırıldı, her şey veritabanından geliyor. En önemlisi de bir şeyi yapmamak oldu: hiçbir yere analitik, hata izleme ya da üçüncü taraf betiği koymadım. Bir seans notunun bir hata raporunun içinde başka bir sunucuya gitmesi, düşünmek bile istemediğim bir senaryo.',
+      text: 'Yaptıklarım az ama yerinde. Parolalar Postgres\'in pgcrypto eklentisiyle bcrypt olarak hash\'leniyor (`crypt($5, gen_salt(\'bf\', 8))`); şema listesinin ilk satırındaki `CREATE EXTENSION` bu yüzden orada. Oturum, HMAC ile imzalanmış bir çerezde tutuluyor. Başlangıçtaki demo verisi ve tarayıcıda saklanan yerel profiller kaldırıldı; her şey veritabanından geliyor. Bir şeyi de bilerek yapmadım: hiçbir yere analitik, hata izleme ya da üçüncü taraf script koymadım. Bir hata raporu, içinde bir seans notuyla başka bir şirketin sunucusuna gidebilirdi.',
     },
 
     { type: 'h2', text: 'Ne Öğrendim' },
     {
       type: 'p',
-      text: 'Bilmediğin bir alana araç yazarken en pahalı hata, alanı kendi kafandaki modele göre kurmak. SOAP\'ı altı gün sonra öğrendim ve ucuz atlattım; aynı şeyi altı ay sonra öğrenseydim elimde yapısız notlarla dolu bir veritabanı olurdu.',
+      text: 'Bilmediğin bir alana araç yazarken en pahalı hata, alanı kendi kafandaki modele göre kurmak. SOAP altı gün sonra panele girdi ve ucuz atlattım. Aynı şey altı ay sonra olsaydı elimde düzensiz notlarla dolu bir veritabanı olurdu.',
     },
     {
       type: 'p',
-      text: 'İkincisi: şema belirsizliği bir teknoloji tercihi doğuruyor. "ORM kullanmalı mıyım" sorusunun cevabı projeye değil, projenin hangi aşamasında olduğuna bağlı. Alanı öğrendiğim ve şema oturduğu gün Mimio\'yu Drizzle\'a taşımak mantıklı olabilir. O gün henüz gelmedi.',
+      text: 'Şemanın belirsiz olması teknoloji seçimini de değiştirdi. "ORM kullanmalı mıyım" sorusunun cevabı, projenin hangi aşamada olduğuna bağlı. Alanı öğrenip şema oturduğunda Mimio\'yu Drizzle\'a taşımak mantıklı olabilir. O gün henüz gelmedi.',
     },
     {
       type: 'p',
-      text: 'Başta skorları yorumlamayı bilerek yapmadım. "Gelişme var" ya da "gerileme var" diyen bir kutu, terapistin vereceği kararı onun yerine vermek gibi geldi. Sonra çizgiyi biraz geçtim: İlerleme Raporu\'ndaki oyun tablosu artık en az üç seans olduğunda ilk ve son skoru karşılaştırıyor; fark 4 puanı aşarsa "artıyor", -4\'ün altına inerse "düşüyor", arada kalırsa "stabil" yazıyor. Bu rapor aileye ya da kuruma gidiyor. 4 puanın kimin yargısı olduğu sorusunun cevabı da şimdilik bende.',
+      text: 'Skorları yorumlayan tek bir yer var. İlerleme Raporu\'ndaki oyun tablosu, 2 Ağustos\'tan beri en az üç seans varsa ilk ve son skoru karşılaştırıyor; fark 4 puanı aşarsa "artıyor", -4\'ün altına inerse "düşüyor", arada kalırsa "stabil" yazıyor. Bu rapor aileye ya da kuruma gidiyor ve o 4 puanlık eşiği bir terapist değil, ben seçtim.',
     },
   ],
 }

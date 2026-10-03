@@ -6,53 +6,53 @@ export const post: BlogPost = {
   tagColor: '#8b5cf6',
   title: "ahmetakyapi.com: Hızlı Ölçüldü, Yavaş Hissedildi",
   excerpt:
-    '"Windows\'ta kasıyor" dediler. Profilleyici 60 kare ve sıfır uzun görev gösterdi. Sorun ölçtüğüm yerde değildi; bulunca animasyon kütüphanesini de sildim.',
-  date: '2026-03-15',
+    '"Windows\'ta takılıyor" dediler. Profiler sıfır uzun görev gösterdi; gecikme JavaScript ile çizilen imleçteydi. Bu arada 76 KB\'lık animasyon kütüphanesi de gitti.',
+  date: '2026-08-15',
   coverGradient: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 50%, #3b82f6 100%)',
   content: [
     {
       type: 'lead',
-      text: 'Sitenin özellikle Windows\'ta akıcı hissettirmediğini söylediler. Profilleyiciyi açtım: işlemci altı kat kısıtlıyken bile 50 milisaniyeyi aşan tek bir görev yok, kaydırma pürüzsüz. Ölçüm "sorun yok" diyordu. Sorun vardı, ama ölçtüğüm yerde değildi.',
+      text: 'Sitenin Windows\'ta gecikmeli hissettirdiği söylendi. Profiler\'ı açtım: işlemci altı kat yavaşlatılmışken bile 50 milisaniyeyi aşan tek bir görev yok. Ölçüm "sorun yok" diyordu. Sorun vardı, ama ölçtüğüm yerde değildi.',
     },
 
     { type: 'h2', text: 'Önce Yanlış Yerlere Baktım' },
     {
       type: 'p',
-      text: 'Şüphelendiğim şeyler sırayla: tam ekran parçacık tuvali, dönen küre, iç içe beş `backdrop-filter` katmanı, büyük bulanıklık filtreleri. Hepsini teker teker devre dışı bırakıp ölçtüm.',
+      text: 'İlk şüphelendiğim şeyler pahalı görünen katmanlardı: tam ekran parçacık tuvali, dönen küre, iç içe beş `backdrop-filter` katmanı, büyük bulanıklık filtreleri.',
     },
     {
       type: 'p',
-      text: 'İlk turda sonuçlar harika göründü: tuvalleri kaldırınca ana iş parçacığının yükü yarıdan fazla düşüyordu. Neredeyse bulgu diye yazacaktım. Sonra aynı ölçümü dört kez daha koşturdum.',
+      text: 'Ölçerken bir tuzağa da düştüm. Aynı ölçümü beş kez çalıştırdım: ilki 493 ms okudu, sonraki dördü 218 ms. Tek ölçüme bakıp bir varyantı onunla kıyaslasaydım, aradaki farkı yaptığım değişikliğe yazacaktım.',
     },
     {
       type: 'compare',
       label: 'Aynı Sayfa, Aynı Ölçüm',
       before: { label: 'İlk Çalıştırma', value: '493 ms' },
       after: { label: 'Sonraki Dört Çalıştırma', value: '218 ms' },
-      note: 'İlk ölçüm soğuk tarayıcının bedelini ödüyordu: JIT derlemesi, ilk boyama, önbelleksiz her şey. Karşılaştırma tabanım oydu, bu yüzden sonraki her varyant sihirli biçimde iyi görünüyordu.',
+      note: 'İlk ölçüm soğuk tarayıcının bedelini ödüyordu: JIT derlemesi, ilk çizim, boş önbellek. O sayıyı taban alsaydım, ondan sonraki her varyant iyileşme gibi görünürdü.',
     },
     {
       type: 'p',
-      text: 'Isınmış tarayıcıda tuvalleri kaldırmanın etkisi neredeyse yok oldu. Olmayan bir sorunun peşinden epey koşmuşum.',
+      text: 'Bu katmanların bir kısmını yine de sadeleştirdim: arka plandaki 90 parçacıklı tuval (ekranda görünür bir karşılığı yoktu) kalktı, beş `backdrop-filter` katmanı bire indi. Ama gecikme hissinin kaynağı bunlar değildi.',
     },
     {
       type: 'callout',
       variant: 'warning',
-      text: 'Bu ölçümden çıkan kural: ilk çalıştırmayı at, her varyantı birkaç kez koştur ve aradaki oynamayı gör. Tek ölçüme bakıp karar vermek, gürültüyü bulgu sanmanın en kolay yolu.',
+      text: 'Buradan çıkan kural: ilk çalıştırmayı at, her varyantı birkaç kez çalıştır ve sayıların ne kadar oynadığına bak. Tek ölçümle karar verirsen gürültüyü bulgu sanırsın.',
     },
 
     { type: 'h2', text: 'Sorun İmleçti' },
     {
       type: 'p',
-      text: 'Sonunda fark ettim: sitede özel bir imleç vardı. CSS her elemana `cursor: none` diyor, JavaScript de ekrana bir nokta ve onu izleyen bir halka çiziyordu.',
+      text: 'Sitede özel bir imleç vardı. CSS her elemana `cursor: none` diyor, JavaScript de ekrana bir nokta ve onu izleyen bir halka çiziyordu.',
     },
     {
       type: 'p',
-      text: 'İşletim sisteminin imleci donanım katmanında çizilir. Pencere yöneticisi onu her şeyin üstüne ayrı bir katman olarak bindirir; sayfanın kare hızıyla ilgisi yoktur. Fareyi oynattığın an oradadır.',
+      text: 'İşletim sisteminin imleci donanım katmanında çizilir. Her şeyin üstüne ayrı bir katman olarak biner ve sayfanın kare hızıyla ilgisi yoktur. Fareyi oynattığın an oradadır.',
     },
     {
       type: 'p',
-      text: 'JavaScript ile çizilen imleç ise sayfanın bir parçası. En iyi ihtimalle bir kare geride kalıyor, 60 Hz\'de 16,7 ms. Windows\'ta tarayıcının katman birleştirme gecikmesi eklenince bu 30-50 ms\'yi buluyor.',
+      text: 'JavaScript ile çizilen imleç ise sayfanın bir parçası. En iyi ihtimalle bir kare geriden gelir, 60 Hz\'de 16,7 ms. Windows\'ta tarayıcının katmanları birleştirme (compositing) gecikmesi eklenince bu 30-50 ms\'yi buluyor.',
     },
     {
       type: 'code',
@@ -67,25 +67,25 @@ ring.current.y += (mouse.current.y - ring.current.y) * 0.14`,
     },
     {
       type: 'quote',
-      text: 'Bir arayüzle kurulan en sık geri bildirim döngüsü el ile imleç arasındaki döngüdür. Onu bozarsan, sayfanın geri kalanı ne kadar hızlı olursa olsun her şey gecikmeli hissedilir.',
+      text: 'Bir arayüzde en sık tekrarlanan döngü el ile imleç arasındadır. Onu bozarsan, sayfanın geri kalanı ne kadar hızlı olursa olsun her şey gecikmeli hissedilir.',
     },
     {
       type: 'p',
-      text: 'Bu hiçbir metriğe yansımıyor. Kare süresi 16,7 ms, uzun görev sıfır, Lighthouse mutlu. Ölçtüğüm şey sayfanın ne kadar hızlı çizildiğiydi; kullanıcının hissettiği şey ise kendi hareketinin ekrana ne kadar geç yansıdığı.',
+      text: 'Bu gecikme kare süresi ölçümlerinde hiç görünmüyor; uzun görev sayısı yine sıfır. Ben sayfanın ne kadar hızlı çizildiğini ölçüyordum. Kullanıcının hissettiği ise kendi hareketinin ekrana ne kadar geç yansıdığıydı.',
     },
     {
       type: 'p',
-      text: 'Özel imleci silmedim, varsayılan olarak kapattım. İsteyen komut paletinden açabiliyor ve tercih kalıcı. `cursor: none` kuralını da CSS\'ten çıkarıp bileşene taşıdım. Eskiden kural CSS\'te, imleç JavaScript\'teydi; yani JavaScript yüklenene kadar sayfada hiç imleç olmuyordu.',
+      text: 'Özel imleci silmedim, varsayılan olarak kapattım. İsteyen komut paletinden açabiliyor ve tercih hatırlanıyor. `cursor: none` kuralını da CSS\'ten çıkarıp bileşene taşıdım. Eskiden kural CSS\'te, imleç JavaScript\'teydi; yani JavaScript yüklenene kadar sayfada hiç imleç olmuyordu.',
     },
 
-    { type: 'h2', text: 'Madem Bakıyordum: Kütüphane Ne Kadar Yer Kaplıyor' },
+    { type: 'h2', text: 'Madem Bakıyordum: Animasyon Kütüphanesi' },
     {
       type: 'p',
-      text: 'Asıl sorunu bulmuştum, ama paket boyutuna da bakmıştım ve gördüğüm şey rahatsız ediciydi. Ana sayfanın ilk yükleme JavaScript\'i 181 KB\'tı ve bunun yaklaşık 76 KB\'ı (gzip) animasyon kütüphanesiydi. Yüzde kırk üç.',
+      text: 'Aynı turda paket boyutuna da baktım. Ana sayfanın ilk yüklemede indirdiği JavaScript 181 KB\'tı ve bunun yaklaşık 76 KB\'ı (gzip) animasyon kütüphanesi framer-motion\'dı. Yüzde kırk üç.',
     },
     {
       type: 'p',
-      text: 'Bir portfolyo sitesi için bu oranı savunamazdım. Kütüphanenin sitede ne iş yaptığını tek tek çıkardım:',
+      text: 'Bir portfolyo sitesi için bu oranı savunamazdım. Kütüphanenin sitede ne iş yaptığını tek tek listeledim:',
     },
     {
       type: 'table',
@@ -100,7 +100,7 @@ ring.current.y += (mouse.current.y - ring.current.y) * 0.14`,
     },
     {
       type: 'p',
-      text: 'Hiçbiri kütüphane gerektirmiyordu. En çok çekindiğim gezinme göstergesiydi: kütüphanenin `layoutId` özelliği iki ayrı elemanı birbirine bağlayıp aradaki geçişi kendisi hesaplıyor. Yerine yazdığım şey on beş satır.',
+      text: 'Hiçbiri kütüphane gerektirmiyordu. En zor görüneni gezinme göstergesiydi: kütüphanenin `layoutId` özelliği iki ayrı elemanı birbirine bağlayıp aradaki geçişi kendisi hesaplıyor. Yerine yazdığım kod on beş satır.',
     },
     {
       type: 'code',
@@ -124,21 +124,21 @@ ring.current.y += (mouse.current.y - ring.current.y) * 0.14`,
     },
     {
       type: 'p',
-      text: 'Konum ve genişlik CSS değişkeni olarak yazılıyor, kaymayı `transition` hallediyor ve JavaScript her kareye karışmıyor. Kart eğiminde de aynı mantık: `mousemove` doğrudan iki CSS değişkeni yazıyor, React hiç yeniden çizim yapmıyor. Sayfada on üç kart var; her birinin üzerinde gezinmek artık yalnızca iki değişken yazıyor.',
+      text: 'Konum ve genişlik CSS değişkeni olarak yazılıyor, kaymayı `transition` yapıyor ve JavaScript her kareye karışmıyor. Kart eğiminde de aynı yol: `mousemove` doğrudan iki CSS değişkeni yazıyor, React yeniden render etmiyor. Sayfada on üç kart var; fareyle üstlerinde gezinmek artık yalnızca iki değişken yazıyor.',
     },
 
-    { type: 'h2', text: 'En Sevdiğim Kısım: Sıfır JavaScript\'li Görünme Animasyonu' },
+    { type: 'h2', text: 'JavaScript\'siz Görünme Animasyonu' },
     {
       type: 'p',
-      text: 'Kartların görünüme girerken belirmesi, kütüphanenin en çok kullandığım özelliğiydi. Her kartın kendi bileşeni ve kendi `IntersectionObserver`\'ı vardı.',
+      text: 'Kartların ekrana girerken belirmesi, kütüphaneyi en çok kullandığım yerdi. Her kartın kendi bileşeni ve kendi `IntersectionObserver`\'ı vardı.',
     },
     {
       type: 'p',
-      text: 'Bunları tek bir gözlemciye indirmek de bir seçenekti, ama aynı riski taşırdı: animasyonun başlangıç durumu `opacity: 0`. JavaScript herhangi bir sebeple çalışmazsa (paket inmedi, bir hata hidrasyonu durdurdu) sayfa bomboş kalır.',
+      text: 'Bunları tek bir observer\'a indirmek de mümkündü, ama aynı risk kalırdı: animasyonun başlangıç durumu `opacity: 0`. JavaScript herhangi bir sebeple çalışmazsa (paket inmedi, bir hata hydration\'ı durdurdu) sayfa bomboş kalır.',
     },
     {
       type: 'p',
-      text: 'CSS\'in kaydırmaya bağlı animasyonları işi tamamen tarayıcıya devrediyor: gözlemci yok, dinleyici yok, ana iş parçacığında iş yok.',
+      text: 'CSS\'in kaydırmaya bağlı animasyonları işi tamamen tarayıcıya bırakıyor: observer yok, dinleyici yok, ana thread\'de iş yok.',
     },
     {
       type: 'code',
@@ -162,17 +162,17 @@ ring.current.y += (mouse.current.y - ring.current.y) * 0.14`,
     },
     {
       type: 'p',
-      text: '`@supports` bloğu yalnızca uyumluluk için değil, güvenlik için orada. Kuralın tamamı içeride olduğundan, desteklemeyen tarayıcı `opacity: 0` başlangıcını hiç görmüyor. Bir özelliği kullanamayan tarayıcının cezası "animasyonu görmemek" oluyor, "içeriği görmemek" değil. JavaScript tamamen kapalı olsa da içerik yerinde; animasyonu tarayıcı yürütüyor.',
+      text: '`@supports` bloğu orada bir güvenlik önlemi olarak duruyor. Kuralın tamamı içeride olduğu için, bu özelliği desteklemeyen tarayıcı `opacity: 0` başlangıcını hiç görmüyor. En kötü ihtimalle okuyucu animasyonu görmüyor; içerik her durumda yerinde. JavaScript tamamen kapalı olsa da öyle, çünkü animasyonu tarayıcı çalıştırıyor.',
     },
 
     { type: 'h2', text: 'Yazı Sayfası En Çok Rahatlayan Yer Oldu' },
     {
       type: 'p',
-      text: 'Blog gövdesinde her blok (her paragraf, her başlık, her kod bloğu) kendi animasyon bileşenine sarılıydı. Uzun bir yazıda bu, altmış bileşen ve altmış ayrı gözlemci demek.',
+      text: 'Blog gövdesinde her blok (her paragraf, her başlık, her kod bloğu) kendi animasyon bileşenine sarılıydı. Uzun bir yazıda bu, altmış bileşen ve altmış ayrı observer demek.',
     },
     {
       type: 'p',
-      text: 'Görsel olarak da iyi değildi. Bir kartın kaydırmayla belirmesi hoş; okumakta olduğun paragrafın gözünün önünde belirmesi rahatsız edici. Yazı gövdesindeki animasyonların hepsini kaldırdım.',
+      text: 'Görüntü olarak da iyi değildi. Bir kartın kaydırınca belirmesi hoş; okuduğun paragrafın gözünün önünde belirmesi rahatsız edici. Yazı gövdesindeki animasyonların hepsini kaldırdım.',
     },
     {
       type: 'stats',
@@ -188,11 +188,11 @@ ring.current.y += (mouse.current.y - ring.current.y) * 0.14`,
     { type: 'h2', text: 'Bir de Gizli Sızıntı Vardı' },
     {
       type: 'p',
-      text: 'Paketin içine bakarken beklemediğim bir şey gördüm: ana sayfanın JavaScript\'inde blog yazılarının tam metni duruyordu. Dokuz makale, gzip ile 38 KB.',
+      text: 'Paketin içine bakarken beklemediğim bir şey çıktı: ana sayfanın JavaScript\'inde blog yazılarının tam metni duruyordu. Dokuz yazı, gzip ile 38 KB.',
     },
     {
       type: 'p',
-      text: 'Sebep tek bir import\'tu. İstemci bileşenleri proje sıralaması için küçük bir yardımcı fonksiyon alıyordu; o fonksiyonun bulunduğu dosya ise varsayılan içerik için blog yazılarını değer olarak import ediyordu.',
+      text: 'Sebep tek bir import\'tu. İstemci bileşenleri proje sıralaması için küçük bir yardımcı fonksiyon alıyordu; o fonksiyonun bulunduğu dosya ise blog yazılarını değer olarak import ediyordu.',
     },
     {
       type: 'code',
@@ -208,26 +208,26 @@ import { getOrderedProjects } from '@/lib/site-content'
     },
     {
       type: 'p',
-      text: 'Saf fonksiyonu veri import etmeyen kendi dosyasına (`lib/project-order.ts`) taşıyınca 38 KB gitti. Bir yardımcı fonksiyon masum görünür; bulunduğu dosya olmayabilir. İstemci bileşeninin import ettiği her dosyanın import ağacına bakmak gerekiyor.',
+      text: 'Fonksiyonu veri import etmeyen kendi dosyasına (`lib/project-order.ts`) taşıyınca 38 KB gitti. Fonksiyonun kendisi zararsızdı; sorun bulunduğu dosyanın neleri import ettiğiydi. İstemci bileşeninin import ettiği her dosyanın kendi import\'larına da bakmak gerekiyor.',
     },
     {
       type: 'callout',
       variant: 'tip',
-      text: 'Bu tür sızıntıyı en hızlı bulduran şey, derlenmiş paket dosyalarında içerikten bir cümle aramak. Paket analiz araçları modül adı verir; "bu metin burada ne arıyor" sorusunu düz bir `grep` daha hızlı cevaplıyor.',
+      text: 'Bu tür sızıntıyı en hızlı bulmanın yolu, build çıktısındaki paket dosyalarında yazılardan bir cümle aramak. Paket analiz araçları modül adı verir; "bu metin burada ne arıyor" sorusuna düz bir `grep` daha hızlı cevap veriyor.',
     },
 
     { type: 'h2', text: 'Ne Kaybettim' },
     {
       type: 'p',
-      text: 'Bir şey kaybettim: sayfalar arası çıkış animasyonu.',
+      text: 'Bir şeyden vazgeçtim: sayfalar arası çıkış animasyonu.',
     },
     {
       type: 'p',
-      text: 'Aslında onu kütüphane varken de yapamıyordum. App Router yeni sayfayı çizerken eski ağacı beklemiyor, yani çıkışı oynatacak bir düğüm ortada kalmıyor. Bunu aşmanın yolları var ama hepsi gezinmeyi kasten geciktiriyor: kısa bir çıkış animasyonu için her tıklamaya aynı süreyi eklemek.',
+      text: 'Onu kütüphane varken de yapamıyordum. App Router yeni sayfayı çizerken eski ağacı beklemiyor, yani çıkış animasyonunu oynatacak bir eleman ortada kalmıyor. Bunu aşmanın yolları var ama hepsi gezinmeyi kasten geciktiriyor: kısa bir çıkış animasyonu için her tıklamaya o kadar bekleme eklemek.',
     },
     {
       type: 'p',
-      text: 'Kütüphane gidince tek yönlü, kısa bir giriş kaldı ve o da saf CSS. Rota geçişini yapan dosya artık istemci bileşeni bile değil.',
+      text: 'Kütüphane gidince geriye kısa bir giriş animasyonu kaldı ve o da yalnızca CSS. Rota geçişini yapan dosya artık istemci bileşeni bile değil.',
     },
     {
       type: 'code',
@@ -244,15 +244,15 @@ export default function SiteTemplate({ children }: { children: React.ReactNode }
     { type: 'h2', text: 'Ne Öğrendim' },
     {
       type: 'p',
-      text: 'Ölçülen hız ile hissedilen hız aynı şey değil. Bütün metrikler yeşilken birinin "kasıyor" demesi gayet mümkün. Metrikler sayfanın ne kadar hızlı çizildiğini ölçüyor; insan kendi hareketinin ne kadar geç karşılık bulduğunu hissediyor.',
+      text: 'Ölçülen hız ile hissedilen hız aynı şey değil. Bütün ölçümler temizken birinin "takılıyor" demesi mümkün. Ölçümler sayfanın ne kadar hızlı çizildiğine bakıyor; insan ise kendi hareketine ne kadar geç cevap geldiğini hissediyor.',
     },
     {
       type: 'p',
-      text: 'Bir animasyon kütüphanesi bir şeyi kolaylaştırdığı için değil, mümkün kıldığı için değerli. Burada yaptığım şeylerin neredeyse hepsi CSS ile zaten mümkündü; kütüphane yalnızca daha az düşünmemi sağlıyordu. 76 KB, daha az düşünmek için yüksek bir fiyat.',
+      text: 'Bu sitede kütüphanenin yaptığı işlerin neredeyse hepsi CSS ile zaten yapılabiliyordu; kütüphane yalnızca daha az kafa yormama yarıyordu. Bunun için 76 KB ödemek fazlaydı.',
     },
     {
       type: 'p',
-      text: 'Hâlâ emin olmadığım tek şey kart eğimi. Kütüphanesiz hâli çalışıyor ama yay hissi kayboldu, artık düz bir geçiş. Belki bir gün onu da kaldırırım, belki de yaya `linear()` geçiş eğrisiyle yaklaşırım.',
+      text: 'Emin olmadığım tek şey kart eğimi. Kütüphanesiz hâli çalışıyor ama artık yay (spring) hareketi yok, düz bir CSS geçişi var. Belki bir gün onu da kaldırırım, belki de `linear()` geçiş eğrisiyle yaya benzetmeye çalışırım.',
     },
   ],
 }

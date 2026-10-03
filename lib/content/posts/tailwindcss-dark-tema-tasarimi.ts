@@ -6,23 +6,23 @@ export const post: BlogPost = {
   tagColor: '#06b6d4',
   title: "ahmetakyapi.com: Dark Tema Sessizce Bozulmuştu",
   excerpt:
-    'Bu sitede uzun süre fark etmediğim bir hata vardı: yazdığım bazı Tailwind sınıfları hiç CSS üretmiyordu ve koyu tema sessizce açık temanın renklerine düşüyordu.',
-  date: '2026-01-10',
+    'Bu sitede yazdığım bazı Tailwind sınıfları hiç CSS üretmiyordu. Ne hata çıkıyordu ne de bir uyarı; koyu tema yer yer açık temanın renkleriyle çiziliyordu.',
+  date: '2026-08-17',
   coverGradient: 'linear-gradient(135deg, #06b6d4 0%, #0891b2 50%, #0f172a 100%)',
   content: [
     {
       type: 'lead',
-      text: 'Ana sayfanın üst bölümünde ince bir ayırıcı çizgi var. Koyu temada uzun süre parlak gri göründü ve ben bunu "biraz açık kalmış" diye geçtim. Meğer o sınıf hiç var olmuyormuş. Tailwind\'i projenin kendi sürümüyle derleyip çıktıyı okuyunca anladım.',
+      text: 'Ana sayfanın üst bölümünde ince bir ayırıcı çizgi var. Koyu temada neredeyse beyaz, tam opak bir çizgi olarak çiziliyordu. Sebebi koyu tema için yazdığım sınıfın CSS\'te hiç karşılığı olmamasıydı.',
     },
 
     { type: 'h2', text: 'Hata: Olmayan Opaklık Değerleri' },
     {
       type: 'p',
-      text: 'Tailwind v3\'ün varsayılan opaklık ölçeği beşin katlarından oluşuyor: 0, 5, 10, 15, 20 ve böyle 100\'e kadar. Yani `bg-white/10` üretiliyor, `bg-white/8` üretilmiyor.',
+      text: 'Tailwind v3\'ün varsayılan opaklık ölçeği beşin katlarından oluşuyor: 0, 5, 10, 15, 20 diye 100\'e kadar gidiyor. Yani `bg-white/10` üretiliyor, `bg-white/8` üretilmiyor.',
     },
     {
       type: 'p',
-      text: 'Üretilmeyince ne oluyor? Hata yok, uyarı da yok. Sınıf HTML\'de duruyor, CSS\'te karşılığı yok ve tarayıcı onu yok sayıyor.',
+      text: 'Üretilmeyen sınıf için hata da uyarı da çıkmıyor. Sınıf HTML\'de duruyor, CSS\'te karşılığı yok ve tarayıcı onu görmezden geliyor.',
     },
     {
       type: 'code',
@@ -35,11 +35,11 @@ export const post: BlogPost = {
     },
     {
       type: 'p',
-      text: 'İşin sinsi yanı şu: `dark:` öneki bir geri dönüş değil, üzerine yazma. `dark:via-white/8` üretilmeyince koyu temada boşluk kalmıyor, bir alttaki `via-slate-200` yürürlükte kalıyor. Koyu tema, açık temanın rengini kullanıyor.',
+      text: 'İşin kötü yanı şu: `dark:` öneki açık temadaki değerin üzerine yazar. `dark:via-white/8` üretilmeyince üzerine yazılacak bir şey kalmıyor ve alttaki `via-slate-200` geçerli oluyor. Yani koyu tema, açık temanın rengiyle çiziliyor.',
     },
     {
       type: 'p',
-      text: 'Doğrulamak için projenin kendi Tailwind sürümüyle yalnızca o sınıfları derledim:',
+      text: 'Bunu görmenin en kısa yolu, projenin kendi Tailwind sürümüyle yalnızca o sınıfları derleyip çıktıya bakmak:',
     },
     {
       type: 'code',
@@ -52,17 +52,17 @@ grep -o 'bg-white\\\\/[0-9]*' /tmp/out.css
     },
     {
       type: 'p',
-      text: 'Sonra bütün projeyi taradım. `/8`, `/12`, `/14`, `/16`, `/18`, `/42`, `/48`, `/74`, `/88` ve birkaç tane daha; hepsi bileşenlerin içine dağılmış, hepsi sessizce boş.',
+      text: 'Bütün projeyi taradığımda liste uzadı: `/8`, `/12`, `/14`, `/16`, `/18`, `/42`, `/48`, `/74`, `/88` ve birkaç tane daha. Hepsi bileşenlerin içine dağılmıştı ve hiçbiri CSS üretmiyordu.',
     },
 
     { type: 'h3', text: 'İki Adımlı Düzeltme' },
     {
       type: 'p',
-      text: 'Anlık çözüm köşeli parantez: `dark:via-white/[0.08]`. Keyfi değer olarak işlendiği için her zaman üretiliyor.',
+      text: 'Hızlı çözüm köşeli parantez: `dark:via-white/[0.08]`. Tailwind bunu serbest değer (arbitrary value) olarak işlediği için her zaman üretiyor.',
     },
     {
       type: 'p',
-      text: 'Kalıcı çözüm ölçeği genişletmek. Kullandığım ara değerleri yapılandırmaya tanımladım; böylece hem `/8` çalışıyor hem de yarın aynı değeri yazdığımda sessizce kırılmıyor:',
+      text: 'Kalıcı çözüm ölçeği genişletmek. Kullandığım ara değerleri config\'e ekledim; böylece `/8` çalışıyor ve yarın aynı değeri yazdığımda da çalışmaya devam ediyor:',
     },
     {
       type: 'code',
@@ -82,19 +82,19 @@ grep -o 'bg-white\\\\/[0-9]*' /tmp/out.css
     { type: 'h2', text: 'Asıl Sorun Daha Derindeydi' },
     {
       type: 'p',
-      text: 'Opaklık hatası bir belirtiydi. Asıl sorun sitede tanımlı bir yüzey ölçeği olmamasıydı.',
+      text: 'Opaklık hatası işin görünen kısmıydı. Asıl sorun, sitede zemin ve kart renkleri için tanımlı bir sıra olmamasıydı.',
     },
     {
       type: 'p',
-      text: 'Kart renklerini tek tek saydım: bileşenlerin içine elle yazılmış 13 farklı koyu hex vardı. `#0c0b18`, `#0c0e17`, `#0a0a12`, `#07060f`, `#0a0814`, `#0e0c1a`, `#09101a`, `#0e1117`... Çoğu aynı hiyerarşi seviyesindeki kartlardı. Gözle bakınca "bir tanesinde tuhaflık var" diyordun ama hangisinde olduğunu söyleyemiyordun.',
+      text: 'Kart renklerini tek tek saydım: bileşenlerin içine elle yazılmış 13 farklı koyu hex vardı. `#0c0b18`, `#0c0e17`, `#0a0a12`, `#07060f`, `#0a0814`, `#0e0c1a`, `#09101a`, `#0e1117`... Çoğu aynı seviyedeki kartlardı. Yan yana bakınca bir tanesinin farklı durduğu seziliyor, ama hangisi olduğu söylenemiyordu.',
     },
     {
       type: 'p',
-      text: 'Sayfa zeminleri de birbirini tutmuyordu; blog ve 404 sayfası kendi zemin renklerini taşıyordu. Ana sayfadan bir yazıya geçince zemin değişiyordu.',
+      text: 'Sayfa zeminleri de birbirini tutmuyordu; blog ve 404 sayfasının kendi zemin rengi vardı. Ana sayfadan bir yazıya geçince zemin değişiyordu.',
     },
     {
       type: 'p',
-      text: 'Çözüm dört kademeli tek bir yüzey ölçeği ve tek bir zemin oldu:',
+      text: 'Çözüm dört kademeli tek bir renk sırası ve tek bir zemin oldu: sayfa zemini, kart, kartın üstündeki katman ve içe gömülü alan.',
     },
     {
       type: 'code',
@@ -121,7 +121,7 @@ html.dark {
     },
     {
       type: 'p',
-      text: 'Sonra bu değişkenleri Tailwind\'e renk olarak tanıttım. Bileşende `bg-card` yazıyorum ve `dark:` önekine hiç gerek kalmıyor, çünkü değişken zaten temaya göre değişiyor.',
+      text: 'Sonra bu değişkenleri Tailwind\'e renk olarak tanıttım. Bileşende `bg-card` yazıyorum ve `dark:` önekine gerek kalmıyor, çünkü değişkenin kendisi temaya göre değişiyor.',
     },
     {
       type: 'code',
@@ -141,13 +141,13 @@ html.dark {
       label: 'Bir Kartın Zemin Tanımı',
       before: { label: 'Önce', value: 'bg-white dark:bg-[#0c0e17]' },
       after: { label: 'Sonra', value: 'bg-card' },
-      note: 'İki sınıf yerine bir sınıf. Daha önemlisi, kart rengini değiştirmek istediğimde 13 dosyayı değil tek bir CSS değişkenini düzenliyorum.',
+      note: 'İki sınıf yerine bir sınıf. Kart rengini değiştirmek istediğimde de 13 dosyayı değil, tek bir CSS değişkenini düzenliyorum.',
     },
 
-    { type: 'h2', text: 'Açık Tema Neden Hep Üvey Evlat' },
+    { type: 'h2', text: 'Açık Temada Kenarlar Kaybolmuştu' },
     {
       type: 'p',
-      text: 'Koyu temayı tasarlarken saatler harcamıştım; açık temayı "aynısının tersi" diye düşünmüştüm. Kontrastı ölçünce çıkan tablo bu oldu:',
+      text: 'Aynı turda açık temanın kontrastını da ölçtüm. İki yer AA eşiğinin altındaydı:',
     },
     {
       type: 'table',
@@ -159,7 +159,7 @@ html.dark {
     },
     {
       type: 'p',
-      text: 'Kartların fiilen kenarı yoktu. Bej zeminin üstünde `rgba(180, 170, 150, 0.2)` bir kenarlık; gözle bakınca var gibi, ölçünce yok. Kenarlıkları koyulaştırdım, altbilgideki ikonları bir kademe koyu griye çektim.',
+      text: 'Kartların kenarı pratikte görünmüyordu. Bej zeminin üstünde `rgba(180, 170, 150, 0.2)` bir kenarlık vardı; 1,12:1 kontrastla ekranda neredeyse yok. Kenarlıkları koyulaştırdım. Altbilgideki sosyal ikonlar da `text-gray-400`\'ten `slate-500`\'e geçti.',
     },
     {
       type: 'quote',
@@ -167,17 +167,17 @@ html.dark {
     },
     {
       type: 'p',
-      text: 'Cam efekti (`backdrop-filter`) için de aynısı geçerli. Koyu zeminde yarı saydam beyaz bir yüzey doğal duruyor; açık zeminde aynı yüzey kayboluyor. `.glass` sınıfının bu yüzden iki tema için iki ayrı tanımı var ve ortak yanları yalnızca bulanıklık miktarı.',
+      text: 'Cam efekti (`backdrop-filter`) için de aynısı geçerli. Koyu zeminde yarı saydam beyaz bir katman doğal duruyor; açık zeminde aynı katman kayboluyor. Bu yüzden `.glass` sınıfının iki tema için iki ayrı tanımı var ve ikisinde ortak olan tek şey bulanıklık miktarı.',
     },
 
     { type: 'h2', text: 'Titremeyi Önlemek' },
     {
       type: 'p',
-      text: 'Sunucu, okuyucunun hangi temada olduğunu bilmiyor. İlk çizim ile istemcideki çizim bu yüzden uyuşmuyor ve React uyarı veriyor.',
+      text: 'Sunucu, okuyucunun hangi temayı seçtiğini bilmiyor. Bu yüzden sunucudaki ilk çizim ile tarayıcıdaki çizim tutmuyor ve React hydration uyarısı veriyor.',
     },
     {
       type: 'p',
-      text: '`next-themes` bunu `<html>` etiketine sınıf yazan küçük bir betikle çözüyor. React\'in uyuşmazlık uyarısını susturmak ise senin işin:',
+      text: '`next-themes` bunu sayfa çizilmeden önce `<html>` etiketine sınıf yazan küçük bir script ile çözüyor. React\'in uyarısını susturmak ise sana kalıyor:',
     },
     {
       type: 'code',
@@ -193,32 +193,32 @@ html.dark {
     },
     {
       type: 'p',
-      text: 'İkinci kısım daha önemli: temayı okuyan her bileşen, bileşen monte olana kadar beklemeli. Tema düğmesi `mounted` kontrolü olmadan çizilirse bir an yanlış ikon görünüp sonra değişiyor. Bu sitede düğme monte olana kadar hiç çizilmiyor (`mounted && …`). Doğrusu yerini tutan aynı boyda bir kutu bırakmaktı; düğme geldiğinde yanındaki öğelerin yeri oynamasın diye. Onu henüz yapmadım.',
+      text: 'İkinci kısım: temayı okuyan her bileşen, tarayıcıda mount olana kadar beklemeli. Tema düğmesi `mounted` kontrolü olmadan çizilirse bir an yanlış ikon görünüp sonra değişiyor. Bu sitede düğme mount olana kadar hiç çizilmiyor (`mounted && …`). Doğrusu, yerine aynı boyda boş bir kutu bırakmaktı; düğme geldiğinde yanındaki öğeler kaymasın diye. Onu henüz yapmadım.',
     },
     {
       type: 'callout',
       variant: 'warning',
-      text: 'Bu bekleme yalnızca `resolvedTheme` değerini kullanan bileşenler için gerekli. `dark:` sınıflarıyla çalışan her şey CSS seviyesinde hallolduğu için beklemeye ihtiyaç duymaz. Her bileşene `mounted` koruması koymak, sayfanın yarısını ilk boyamada boş bırakır.',
+      text: 'Bu bekleme yalnızca `resolvedTheme` değerini okuyan bileşenler için gerekli. `dark:` sınıflarıyla çalışan her şey CSS\'te çözülüyor, beklemesine gerek yok. Her bileşene `mounted` kontrolü koyarsan sayfanın yarısı ilk çizimde boş gelir.',
     },
 
     { type: 'h2', text: 'Bu Hata Bir Daha Olur mu' },
     {
       type: 'p',
-      text: 'Bu sitede olabilir. Ölçeği genişlettim ama yarın `/13` yazarsam yine sessizce hiçbir şey üretmeyecek ve bunu yakalayan bir kontrol yok.',
+      text: 'Bu sitede olabilir. Ölçeği genişlettim ama yarın `/13` yazarsam yine hiçbir şey üretilmeyecek ve bunu yakalayan bir kontrol yok.',
     },
     {
       type: 'p',
-      text: 'Tailwind v4\'te ise bu hata sınıfı ortadan kalkıyor. Açılış Zili\'nde kurulu olan v4.3.3 ile aynı sınıfları derledim: `bg-white/8`, `bg-white/42`, hatta `text-white/13` bile üretiliyor. v4 opaklığı sabit bir ölçekten değil, yazdığın sayıdan `color-mix()` ile kuruyor.',
+      text: 'Tailwind v4\'te bu hata türü yok. Açılış Zili\'nde kurulu olan v4.3.3 ile aynı sınıfları derledim: `bg-white/8`, `bg-white/42`, hatta `text-white/13` bile üretiliyor. v4 opaklığı sabit bir ölçekten almıyor, yazdığın sayıyı `color-mix()` içine koyuyor.',
     },
 
-    { type: 'h2', text: 'Çıkardığım Ders' },
+    { type: 'h2', text: 'Baştan Yapsam' },
     {
       type: 'p',
-      text: 'Bir CSS aracının sessizce hiçbir şey üretmemesi, fark edilmesi en zor hata türü. Derleyici uyarmıyor, tarayıcı uyarmıyor, ekranda bir şey görünüyor; yalnızca yanlış şey görünüyor.',
+      text: 'Bir CSS aracının hiçbir şey üretmemesini fark etmek zor. Build uyarmıyor, tarayıcı uyarmıyor ve ekranda yine bir renk görünüyor; sadece yanlış renk.',
     },
     {
       type: 'p',
-      text: 'Bugün olsa iki şeyi baştan yapardım: yüzey ölçeğini ilk günden CSS değişkeni olarak tanımlar, iki temanın kontrastını tasarım aşamasında ölçerdim. İkisini de iş bittikten sonra düzeltmek, baştan yapmaktan uzun sürdü.',
+      text: 'Bugün başlasam iki şeyi ilk gün yapardım: zemin ve kart renklerini CSS değişkeni olarak tanımlar, iki temanın kontrastını tasarım sırasında ölçerdim. Bu sitede ikisi de ancak Ağustos\'taki temizlikte yapıldı. Hâlâ açık kalan soru şu: bir sınıfın hiç CSS üretmediğini build sırasında yakalayan bir kontrolü nasıl kurarım?',
     },
   ],
 }

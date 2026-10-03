@@ -73,6 +73,13 @@ export interface BlogPost {
   excerpt: string
   date: string
   coverGradient: string
+  /**
+   * Yazının anlattığı proje (projects.ts `slug`). Kapak görseli ve "ilgili
+   * proje" bağlantısı buradan çözülür. Boşsa eski eşleşme geçerli: projenin
+   * `postSlug` alanı. Bir projenin birden çok yazısı olabildiği için gerekli;
+   * `postSlug` tek yazı taşıyor ve vaka sayfasının ilgili yazısı o kalıyor.
+   */
+  project?: string
   content: Block[]
 }
 
