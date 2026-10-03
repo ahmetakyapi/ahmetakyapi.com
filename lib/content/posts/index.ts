@@ -1,3 +1,4 @@
+import { typeset } from '@/lib/typeset'
 import type { BlogPost } from '../types'
 
 import acilisZili from './acilis-zili-nasil-yapildi'
@@ -10,7 +11,16 @@ import typescript from './typescript-ile-daha-iyi-react-bilesenleri'
 import tailwind from './tailwindcss-dark-tema-tasarimi'
 import firebase from './firebase-realtime-chat-uygulamasi'
 
-/** Sıra ekranda da geçerli: ilk yazı blog sayfasında öne çıkan karta düşer. */
+/**
+ * Yazılar YENİDEN ESKİYE, tarihe göre. Sıra eskiden bu dizinin elle
+ * yazılmış sırasıydı ve tarihle tutarsızdı; ana sayfa ile /blog farklı
+ * "son yazılar" gösteriyordu. Artık tek kaynak bu sıralama.
+ *
+ * Başlık ve özet gövdeyle aynı tipografiden geçer (lib/typeset.ts):
+ * gövdede "Spoiler’a" tipografik kesmeyle yazılırken başlıkta, kartta,
+ * RSS'te ve OG görselinde düz kesmeyle duruyordu. Metin dosyaları
+ * değişmez, dönüşüm burada bir kez yapılır.
+ */
 export const blogPosts: BlogPost[] = [
   acilisZili,
   spoilerWiki,
@@ -22,3 +32,5 @@ export const blogPosts: BlogPost[] = [
   tailwind,
   firebase,
 ]
+  .map((post) => ({ ...post, title: typeset(post.title), excerpt: typeset(post.excerpt) }))
+  .sort((a, b) => b.date.localeCompare(a.date))
