@@ -45,8 +45,6 @@ export default function ProjectsPage() {
   const ordered = getOrderedProjects(projects)
   const featured = ordered.filter((p) => p.featured)
   const rest = ordered.filter((p) => !p.featured)
-  const liveCount = projects.filter((p) => p.badge === 'Canlı').length
-  const withPost = projects.filter((p) => p.postSlug).length
 
   const counts = Object.fromEntries([
     ['all', projects.length],
@@ -82,8 +80,8 @@ export default function ProjectsPage() {
             </span>
           </h1>
           <p className="page-lead">
-            {projects.length} proje, {liveCount} tanesi yayında. Hepsinin kodu açık; {withPost} tanesinin nasıl
-            yapıldığını blogda anlattım.
+            Borsa takibinden klinik panellere, çok oyunculu oyunlardan küçük araçlara kadar kendi geliştirdiğim
+            ürünler. Çoğu yayında, hepsinin kodu açık.
           </p>
         </header>
 

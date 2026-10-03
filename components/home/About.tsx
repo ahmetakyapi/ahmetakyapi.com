@@ -68,7 +68,7 @@ export function About({ about }: { about: HomeContent['about'] }) {
 
   return (
     <section id="hakkimda" aria-labelledby="hakkimda-baslik" className="home-about">
-      <Container size="wide" className="pb-4 pt-10 sm:pb-8 sm:pt-16 lg:pt-20">
+      <Container size="wide" className="home-about-recede pb-4 pt-10 sm:pb-8 sm:pt-16 lg:pt-20">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
           <div>
             <h2 id="hakkimda-baslik" className="home-title lg:sticky lg:top-28">

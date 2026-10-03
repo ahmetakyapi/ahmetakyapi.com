@@ -1,19 +1,21 @@
 import { useId } from 'react'
+import { SIGNATURE_MARK_A, SIGNATURE_MARK_FLOURISH } from '@/lib/brand/signature'
 import { cx } from '@/lib/utils'
 
 /**
- * Marka işareti: üçgen, `signature` marka degradesinde karo.
+ * Marka işareti: imza "A"sı ve altında kara kalem bir kuyruk, `signature`
+ * marka degradesinde karo (3 Ekim 2026; önceki ince üçgen küçük boyda "A"
+ * olarak okunmuyordu). Harfler lib/brand/signature.ts'te, yazı tipi yok.
  *
  *   <Logo />                     // 36px
  *   <Logo size={28} />
  *
  * Tek bileşen; başlık, alt bilgi ve 404 aynı işareti çizer. Degrade
- * `id`si `useId` ile benzersiz: eski iki kopya `lg` ve `flg` id'lerini
- * paylaşıyordu ve aynı sayfadaki ikinci SVG birincinin degradesini
- * okuyabiliyordu. Duraklar token'dan (`--brand-from/mid/to`); sekme ikonu
- * (app/icon.svg), apple-icon ve OG (lib/og.tsx) aynı değerleri sabit
- * olarak taşır, çünkü orada CSS değişkeni çözülmez.
+ * `id`si `useId` ile benzersiz. Duraklar token'dan (`--brand-from/mid/to`);
+ * sekme ikonu (app/icon.svg), apple-icon ve OG (lib/og.tsx) aynı değerleri
+ * sabit olarak taşır, çünkü orada CSS değişkeni çözülmez.
  *
+ * Kuyruk sayfa açılınca bir kez kendini çizer (globals.css → `.logo-tail`).
  * Dekoratiftir (`aria-hidden`); erişilebilir adı onu saran bağlantı verir.
  */
 export function Logo({ size = 36, className }: { size?: number; className?: string }) {
@@ -31,11 +33,13 @@ export function Logo({ size = 36, className }: { size?: number; className?: stri
       className={cx('shrink-0', className)}
     >
       <rect width="42" height="42" rx="12" fill={`url(#${gradientId})`} />
+      <path d={SIGNATURE_MARK_A} fill="var(--on-brand)" />
       <path
-        d="M21 12L30 29H12L21 12Z"
-        stroke="var(--on-brand)"
-        strokeWidth="2.6"
-        strokeLinejoin="round"
+        className="logo-tail"
+        pathLength={1}
+        d={SIGNATURE_MARK_FLOURISH}
+        stroke="var(--brand-glow)"
+        strokeWidth="1.7"
         strokeLinecap="round"
       />
       <defs>

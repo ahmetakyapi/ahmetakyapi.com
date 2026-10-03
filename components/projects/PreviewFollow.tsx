@@ -24,6 +24,9 @@ import { useEffect } from 'react'
  * istemez. Sayfayı yalnızca okuyan kişi on ekran görüntüsü indirmez.
  */
 const SMOOTHING = 0.2
+/** İmleç hızından eğilme: piksel başına derece ve üst sınır. */
+const TILT_PER_PX = 0.12
+const MAX_TILT = 6
 const SETTLE_PX = 0.4
 /** Önizlemenin sağ ekran kenarından payı; CSS'teki `--pp-gap` (2rem) bunun iki katı. */
 const EDGE_MARGIN = 16
@@ -43,9 +46,13 @@ export function PreviewFollow({ targetId }: { targetId: string }) {
     let raf = 0
     let primed = false
 
+    /* Önizleme hareket yönüne hafifçe eğilir, durunca düzelir: elle
+       taşınan bir kart gibi. */
     function write() {
+      const tilt = Math.max(-MAX_TILT, Math.min(MAX_TILT, (tx - x) * TILT_PER_PX))
       host.style.setProperty('--px', `${x.toFixed(1)}px`)
       host.style.setProperty('--py', `${y.toFixed(1)}px`)
+      host.style.setProperty('--pr', `${tilt.toFixed(2)}deg`)
     }
 
     function frame() {

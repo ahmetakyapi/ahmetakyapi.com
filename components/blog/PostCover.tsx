@@ -1,4 +1,5 @@
 import { ViewTransition } from 'react'
+import { CoverArt } from '@/components/ui/CoverArt'
 import { ThemedImage } from '@/components/ui/ThemedImage'
 import type { BlogPost } from '@/lib/content/types'
 import { DEFAULT_THEME } from '@/lib/theme'
@@ -67,10 +68,7 @@ export function PostCover({
           className="size-full object-cover object-top"
         />
       ) : (
-        <div className="post-cover-type bg-cta" aria-hidden="true">
-          <span className="post-cover-word">{post.tag}</span>
-          {coverSubject(post) ? <span className="post-cover-tag">{coverSubject(post)}</span> : null}
-        </div>
+        <CoverArt word={post.tag} kicker={coverSubject(post) ?? undefined} />
       )}
     </div>
   )

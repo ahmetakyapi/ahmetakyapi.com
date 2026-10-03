@@ -175,6 +175,8 @@
   /* Vurgu kelimesi ve üzerine gelinen başlık: markanın mavisi içinde kalan
      kısa degrade. En açık uç #1b7bd6 / #e9eff6 ≈ 3,9:1 (büyük metin ≥ 3). */
   --accent-gradient: linear-gradient(105deg, #0d6ac2 0%, #1b7bd6 100%);
+  /* Degradenin bittiği renk: uzun başlıkta 11em'den sonrası. */
+  --ink-end: #1166bb;
   --display-gradient-tight: linear-gradient(100deg, #0a2547 0%, #1e6fbe 100%);
   /* Ana sayfadaki isim: iki kelimeyi tek yüzey gibi kaplar, koyu
      laciverten derin maviye. En açık uç #1066b8 / #f5f7fa ≈ 5,5:1. */
@@ -189,6 +191,11 @@
   --brand-from: #5cc4ff;
   --brand-mid: #1f86e0;
   --brand-to: #0b3f86;
+  /* Logonun kara kalem kuyruğu: karonun üstünde açık buz mavisi. */
+  --brand-glow: #bfe6ff;
+  /* İmza (başlıktaki ad): başlık mürekkebiyle aynı uçlar. */
+  --sig-from: #0a1a30;
+  --sig-to: #1166bb;
   --brand-gradient: linear-gradient(150deg, var(--brand-from) 0%, var(--brand-mid) 48%, var(--brand-to) 100%);
   /* Birincil CTA: aynı ailenin koyu yarısı, beyaz metinle her noktada AA. */
   --cta-gradient: linear-gradient(150deg, #1673c4 0%, #0b3f86 100%);
@@ -230,6 +237,9 @@
 
   --display-gradient: linear-gradient(105deg, #ffffff 0%, #d6edff 55%, #8fd3ff 100%);
   --accent-gradient: linear-gradient(105deg, #35b8ff 0%, #8fd3ff 100%);
+  --ink-end: #8fd3ff;
+  --sig-from: #ffffff;
+  --sig-to: #8fd3ff;
   --display-gradient-tight: linear-gradient(100deg, #eef5fc 0%, #58c4ff 100%);
   /* İsim: mavimsi beyazdan maviye. En koyu uç #3fbcff / #070d16 ≈ 9,4:1. */
   --name-gradient: linear-gradient(118deg, #f2f7fc 0%, #d4ecff 34%, #8fd3ff 70%, #3fbcff 100%);
@@ -1185,15 +1195,19 @@ html.theme-switching::view-transition-new(root) {
   :is(
       .ink,
       .home-title .home-mask-in,
-      .pfeat-title,
       .prest-title,
       .bl-archive-title,
       .bl-featured-title,
+      .prow-title,
       .post-title,
       .post-prose > h2,
       .post-prose > h3
     ) {
-    background-image: var(--display-gradient);
+    /* Degrade METNİN boyunda: kutu sayfa genişliğindeydi ve kısa bir başlık
+       degradenin yalnız koyu ucunu gösterip düz lacivert okunuyordu
+       ("başlıklar hep gradient olsun"). En çok 18em (11em'de uzun başlık
+       iki renkli gibi okunuyordu); ötesi uç rengiyle. */
+    background: var(--display-gradient) 0 0 / min(100%, 18em) 100% no-repeat var(--ink-end);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -1216,14 +1230,14 @@ html.theme-switching::view-transition-new(root) {
 
   @media (hover: hover) and (pointer: fine) {
     .group:hover .ink-hover,
-    .pfeat-in:hover .pfeat-title {
+    .prow-in:hover .prow-title {
       background-image: var(--accent-gradient);
     }
   }
 }
 
 @media (forced-colors: active) {
-  :is(.ink, .home-title .home-mask-in, .home-title-accent, .pfeat-title, .prest-title, .bl-archive-title, .bl-featured-title, .post-title, .post-prose > h2, .post-prose > h3) {
+  :is(.ink, .home-title .home-mask-in, .home-title-accent, .prest-title, .bl-archive-title, .bl-featured-title, .post-title, .post-prose > h2, .post-prose > h3) {
     background: none;
     -webkit-text-fill-color: currentColor;
     color: CanvasText;
@@ -1388,4 +1402,325 @@ html.theme-switching::view-transition-new(root) {
   .page-top .bl-filter {
     animation-delay: 220ms;
   }
+}
+
+/* ==========================================================================
+   Projenin kendi tonunda kart (`.tint-card`). Ana sayfanın Öne Çıkan
+   Projeler panelleri ve /projeler'in öne çıkanları. 3 Ekim 2026, sahibinin
+   seçtiği "B": beyaz zemin üstünde beyaz kartlar birbirinden ayrılmıyordu;
+   her kart artık projesinin rengini taşıyor (`--tint`, lib/content/projects.ts
+   → `tint`, satır içi stil). Renk VERİDEN geliyor; burada yalnız karışım
+   oranları var. Kart OPAK: ana sayfada paneller üst üste biniyor ve alttaki
+   panel içinden görünmemeli.
+   ========================================================================== */
+.tint-card {
+  --tint: var(--primary);
+  /* Metin olarak tonun koyu hâli: açık zeminde AA (altın bile). */
+  --tint-ink: color-mix(in oklab, var(--tint) 60%, var(--text-strong) 40%);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    linear-gradient(
+      140deg,
+      color-mix(in oklab, var(--tint) 26%, var(--page-bg)) 0%,
+      color-mix(in oklab, var(--tint) 9%, var(--page-bg)) 55%,
+      color-mix(in oklab, var(--tint) 4%, var(--page-bg)) 100%
+    ),
+    var(--page-bg);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--tint) 22%, transparent);
+}
+:root[data-theme="dark"] .tint-card {
+  --tint-ink: color-mix(in oklab, var(--tint) 55%, var(--text-strong) 45%);
+  background:
+    linear-gradient(
+      140deg,
+      color-mix(in oklab, var(--tint) 30%, var(--page-bg)) 0%,
+      color-mix(in oklab, var(--tint) 10%, var(--page-bg)) 60%,
+      var(--page-bg) 100%
+    ),
+    var(--page-bg);
+}
+
+/* Köşede tonun ışığı ve sönen noktalı ızgara: kartın "vitrin" katmanı. */
+.tint-card-glow {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(38rem 24rem at 30% 0%, color-mix(in oklab, var(--tint) 30%, transparent), transparent 70%),
+    radial-gradient(circle, color-mix(in oklab, var(--tint) 30%, transparent) 1px, transparent 1.6px) 0 0 / 22px 22px;
+  mask-image: radial-gradient(ellipse 80% 90% at 20% 0%, black, transparent 75%);
+}
+
+/* Görsel tonun gölgesiyle havada durur; üzerine gelince biraz yükselir. */
+.tint-card-media > * {
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--tint) 20%, transparent),
+    0 30px 60px -28px color-mix(in oklab, var(--tint) 55%, var(--scrim) 45%);
+  transition: translate 500ms var(--ease-brand);
+}
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .tint-card:hover .tint-card-media > :first-child {
+    translate: 0 -4px;
+  }
+  .tint-card:hover .tint-card-media > :nth-child(2) {
+    translate: 0 -10px;
+  }
+}
+
+.tint-card-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: fit-content;
+  padding: 0.3rem 0.75rem 0.3rem 0.55rem;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--tint) 14%, transparent);
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  font-weight: 500;
+  color: var(--tint-ink);
+}
+.tint-card-kicker::before {
+  content: "";
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: var(--tint);
+}
+
+/* Ad: koyu mürekkepten tonun kendisine giden degrade. */
+.tint-card-title {
+  font-size: clamp(2.5rem, 1.6rem + 3.4vw, 4.5rem);
+  font-weight: 700;
+  line-height: 0.98;
+  letter-spacing: -0.05em;
+  color: var(--text-strong);
+  text-wrap: balance;
+}
+@supports (background-clip: text) or (-webkit-background-clip: text) {
+  .tint-card-title {
+    background: linear-gradient(105deg, var(--text-strong) 10%, var(--tint-ink) 100%) 0 0 / min(100%, 9em) 100% no-repeat
+      var(--tint-ink);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    padding-bottom: 0.1em;
+    margin-bottom: -0.1em;
+  }
+}
+
+.tint-card-stats {
+  border-top: 1px solid color-mix(in oklab, var(--tint) 24%, transparent);
+}
+.tint-card-stats dd {
+  color: var(--tint-ink);
+}
+
+.tint-card-btn,
+.tint-card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding-inline: 1.1rem;
+  border-radius: 999px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  transition:
+    background-color 200ms,
+    color 200ms,
+    gap 300ms var(--ease-brand);
+}
+.tint-card-btn {
+  background: var(--tint-ink);
+  color: var(--on-brand);
+}
+:root[data-theme="dark"] .tint-card-btn {
+  color: var(--page-bg);
+}
+.tint-card-link {
+  color: var(--tint-ink);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--tint) 35%, transparent);
+}
+@media (hover: hover) and (pointer: fine) {
+  .tint-card-btn:hover,
+  .tint-card-link:hover {
+    gap: 0.75rem;
+  }
+  .tint-card-link:hover {
+    background: color-mix(in oklab, var(--tint) 12%, transparent);
+  }
+}
+
+/* ==========================================================================
+   Kapak Sahnesi (components/ui/CoverArt.tsx): görseli olmayan yazı ve proje
+   kapağı. Punto kap sorgusu birimiyle kutuya göre ölçeklenir; küçük satır
+   görselinde de büyük kapakta da aynı sahne.
+   ========================================================================== */
+.cover-art {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  isolation: isolate;
+  container-type: inline-size;
+  color: var(--on-brand);
+}
+
+.cover-art-orb {
+  position: absolute;
+  z-index: -1;
+  width: 70cqi;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  filter: blur(6cqi);
+  opacity: 0.75;
+}
+.cover-art-orb-1 {
+  top: -30cqi;
+  right: -18cqi;
+  background: radial-gradient(circle, var(--brand-from), transparent 65%);
+}
+.cover-art-orb-2 {
+  bottom: -40cqi;
+  left: -20cqi;
+  background: radial-gradient(circle, var(--brand-to), transparent 65%);
+}
+
+.cover-art-grid {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(circle, color-mix(in oklab, var(--on-brand) 28%, transparent) 1px, transparent 1.5px) 0 0 / 14px 14px;
+  mask-image: radial-gradient(ellipse 60% 70% at 85% 15%, black, transparent 75%);
+}
+
+.cover-art-rings {
+  position: absolute;
+  top: 50%;
+  right: -6cqi;
+  z-index: -1;
+  width: 62cqi;
+  translate: 0 -50%;
+  overflow: visible;
+}
+.cover-art-rings :is(ellipse, circle) {
+  fill: none;
+  stroke: color-mix(in oklab, var(--on-brand) 32%, transparent);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.cover-art-rings circle {
+  stroke: color-mix(in oklab, var(--on-brand) 18%, transparent);
+  stroke-dasharray: 3 5;
+}
+
+.cover-art-text {
+  position: absolute;
+  inset: auto 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5cqi;
+  padding: 6cqi;
+}
+
+.cover-art-kicker {
+  font-family: var(--font-mono);
+  font-size: max(0.6875rem, 2.6cqi);
+  opacity: 0.85;
+}
+
+.cover-art-word {
+  position: relative;
+  width: fit-content;
+  font-size: max(1rem, 10cqi);
+  line-height: 0.95;
+  font-weight: 700;
+  letter-spacing: -0.045em;
+}
+
+.cover-art-scribble {
+  position: absolute;
+  left: -2%;
+  bottom: -0.16em;
+  width: 104%;
+  height: 0.18em;
+  overflow: visible;
+}
+.cover-art-scribble path {
+  fill: none;
+  stroke: var(--brand-from);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes cover-orb-drift {
+    to {
+      translate: -12cqi 10cqi;
+      scale: 1.15;
+    }
+  }
+  @keyframes cover-rings-spin {
+    to {
+      rotate: 360deg;
+    }
+  }
+  .cover-art-orb-1 {
+    animation: cover-orb-drift 9s ease-in-out infinite alternate;
+  }
+  .cover-art-orb-2 {
+    animation: cover-orb-drift 11s ease-in-out -4s infinite alternate-reverse;
+  }
+  .cover-art-rings {
+    animation: cover-rings-spin 60s linear infinite;
+  }
+  .cover-art-scribble path {
+    animation: sketch-draw 1100ms var(--ease-brand) 400ms both;
+  }
+}
+
+/* ==========================================================================
+   İmza logosu (components/site/Logo.tsx, Signature.tsx). Sayfa açılınca
+   ad soldan sağa yazılır, karodaki kuyruk ardından çizilir. Hareketi
+   azaltan okuyucuda ikisi de baştan yerinde.
+   ========================================================================== */
+.signature {
+  display: block;
+  width: auto;
+  overflow: visible;
+}
+
+.logo-tail {
+  stroke-dasharray: 1;
+}
+
+@keyframes signature-write {
+  from {
+    clip-path: inset(-20% 100% -20% 0);
+  }
+  to {
+    clip-path: inset(-20% 0 -20% 0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .signature {
+    animation: signature-write 1300ms cubic-bezier(0.45, 0, 0.25, 1) 250ms both;
+  }
+  .logo-tail {
+    animation: sketch-draw 600ms var(--ease-brand) 1350ms both;
+  }
+}
+
+/* Başlıktaki imza: logo karosuyla (36px) AYNI boyda ve aynı ortada. İmzanın
+   görüş kutusu alta inen harfleri (y, p) de taşıdığı için büyük harflerin
+   ortası kutunun ortasından yukarıda; 2px aşağı itiliyor (ölçüldü). */
+.header-signature {
+  height: 2.6rem;
+  translate: 0 0.2rem;
 }

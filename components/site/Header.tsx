@@ -5,8 +5,9 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from 'react'
 import { Logo } from '@/components/site/Logo'
+import { Signature } from '@/components/site/Signature'
 import { ThemeToggle } from '@/components/site/ThemeToggle'
-import { JOB_TITLE, NAV_ITEMS } from '@/lib/nav'
+import { NAV_ITEMS } from '@/lib/nav'
 import { cx } from '@/lib/utils'
 
 /** Bu kadar kaydırınca başlık cam yüzeye geçer; en üstte zemin saydam. */
@@ -133,10 +134,9 @@ export function Header() {
           aria-label="Ahmet Akyapı, ana sayfa"
         >
           <Logo size={36} className="transition-transform group-hover:scale-105" />
-          <span className="hidden flex-col leading-none sm:flex">
-            <span className="text-sm font-semibold tracking-[-0.01em] text-strong">Ahmet Akyapı</span>
-            <span className="mt-1 font-mono text-micro text-muted">{JOB_TITLE}</span>
-          </span>
+          {/* Unvan burada yok: hero'nun üst satırında zaten yazıyor ve iki
+              yerde aynı metin duruyordu (3 Ekim 2026). */}
+          <Signature className="header-signature hidden sm:block" />
         </Link>
 
         <nav
