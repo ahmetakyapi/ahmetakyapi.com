@@ -10,28 +10,44 @@
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   Hero: isim sahnenin kendisi, küre arkasında yükselir.
-   Telefon ve dikey tablet: isim üstte (iki satır), blok altta.
-   Geniş ekran: blok üstte, isim sahnenin tabanında tek satır, kenardan
-   kenara. Yükseklik ilk ekran; başlık 4rem (64px) + güvenli alan.
+   Hero: "Gece Mavisi" (components/home/HomeHero.tsx).
+   Geniş ekranda iki kolon ve ilk ekranın tamamı (başlık 4rem); telefonda
+   tek kolon, içerik kadar. Zeminde köşelerden gelen iki mavi ışık; renkler
+   token'dan, `color-mix` ile saydamlaştırılıyor.
    -------------------------------------------------------------------------- */
 .home-hero {
   position: relative;
   isolation: isolate;
   overflow: clip;
-  display: flex;
-  /* Tam ekran yükseklik YOK: içerik kadar (gerekçe HomeHero.tsx). */
+}
+
+/* Işık: sağ üstte (kürenin arkası) güçlü, sol üstte soluk. Altta zemine
+   yumuşakça erir; hero ile Hakkımda arasında çizgi yok, ton geçişi var. */
+.home-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(56rem 38rem at 78% 30%, color-mix(in oklab, var(--primary) 26%, transparent), transparent 62%),
+    radial-gradient(44rem 32rem at 4% 0%, color-mix(in oklab, var(--primary-hover) 14%, transparent), transparent 60%);
+  mask-image: linear-gradient(to bottom, black 70%, transparent);
+}
+:root:not([data-theme="dark"]) .home-hero::before {
+  background:
+    radial-gradient(56rem 38rem at 78% 30%, color-mix(in oklab, var(--primary-soft) 30%, transparent), transparent 62%),
+    radial-gradient(44rem 32rem at 4% 0%, color-mix(in oklab, var(--surface) 80%, transparent), transparent 60%);
 }
 
 .home-hero-inner {
-  container-type: inline-size;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  gap: clamp(1.5rem, 4vw, 2.75rem);
-  min-width: 0;
-  padding: clamp(1.5rem, 5vw, 3.5rem) max(1rem, env(safe-area-inset-right)) clamp(2.5rem, 6vw, 4.5rem)
+  display: grid;
+  gap: clamp(2rem, 6vw, 3rem);
+  align-items: center;
+  width: 100%;
+  max-width: 88rem;
+  margin-inline: auto;
+  padding: clamp(2.5rem, 7vw, 4rem) max(1rem, env(safe-area-inset-right)) clamp(3.5rem, 8vw, 5rem)
     max(1rem, env(safe-area-inset-left));
 }
 
@@ -40,132 +56,161 @@
     padding-inline: 1.5rem;
   }
 }
+
 @media (min-width: 1024px) {
   .home-hero-inner {
-    padding-inline: 2rem;
+    grid-template-columns: minmax(0, 1.04fr) minmax(0, 1fr);
+    gap: 2rem;
+    /* İlk ekranın tamamı, başlık (4rem) düşülerek. Çok uzun ekranda
+       tavan: 1440×1600'de sahne boşlukta yüzmesin. */
+    min-height: min(calc(100svh - 4rem), 60rem);
+    padding: 2rem 2rem 4rem;
   }
 }
 
-/* İsim. Punto kabın genişliğinden (`cqi`) ve kelime boylarından
-   (`--w1n`/`--w2n`, name-metrics.ts) hesaplanır: telefonda uzun kelime
-   kabın %93'ü, geniş ekranda iki kelime + aralık kabın tamamı. Yükseklik
-   tavanı yatay telefonda iki satırın ekranı taşmaması için. */
-.home-name {
-  /* İsim başlık fontunda; harf ölçüleri (name-metrics.ts) bu fonta göre. */
-  font-family: var(--font-display);
-  --lh: 0.86em;
-  --gap: 0.24em;
-  --nw: max(var(--w1), var(--w2));
-  --nh: calc(var(--lh) * 2 + 0.2em);
+.home-hero-copy {
+  min-width: 0;
+}
+
+.home-hero-eyebrow {
   display: flex;
-  flex-direction: column;
-  font-size: min(calc(93cqi / max(var(--w1n), var(--w2n))), 24svh);
-  line-height: var(--lh);
-  font-weight: 560;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--primary-ink);
+}
+.home-hero-eyebrow::before {
+  content: "";
+  width: 1.75rem;
+  height: 1px;
+  background: currentColor;
+}
+
+/* İsim: iki satır, sıkı. Telefonda uzun kelime ("Akyapı") kabın ~%70'i. */
+.home-name {
+  margin-top: 1.5rem;
+  font-size: clamp(4.25rem, 20vw, 6.5rem);
+  font-weight: 700;
+  line-height: 0.9;
   letter-spacing: -0.055em;
   color: var(--text-strong);
   /* "A"nın sol çıkıntısı kenar hattına optik olarak otursun. */
-  margin-left: -0.045em;
+  margin-left: -0.04em;
 }
-
 @media (min-width: 1024px) {
   .home-name {
-    --nw: calc(var(--w1) + var(--gap) + var(--w2));
-    --nh: calc(var(--lh) + 0.2em);
-    flex-direction: row;
-    column-gap: var(--gap);
-    font-size: min(calc(100cqi / (var(--w1n) + 0.24 + var(--w2n))), 40svh);
-    /* Kuyruklu harflerin (y, p) payı: -0.04em'de "Akyapı"nın y ve p'si
-       kahramanın `overflow: clip` sınırında kesiliyordu (1440×900,
-       3 Ekim 2026, ekran görüntüsünde görüldü). */
-    margin-bottom: 0.14em;
+    font-size: clamp(6rem, 9.6vw, 9.75rem);
   }
 }
 
-/* Satır maskesi: harfler bunun içinde aşağıdan yükselir. Üst/alt pay alta
-   inen harfi (y, p) ve kalınlaşan harfin taşan mürekkebini kesmesin diye;
-   eksi kenar boşluğu satır aralığını değiştirmez. */
+/* Satır maskesi. Alt pay alta inen harfi (y, p) kesmesin; eksi kenar
+   boşluğu satır aralığını değiştirmez. */
 .home-name-line {
-  --lx: 0em;
-  --ly: 0em;
   display: block;
   width: fit-content;
-  white-space: nowrap;
   overflow: clip;
-  padding: 0.06em 0.08em 0.2em;
-  margin: -0.06em -0.08em -0.2em;
-}
-.home-name-l2 {
-  --ly: var(--lh);
-}
-@media (min-width: 1024px) {
-  .home-name-l2 {
-    --lx: calc(var(--w1) + var(--gap));
-    --ly: 0em;
-  }
+  padding: 0.04em 0.06em 0.16em;
+  margin: -0.04em -0.06em -0.16em;
 }
 
-.home-glyph {
-  display: inline-block;
-  text-align: center;
-  /* Degradenin boyandığı alan kutunun kendisi: alta inen harfin kuyruğu
-     kutudan taşar, pay olmadan boyasız kalırdı. */
-  padding-bottom: 0.2em;
-  margin-bottom: -0.2em;
+.home-name-in {
+  display: block;
+  padding-bottom: 0.08em;
 }
 
-/* Degrade iki kelimeyi tek yüzey gibi kaplar: her harfte aynı boyda
-   (`--nw` × `--nh`, ismin tamamı) ve harfin isim içindeki yeri kadar
-   kaydırılmış. Telefonda iki satır, geniş ekranda tek satır üstünde. */
+/* Degrade iki satırı tek yüzey gibi kaplar: üst satır açık uçta başlar,
+   alt satır mavi uçta biter. */
 @supports (background-clip: text) or (-webkit-background-clip: text) {
-  .home-glyph {
-    background-image: var(--name-gradient);
-    background-size: var(--nw) var(--nh);
-    background-position: calc(-1 * (var(--gx) + var(--lx))) calc(-1 * var(--ly));
-    background-repeat: no-repeat;
+  .home-name-in {
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     color: transparent;
   }
+  .home-name-1 {
+    background-image: linear-gradient(180deg, var(--name-top) 20%, var(--name-mid) 110%);
+  }
+  .home-name-2 {
+    background-image: linear-gradient(180deg, var(--name-mid) 0%, var(--name-bottom) 80%);
+  }
 }
 
 @media (forced-colors: active) {
-  .home-glyph {
+  .home-name-in {
     background: none;
     -webkit-text-fill-color: currentColor;
     color: CanvasText;
   }
 }
 
-.home-hero-foot {
+.home-hero-lead {
+  margin-top: 1.75rem;
+  max-width: 30ch;
+  font-size: clamp(1.1875rem, 1rem + 0.6vw, 1.4375rem);
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  color: var(--text-body);
+  text-wrap: pretty;
+}
+
+.home-hero-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2.25rem;
+}
+
+/* Küre: kare alan, sağ kolonun ortasında. Telefonda en çok 26rem. */
+.home-hero-art {
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  align-items: center;
+  width: 100%;
+  max-width: 26rem;
+  margin-inline: auto;
 }
-
-/* Tek cümle: gri gövde metni değil, büyük ve net. */
-.home-hero-line {
-  max-width: 34ch;
-  font-size: clamp(1.375rem, 1rem + 1.4vw, 2.375rem);
-  line-height: 1.25;
-  font-weight: 500;
-  letter-spacing: -0.02em;
-  text-wrap: balance;
-}
-
 @media (min-width: 1024px) {
-  .home-hero-foot {
-    flex-direction: row;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 2rem;
+  .home-hero-art {
+    max-width: 35rem;
+    margin-right: 0;
   }
 }
 
-@keyframes home-glyph-rise {
+.home-globe-box {
+  width: 100%;
+  aspect-ratio: 1;
+}
+
+.home-globe-canvas {
+  display: block;
+  cursor: grab;
+  /* Yatay sürükleme küreyi döndürür, dikey hareket sayfayı kaydırır. */
+  touch-action: pan-y;
+  opacity: 0;
+  transition: opacity 600ms var(--ease-brand);
+}
+.home-globe-canvas[data-ready] {
+  opacity: 1;
+}
+.home-globe-canvas[data-dragging] {
+  cursor: grabbing;
+}
+
+.home-globe-hint {
+  margin-top: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  color: var(--text-muted);
+  user-select: none;
+}
+
+@keyframes home-line-rise {
   from {
-    transform: translateY(0.62em);
+    transform: translateY(105%);
   }
 }
 
@@ -177,42 +222,37 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  /* Harf harf: 34 ms aralık, 11 harf, toplam ~860 ms. */
-  .home-glyph {
-    animation: home-glyph-rise 520ms var(--ease-brand) calc(var(--d) * 34ms) both;
+  .home-name-in {
+    animation: home-line-rise 900ms var(--ease-brand) both;
+  }
+  .home-name-2 {
+    animation-delay: 90ms;
   }
   .home-rise {
-    animation: home-fade-in 0.6s var(--ease-brand) 0.32s both;
+    animation: home-fade-in 0.7s var(--ease-brand) 0.3s both;
+  }
+  .home-hero-eyebrow.home-rise {
+    animation-delay: 0s;
   }
 
   /* Açılış perdesi varken (globals.css → "Açılış perdesi") giriş perdenin
-     kalkışıyla BAŞLAR, onu beklemez de onunla yarışmaz da: perde 760 ms'de
-     kalkmaya başlıyor ve alttan yukarı açıldığı için ilk açığa çıkan yer
-     sahnenin tabanı, yani isim. Harfler o anda yükselmeye başlıyor; tek
-     bir hareket gibi okunuyor, iki ayrı animasyon gibi değil. */
-  :root[data-intro] .home-glyph {
-    animation-delay: calc(760ms + var(--d) * 34ms);
+     kalkışıyla başlar (760 ms); iki ayrı animasyon değil tek hareket. */
+  :root[data-intro] .home-name-1 {
+    animation-delay: 760ms;
   }
-  /* Telefonda isim sahnenin TEPESİNDE: perde oraya ~1050 ms'de ulaşıyor.
-     Harfler biraz daha geç kalkar ki okuyucu yarısı bitmiş bir girişi
-     değil, açılan perdenin altından yükselen harfleri görsün. Son harf
-     ≈ 1760 ms'de oturur; öznitelik 1900'da kalkar (lib/intro.ts). */
-  @media (max-width: 1023px) {
-    :root[data-intro] .home-glyph {
-      animation-delay: calc(900ms + var(--d) * 34ms);
-    }
+  :root[data-intro] .home-name-2 {
+    animation-delay: 850ms;
   }
   :root[data-intro] .home-rise {
-    animation-delay: 1.08s;
+    animation-delay: 1.02s;
   }
 }
 
-/* Kaydırınca sahne değişiyor: isim yukarı kayıp solar. Zamanlayıcı hero'nun kendi çıkışı; desteksiz ya da hareketsiz
-   okuyucuda hiçbiri olmaz. */
-@keyframes home-name-leave {
+/* Kaydırınca sahne çekilir: isim ve küre yukarı kayıp solar. */
+@keyframes home-hero-leave {
   to {
-    transform: translateY(-18%);
-    opacity: 0.12;
+    transform: translateY(-10%);
+    opacity: 0.2;
   }
 }
 
@@ -221,10 +261,11 @@
     .home-hero {
       view-timeline-name: --home-hero;
     }
-    .home-name {
-      animation: home-name-leave linear both;
+    .home-hero-copy,
+    .home-hero-art {
+      animation: home-hero-leave linear both;
       animation-timeline: --home-hero;
-      animation-range: exit 0% exit 75%;
+      animation-range: exit 10% exit 90%;
     }
   }
 }
@@ -741,9 +782,28 @@
 }
 
 
-/* Başlık işlevi gören büyük rakamlar ve alanlar başlık fontunda
-   (Schibsted Grotesk; gövde Bricolage Grotesque — layout.tsx). */
-.home-built-num,
-.home-built-domains {
+
+/* --------------------------------------------------------------------------
+   Bölüm başlıkları: "Gece Mavisi" (3 Ekim 2026). Hepsi aynı kalıp: büyük,
+   kalın, sıkı; son kelime markanın mavisinde (MaskTitle `accentLast`).
+   Önceki başlıklar 28-36 piksellik "panel başlığı" boyundaydı ve bölümler
+   birbirinden ayrılmıyordu ("başlıkları daha belirgin yapalım").
+   -------------------------------------------------------------------------- */
+.home-title {
   font-family: var(--font-display);
+  font-size: clamp(2.75rem, 1.6rem + 5vw, 6rem);
+  font-weight: 700;
+  line-height: 0.96;
+  letter-spacing: -0.05em;
+  color: var(--text-strong);
+  text-wrap: balance;
+}
+
+.home-title-xl {
+  font-size: clamp(3.25rem, 1.5rem + 8vw, 9rem);
+  line-height: 0.92;
+}
+
+.home-title-accent {
+  color: var(--primary-ink);
 }

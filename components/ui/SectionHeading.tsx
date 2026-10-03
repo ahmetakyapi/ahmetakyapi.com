@@ -23,7 +23,8 @@ type SectionHeadingProps = {
   description?: ReactNode
   action?: ReactNode
   as?: 'h1' | 'h2' | 'h3'
-  size?: 'section' | 'page'
+  /** `home`: ana sayfanın büyük bölüm başlığı, stili app/(site)/home.css → `.home-title`. */
+  size?: 'section' | 'page' | 'home'
   className?: string
 }
 
@@ -45,7 +46,11 @@ export function SectionHeading({
           id={id}
           className={cx(
             'font-semibold tracking-[-0.03em] text-strong',
-            size === 'page' ? 'text-display' : 'text-heading sm:text-[2.25rem] sm:leading-[1.1]',
+            size === 'home'
+              ? 'home-title'
+              : size === 'page'
+                ? 'text-display'
+                : 'text-heading sm:text-[2.25rem] sm:leading-[1.1]',
           )}
         >
           {title}

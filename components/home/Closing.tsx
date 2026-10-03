@@ -18,12 +18,9 @@ const ICON_LINK =
 
 export function Closing({ closing }: { closing: HomeContent['closing'] }) {
   return (
-    <Container as="section" size="wide" aria-labelledby="iletisim" className="pt-28 sm:pt-40">
-      <h2
-        id="iletisim"
-        className="text-[clamp(3rem,10vw,8.5rem)] font-semibold leading-[0.95] tracking-[-0.05em] text-strong"
-      >
-        <MaskTitle>{closing.title}</MaskTitle>
+    <Container as="section" size="wide" aria-labelledby="iletisim" className="pt-24 sm:pt-36">
+      <h2 id="iletisim" className="home-title home-title-xl">
+        <MaskTitle accentLast>{closing.title}</MaskTitle>
       </h2>
       <div className="mt-8 grid gap-8 border-t border-line pt-8 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
         <div className="min-w-0">

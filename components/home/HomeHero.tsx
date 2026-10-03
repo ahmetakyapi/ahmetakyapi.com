@@ -1,87 +1,55 @@
 import { ArrowRight } from 'lucide-react'
-import type { CSSProperties } from 'react'
-import { layoutWord } from '@/components/home/name-metrics'
-import { NameWave } from '@/components/home/NameWave'
+import { GlobeIsland } from '@/components/home/GlobeIsland'
 import { ButtonLink } from '@/components/ui/Button'
 import type { HomeContent } from '@/lib/site-content'
 
 /**
- * Hero: isim sahnenin kendisi, içeriği kadar yer kaplayan sıkı bir blok.
+ * Hero: "Gece Mavisi" (3 Ekim 2026, sahibinin üç yön taslağından seçtiği).
  *
- * Bir dönem üstte dört kutulu mono künye ızgarası, sonra ismin arkasında
- * ince çizgili bir küre ve tam ekran yükseklik vardı. Telefonda isimle
- * düğmeler arasında yarım ekranlık boşluk kalıyor, küre de anlamsız bir
- * "dünya haritası" gibi okunuyordu (3 Ekim 2026, Ahmet: "boşluk çok
- * gereksiz, dünya sistemi gibi saçma duruyor"). Küre ve tam ekran
- * yükseklik kalktı; hero bitince Hakkımda hemen başlar.
+ * İki kolon, ilk ekranın tamamı: solda kimlik (unvan, isim, tek cümle, iki
+ * düğme), sağda ilk sürümün etkileşimli küresi. Önceki tipografik hero
+ * (kenardan kenara isim, harf harf ağırlık dalgası) "editör sitesi gibi"
+ * okunuyordu; sağ yarıya Açılış Zili ekranı da denendi ve reddedildi:
+ * hero tek bir projeyi öne çıkarmamalı.
  *
- * Düzen her genişlikte aynı sıra: isim (telefonda iki satır, masaüstünde
- * tek satır kenardan kenara), altında unvan, tek cümle ve iki düğme.
+ * Telefonda tek kolon: metin üstte, küre altında kendi alanında. Küre
+ * metnin ARKASINA konmaz; bir kez denendi ve harita gibi gürültü yaptı.
  *
- * Harfler: her biri ayrı kutu, genişliği sunucuda sabit (name-metrics.ts).
- * Harf harf maskeli yükselir (home.css → `.home-glyph`); maskenin dışından
- * değil yarı yoldan başlar, ilk karede her harfin üstü zaten boyalı.
- * Degrade iki kelimeyi tek yüzey gibi kaplar: degrade ebeveyne DEĞİL her
- * harfin kendisine uygulanır, çünkü `.display-ink` içindeki bir çocuğa
- * transform vermek onu background-clip bölgesinden çıkarır ve harf görünmez
- * olur (globals.css → TUZAK). Her harf degradenin kendi dilimini gösterir.
- *
- * Harfler `aria-hidden`; başlığın adı `aria-label`dan gelir, ekran okuyucu
- * ismi harf harf hecelemez.
+ * İsim iki satır, her satır kendi maskesinden yükselir (home.css). Degrade
+ * hareket eden öğenin KENDİSİNDE: `.display-ink` içindeki bir çocuğa
+ * transform vermek onu boyama alanından çıkarıyor (globals.css → TUZAK).
  */
 export function HomeHero({ home }: { home: HomeContent }) {
-  const first = layoutWord(home.firstName)
-  const last = layoutWord(home.lastName)
-  const nameStyle = {
-    '--w1': `${first.width}em`,
-    '--w2': `${last.width}em`,
-    '--w1n': first.width,
-    '--w2n': last.width,
-  } as CSSProperties
-
   return (
     <section aria-labelledby="hero-baslik" className="home-hero">
       <div className="home-hero-inner">
-        <h1 id="hero-baslik" aria-label={`${home.firstName} ${home.lastName}`} className="home-name" style={nameStyle}>
-          {[first, last].map((word, line) => (
-            <span key={line} className={`home-name-line home-name-l${line + 1}`} aria-hidden="true">
-              {word.glyphs.map((box, i) => (
-                <span
-                  key={i}
-                  className="home-glyph"
-                  style={
-                    {
-                      width: `${box.width}em`,
-                      '--gx': `${box.x}em`,
-                      '--d': line === 0 ? i : first.glyphs.length + i,
-                    } as CSSProperties
-                  }
-                >
-                  {box.glyph}
-                </span>
-              ))}
+        <div className="home-hero-copy">
+          <p className="home-hero-eyebrow home-rise">{home.role}</p>
+          <h1 id="hero-baslik" className="home-name">
+            <span className="home-name-line">
+              <span className="home-name-in home-name-1">{home.firstName}</span>
+            </span>{' '}
+            <span className="home-name-line">
+              <span className="home-name-in home-name-2">{home.lastName}</span>
             </span>
-          ))}
-        </h1>
-
-        <div className="home-hero-foot home-rise">
-          <div className="min-w-0">
-            <p className="font-mono text-small font-medium text-body">{home.role}</p>
-            <p className="home-hero-line mt-3 font-display text-strong">{home.intro}</p>
-          </div>
-          <div className="flex flex-wrap items-center gap-3">
+          </h1>
+          <p className="home-hero-lead home-rise">{home.intro}</p>
+          <div className="home-hero-cta home-rise">
             <ButtonLink href="/projeler" variant="primary" size="lg">
               Projeleri Gör
               <ArrowRight aria-hidden="true" />
             </ButtonLink>
-            <ButtonLink href="/blog" variant="secondary" size="lg">
-              Yazıları Oku
+            <ButtonLink href="/#iletisim" variant="secondary" size="lg">
+              Benimle Çalış
             </ButtonLink>
           </div>
         </div>
-      </div>
 
-      <NameWave />
+        <div className="home-hero-art">
+          <GlobeIsland />
+          <p className="home-globe-hint">Sürükleyerek döndürebilirsin.</p>
+        </div>
+      </div>
     </section>
   )
 }

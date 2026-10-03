@@ -81,6 +81,23 @@
   --intro-bg: #0e1a28;
   --intro-ink: #eef3f8;
   --intro-edge: #3a93d6;
+
+  /* Hero küresi (components/home/HeroGlobe.tsx). İki temada AYNI: küre
+     koyu lacivert bir nesne, açık zeminde de koyu durur ve etiketleri
+     kendi koyu hapında okunur. Şehirler markanın mavi ailesinde; ev
+     (İstanbul) `--accent-warm`. Mor yok. */
+  --globe-core-1: #12305c;
+  --globe-core-2: #0a1c38;
+  --globe-core-3: #050d1c;
+  --globe-grid: #3a93d6;
+  --globe-ring: #1f86e0;
+  --globe-c1: #35b8ff;
+  --globe-c2: #7fd2ff;
+  --globe-c3: #5c9dff;
+  --globe-c4: #b6e2ff;
+  --globe-star: #ffffff;
+  --globe-label-bg: #050a14;
+  --globe-label-ink: #eaf1f8;
 }
 
 /* --- Sistem: koyu ---------------------------------------------------------- */
@@ -125,10 +142,12 @@
        body   #3a4a5c    8,5 /  8,9 /  7,9   (gövde ≥ 7)
        muted  #536477    5,7 /  6,0 /  5,3   (soluk ≥ 4,5)
      Eski gövde #54677c 5,5:1'di. */
-  --page-bg: #f5f7fa;
-  --surface: #fcfdfe;
+  /* "Beyaz çok beyaz" (3 Ekim 2026): zemin kırık beyazdan bir ton mavi
+     griye indi; kart hâlâ zeminden açık, çukur yüzey bir ton koyu. */
+  --page-bg: #e9eff6;
+  --surface: #f6f9fc;
   --surface-raised: rgb(16 32 52 / 0.06);
-  --surface-sunken: #ebf0f6;
+  --surface-sunken: #dce5ef;
 
   --text-strong: #0e1a28;
   --text-body: #3a4a5c;
@@ -153,6 +172,11 @@
   /* Ana sayfadaki isim: iki kelimeyi tek yüzey gibi kaplar, koyu
      laciverten derin maviye. En açık uç #1066b8 / #f5f7fa ≈ 5,5:1. */
   --name-gradient: linear-gradient(118deg, #0a1a30 0%, #0b2f5c 38%, #0c4f96 72%, #1066b8 100%);
+  /* Hero ismi, dikey: üst satır koyu, alt satır mavi uçta biter.
+     En açık uç #0d74c4 / #e9eff6 ≈ 4,4:1, büyük metin için AA (≥ 3). */
+  --name-top: #0a1a30;
+  --name-mid: #0c3b73;
+  --name-bottom: #0d74c4;
   /* Marka karosu: açık ucu beyaz metinle AA'yı geçmez, üstüne yazı konmaz.
      Duraklar ayrı da okunuyor: Logo'nun SVG degradesi `stop-color` ister. */
   --brand-from: #5cc4ff;
@@ -174,8 +198,10 @@
 /* --- Palet: signature, koyu ------------------------------------------------ */
 :root[data-theme="dark"],
 :root[data-theme="dark"][data-palette="signature"] {
-  --page-bg: #070d16;
-  --surface: rgb(255 255 255 / 0.05);
+  /* Gece Mavisi (3 Ekim 2026): zemin saf siyaha değil laciverde yakın;
+     hero ve bölüm geçişlerindeki mavi ışık bu zeminde okunuyor. */
+  --page-bg: #050a14;
+  --surface: rgb(255 255 255 / 0.045);
   --surface-raised: rgb(255 255 255 / 0.12);
   --surface-sunken: rgb(0 0 0 / 0.3);
 
@@ -199,6 +225,11 @@
   --display-gradient-tight: linear-gradient(100deg, #eef5fc 0%, #58c4ff 100%);
   /* İsim: mavimsi beyazdan maviye. En koyu uç #3fbcff / #070d16 ≈ 9,4:1. */
   --name-gradient: linear-gradient(118deg, #f2f7fc 0%, #d4ecff 34%, #8fd3ff 70%, #3fbcff 100%);
+  /* Hero ismi, dikey: beyazdan buz mavisine, alt satır markanın
+     mavisinde biter. En koyu uç #35b8ff / #050a14 ≈ 9,6:1. */
+  --name-top: #ffffff;
+  --name-mid: #cfe8ff;
+  --name-bottom: #35b8ff;
 
   --code-keyword: #7fd2ff;
   --code-string: #3ddc97;
@@ -243,7 +274,7 @@
 
 @theme inline {
   --font-sans: var(--font-sans-face), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-display-face), var(--font-sans-face), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-sans-face), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-mono-face), ui-monospace, "SFMono-Regular", monospace;
 
   --color-page: var(--page-bg);
@@ -327,7 +358,7 @@
     text-wrap: pretty;
   }
 
-  /* Başlıklar Schibsted Grotesk, gövde Bricolage Grotesque (layout.tsx).
+  /* Başlık ve gövde aynı aile, Geist (layout.tsx).
      Katmanda: bir yardımcı sınıf (font-sans/font-mono) gerekirse ezer. */
   h1,
   h2,
@@ -404,14 +435,6 @@
       font-size: 16px;
     }
   }
-}
-
-/* Schibsted'de `tnum` virgülü ve noktayı da RAKAM GENİŞLİĞİNE çeker:
-   "8,97" ekranda "8 , 97" okunuyor (Açılış Zili'nde ölçüldü). Gövde
-   Schibsted olduğu için yardımcı etkisizleştirildi; hizalı sayı gereken
-   yerde `font-mono` (IBM Plex Mono) kullan. */
-@utility tabular-nums {
-  font-variant-numeric: normal;
 }
 
 /* --------------------------------------------------------------------------

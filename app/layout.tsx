@@ -1,6 +1,6 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
-import { Bricolage_Grotesque, IBM_Plex_Mono, Schibsted_Grotesk } from 'next/font/google'
+import { Geist, Geist_Mono } from 'next/font/google'
 import type { ReactNode } from 'react'
 import { JOB_TITLE, SITE_DESCRIPTION, SITE_NAME, SITE_URL, TWITTER } from '@/lib/seo'
 import { IntroCurtain } from '@/components/site/IntroCurtain'
@@ -9,32 +9,24 @@ import { DEFAULT_THEME, PALETTE, THEME_COLOR, THEME_SCRIPT } from '@/lib/theme'
 import './globals.css'
 
 /*
- * Fontlar (3 Ekim 2026, Ahmet'in seçimi: "Tüm başlıklar A, metinler B"):
- * - Başlıklar (hero'daki isim dahil, h1-h6): Schibsted Grotesk.
- * - Gövde, düğme, menü: Bricolage Grotesque (optik boyut ekseniyle).
- * - Künye, tarih, kod: IBM Plex Mono.
+ * Fontlar (3 Ekim 2026, "Gece Mavisi" yönüyle): tek aile, Geist.
+ * Önceki çift (Schibsted başlık + Bricolage gövde) "editör sitesi gibi"
+ * okunuyordu; sahibi üç yön taslağı arasından Geist'li olanı seçti.
+ * - Başlık, gövde, düğme, menü: Geist (değişken, 100-900).
+ * - Künye, tarih, kod: Geist Mono.
  *
  * TUZAK: next/font `variable` adı @theme'deki adla aynı olursa
  * (`--font-sans: var(--font-sans)`) değişken kendine başvurur ve font
  * sessizce sistem yazı tipine düşer. Bu yüzden `-face` soneki.
- * İkisi de değişken aile: `weight` verilmez.
  */
-const display = Schibsted_Grotesk({
+const sans = Geist({
   subsets: ['latin', 'latin-ext'],
-  variable: '--font-display-face',
-  display: 'swap',
-})
-
-const sans = Bricolage_Grotesque({
-  subsets: ['latin', 'latin-ext'],
-  axes: ['opsz'],
   variable: '--font-sans-face',
   display: 'swap',
 })
 
-const mono = IBM_Plex_Mono({
+const mono = Geist_Mono({
   subsets: ['latin', 'latin-ext'],
-  weight: ['400', '500', '600'],
   variable: '--font-mono-face',
   display: 'swap',
 })
@@ -95,7 +87,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       // THEME_SCRIPT özniteliği hidrasyondan önce değiştirir; bu bilinçli
       // farkı React raporlamasın.
       suppressHydrationWarning
-      className={`${display.variable} ${sans.variable} ${mono.variable}`}
+      className={`${sans.variable} ${mono.variable}`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
