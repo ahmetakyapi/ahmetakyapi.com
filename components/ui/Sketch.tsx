@@ -1,3 +1,5 @@
+import { SIGNATURE_MARK_A, SIGNATURE_MARK_FLOURISH } from '@/lib/brand/signature'
+
 /**
  * Kara kalem çizgileri: elle çizilmiş gibi duran küçük SVG'ler.
  *
@@ -36,12 +38,15 @@ export function SketchArrow({ className }: { className?: string }) {
   )
 }
 
-/** Marka üçgeni, kara kalemle: yükleme işareti. Döngüde çizilip silinir. */
+/**
+ * Yükleme işareti: imza A'sı ve altında kara kalem kuyruk; kuyruk döngüde
+ * çizilip silinir (4 Ekim 2026: önceden eski logonun üçgeniydi).
+ */
 export function SketchMark({ className }: { className?: string }) {
   return (
-    <svg aria-hidden="true" className={`sketch sketch-mark ${className ?? ''}`} viewBox="0 0 40 40" focusable="false">
-      <path pathLength={1} d="M20 6.5L33.5 32.5H6.5Z" />
-      <path pathLength={1} className="sketch-second" d="M19.2 8.4 32 33.4 7.6 31.6 19.6 7.2" />
+    <svg aria-hidden="true" className={`sketch sketch-mark ${className ?? ''}`} viewBox="0 0 42 42" focusable="false">
+      <path className="sketch-mark-a" d={SIGNATURE_MARK_A} />
+      <path pathLength={1} d={SIGNATURE_MARK_FLOURISH} />
     </svg>
   )
 }

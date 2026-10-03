@@ -115,7 +115,7 @@ export function Experience({ experience, projects }: { experience: HomeContent['
               )
             })}
           </ul>
-          <Link href="/projeler" className="tint-card-btn mt-auto w-fit">
+          <Link href="/projeler" className="tint-card-btn w-fit">
             Tüm Projeler
             <ArrowRight aria-hidden="true" className="size-4" />
           </Link>

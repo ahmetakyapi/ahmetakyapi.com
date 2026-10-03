@@ -501,8 +501,8 @@
   color: var(--text-strong);
   transition:
     translate 400ms var(--ease-brand),
-    color 200ms,
-    box-shadow 200ms;
+    color 380ms var(--ease-brand),
+    box-shadow 380ms var(--ease-brand);
 }
 
 .home-stack-logo svg {
@@ -833,9 +833,9 @@
     border-radius: 999px;
     color: var(--text-body);
     transition:
-      background-color 200ms,
-      border-color 200ms,
-      color 200ms,
+      background-color 380ms var(--ease-brand),
+      border-color 380ms var(--ease-brand),
+      color 380ms var(--ease-brand),
       translate 300ms var(--ease-brand);
   }
   .home-post:hover .home-post-arrow {
@@ -1187,5 +1187,69 @@
       animation-timeline: view();
       animation-range: entry 10% entry 90%;
     }
+  }
+}
+
+/* --------------------------------------------------------------------------
+   İş Deneyimi, koyu tema (4 Ekim 2026: "özellikle dark temada eksiklikler
+   var"). Açık temanın kuralları koyuda üç yerde tutmuyordu:
+     - İkon karosu tonun açık hâlinde, ikon beyaz: kontrast yok denecek
+       kadar düşüktü. Koyuda karo tonun koyu bir yıkaması, ikon tonun
+       kendisi ve ince bir ton kenarı.
+     - Kart zeminle aynı karanlıkta kayboluyordu. Üstte tonun ince bir ışık
+       çizgisi, kenarda ton halkası ve altında tonun yumuşak gölgesi.
+     - Sağ kartta sayı ile düğme arasında boşluk kalıyordu: düğme artık
+       hapların hemen altında.
+   -------------------------------------------------------------------------- */
+.home-xp-own .tint-card-btn {
+  margin-top: 0.25rem;
+}
+
+:root[data-theme="dark"] .home-xp-card {
+  box-shadow:
+    inset 0 0 0 1px color-mix(in oklab, var(--tint) 24%, transparent),
+    inset 0 1px 0 color-mix(in oklab, var(--tint) 55%, transparent),
+    0 40px 80px -48px color-mix(in oklab, var(--tint) 55%, transparent);
+}
+
+:root[data-theme="dark"] .home-xp-icon {
+  background: color-mix(in oklab, var(--tint) 22%, var(--page-bg));
+  box-shadow:
+    inset 0 0 0 1px color-mix(in oklab, var(--tint) 45%, transparent),
+    0 8px 24px -10px color-mix(in oklab, var(--tint) 70%, transparent);
+  color: var(--tint);
+}
+
+:root[data-theme="dark"] .home-xp-roles > li::before {
+  background: var(--surface-solid);
+}
+:root[data-theme="dark"] .home-xp-roles > li:first-child::before {
+  background: var(--tint);
+}
+
+:root[data-theme="dark"] .home-xp-domains li {
+  background: color-mix(in oklab, var(--tint) 10%, transparent);
+}
+
+:root[data-theme="dark"] .home-xp-period {
+  background: color-mix(in oklab, var(--tint) 18%, transparent);
+  color: color-mix(in oklab, var(--tint) 70%, var(--text-strong));
+}
+
+:root[data-theme="dark"] .home-xp-big-num {
+  background: linear-gradient(180deg, var(--text-strong), var(--tint));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .home-xp-card {
+    transition:
+      translate 520ms var(--ease-brand),
+      box-shadow 520ms var(--ease-brand);
+  }
+  .home-xp-card:hover {
+    translate: 0 -3px;
   }
 }

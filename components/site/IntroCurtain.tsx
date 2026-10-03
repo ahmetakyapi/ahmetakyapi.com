@@ -1,3 +1,6 @@
+import { Signature } from '@/components/site/Signature'
+import { SIGNATURE_MARK_A, SIGNATURE_MARK_FLOURISH } from '@/lib/brand/signature'
+
 /**
  * Açılış perdesi: marka karosu kendini çizer, isim maskeden yükselir, perde
  * yukarı kalkar ve kahramanın harf girişi perdenin altından devam eder.
@@ -12,7 +15,8 @@
  * Zaman çizelgesi (app/globals.css → "Açılış perdesi"):
  *     0-340 ms  karonun kenarı çizilir
  *   300-580 ms  karo marka degradesiyle dolar
- *   300-740 ms  üçgen çizilir, isim maskeden yükselir
+ *   300-740 ms  imza A'sı belirir ve kuyruğu çizilir, imza soldan sağa
+ *               yazılır (4 Ekim 2026: önceden üçgen ve düz metin vardı)
  *   760-1180 ms perde kalkar; kahraman harfleri 760'ta yükselmeye başlar
  *
  * Neden: ilk ziyarette okuyucuya "kimin sitesindesin" bir kez, sakin
@@ -33,10 +37,11 @@ export function IntroCurtain() {
           </defs>
           <rect className="intro-tile" x="1" y="1" width="40" height="40" rx="11.5" pathLength={1} />
           <rect className="intro-fill" width="42" height="42" rx="12" fill="url(#intro-gradient)" />
-          <path className="intro-tri" d="M21 12L30 29H12L21 12Z" pathLength={1} />
+          <path className="intro-a" d={SIGNATURE_MARK_A} />
+          <path className="intro-tail" d={SIGNATURE_MARK_FLOURISH} pathLength={1} />
         </svg>
         <p className="intro-name">
-          <span>Ahmet Akyapı</span>
+          <Signature className="intro-signature" />
         </p>
       </div>
     </div>

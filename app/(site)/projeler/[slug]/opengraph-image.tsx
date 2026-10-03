@@ -4,6 +4,7 @@ import { ImageResponse } from 'next/og'
 import { splitLead } from '@/components/projects/project-text'
 import { DEV_STARTER_BANNER, shotSources } from '@/lib/content/project-shots'
 import { getProjectBySlug, projects } from '@/lib/content/projects'
+import { SIGNATURE_MARK_A, SIGNATURE_MARK_FLOURISH } from '@/lib/brand/signature'
 import { OG_CONTENT_TYPE, OG_SIZE } from '@/lib/og'
 
 export const alt = 'Ahmet Akyapı projelerinden birinin paylaşım kartı'
@@ -39,6 +40,7 @@ const C = {
   brandMid: '#1f86e0',
   brandTo: '#0b3f86',
   onBrand: '#ffffff',
+  brandGlow: '#bfe6ff',
 } as const
 
 /** Ekran görüntüsünün kartta kapladığı genişlik; sağdan ve alttan taşar. */
@@ -193,8 +195,9 @@ export default async function Image({ params }: { params: Promise<{ slug: string
                 backgroundImage: `linear-gradient(150deg, ${C.brandFrom} 0%, ${C.brandMid} 48%, ${C.brandTo} 100%)`,
               }}
             >
-              <svg width={30} height={30} viewBox="0 0 42 42" fill="none">
-                <path d="M21 12L30 29H12L21 12Z" stroke={C.onBrand} strokeWidth="2.8" strokeLinejoin="round" strokeLinecap="round" />
+              <svg width={52} height={52} viewBox="0 0 42 42" fill="none">
+                <path d={SIGNATURE_MARK_A} fill={C.onBrand} />
+                <path d={SIGNATURE_MARK_FLOURISH} stroke={C.brandGlow} strokeWidth="1.7" strokeLinecap="round" />
               </svg>
             </div>
             <div style={{ display: 'flex', marginLeft: 16, fontSize: 24, fontWeight: 700 }}>Ahmet Akyapı</div>
