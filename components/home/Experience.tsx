@@ -1,4 +1,4 @@
-import { ArrowRight, Building2, FlaskConical, Sparkles } from 'lucide-react'
+import { ArrowRight, Building2, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 import { MaskTitle } from '@/components/home/MaskTitle'
 import { ProjectCover } from '@/components/projects/ProjectCover'
@@ -50,8 +50,6 @@ export function Experience({ experience, projects }: { experience: HomeContent['
     counts.set(domain, (counts.get(domain) ?? 0) + 1)
   }
   const domains = [...counts.entries()].sort((a, b) => b[1] - a[1])
-  const years = new Date().getFullYear() - experience.since
-  const workProjects = experience.roles.flatMap((role) => role.project.split(/, | ve /)).length
   /* Şerit: sıralı liste ikiye bölünür, üst sıra öne çıkanlarla başlar. */
   const ordered = getOrderedProjects(projects)
   const half = Math.ceil(ordered.length / 2)
@@ -84,36 +82,32 @@ export function Experience({ experience, projects }: { experience: HomeContent['
                   <span className="font-semibold text-strong">{role.title}</span>
                   <span className="home-xp-period">{role.period}</span>
                 </p>
-                <p className="home-xp-project">{role.project}</p>
-                <p className="home-xp-desc">{role.text}</p>
+                {role.items ? (
+                  <ul className="home-xp-items">
+                    {role.items.map((item) => (
+                      <li key={item.name}>
+                        <span className="home-xp-project">{item.name}</span>
+                        <span className="home-xp-desc">{item.text}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <>
+                    <p className="home-xp-project">{role.project}</p>
+                    <p className="home-xp-desc">{role.text}</p>
+                  </>
+                )}
               </li>
             ))}
+            {/* Ar-Ge ve TÜBİTAK: tarihi olmayan, rollerin dışında bir iş;
+                çizginin sonunda soluk bir nokta. */}
+            <li className="home-xp-extra">
+              <p className="home-xp-role">
+                <span className="font-semibold text-strong">Ar-Ge ve TÜBİTAK</span>
+              </p>
+              <p className="home-xp-desc">{experience.note}</p>
+            </li>
           </ol>
-
-          {/* Kartın dibi: üç ölçü ve Ar-Ge notu. Kart sağdaki şeritli kartla
-              aynı boyda; roller bitince alt yarı boş kalıyordu (4 Ekim 2026).
-              Ölçüler veriden: yıl başlangıçtan, proje sayısı rollerin proje
-              adlarından ("MDM, Revenue ve OYS" üç sayılır). */}
-          <footer className="home-xp-foot">
-            <dl className="home-own-stats">
-              <div>
-                <dd>{years}</dd>
-                <dt>Yıl</dt>
-              </div>
-              <div>
-                <dd>{experience.roles.length}</dd>
-                <dt>Rol</dt>
-              </div>
-              <div>
-                <dd>{workProjects}</dd>
-                <dt>Proje</dt>
-              </div>
-            </dl>
-            <p className="home-xp-note">
-              <FlaskConical aria-hidden="true" />
-              {experience.note}
-            </p>
-          </footer>
         </article>
 
         <article className="tint-card home-xp-card home-own reveal">

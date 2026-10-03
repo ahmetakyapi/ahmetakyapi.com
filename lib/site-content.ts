@@ -27,9 +27,14 @@ export type HomeContent = {
     company: string
     sector: string
     period: string
-    /** İşe başlangıç yılı: kartın "Yıl" ölçüsü bundan hesaplanır. */
-    since: number
-    roles: readonly { title: string; period: string; project: string; text: string }[]
+    roles: readonly {
+      title: string
+      period: string
+      project: string
+      text: string
+      /** Birden çok proje tek rolde: her biri kendi satırında. */
+      items?: readonly { name: string; text: string }[]
+    }[]
     note: string
   }
   closing: { title: string; text: string }
@@ -105,7 +110,6 @@ export const defaultHomeContent: HomeContent = {
     company: 'Nar Sistem Teknoloji',
     sector: 'Enerji',
     period: '2021 – Günümüz',
-    since: 2021,
     roles: [
       { title: 'AI Developer', period: '2026 – Günümüz', project: 'Lena', text: 'Akıllı sayaç verisini toplayıp yöneten platform.' },
       { title: 'Full-Stack Developer', period: '2024 – 2026', project: 'Thor', text: 'İş emri, fatura ve tahakkuk yönetim sistemi.' },
@@ -114,10 +118,15 @@ export const defaultHomeContent: HomeContent = {
         period: '2021 – 2023',
         project: 'MDM, Revenue ve OYS',
         text: 'Sayaç takibi, kayıp kaçak tespiti ve OSB enerji yönetimi.',
+        items: [
+          { name: 'MDM', text: 'Sayaç takibi.' },
+          { name: 'Revenue', text: 'Kayıp kaçak tespiti.' },
+          { name: 'OYS', text: 'OSB enerji yönetimi.' },
+        ],
       },
     ],
     /* Sahibinin Hakkımda metninden (4 Ekim 2026). */
-    note: 'Bunların dışında Ar-Ge ve TÜBİTAK projelerinde de görev aldım.',
+    note: 'Rollerin yanında Ar-Ge ve TÜBİTAK destekli projelerde de görev aldım.',
   },
   closing: {
     title: 'Birlikte Çalışalım',
