@@ -107,6 +107,12 @@
 
 /* İsim: iki satır, sıkı. Telefonda uzun kelime ("Akyapı") kabın ~%70'i. */
 .home-name {
+  /* Esnek sütun: satır maskelerinin eksi kenar boşlukları blok akışında
+     ÇÖKÜYORDU (-0,16 ile -0,24'ün toplamı değil büyüğü alınıyor) ve iki
+     satır arası 1,14em'e çıkıyordu (ölçüldü, 4 Ekim 2026). Flex'te
+     çökme yok: satır adımı satır yüksekliğine (0,9em) eşit. */
+  display: flex;
+  flex-direction: column;
   margin-top: 1.5rem;
   font-size: clamp(4.25rem, 20vw, 6.5rem);
   font-weight: 700;
@@ -134,7 +140,6 @@
 
 .home-name-in {
   display: block;
-  padding-bottom: 0.08em;
 }
 
 /* Degrade iki satırı tek yüzey gibi kaplar: üst satır açık uçta başlar,
@@ -272,13 +277,13 @@
   /* Açılış perdesi varken (globals.css → "Açılış perdesi") giriş perdenin
      kalkışıyla başlar (760 ms); iki ayrı animasyon değil tek hareket. */
   :root[data-intro] .home-name-1 {
-    animation-delay: 760ms;
+    animation-delay: 1500ms;
   }
   :root[data-intro] .home-name-2 {
-    animation-delay: 850ms;
+    animation-delay: 1590ms;
   }
   :root[data-intro] .home-rise {
-    animation-delay: 1.02s;
+    animation-delay: 1.76s;
   }
 }
 
@@ -892,10 +897,6 @@
   }
 }
 
-.home-xp-own {
-  --tint: var(--accent-warm);
-}
-
 .home-xp-card-head {
   display: flex;
   align-items: center;
@@ -926,12 +927,6 @@
 }
 
 .home-xp-tag,
-.home-xp-count {
-  font-family: var(--font-mono);
-  font-size: var(--text-small);
-  font-weight: 500;
-  color: var(--text-muted);
-}
 .home-xp-tag {
   margin-top: 0.2rem;
 }
@@ -1017,50 +1012,6 @@
   font-size: 0.75rem;
   font-weight: 500;
   color: var(--tint-ink);
-}
-
-.home-xp-big {
-  display: flex;
-  align-items: baseline;
-  gap: 0.75rem;
-}
-.home-xp-big-num {
-  font-size: clamp(4rem, 3rem + 4vw, 6rem);
-  font-weight: 700;
-  line-height: 0.85;
-  letter-spacing: -0.06em;
-  color: var(--tint-ink);
-}
-.home-xp-big-label {
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: var(--text-strong);
-}
-
-.home-xp-domains {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-.home-xp-domains li {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.45rem 0.8rem 0.45rem 0.65rem;
-  border-radius: 999px;
-  background: color-mix(in oklab, var(--page-bg) 70%, transparent);
-  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--tint) 25%, transparent);
-  font-size: 0.9375rem;
-  font-weight: 500;
-  color: var(--text-strong);
-}
-.home-xp-domains svg {
-  width: 1rem;
-  height: 1rem;
-  color: var(--tint-ink);
-}
-.home-xp-count {
-  margin-left: 0.1rem;
 }
 
 @keyframes home-xp-line {
@@ -1199,13 +1150,7 @@
        kendisi ve ince bir ton kenarı.
      - Kart zeminle aynı karanlıkta kayboluyordu. Üstte tonun ince bir ışık
        çizgisi, kenarda ton halkası ve altında tonun yumuşak gölgesi.
-     - Sağ kartta sayı ile düğme arasında boşluk kalıyordu: düğme artık
-       hapların hemen altında.
    -------------------------------------------------------------------------- */
-.home-xp-own .tint-card-btn {
-  margin-top: 0.25rem;
-}
-
 :root[data-theme="dark"] .home-xp-card {
   box-shadow:
     inset 0 0 0 1px color-mix(in oklab, var(--tint) 24%, transparent),
@@ -1228,20 +1173,9 @@
   background: var(--tint);
 }
 
-:root[data-theme="dark"] .home-xp-domains li {
-  background: color-mix(in oklab, var(--tint) 10%, transparent);
-}
-
 :root[data-theme="dark"] .home-xp-period {
   background: color-mix(in oklab, var(--tint) 18%, transparent);
   color: color-mix(in oklab, var(--tint) 70%, var(--text-strong));
-}
-
-:root[data-theme="dark"] .home-xp-big-num {
-  background: linear-gradient(180deg, var(--text-strong), var(--tint));
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
 }
 
 @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
@@ -1256,61 +1190,189 @@
 }
 
 /* --------------------------------------------------------------------------
-   Kendi Ürünlerim kartı: alan dağılımı çubuğu ve köşede yörünge halkaları
-   (4 Ekim 2026: "sağdaki kart eksik hissettiriyor"). Çubuğun her parçası
-   tonun bir kademesi; görünüme girince soldan dolar. Halkalar küreye bir
-   gönderme, çok soluk ve kartın dışına taşmaz.
+   Kendi Ürünlerim: film şeridi kartı (components/home/Experience.tsx;
+   4 Ekim 2026). Kartın ortasında iki sıra NET kapak, ters yönde yavaşça
+   akıyor; her kapağın altında projenin adı. Şerit kartın iki kenarına
+   kadar uzanır ve kenarlarda maskeyle söner. Üzerine gelince akış durur,
+   gelinen kapak öne çıkar. Hareketi azaltan okuyucuda şerit durur ve
+   yatay kaydırılabilir.
+   Zemin soldaki kartla aynı ton ailesi (`.tint-card`); ayrı ışık yok,
+   rengi kapaklar getiriyor.
    -------------------------------------------------------------------------- */
-.home-xp-own {
-  position: relative;
+:root[data-theme] .home-own {
+  --own-pad: clamp(1.25rem, 3vw, 2.25rem);
+  --own-tile: clamp(9.5rem, 15vw, 12rem);
+  justify-content: space-between;
+  gap: 1.5rem;
+  overflow: clip;
 }
 
-.home-xp-rings {
-  position: absolute;
-  top: -3.5rem;
-  right: -3.5rem;
-  z-index: -1;
-  width: 15rem;
-  height: 15rem;
-  pointer-events: none;
-}
-.home-xp-rings circle {
-  fill: none;
-  stroke: color-mix(in oklab, var(--tint) 30%, transparent);
-  stroke-width: 1;
-  vector-effect: non-scaling-stroke;
-}
-.home-xp-rings circle:nth-child(2) {
-  stroke-dasharray: 3 6;
+.home-own .tint-card-glow {
+  display: none;
 }
 
-.home-xp-bar {
+.home-own-head .home-xp-tag {
+  text-wrap: balance;
+}
+
+/* Kart ızgara öğesi: şeridin `max-content` genişliği kartı (ve sayfayı)
+   genişletmesin. Telefonda kart ekrandan taşıyordu (ölçüldü, 4 Ekim). */
+.home-xp > * {
+  min-width: 0;
+}
+
+.home-own-reel {
+  min-width: 0;
+  overflow: clip;
+  display: grid;
+  gap: 0.9rem;
+  margin-inline: calc(-1 * var(--own-pad));
+  mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+}
+
+.home-own-row {
   display: flex;
-  gap: 4px;
-  height: 0.6rem;
-  margin-top: -0.5rem;
-}
-.home-xp-bar > span {
-  flex-basis: 0;
-  border-radius: 999px;
-  background: color-mix(in oklab, var(--tint) calc(100% - var(--i) * 15%), var(--surface));
-  transform-origin: left;
+  width: max-content;
 }
 
-@keyframes home-xp-bar-in {
-  from {
-    scale: 0 1;
+.home-own-track {
+  display: flex;
+  gap: 0.9rem;
+  padding-right: 0.9rem;
+}
+
+.home-own-tile {
+  width: var(--own-tile);
+  margin: 0;
+  transition:
+    translate 480ms var(--ease-brand),
+    opacity 380ms var(--ease-brand);
+}
+.home-own-tile > :first-child {
+  border-radius: 0.7rem;
+  border-color: color-mix(in oklab, var(--tint) 30%, transparent);
+  box-shadow: 0 16px 30px -18px color-mix(in oklab, var(--tint) 55%, var(--scrim) 45%);
+}
+:root[data-theme="dark"] .home-own-tile > :first-child {
+  border-color: color-mix(in oklab, var(--tint) 45%, transparent);
+}
+.home-own-tile .cover-art-kicker {
+  display: none;
+}
+.home-own-tile figcaption {
+  margin-top: 0.5rem;
+  padding-inline: 0.15rem;
+  overflow: hidden;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text-strong);
+}
+
+.home-own-stats {
+  display: flex;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+}
+.home-own-stats > div {
+  display: flex;
+  flex-direction: column-reverse;
+}
+.home-own-stats dd {
+  font-size: clamp(2rem, 1.5rem + 1.6vw, 2.75rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  color: var(--tint-ink);
+}
+.home-own-stats dt {
+  margin-top: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  color: var(--text-muted);
+}
+
+.home-own-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.25rem 2rem;
+}
+
+@keyframes home-own-left {
+  to {
+    translate: -50% 0;
   }
 }
-@media (prefers-reduced-motion: no-preference) {
-  .home-xp-rings {
-    animation: cover-rings-spin 90s linear infinite;
+@keyframes home-own-right {
+  from {
+    translate: -50% 0;
   }
-  @supports (animation-timeline: view()) {
-    .home-xp-bar > span {
-      animation: home-xp-bar-in linear both;
-      animation-timeline: view();
-      animation-range: entry 40% cover 40%;
+  to {
+    translate: 0 0;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .home-own-row[data-dir="left"] {
+    animation: home-own-left 48s linear infinite;
+  }
+  .home-own-row[data-dir="right"] {
+    animation: home-own-right 54s linear infinite;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .home-own-reel:hover .home-own-row {
+      animation-play-state: paused;
+    }
+    .home-own-reel:hover .home-own-tile {
+      opacity: 0.55;
+    }
+    .home-own-reel .home-own-tile:hover {
+      opacity: 1;
+      translate: 0 -4px;
     }
   }
+}
+
+/* Hareketsiz: tek kopya, yatay kaydırılır. */
+@media (prefers-reduced-motion: reduce) {
+  .home-own-reel {
+    overflow-x: auto;
+  }
+  .home-own-track + .home-own-track {
+    display: none;
+  }
+}
+
+/* İş Deneyimi kartının dibi: ölçüler ve Ar-Ge notu, kartın en altında. */
+.home-xp-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.25rem 2rem;
+  margin-top: auto;
+  padding-top: 1.5rem;
+  border-top: 1px solid color-mix(in oklab, var(--tint) 22%, transparent);
+}
+
+.home-xp-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  max-width: 26rem;
+  padding: 0.6rem 0.9rem;
+  border-radius: 0.875rem;
+  background: color-mix(in oklab, var(--tint) 12%, transparent);
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  color: var(--text-body);
+}
+.home-xp-note svg {
+  flex: none;
+  width: 1.125rem;
+  height: 1.125rem;
+  color: var(--tint-ink);
 }

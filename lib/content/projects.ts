@@ -63,7 +63,7 @@ export const projects: Project[] = [
     tint: '#c8902e',
     gradient: 'linear-gradient(135deg, #ef4444 0%, #f59e0b 100%)',
     badge: 'Canlı',
-    featured: true,
+    featured: false,
     postSlug: 'spoiler-vermeyen-wiki',
   },
   {
@@ -98,9 +98,10 @@ export const projects: Project[] = [
     link: 'https://elevenforge.vercel.app',
     github: 'https://github.com/ahmetakyapi/elevenforge',
     accent: '#22c55e',
+    tint: '#16a34a',
     gradient: 'linear-gradient(135deg, #22c55e 0%, #15803d 100%)',
     badge: 'Canlı',
-    featured: false,
+    featured: true,
   },
   {
     id: 6,
@@ -204,9 +205,10 @@ export const projects: Project[] = [
     slug: 'dev-starter',
     group: 'arac',
     description:
-      'Kendi geliştirme ekosistemim: tasarım tokenları, paylaşılan UI bileşenleri, Next.js şablonları ve projeler arası ortak kural seti. İki npm paketi olarak yayımlanıyor.',
-    detail: '@ahmetakyapi/theme ve @ahmetakyapi/ui: token katmanı ve bileşen katmanı ayrı paketlerde.',
-    tags: ['TypeScript', 'npm', 'Monorepo', 'Tailwind'],
+      'Her yeni projeye sıfırdan başlamamak için kurduğum geliştirme altyapısı. İçinde dört hazır Next.js şablonu (full-stack uygulama, tanıtım sayfası, yapay zekâ sohbet arayüzü, belge sitesi), 36 kopyalanıp kullanılabilen arayüz parçası ve on bir adımlık bir rehber var. Projeye başlarken fikirden plana, renk paletinden yayına kadar her adım aynı kurallarla ilerliyor.',
+    detail:
+      'Tasarım tokenları ve bileşenler iki ayrı npm paketi: @ahmetakyapi/theme ve @ahmetakyapi/ui. Dört renk paleti (signature, verdant, ember, iris) aynı token adlarını kullandığı için bir projenin rengini değiştirmek tek satır. Yanında Claude Code için on bir uzman ajan (strateji, tasarım denetimi, metin editörü, kalite kapısı) ve projelerde yaşanmış hataların tutulduğu bir bilgi tabanı duruyor; yeni bir bilgisayarda hepsi tek betikle kuruluyor.',
+    tags: ['Next.js 16', 'TypeScript', 'Tailwind v4', 'npm Workspaces', 'Claude Code'],
     link: 'https://github.com/ahmetakyapi/dev-starter',
     github: 'https://github.com/ahmetakyapi/dev-starter',
     accent: '#6366f1',

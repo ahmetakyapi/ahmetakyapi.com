@@ -13,6 +13,10 @@
  * ve önizleme ajanları, adreste çapa (#hakkimda gibi bir yere doğrudan
  * gelen okuyucu beklemesin).
  *
+ * 4 Ekim 2026: perde imza tamamen yazılana kadar bekliyor (kalkış 760
+ * ms'den 1500 ms'ye); kahramanın girişi buna göre kaydı (isim 1500/1590,
+ * alt blok 1760 + 700 ≈ 2460 ms), öznitelik 2700'de kalkıyor.
+ *
  * Öznitelik INTRO_CLEAR_MS sonra kalkar: kalkmasaydı ana sayfaya istemci
  * gezinmesiyle dönüldüğünde kahramanın harf girişi perdeyi bekleyip
  * (gecikmeli) yeniden oynardı. Süre harf girişinin bitişinden sonra
@@ -21,7 +25,7 @@
  * erken kalksaydı animasyon gecikmesi ortada kısalır ve harfler sıçrardı.
  */
 export const INTRO_KEY = 'intro-seen'
-export const INTRO_CLEAR_MS = 1900
+export const INTRO_CLEAR_MS = 2700
 
 const BOT_UA =
   'bot|crawl|spider|slurp|lighthouse|headless|preview|facebookexternalhit|embedly|whatsapp|telegram|discord|slack|vercel|pingdom|gtmetrix'

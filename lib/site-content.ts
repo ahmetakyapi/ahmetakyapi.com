@@ -27,7 +27,10 @@ export type HomeContent = {
     company: string
     sector: string
     period: string
+    /** İşe başlangıç yılı: kartın "Yıl" ölçüsü bundan hesaplanır. */
+    since: number
     roles: readonly { title: string; period: string; project: string; text: string }[]
+    note: string
   }
   closing: { title: string; text: string }
 }
@@ -72,9 +75,9 @@ export const defaultHomeContent: HomeContent = {
         'Tek kişilik bir klinik pratiğin yönetim paneli: gelir-gider, danışan, seans, fatura, ödeme ve vergi takibi tek sakin arayüzde.',
     },
     {
-      slug: 'onepiece-hub',
+      slug: 'elevenforge',
       summary:
-        'One Piece evrenini Türkçe içerikle düzenleyen fan wikisi. Hangi arkta olduğunu seçiyorsun, sonrasındaki bilgiler gizli kalıyor.',
+        '16 arkadaşın aynı ligde yarıştığı Türkçe futbol menajerlik oyunu. Davet koduyla katılıyorsun, boş yerleri bot dolduruyor, maçlar ligi kuranın seçtiği saatte oynanıyor.',
     },
   ],
   /* Sahibinin kendi metni, kelimesine dokunulmaz (Ekim 2026). Yalnız ürün
@@ -88,7 +91,7 @@ export const defaultHomeContent: HomeContent = {
   about: {
     title: 'Merhaba, Ben Ahmet.',
     paragraphs: [
-      'Web ürünleri geliştiriyorum. Tasarımından geliştirmesine, oradan da yayına almasına kadar işi uçtan uca yapmayı seviyorum. Bana göre iyi bir ürün kendini anlatmak zorunda kalmaz. Hızlı açılır, rahat okunur, kullanana ne yapacağını söyler ve doğru bilgi verir. Ben de tam olarak bunu yapmaya çalışıyorum.',
+      'Bir fikri alıp tasarımından geliştirmesine, oradan da yayına almasına kadar uçtan uca kendim götürmeyi seviyorum. Bana göre iyi bir ürün kendini anlatmak zorunda kalmaz. Hızlı açılır, rahat okunur, kullanana ne yapacağını söyler ve doğru bilgi verir. Ben de tam olarak bunu yapmaya çalışıyorum.',
       "Nar Sistem Teknoloji'de enerji sektörüne yönelik Thor ve Lena gibi iki büyük projede görev aldım. Thor, iş emirlerinin, faturaların ve tahakkukların oluşturulup takip edildiği bir sistem. Lena ise akıllı sayaçlardan gelen veriyi toplayıp yöneten bir platform. Bunların dışında Ar-Ge ve TÜBİTAK projelerinde de görev aldım.",
       "Kendi tarafımda da birkaç ürün geliştirdim. Açılış Zili, ABD borsalarını Türkçe takip eden bir site. Derinay, bir psikoloğun danışanlarını takip ettiği bir panel. Bir de Ramazan Vakitleri ve arkadaşlarımla oynamak için yaptığım çok oyunculu oyun Dungeon Mates var. Bunları çoğunlukla Next.js, TypeScript ve PostgreSQL ile yapıyorum.",
       "İşin büyük kısmını artık yapay zekâ ajanlarıyla birlikte yürütüyorum. Araştırma, tasarım kontrolü, test ve metin düzeltme gibi işleri kendi kurduğum ajanlara bırakıyorum. Neyin yapılacağına ve neyin yayına çıkacağına ise ben karar veriyorum. Açılış Zili'ndeki bültenleri ve bilanço analizlerini de her gün bu ajanlar yazıyor.",
@@ -102,6 +105,7 @@ export const defaultHomeContent: HomeContent = {
     company: 'Nar Sistem Teknoloji',
     sector: 'Enerji',
     period: '2021 – Günümüz',
+    since: 2021,
     roles: [
       { title: 'AI Developer', period: '2026 – Günümüz', project: 'Lena', text: 'Akıllı sayaç verisini toplayıp yöneten platform.' },
       { title: 'Full-Stack Developer', period: '2024 – 2026', project: 'Thor', text: 'İş emri, fatura ve tahakkuk yönetim sistemi.' },
@@ -112,6 +116,8 @@ export const defaultHomeContent: HomeContent = {
         text: 'Sayaç takibi, kayıp kaçak tespiti ve OSB enerji yönetimi.',
       },
     ],
+    /* Sahibinin Hakkımda metninden (4 Ekim 2026). */
+    note: 'Bunların dışında Ar-Ge ve TÜBİTAK projelerinde de görev aldım.',
   },
   closing: {
     title: 'Birlikte Çalışalım',

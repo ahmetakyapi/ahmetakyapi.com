@@ -17,7 +17,8 @@ import { SIGNATURE_MARK_A, SIGNATURE_MARK_FLOURISH } from '@/lib/brand/signature
  *   300-580 ms  karo marka degradesiyle dolar
  *   300-740 ms  imza A'sı belirir ve kuyruğu çizilir, imza soldan sağa
  *               yazılır (4 Ekim 2026: önceden üçgen ve düz metin vardı)
- *   760-1180 ms perde kalkar; kahraman harfleri 760'ta yükselmeye başlar
+ *  1200-1440 ms imza bir an durur
+ *  1500-1960 ms perde kalkar; kahramanın ismi 1500'de yükselmeye başlar
  *
  * Neden: ilk ziyarette okuyucuya "kimin sitesindesin" bir kez, sakin
  * söylenir; ikinci yüklemede ve sonraki gezinmelerde hiç yok.
