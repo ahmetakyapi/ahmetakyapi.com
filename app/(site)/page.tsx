@@ -34,8 +34,7 @@ export const metadata: Metadata = {
  * Aynı düzen iki kez kullanılmıyor; bölüm başlıkları aynı maskeli
  * açılışla gelir (MaskTitle), bölümler birbirine bağlanır.
  *
- * Tamamı sunucu bileşeni. İstemciye giden adalar: küre,
- * yazı önizlemesi ve e-posta kopyalama düğmesi. Bölüm
+ * Tamamı sunucu bileşeni. İstemciye giden adalar: küre ve e-posta kopyalama düğmesi. Bölüm
  * hareketlerinin hepsi CSS (./home.css); rota statik kalır.
  */
 export default function HomePage() {
@@ -53,7 +52,7 @@ export default function HomePage() {
       <SelectedWork home={home} projects={projects} />
       <Experience experience={home.experience} projects={projects} />
       <StackMarquee />
-      <RecentPosts posts={blogPosts} projects={projects} />
+      <RecentPosts posts={blogPosts} />
       <Closing closing={home.closing} />
     </PageTransition>
   )

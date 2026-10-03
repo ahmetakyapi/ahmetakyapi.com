@@ -53,7 +53,7 @@ export const projects: Project[] = [
     slug: 'onepiece-hub',
     group: 'platform',
     description:
-      'One Piece evrenini Türkçe içerikle düzenli ve keşfedilebilir hale getiren fan platformu. Ark takibi, karakter ilişkileri, quiz modu ve hızlı arama tek bir sinematik wiki deneyiminde birleşiyor.',
+      'One Piece evrenini Türkçe içerikle düzenli ve keşfedilebilir hale getiren fan platformu. Ark takibi, karakter ilişkileri, quiz modu ve hızlı arama aynı sitede.',
     detail:
       'Spoiler kapısı var: hangi arkta olduğunu söylüyorsun, sonrasına ait her şey bulanıklaşıyor. Ekran okuyucuya da içerik sızmıyor.',
     tags: ['Next.js 14', 'TypeScript', 'Drizzle', 'Neon', 'JWT'],
@@ -109,8 +109,10 @@ export const projects: Project[] = [
     slug: 'digynotes',
     group: 'arac',
     description:
-      'Sade ama işlevli bir dijital not uygulaması. Notları hızlıca oluşturup kategorilere ayırıyor, içerik içinde anlık arama yapıyor ve günlük kullanımda dikkat dağıtmayan bir akış sunuyor.',
-    tags: ['TypeScript', 'React', 'TailwindCSS'],
+      'İzlediğin film ve dizileri, oynadığın oyunları, okuduğun kitapları ve gezdiğin yerleri not ettiğin kişisel bir arşiv. Her kayda yarım puanlık adımlarla 5 üzerinden puan, izlendi ya da izlenecek gibi bir durum, etiketler ve zengin metinli bir inceleme ekleniyor. Başka kullanıcıları takip edip akışlarını görebiliyor, notlarını koleksiyonlara ayırıp bir istek listesi tutabiliyorsun.',
+    detail:
+      'Kayıt açarken adını yazman yetiyor; kapak, yönetmen, yazar ya da geliştirici ve yıl her türün kendi kaynağından doluyor. Film ve dizi TMDB\'den (önce Türkçe aranıyor, sonuç yoksa İngilizce), oyun RAWG\'den, kitap Open Library\'den, gezi yerleri OpenStreetMap\'ten geliyor.',
+    tags: ['Next.js 14', 'TypeScript', 'Prisma', 'Neon', 'NextAuth', 'Tailwind CSS'],
     link: 'https://digy-notes.vercel.app',
     github: 'https://github.com/ahmetakyapi/DigyNotes',
     accent: '#10b981',
@@ -126,8 +128,9 @@ export const projects: Project[] = [
     group: 'oyun',
     onlyDark: true,
     description:
-      'Kayıt olmadan arkadaşlarla hızlıca oynanan çok oyunculu çizim oyunu. Türkçe kelime havuzu, oda tabanlı gerçek zamanlı akış ve mobil uyumlu bir sahne; bağlantıyı paylaşır paylaşmaz oyun başlıyor.',
-    detail: 'Socket.io üzerinde oda tabanlı durum yönetimi; sunucu otoriteli tur akışı.',
+      'Kayıt olmadan, bir bağlantıyla arkadaşlarınla oynadığın Türkçe çizim ve tahmin oyunu. Sırası gelen kelimesini seçip çiziyor, ötekiler sohbete tahmin yazıyor; süre azaldıkça kelimenin iki harfi ipucu olarak açılıyor ve erken bilen daha çok puan alıyor. Havuzda 18 kategoride 1.071 kelime var, oda kurucusu kendi kelimelerini ekleyebiliyor, kişi azsa lobiye bot çağırabiliyor.',
+    detail:
+      'Oyunun durumu Railway\'de çalışan ayrı bir Socket.io sunucusunda, arayüz Vercel\'de. Tahmin edenlerin tarayıcısına kelimenin kendisi hiç gitmiyor, yalnız harf sayısı ve ipucu gidiyor. Bir iki harfle ıskalayan tahmini sunucu sohbete düşürmüyor, yalnız yazana "çok yaklaştın" diyor; yoksa ötekilere hazır ipucu olurdu.',
     tags: ['Next.js 14', 'Socket.io', 'Zustand', 'TypeScript', 'Monorepo'],
     link: 'https://karalama.vercel.app',
     github: 'https://github.com/ahmetakyapi/karalama',
@@ -145,8 +148,9 @@ export const projects: Project[] = [
     group: 'oyun',
     onlyDark: true,
     description:
-      'Tarayıcıda çalışan, 2-4 kişilik kooperatif zindan oyunu. Prosedürel haritalar, farklı sınıflar ve sunucu otoriteli yapı sayesinde her tur yeniden oynanmak isteniyor.',
-    detail: 'Haritalar BSP ile üretiliyor ve sunucuda tek yerden dağıtılıyor, istemciler kendi zindanını üretmiyor.',
+      'Tarayıcıda tek başına ya da oda koduyla en fazla dört kişi birlikte oynanan, piksel grafikli bir zindan oyunu. Savaşçı, Büyücü, Okçu ve Şifacı arasından sınıfını seçip on katlık bir zindana iniyorsun; 3, 5, 7 ve 8. katlarda birer boss, onuncu katta Demon bekliyor. Her kat yeniden üretiliyor, kata göre değişen kurallar, güçlendirilmiş canavarlar, yetenek seçimi ve dükkân da bir turu öncekinden ayırıyor.',
+    detail:
+      'Oyunun bütün mantığı Node sunucusunda saniyede 20 kez işleniyor; tarayıcı yalnız tuş ve eylem gönderiyor, gelen durumu Canvas\'a çiziyor. Haritalar BSP ile sunucuda üretiliyor ve odadaki herkese aynısı gidiyor. Ses efektlerinin hiçbiri dosya değil, Web Audio ile o an üretiliyor.',
     tags: ['Next.js 14', 'Canvas', 'Socket.io', 'WebAudio', 'TypeScript'],
     link: 'https://dungeon-mates.vercel.app',
     github: 'https://github.com/ahmetakyapi/dungeon-mates',
@@ -182,8 +186,10 @@ export const projects: Project[] = [
     slug: 'keskealsaydim',
     group: 'arac',
     description:
-      '"O gün alsaydım bugün ne olurdu?" sorusunu sayıya döken küçük ama merak uyandıran bir araç. Seçtiğin varlığa geçmişte yatırım yapsaydın bugünkü karşılığını hızlı ve anlaşılır biçimde gösteriyor.',
-    tags: ['TypeScript', 'React', 'TailwindCSS'],
+      'İki hisseyi aynı tarih aralığında ve aynı tutarla karşılaştırıp "onu değil de bunu alsaydım ne olurdu?" sorusunu sayıyla cevaplayan bir yatırım aracı. Sonuçta gün gün değer eğrisi, iki hissenin oynaklığı, aralarındaki korelasyon ve en sert düşüş var. Yanında komisyonlu alış-satış kaydeden bir portföy, izleme listesi ve fiyat alarmları duruyor; kaydettiğin bir karşılaştırmayı giriş gerektirmeyen bir bağlantıyla paylaşabiliyorsun.',
+    detail:
+      'Bütün toplamlar Türk lirası. ABD hissesi gibi dövizle işlem gören bir varlık bugünkü kurla değil, her işlem gününün kuruyla çevriliyor; sonuca hem hisse hem kur hareketi yansıyor. Arka uç Vercel\'de çalışan Go fonksiyonları, fiyat ve kur verisi Yahoo Finance\'tan geliyor ve Upstash Redis\'te önbelleğe alınıyor.',
+    tags: ['React 18', 'TypeScript', 'Go', 'Neon', 'Redis', 'TanStack Query'],
     link: 'https://keskealsaydim.vercel.app',
     github: 'https://github.com/ahmetakyapi/keskealsaydim',
     accent: '#14b8a6',
@@ -215,8 +221,10 @@ export const projects: Project[] = [
     slug: 'ramazan-vakitleri',
     group: 'arac',
     description:
-      "Türkiye'nin 81 ili için iftar ve sahur vakitlerini gösteren hafif bir web uygulaması. İl seçimine göre anında filtreleniyor; özellikle mobilde sade ve doğrudan bir deneyim sunuyor.",
-    tags: ['JavaScript', 'HTML', 'CSS'],
+      "Sahur ve iftar vakitlerini, vakte kalan süreyi saniye saniye sayarak gösteren bir Ramazan uygulaması. Türkiye'nin 81 ili ve ilçeleri için Diyanet vakitlerini getiriyor; istersen imsak ile iftarın yanında günün altı vaktini de görüyorsun. Ramazan'ın kaçıncı günü olduğunu yazıyor, Kadir Gecesi'ni ayrıca işaretliyor, bildirime izin verirsen imsaktan ve iftardan 15 dakika önce hatırlatıyor.",
+    detail:
+      "Vakitler Diyanet verisini yayımlayan ezanvakti.emushaf.net'ten geliyor ve tarayıcıda saklanıyor; bağlantı koparsa son alınan liste gösteriliyor. Ramazan'ın kaçıncı günü olduğu sabit bir tarih tablosundan değil, tarayıcının Hicri takviminden hesaplanıyor. API'nin ilçe listesinde eksik kalan Kadıköy, Üsküdar gibi İstanbul ilçeleri il merkezinin vaktine bağlanıp listeye ekleniyor.",
+    tags: ['React 18', 'Vite', 'JavaScript', 'Service Worker'],
     link: 'https://ramazan-vakitleri.vercel.app',
     github: 'https://github.com/ahmetakyapi/ramazan-vakitleri',
     accent: '#f59e0b',

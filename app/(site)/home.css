@@ -128,8 +128,8 @@
   display: block;
   width: fit-content;
   overflow: clip;
-  padding: 0.04em 0.06em 0.16em;
-  margin: -0.04em -0.06em -0.16em;
+  padding: 0.24em 0.06em 0.16em;
+  margin: -0.24em -0.06em -0.16em;
 }
 
 .home-name-in {
@@ -601,59 +601,6 @@
 }
 
 /* --------------------------------------------------------------------------
-   Son Yazılar: imleci izleyen önizleme (components/home/PostPreview.tsx).
-   Yalnız fare + hareket açık; geri kalanında hiç basılmaz.
-   -------------------------------------------------------------------------- */
-.home-follow {
-  display: none;
-}
-
-@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-  .home-follow {
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 17rem;
-    aspect-ratio: 16 / 10;
-    pointer-events: none;
-    z-index: 1;
-    opacity: 0;
-    scale: 0.9;
-    transition:
-      opacity 160ms var(--ease-brand),
-      scale 240ms var(--ease-brand);
-  }
-
-  .home-posts[data-previewing] .home-follow {
-    opacity: 1;
-    scale: 1;
-  }
-
-  .home-follow-item {
-    position: absolute;
-    inset: 0;
-    overflow: hidden;
-    border: 1px solid var(--line-strong);
-    border-radius: var(--radius-button);
-    background: var(--page-bg);
-    box-shadow: var(--shadow-md);
-    opacity: 0;
-    transition: opacity 160ms var(--ease-brand);
-  }
-
-  .home-follow-item[data-on] {
-    opacity: 1;
-  }
-
-  .home-follow-item img {
-    height: 100%;
-    object-fit: cover;
-    object-position: top;
-  }
-}
-
-/* --------------------------------------------------------------------------
    Bölüm başlıkları: maskeli açılış (components/home/MaskTitle.tsx).
    Neden: her bölüm aynı hareketle başlar; ana sayfa ayrı kutular değil, bir
    hikâyenin sıradaki başlıkları gibi okunur. Başlık ekranın alt kenarından
@@ -663,10 +610,12 @@
 .home-mask {
   display: block;
   overflow: clip;
-  /* Alta inen harfler (y, ş, ç) ve sola taşan büyük harf kesilmesin;
-     eksi kenar boşluğu satır düzenini değiştirmez. */
-  padding: 0.04em 0.06em 0.16em;
-  margin: -0.04em -0.06em -0.16em;
+  /* Alta inen harfler (y, ş, ç), sola taşan büyük harf ve büyük harfin
+     ÜSTÜNDEKİ işaret (Ö, İ) kesilmesin. Üst pay 0,04em'di ve 0,96 satır
+     yüksekliğinde Ö'nün noktaları ile İ'nin noktası kırpılıyordu (4 Ekim
+     2026, ekran görüntüsü). Eksi kenar boşluğu satır düzenini değiştirmez. */
+  padding: 0.24em 0.06em 0.16em;
+  margin: -0.24em -0.06em -0.16em;
 }
 
 .home-mask-in {
