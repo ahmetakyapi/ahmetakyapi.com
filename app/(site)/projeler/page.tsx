@@ -1,11 +1,11 @@
 import type { Metadata } from 'next'
 import { Suspense } from 'react'
-import { ProjectCard, type CardSize } from '@/components/projects/ProjectCard'
-import { FilterChips, ProjectFilter } from '@/components/projects/ProjectFilter'
-import { GRID_ID } from '@/components/projects/project-text'
+import { FilterTabs, ProjectFilter } from '@/components/projects/ProjectFilter'
+import { PreviewFollow } from '@/components/projects/PreviewFollow'
+import { FeaturedRow, ProjectRow } from '@/components/projects/ProjectRow'
+import { LIST_ID } from '@/components/projects/project-text'
 import { PageTransition } from '@/components/site/PageTransition'
 import { Container } from '@/components/ui/Container'
-import { SectionHeading } from '@/components/ui/SectionHeading'
 import { projects } from '@/lib/content/projects'
 import { PROJECT_GROUPS, type ProjectGroup } from '@/lib/content/types'
 import { getOrderedProjects } from '@/lib/project-order'
@@ -25,23 +25,25 @@ export const metadata: Metadata = {
   },
 }
 
-/**
- * Izgaradaki yer: ilk öne çıkan tam genişlik, öteki öne çıkanlar yarım,
- * geri kalanlar 7/5 ve 5/7 dönüşümlü satırlar. Üç eşit kart yan yana hiç
- * gelmiyor; her satır bir öncekinin aynası.
+/*
+ * Proje dizini: EDİTORYAL LİSTE, kart ızgarası değil.
+ *
+ * On üç eş ağırlıklı kart (görsel + ad + kategori + açıklama + üç etiket)
+ * göz için on üç ayrı karar demekti ve hangisinin önemli olduğu
+ * okunmuyordu. Şimdi iki kademe var:
+ *   - öne çıkan üç proje: dev ad, tek cümle, yanında görünür ekran görüntüsü;
+ *   - geri kalanlar: tek satırlık ad + kategori. Masaüstünde görsel, satırın
+ *     üstünde durulunca imleci izleyen bir önizleme olarak belirir;
+ *     telefonda satırın başında küçük görsel olarak hep görünür.
+ *
+ * Süzgeç her iki kademeyi de süzer. Seçili kümede öne çıkan proje yoksa
+ * (Oyunlar, Araçlar) üstteki bölüm ve "Diğer Projeler" başlığı kalkar;
+ * kurallar burada, veriden üretiliyor (kümeler değişince elle güncellenmez).
  */
-function cardSize(index: number, featuredCount: number): CardSize {
-  if (index === 0) return 'wide'
-  if (index < featuredCount) return 'feature'
-  const i = index - featuredCount
-  const row = Math.floor(i / 2)
-  const first = i % 2 === 0
-  return (row % 2 === 0) === first ? 'major' : 'minor'
-}
-
 export default function ProjectsPage() {
   const ordered = getOrderedProjects(projects)
-  const featuredCount = ordered.filter((p) => p.featured).length
+  const featured = ordered.filter((p) => p.featured)
+  const rest = ordered.filter((p) => !p.featured)
   const liveCount = projects.filter((p) => p.badge === 'Canlı').length
   const withPost = projects.filter((p) => p.postSlug).length
 
@@ -68,29 +70,65 @@ export default function ProjectsPage() {
           ]),
         }}
       />
+      <style>{sectionRules(featured.map((p) => p.group), rest.map((p) => p.group))}</style>
 
-      <Container as="section" size="wide" className="py-12 sm:py-20" aria-labelledby="projeler-baslik">
-        <SectionHeading
-          as="h1"
-          id="projeler-baslik"
-          size="page"
-          kunye={`${projects.length} Proje, ${liveCount} Canlı`}
-          title="Projeler"
-          description={`Hepsinin kodu açık. ${withPost} tanesinin nasıl yapıldığını blogda ayrıca anlattım.`}
-        />
+      <Container as="section" size="wide" className="pb-20 pt-12 sm:pb-28 sm:pt-20" aria-labelledby="projeler-baslik">
+        <header className="max-w-3xl">
+          <h1 id="projeler-baslik" className="text-display font-semibold tracking-[-0.04em]">
+            <span className="display-ink">Projeler</span>
+          </h1>
+          <p className="mt-4 max-w-[52ch] text-read text-body">
+            {projects.length} proje, {liveCount} tanesi yayında. Hepsinin kodu açık; {withPost} tanesinin nasıl
+            yapıldığını blogda anlattım.
+          </p>
+        </header>
 
         <div className="mt-8 sm:mt-10">
-          <Suspense fallback={<FilterChips active={null} counts={counts} />}>
+          <Suspense fallback={<FilterTabs active={null} counts={counts} />}>
             <ProjectFilter counts={counts} />
           </Suspense>
         </div>
 
-        <div id={GRID_ID} className="pgrid mt-10 sm:mt-14">
-          {ordered.map((project, i) => (
-            <ProjectCard key={project.slug} project={project} size={cardSize(i, featuredCount)} priority={i === 0} />
-          ))}
+        <div id={LIST_ID} className="pscope mt-8 sm:mt-12">
+          <section aria-labelledby="one-cikanlar" className="pfeat-section">
+            <h2 id="one-cikanlar" className="sr-only">
+              Öne Çıkan Projeler
+            </h2>
+            <ol className="pfeat-list">
+              {featured.map((project, i) => (
+                <FeaturedRow key={project.slug} project={project} priority={i === 0} />
+              ))}
+            </ol>
+          </section>
+
+          <section aria-labelledby="diger-projeler" className="prest-section">
+            <h2 id="diger-projeler" className="prest-title">
+              Diğer Projeler
+            </h2>
+            <ol className="prow-list">
+              {rest.map((project) => (
+                <ProjectRow key={project.slug} project={project} />
+              ))}
+            </ol>
+          </section>
+          <PreviewFollow targetId={LIST_ID} />
         </div>
       </Container>
     </PageTransition>
   )
+}
+
+/**
+ * Seçili kümede hiç öğesi kalmayan bölümü gizleyen kurallar. Öne çıkanlar
+ * bölümü boşsa "Diğer Projeler" başlığı da kalkar: üstünde bir şey yokken
+ * "diğer" demek anlamsız.
+ */
+function sectionRules(featuredGroups: readonly ProjectGroup[], restGroups: readonly ProjectGroup[]) {
+  return PROJECT_GROUPS.map((group) => {
+    const on = `.pscope[data-filter="${group}"]`
+    const rules: string[] = []
+    if (!featuredGroups.includes(group)) rules.push(`${on} .pfeat-section{display:none}`, `${on} .prest-title{display:none}`)
+    if (!restGroups.includes(group)) rules.push(`${on} .prest-section{display:none}`)
+    return rules.join('')
+  }).join('')
 }

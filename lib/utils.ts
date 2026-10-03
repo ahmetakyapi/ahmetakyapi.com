@@ -21,7 +21,6 @@ export const TEXT_SIZES = [
   'title',
   'heading',
   'display',
-  'hero',
 ] as const
 
 /** Yarıçap rolleri (`rounded-card`, `rounded-button`) aynı sebeple. */

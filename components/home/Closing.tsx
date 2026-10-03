@@ -1,3 +1,4 @@
+import { MaskTitle } from '@/components/home/MaskTitle'
 import { BrandIcon } from '@/components/site/BrandIcon'
 import { Container } from '@/components/ui/Container'
 import { CopyButton } from '@/components/ui/CopyButton'
@@ -22,7 +23,7 @@ export function Closing({ closing }: { closing: HomeContent['closing'] }) {
         id="iletisim"
         className="text-[clamp(3rem,10vw,8.5rem)] font-semibold leading-[0.95] tracking-[-0.05em] text-strong"
       >
-        {closing.title}
+        <MaskTitle>{closing.title}</MaskTitle>
       </h2>
       <div className="mt-8 grid gap-8 border-t border-line pt-8 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
         <div className="min-w-0">

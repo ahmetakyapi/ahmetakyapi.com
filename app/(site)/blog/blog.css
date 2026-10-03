@@ -8,11 +8,13 @@
    bu yüzden bu dosya yalnızca `data-block` / `data-part` kancalarını ve
    `post-*` / `bl-*` sınıflarını hedefler, Tailwind sınıflarını değil.
 
-   İKİ HAT (Açılış Zili'nin Mercek okumasından uyarlandı). Yüzeyler (kod,
-   tablo, rakamlar, karşılaştırma, not) sütunun kenarında biter; metin,
-   yüzeylerin içi dahil, `--read-inset` kadar içeride aynı sol hattan
-   başlar. Telefonda yüzeyler ekran kenarına taşar (`--bleed`) ve iç
-   payları yine metin hattını tutar: 390 pikselde iki ayrı sol kenar yok.
+   TEK HAT. Bir dönem yazı Açılış Zili'nin Mercek okumasından uyarlanan
+   "iki hatlı" ızgaradaydı: metin kutuların kenarından `--read-inset` kadar
+   içeride, kapak ekranın tamamı genişliğinde. Sonuç okunmuyordu: kapak
+   1440×900'de 680 piksel yüksekti ve ilk ekranın tamamını alıyordu, metin
+   iki ayrı sol kenar arasında sıkışıyordu (3 Ekim 2026, sahibinin
+   şikâyeti: "eskisi gibi olsun"). Şimdi her şey aynı sol kenardan başlar:
+   başlık, kapak, gövde ve kutular tek sütunda; içindekiler sağda.
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -46,52 +48,67 @@
 }
 
 /* --------------------------------------------------------------------------
-   Yazının başı
+   Sayfa ızgarası: okuma sütunu + içindekiler
+   Telefon ve tablette tek sütun. 1024+ okuma sütunu (44rem) ile 14rem'lik
+   içindekiler yan yana, ikisi birlikte sayfada ortalı. Okuma sütunu
+   başlığı, kapağı ve gövdeyi aynı kenarda taşır.
    -------------------------------------------------------------------------- */
-.post-head {
-  max-width: calc(54rem + 2 * var(--read-inset));
-  padding-inline: var(--read-inset);
+.post-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  justify-content: center;
 }
 
-/* Başlık bloğu gövdeyle aynı hatta (`--read-inset`); kapak, gövdedeki
-   yüzeyler gibi kenarda. */
-.post {
-  --read-inset: 0px;
+.post-main {
+  min-width: 0;
+  max-width: 44rem;
+  margin-inline: auto;
+  width: 100%;
 }
 
-@media (min-width: 640px) {
-  .post {
-    --read-inset: 1.75rem;
+@media (min-width: 1024px) {
+  .post-grid {
+    grid-template-columns: minmax(0, 44rem) 14rem;
+    column-gap: clamp(3rem, 6vw, 5.5rem);
+  }
+  .post-main {
+    margin-inline: 0;
   }
 }
 
+/* --------------------------------------------------------------------------
+   Yazının başı: künye, başlık, özet. Başlık ölçülü (en çok 2,875rem): ilk
+   ekranda başlık + özet + kapağın üstü birlikte görünmeli.
+   -------------------------------------------------------------------------- */
 .post-title {
-  margin-top: 1rem;
-  font-size: clamp(2.125rem, 1.4rem + 3.2vw, 3.5rem);
-  line-height: 1.06;
+  margin-top: 0.875rem;
+  font-size: clamp(2rem, 1.35rem + 2.2vw, 2.875rem);
+  line-height: 1.1;
   font-weight: 650;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.035em;
   color: var(--text-strong);
   text-wrap: balance;
 }
 
 .post-excerpt {
-  margin-top: 1.25rem;
-  max-width: 44rem;
+  margin-top: 1rem;
   font-size: 1.125rem;
   line-height: 1.6;
-  color: var(--text-body);
+  color: color-mix(in srgb, var(--text-body) 70%, var(--text-strong));
   text-wrap: pretty;
 }
 
 @media (min-width: 640px) {
   .post-excerpt {
-    font-size: 1.25rem;
+    font-size: 1.1875rem;
   }
 }
 
 /* --------------------------------------------------------------------------
-   Kapak
+   Kapak: başlığın ALTINDA, okuma sütunu genişliğinde, 16:9. Yüksekliği
+   ekranın %45'ini geçmez (kısa ekranda oran bozulur, görsel üstten
+   kırpılır; ekran görüntüleri sayfanın tepesini gösteriyor). Telefonda
+   kenardan kenara ama yine kısa.
    -------------------------------------------------------------------------- */
 .post-cover {
   background: var(--surface);
@@ -104,8 +121,30 @@
   object-position: top;
 }
 
+.post-cover[data-variant="hero"] {
+  aspect-ratio: 16 / 9;
+  max-height: 45svh;
+  width: 100%;
+  margin-top: 2rem;
+}
+
+@media (max-width: 639.98px) {
+  .post-cover[data-variant="hero"] {
+    width: auto;
+    margin-inline: calc(-1 * max(1rem, env(safe-area-inset-left)));
+    border-inline-width: 0;
+    border-radius: 0;
+  }
+}
+
 /* Tipografik kapak: ekran görüntüsü olmayan yazı. Degrade birincil eylemle
-   aynı (`bg-cta`, beyaz metin her noktada AA); süs değil, kimlik. */
+   aynı (`bg-cta`, beyaz metin her noktada AA); süs değil, kimlik. Yazı
+   sayfasında basık (3:1): düz bir degrade alanı ekran görüntüsünün
+   taşıdığı bilgiyi taşımıyor. */
+.post-cover[data-variant="hero"][data-kind="type"] {
+  aspect-ratio: 3 / 1;
+}
+
 .post-cover-type {
   position: absolute;
   inset: 0;
@@ -129,16 +168,7 @@
 .post-cover-tag {
   font-family: var(--font-mono);
   font-size: 0.8125rem;
-  opacity: 0.8;
-}
-
-/* Tipografik kapak yazı sayfasında daha basık: 2:1'de masaüstünde 544
-   piksellik düz bir degrade alan oluyordu, ekran görüntüsünün taşıdığı
-   bilgiyi taşımadan. */
-@media (min-width: 640px) {
-  .post-cover[data-variant="hero"][data-kind="type"] {
-    aspect-ratio: 3 / 1;
-  }
+  opacity: 0.85;
 }
 
 .post-cover[data-variant="thumb"] .post-cover-type {
@@ -155,49 +185,27 @@
 }
 
 /* --------------------------------------------------------------------------
-   Gövde ve kenar çubuğu
+   Gövde. Ölçü ~68ch, telefonda 17, masaüstünde 18 piksel, satır yüksekliği
+   1,75, paragraf arası 1,25em. Metin rengi gövde tonunun %35'i ile güçlü
+   metnin %65'i: `--text-body` uzun okumada fazla soluk (açıkta 5,5:1),
+   `--text-strong` parlıyor. Ölçüldü: açıkta 11,6:1, koyuda 13,4:1.
    -------------------------------------------------------------------------- */
-.post-layout {
-  display: grid;
-  gap: 4rem;
-  margin-top: 2.5rem;
-}
-
-@media (min-width: 1024px) {
-  .post-layout {
-    grid-template-columns: minmax(0, 1fr) 15rem;
-    margin-top: 3.5rem;
-  }
-}
-
 .post-prose {
-  --read-inset: 0px;
-  --bleed: 1rem;
-  --surface-pad: max(var(--read-inset), var(--bleed));
-  --prose-size: 1.125rem;
-  --prose-lh: 1.7;
-  /* Gövde metni gövde tonundan bir kademe koyu: uzun okumada `--text-body`
-     koyu temada fazla soluk kalıyor, `--text-strong` ise parlıyor. */
-  --prose-ink: color-mix(in srgb, var(--text-body) 58%, var(--text-strong));
+  --prose-size: 1.0625rem;
+  --prose-ink: color-mix(in srgb, var(--text-body) 35%, var(--text-strong));
 
-  /* ÖLÇÜ ~68ch: `ch` gövde puntosundan hesaplanır, iç pay iki yandan eklenir. */
-  max-width: calc(68ch + 2 * var(--read-inset));
+  max-width: 68ch;
+  margin-top: 2.5rem;
   font-size: var(--prose-size);
-  line-height: var(--prose-lh);
+  line-height: 1.75;
   color: var(--prose-ink);
   overflow-wrap: break-word;
-  counter-reset: none;
 }
 
 @media (min-width: 640px) {
   .post-prose {
-    --read-inset: 1.75rem;
-    --bleed: 0px;
-    --prose-size: 1.1875rem;
-  }
-
-  .post-prose > [data-block="lead"] {
-    font-size: 1.18em;
+    --prose-size: 1.125rem;
+    margin-top: 3rem;
   }
 }
 
@@ -206,16 +214,23 @@
 }
 
 .post-prose > * + * {
-  margin-top: 1.15em;
-}
-
-.post-prose > :is(p, ul, ol, h2, h3) {
-  padding-inline: var(--read-inset);
+  margin-top: 1.25em;
 }
 
 .post-prose strong {
   color: var(--text-strong);
   font-weight: 600;
+}
+
+.post-prose a {
+  color: var(--primary-ink);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--primary-ink) 40%, transparent);
+  text-underline-offset: 0.2em;
+}
+
+.post-prose a:hover {
+  text-decoration-color: currentColor;
 }
 
 /* Satır içi kod: ters tırnak arası (components/blog/Inline.tsx). */
@@ -224,77 +239,59 @@
   border-radius: 0.375rem;
   background: var(--surface-raised);
   font-family: var(--font-mono);
-  font-size: 0.84em;
+  font-size: 0.86em;
   color: var(--text-strong);
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
 }
 
-/* Giriş paragrafı: yazının kapısı, bir punto büyük ve koyu. */
+/* Giriş paragrafı: yazının kapısı, bir punto büyük ve güçlü metin renginde. */
 .post-prose > [data-block="lead"] {
-  font-size: 1.1em;
-  line-height: 1.55;
-  font-weight: 500;
-  letter-spacing: -0.012em;
+  font-size: 1.125em;
+  line-height: 1.65;
   color: var(--text-strong);
 }
 
-/* ARA BAŞLIK: üstte sütun kadar uzun bir cetvel ve içindekilerle aynı
-   numara. Cetvel `padding-inline` içinden de geçer, yüzeylerle aynı
-   kenarda biter. */
+/* Ara başlıklar düz: numara yok, cetvel yok. Üstte bol hava başlığı
+   önceki bölümden ayırıyor; altındaki paragrafa yakın duruyor. */
 .post-prose > h2 {
-  margin-top: 3.5rem;
-  padding-top: 1.75rem;
-  border-top: 1px solid var(--line);
-  font-size: clamp(1.5rem, 1.15rem + 1.1vw, 1.875rem);
-  line-height: 1.18;
+  margin-top: 2.6em;
+  font-size: clamp(1.4rem, 1.2rem + 0.6vw, 1.6rem);
+  line-height: 1.25;
   font-weight: 650;
-  letter-spacing: -0.032em;
+  letter-spacing: -0.025em;
   color: var(--text-strong);
   text-wrap: balance;
   scroll-margin-top: 5.5rem;
 }
 
-.post-h2-num {
-  display: block;
-  margin-bottom: 0.75rem;
-  font-family: var(--font-mono);
-  font-size: 0.8125rem;
-  line-height: 1;
-  font-weight: 500;
-  letter-spacing: 0;
-  color: var(--primary-ink);
-}
-
 .post-prose > h3 {
-  margin-top: 2.25rem;
-  font-size: 1.15em;
-  line-height: 1.3;
+  margin-top: 2em;
+  font-size: 1.25rem;
+  line-height: 1.35;
   font-weight: 650;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.015em;
   color: var(--text-strong);
   text-wrap: balance;
+  scroll-margin-top: 5.5rem;
 }
 
-.post-prose > h2 + * {
-  margin-top: 1rem;
-}
-
+.post-prose > h2 + *,
 .post-prose > h3 + * {
-  margin-top: 0.5rem;
+  margin-top: 0.75em;
 }
 
 /* Listeler gövde puntosunda; işaret ilk satırın ortasında (`1lh`). */
 .post-prose > [data-block="list"] {
   display: grid;
-  gap: 0.55em;
+  gap: 0.6em;
   list-style: none;
 }
 
 .post-prose > [data-block="list"] > li {
   display: grid;
-  grid-template-columns: 1.5em minmax(0, 1fr);
-  column-gap: 0.4em;
+  grid-template-columns: 1.4em minmax(0, 1fr);
+  column-gap: 0.35em;
 }
 
 .post-prose > [data-block="list"] [data-part="marker"] {
@@ -313,22 +310,20 @@
 .post-prose > [data-block="list"][data-ordered] [data-part="marker"] {
   align-items: baseline;
   height: auto;
-  font-family: var(--font-mono);
-  font-size: 0.78em;
-  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
   color: var(--primary-ink);
 }
 
 /* Vurgu cümlesi: metnin hattında, solda marka çizgisi. Kutu değil. */
 .post-prose > [data-block="quote"] {
-  margin-block: 2.5rem;
-  margin-inline: var(--read-inset);
+  margin-block: 2em;
   padding-left: 1.25rem;
   border-left: 2px solid var(--primary);
-  font-size: 1.22em;
-  line-height: 1.5;
+  font-size: 1.15em;
+  line-height: 1.55;
   font-weight: 500;
-  letter-spacing: -0.012em;
+  letter-spacing: -0.01em;
   color: var(--text-strong);
 }
 
@@ -337,25 +332,17 @@
 }
 
 /* --------------------------------------------------------------------------
-   Yüzeyler: kod, tablo, rakamlar, karşılaştırma, not. Derinlik tonla ve
-   tek piksellik çizgiyle; gölge ve degrade yok.
+   Yüzeyler: kod, tablo, rakamlar, karşılaştırma, not. Gövdeyle aynı
+   kenarda; derinlik tonla ve tek piksellik çizgiyle, gölge ve degrade yok.
    -------------------------------------------------------------------------- */
 .post-prose > :is([data-block="code"], [data-block="table"], [data-block="stats"], [data-block="compare"], [data-block="callout"]) {
-  margin-block: 2.25rem;
-  margin-inline: calc(-1 * var(--bleed));
+  margin-block: 2em;
   border: 1px solid var(--line);
-  border-radius: var(--radius-card, 1.25rem);
+  border-radius: var(--radius-button, 0.75rem);
 }
 
-.post-prose > h2 + :is([data-block="code"], [data-block="table"], [data-block="stats"], [data-block="compare"], [data-block="callout"]) {
-  margin-top: 1.5rem;
-}
-
-@media (max-width: 639.98px) {
-  .post-prose > :is([data-block="code"], [data-block="table"], [data-block="stats"], [data-block="compare"], [data-block="callout"]) {
-    border-inline-width: 0;
-    border-radius: 0;
-  }
+.post-prose > :is(h2, h3) + :is([data-block="code"], [data-block="table"], [data-block="stats"], [data-block="compare"], [data-block="callout"]) {
+  margin-top: 1em;
 }
 
 /* Kırpan yüzeylerin içinde odak halkası içeri çizilir (globals.css'teki
@@ -369,16 +356,14 @@
 
 /* Künye başlığı (rakamlar, karşılaştırma). */
 .post-prose [data-part="label"] {
-  margin: 0 0 1.1rem;
-  padding-bottom: 0.8rem;
-  border-bottom: 1px solid var(--line-soft);
-  font-size: 0.875rem;
-  line-height: 1.35;
+  margin: 0 0 1rem;
+  font-size: 0.9375rem;
+  line-height: 1.4;
   font-weight: 600;
   color: var(--text-strong);
 }
 
-/* Kod */
+/* Kod: kendi zemininde, kontrastlı; uzun satır kayar, kırılmaz. */
 .post-prose > [data-block="code"] {
   overflow: hidden;
   background: var(--surface-sunken);
@@ -390,7 +375,7 @@
   justify-content: space-between;
   gap: 0.75rem;
   min-height: 2.75rem;
-  padding: 0.25rem calc(var(--surface-pad) - 0.5rem) 0.25rem var(--surface-pad);
+  padding: 0.25rem 0.5rem 0.25rem 1rem;
   border-bottom: 1px solid var(--line);
 }
 
@@ -407,12 +392,21 @@
 
 .post-code pre {
   overflow-x: auto;
-  padding: 1.1rem var(--surface-pad) 1.3rem;
+  padding: 1rem 1rem 1.15rem;
   font-family: var(--font-mono);
   font-size: 0.875rem;
-  line-height: 1.75;
+  line-height: 1.7;
   color: var(--text-strong);
   tab-size: 2;
+}
+
+@media (min-width: 640px) {
+  .post-code pre {
+    padding-inline: 1.25rem;
+  }
+  .post-code figcaption {
+    padding-left: 1.25rem;
+  }
 }
 
 /* Tablo: dar ekranda kayar, ilk sütun yerinde durur. Sağdaki gölge
@@ -428,7 +422,7 @@
 
 .post-prose [data-block="table"] table {
   width: 100%;
-  min-width: calc(var(--cols, 3) * 10.5rem);
+  min-width: calc(var(--cols, 3) * 10rem);
   border-collapse: separate;
   border-spacing: 0;
   font-size: 0.9375rem;
@@ -441,20 +435,11 @@
   vertical-align: top;
 }
 
-.post-prose [data-block="table"] :is(th, td):first-child {
-  padding-left: var(--surface-pad);
-}
-
-.post-prose [data-block="table"] :is(th, td):last-child {
-  padding-right: var(--surface-pad);
-}
-
 .post-prose [data-block="table"] thead th {
   border-bottom: 1px solid var(--line);
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: var(--text-muted);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-strong);
   white-space: nowrap;
 }
 
@@ -480,45 +465,50 @@
   box-shadow: inset -1px 0 0 var(--line-soft);
 }
 
-/* Rakamlar: değer büyük mono, etiketi altında. Kutu değil, sol çizgi. */
+/* Rakamlar: değer büyük, etiketi altında. */
 .post-prose > [data-block="stats"],
 .post-prose > [data-block="compare"] {
-  padding: 1.1rem var(--surface-pad) 1.4rem;
+  padding: 1.1rem 1.1rem 1.25rem;
   background: var(--surface);
+}
+
+@media (min-width: 640px) {
+  .post-prose > [data-block="stats"],
+  .post-prose > [data-block="compare"] {
+    padding: 1.25rem 1.5rem 1.4rem;
+  }
 }
 
 .post-prose [data-block="stats"] dl {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
-  gap: 1.4rem 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
+  gap: 1.25rem 1.5rem;
 }
 
 .post-prose [data-block="stats"] dl > div {
   display: flex;
   flex-direction: column-reverse;
   justify-content: flex-end;
-  gap: 0.45rem;
-  padding-left: 0.9rem;
-  border-left: 1px solid var(--line);
+  gap: 0.4rem;
 }
 
 .post-prose [data-block="stats"] dd {
   margin: 0;
-  font-family: var(--font-mono);
   font-size: 1.75rem;
   line-height: 1.05;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
   color: var(--text-strong);
 }
 
 .post-prose [data-block="stats"] dt {
   font-size: 0.875rem;
   line-height: 1.45;
-  color: var(--text-muted);
+  color: var(--text-body);
 }
 
-/* Karşılaştırma: önce soluk, sonra vurgu rengi. */
+/* Karşılaştırma: önce sessiz, sonra vurgu rengi. */
 .post-prose [data-block="compare"] [data-part="pair"] {
   display: grid;
   gap: 0.6rem;
@@ -535,7 +525,7 @@
 .post-prose [data-block="compare"] :is([data-part="before"], [data-part="after"]) {
   height: 100%;
   padding: 0.85rem 1rem 0.95rem;
-  border-radius: var(--radius-button, 0.75rem);
+  border-radius: 0.5rem;
 }
 
 .post-prose [data-block="compare"] [data-part="before"] {
@@ -547,19 +537,18 @@
 }
 
 .post-prose [data-block="compare"] [data-part="side"] {
-  font-size: 0.8125rem;
-  line-height: 1.3;
-  color: var(--text-muted);
+  font-size: 0.875rem;
+  line-height: 1.35;
+  color: var(--text-body);
 }
 
 .post-prose [data-block="compare"] [data-part="value"] {
   margin-top: 0.35rem;
-  font-family: var(--font-mono);
   font-size: 1.375rem;
   line-height: 1.2;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: -0.02em;
-  color: var(--text-muted);
+  color: var(--text-strong);
 }
 
 .post-prose [data-block="compare"] [data-part="after"] :is([data-part="side"], [data-part="value"]) {
@@ -584,17 +573,23 @@
   margin-top: 1rem;
   font-size: 0.9375rem;
   line-height: 1.6;
-  color: var(--text-body);
+  color: var(--prose-ink);
 }
 
-/* Not kutusu: türüne göre ton; metin gövdeden bir kademe küçük. */
+/* Not kutusu: türüne göre ton; metin gövdeyle aynı renkte, bir kademe küçük. */
 .post-prose > [data-block="callout"] {
   --tone: var(--primary-ink);
-  padding: 1rem var(--surface-pad) 1.15rem;
+  padding: 1rem 1.1rem 1.1rem;
   border-color: color-mix(in srgb, var(--tone) 28%, transparent);
-  background: color-mix(in srgb, var(--tone) 7%, transparent);
-  font-size: 0.92em;
-  line-height: 1.65;
+  background: color-mix(in srgb, var(--tone) 6%, transparent);
+  font-size: 0.95em;
+  line-height: 1.7;
+}
+
+@media (min-width: 640px) {
+  .post-prose > [data-block="callout"] {
+    padding: 1.1rem 1.4rem 1.2rem;
+  }
 }
 
 .post-prose > [data-block="callout"][data-variant="tip"] {
@@ -609,34 +604,30 @@
   display: flex;
   align-items: center;
   gap: 0.45rem;
-  margin-bottom: 0.4rem;
-  padding: 0;
-  border: 0;
-  font-family: var(--font-mono);
-  font-size: 0.8125rem;
-  font-weight: 500;
+  margin-bottom: 0.35rem;
+  font-size: 0.875rem;
+  font-weight: 600;
   color: var(--tone);
 }
 
 .post-prose > [data-block="callout"] [data-part="label"] svg {
-  width: 0.95rem;
-  height: 0.95rem;
+  width: 1rem;
+  height: 1rem;
 }
 
 /* Adımlar: numaralı akış, numaraları dikey bir ray bağlıyor. */
 .post-prose > [data-block="steps"] {
   display: grid;
-  margin-block: 2rem;
-  padding-inline: var(--read-inset);
+  margin-block: 2em;
   list-style: none;
 }
 
 .post-prose > [data-block="steps"] > li {
   position: relative;
   display: grid;
-  grid-template-columns: 2.25rem minmax(0, 1fr);
+  grid-template-columns: 2rem minmax(0, 1fr);
   column-gap: 1rem;
-  padding-bottom: 1.5rem;
+  padding-bottom: 1.4rem;
 }
 
 .post-prose > [data-block="steps"] > li:last-child {
@@ -646,9 +637,9 @@
 .post-prose > [data-block="steps"] > li:not(:last-child)::before {
   content: "";
   position: absolute;
-  top: 2.25rem;
+  top: 2rem;
   bottom: 0;
-  left: calc(1.125rem - 0.5px);
+  left: calc(1rem - 0.5px);
   width: 1px;
   background: var(--line);
 }
@@ -656,29 +647,28 @@
 .post-prose > [data-block="steps"] [data-part="marker"] {
   display: grid;
   place-items: center;
-  width: 2.25rem;
-  height: 2.25rem;
+  width: 2rem;
+  height: 2rem;
   border: 1px solid color-mix(in srgb, var(--primary) 40%, transparent);
   border-radius: 999px;
   background: var(--page-bg);
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 500;
+  font-size: 0.875rem;
+  font-weight: 600;
   line-height: 1;
+  font-variant-numeric: tabular-nums;
   color: var(--primary-ink);
 }
 
 .post-prose > [data-block="steps"] [data-part="title"] {
-  padding-top: 0.3rem;
+  padding-top: 0.2rem;
   font-weight: 600;
-  line-height: 1.4;
+  line-height: 1.45;
   color: var(--text-strong);
 }
 
 .post-prose > [data-block="steps"] [data-part="text"] {
   margin-top: 0.3rem;
-  font-size: 0.94em;
-  line-height: 1.65;
+  line-height: 1.7;
 }
 
 /* --------------------------------------------------------------------------
@@ -690,25 +680,19 @@
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem 1.5rem;
-  max-width: calc(68ch + 3.5rem);
+  max-width: 68ch;
   margin-top: 3.5rem;
-  padding: 1.25rem 0 0;
+  padding-top: 1.25rem;
   border-top: 1px solid var(--line);
-  font-size: 1.1875rem; /* `ch` ölçüsü gövdeyle aynı punto üzerinden */
+  font-size: 1.125rem; /* `ch` ölçüsü gövdeyle aynı punto üzerinden */
 }
 
 .post-end > * {
   font-size: 0.8125rem;
 }
 
-@media (min-width: 640px) {
-  .post-end {
-    padding-inline: 1.75rem;
-  }
-}
-
 /* --------------------------------------------------------------------------
-   İçindekiler
+   İçindekiler: masaüstünde sağda yapışkan, sade liste (numara yok).
    -------------------------------------------------------------------------- */
 .post-toc {
   position: sticky;
@@ -720,9 +704,9 @@
 
 .post-toc-title {
   margin-bottom: 0.75rem;
-  font-family: var(--font-mono);
-  font-size: 0.8125rem;
-  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-strong);
 }
 
 :is(.post-toc, .post-toc-m-list) ol {
@@ -731,13 +715,12 @@
 }
 
 :is(.post-toc, .post-toc-m-list) a {
-  display: grid;
-  grid-template-columns: 1.6rem minmax(0, 1fr);
+  display: block;
   margin-left: -1px;
-  padding: 0.4rem 0.5rem 0.4rem 0.85rem;
+  padding: 0.4rem 0.5rem 0.4rem 0.9rem;
   border-left: 2px solid transparent;
   font-size: 0.875rem;
-  line-height: 1.4;
+  line-height: 1.45;
   color: var(--text-muted);
   transition:
     color 160ms,
@@ -747,15 +730,10 @@
 /* Kaba imleçte satır en az 44 piksel: liste bir dokunma hedefi dizisi. */
 @media (pointer: coarse) {
   :is(.post-toc, .post-toc-m-list) a {
+    display: flex;
+    align-items: center;
     min-height: 2.75rem;
-    align-content: center;
   }
-}
-
-:is(.post-toc, .post-toc-m-list) a > span:first-child {
-  padding-top: 0.12rem;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
 }
 
 :is(.post-toc, .post-toc-m-list) a:hover {
@@ -767,13 +745,9 @@
   color: var(--text-strong);
 }
 
-.post-toc a[aria-current] > span:first-child {
-  color: var(--primary-ink);
-}
-
-/* Telefonda: gövdenin başında katlanır liste, JavaScript'siz. */
+/* Telefonda: başlığın altında katlanır liste, JavaScript'siz. */
 .post-toc-m {
-  margin-bottom: 2rem;
+  margin-top: 2rem;
   border-block: 1px solid var(--line);
 }
 
@@ -801,8 +775,7 @@
 
 .post-toc-m-count {
   margin-left: auto;
-  font-family: var(--font-mono);
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   font-weight: 400;
   color: var(--text-muted);
 }
@@ -823,43 +796,41 @@
 }
 
 /* --------------------------------------------------------------------------
-   Yazıdan sonra: proje kartı ve diğer yazılar
+   Yazıdan sonra: ilgili proje ve diğer yazılar. Okuma sütunuyla aynı
+   genişlikte ve aynı kenarda; tek sütun.
    -------------------------------------------------------------------------- */
 .post-after {
   display: grid;
   gap: 3.5rem;
-  padding-top: 5rem;
+  padding-top: 4.5rem;
   padding-bottom: 6rem;
 }
 
-@media (min-width: 1024px) {
-  .post-after {
-    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
-    gap: 4rem;
-  }
-
-  .post-after > .post-more:only-child {
-    grid-column: 1 / -1;
-    max-width: calc(68ch + 3.5rem);
-  }
-}
-
 .post-end-title {
-  font-size: 1.5rem;
-  line-height: 1.2;
+  font-size: 1.375rem;
+  line-height: 1.25;
   font-weight: 650;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.025em;
   color: var(--text-strong);
 }
 
+/* İlgili proje: tek satırlık kart, solda küçük görsel. */
 .post-project {
   display: grid;
-  margin-top: 1.25rem;
+  grid-template-columns: minmax(0, 1fr);
+  margin-top: 1rem;
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: var(--radius-card, 1.25rem);
   background: var(--surface);
   transition: border-color 180ms;
+}
+
+@media (min-width: 640px) {
+  .post-project {
+    grid-template-columns: 15rem minmax(0, 1fr);
+    align-items: center;
+  }
 }
 
 .post-project:hover {
@@ -872,9 +843,17 @@
 
 .post-project-shot {
   position: relative;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 16 / 10;
   overflow: hidden;
   border-bottom: 1px solid var(--line);
+}
+
+@media (min-width: 640px) {
+  .post-project-shot {
+    height: 100%;
+    border-bottom: 0;
+    border-right: 1px solid var(--line);
+  }
 }
 
 .post-project-shot img {
@@ -890,12 +869,12 @@
 }
 
 .post-project-text {
-  padding: 1.25rem 1.25rem 1.4rem;
+  padding: 1.1rem 1.25rem 1.25rem;
 }
 
 @media (min-width: 640px) {
   .post-project-text {
-    padding: 1.5rem 1.75rem 1.75rem;
+    padding: 1.25rem 1.5rem;
   }
 }
 
@@ -910,14 +889,16 @@
 
 .post-more-list a {
   display: block;
-  padding-block: 1.1rem;
+  padding-block: 1rem;
 }
 
 /* ==========================================================================
    Dizin (/blog)
    ========================================================================== */
 
-/* Öne çıkan yazı: masaüstünde kapak solda geniş, metin sağda. */
+/* Öne çıkan yazı: masaüstünde kapak ve metin eşit iki sütun. Kapak
+   bir dönem 1,35 kat genişti ve sayfanın ilk ekranını tek başına
+   kaplıyordu; öne çıkan yazı abartısız, listenin bir kademe büyüğü. */
 .bl-featured {
   display: grid;
   gap: 1.5rem;
@@ -926,8 +907,8 @@
 
 @media (min-width: 1024px) {
   .bl-featured {
-    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
-    gap: 3.5rem;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 3rem;
   }
 }
 
@@ -944,16 +925,23 @@
   border-radius: var(--radius-card, 1.25rem);
 }
 
-/* Etiket süzgeci: radyo grubu, çip görünümünde. Giriş görünmez ama
-   erişilebilir; odak halkası etiketin üstüne çizilir. */
+/* Etiket süzgeci: radyo grubu, METİN SEKMESİ görünümünde (proje
+   dizinindeki süzgeçle aynı dil). Giriş görünmez ama erişilebilir; odak
+   halkası etiketin üstüne çizilir. */
 .bl-filter {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0 1.1rem;
   margin-inline: 0;
   padding: 0;
   border: 0;
   min-width: 0;
+}
+
+@media (min-width: 640px) {
+  .bl-filter {
+    gap: 0 1.75rem;
+  }
 }
 
 .bl-chip-input {
@@ -965,61 +953,59 @@
 }
 
 .bl-chip {
+  position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
+  gap: 0.4rem;
   min-height: 2.75rem;
-  padding-inline: 1rem;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: var(--surface);
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
   font-weight: 500;
   color: var(--text-body);
   cursor: pointer;
   user-select: none;
-  transition:
-    color 160ms,
-    background-color 160ms,
-    border-color 160ms;
+  transition: color 160ms;
 }
 
-@media (pointer: fine) {
+@media (min-width: 640px) {
   .bl-chip {
-    min-height: 2.25rem;
+    font-size: 1rem;
   }
 }
 
 .bl-chip:hover {
-  border-color: var(--line-strong);
   color: var(--text-strong);
 }
 
 .bl-chip-input:checked + .bl-chip {
-  border-color: transparent;
-  background: var(--text-strong);
-  color: var(--page-bg);
+  color: var(--text-strong);
 }
 
-/* Sayı sessiz metin renginde (AA); seçili çipte çipin kendi rengini alır,
-   koyu zeminde gri sayı okunmuyordu. */
+.bl-chip-input:checked + .bl-chip::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0.3rem;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--primary);
+}
+
 .bl-chip-count {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
   color: var(--text-muted);
-}
-
-.bl-chip-input:checked + .bl-chip .bl-chip-count {
-  color: inherit;
 }
 
 .bl-chip-input:focus-visible + .bl-chip {
   outline: 2px solid var(--line-focus);
-  outline-offset: 3px;
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 /* Arşiv satırı: telefonda üst üste, masaüstünde üç sütun
    (tarih · başlık · küçük kapak). Satırlar arasında tek çizgi. */
 .bl-list {
-  margin-top: 1.5rem;
+  margin-top: 1rem;
   list-style: none;
   border-top: 1px solid var(--line);
 }

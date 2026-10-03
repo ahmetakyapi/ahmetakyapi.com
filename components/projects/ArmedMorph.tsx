@@ -3,7 +3,8 @@
 import { ViewTransition, useState, type ReactNode } from 'react'
 
 /**
- * Yalnız TIKLANINCA adlanan morf: detaydaki "Sonraki Proje" küçük resmi.
+ * Yalnız TIKLANINCA adlanan morf: /projeler satırlarının önizlemesi ve
+ * detaydaki "Sıradaki Proje" küçük resmi.
  *
  * Küçük resim sonraki projenin kahramanına morf etmek için
  * `project-<sonraki>` adını taşımak zorunda. Ad hep takılı kalınca dizinden
@@ -22,18 +23,21 @@ export function ArmedMorph({
   coverClassName,
   content,
   cover,
+  coverHidden = false,
 }: {
   name: string
   className?: string
   coverClassName?: string
   content: ReactNode
   cover: ReactNode
+  /** Görsel süs: ad hemen yanında yazılı, ekran okuyucuya ikinci kez söylenmez. */
+  coverHidden?: boolean
 }) {
   const [armed, setArmed] = useState(false)
   return (
     <div className={className} onClickCapture={() => setArmed(true)}>
       {content}
-      <div className={coverClassName}>
+      <div className={coverClassName} aria-hidden={coverHidden || undefined}>
         <ViewTransition name={armed ? name : undefined} share="morph" default="none">
           {cover}
         </ViewTransition>

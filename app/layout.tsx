@@ -1,22 +1,33 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
-import { IBM_Plex_Mono, Schibsted_Grotesk } from 'next/font/google'
+import { Bricolage_Grotesque, IBM_Plex_Mono, Schibsted_Grotesk } from 'next/font/google'
 import type { ReactNode } from 'react'
 import { JOB_TITLE, SITE_DESCRIPTION, SITE_NAME, SITE_URL, TWITTER } from '@/lib/seo'
+import { IntroCurtain } from '@/components/site/IntroCurtain'
+import { INTRO_SCRIPT } from '@/lib/intro'
 import { DEFAULT_THEME, PALETTE, THEME_COLOR, THEME_SCRIPT } from '@/lib/theme'
 import './globals.css'
 
 /*
- * Fontlar: Schibsted Grotesk (değişken, tek aile: display + gövde) ve
- * IBM Plex Mono (künye, tarih, kod, sayı).
+ * Fontlar (3 Ekim 2026, Ahmet'in seçimi: "Tüm başlıklar A, metinler B"):
+ * - Başlıklar (hero'daki isim dahil, h1-h6): Schibsted Grotesk.
+ * - Gövde, düğme, menü: Bricolage Grotesque (optik boyut ekseniyle).
+ * - Künye, tarih, kod: IBM Plex Mono.
  *
  * TUZAK: next/font `variable` adı @theme'deki adla aynı olursa
  * (`--font-sans: var(--font-sans)`) değişken kendine başvurur ve font
  * sessizce sistem yazı tipine düşer. Bu yüzden `-face` soneki.
- * Schibsted değişken bir aile: `weight` verilmez, 400-900 tek dosyada.
+ * İkisi de değişken aile: `weight` verilmez.
  */
-const sans = Schibsted_Grotesk({
+const display = Schibsted_Grotesk({
   subsets: ['latin', 'latin-ext'],
+  variable: '--font-display-face',
+  display: 'swap',
+})
+
+const sans = Bricolage_Grotesque({
+  subsets: ['latin', 'latin-ext'],
+  axes: ['opsz'],
   variable: '--font-sans-face',
   display: 'swap',
 })
@@ -84,10 +95,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       // THEME_SCRIPT özniteliği hidrasyondan önce değiştirir; bu bilinçli
       // farkı React raporlamasın.
       suppressHydrationWarning
-      className={`${sans.variable} ${mono.variable}`}
+      className={`${display.variable} ${sans.variable} ${mono.variable}`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+        {/* Açılış perdesinin kararı da ilk boyamadan önce (lib/intro.ts). */}
+        <script dangerouslySetInnerHTML={{ __html: INTRO_SCRIPT }} />
       </head>
       <body className="min-h-dvh bg-page font-sans text-body antialiased">
         <a
@@ -96,6 +109,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         >
           İçeriğe Geç
         </a>
+        <IntroCurtain />
         {children}
         {/* Yalnız Vercel'de: başka yerde (yerel `next start`) betik adresi
             404 dönüp konsola hata basıyor. `VERCEL` derleme ve çalışma

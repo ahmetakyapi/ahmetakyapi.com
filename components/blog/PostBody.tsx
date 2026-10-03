@@ -11,11 +11,9 @@ import type { PostSection } from './posts'
  * olarak da iniyordu.
  *
  * Görünüm app/(site)/blog/blog.css içinde ve yalnızca `data-block` /
- * `data-part` kancalarını okur; burada yerleşim sınıfı yok. İki hat:
- * yüzeyler (kod, tablo, rakam, karşılaştırma, not) sütunun kenarında biter,
- * metin (gövde, başlık, yüzeylerin içi) `--read-inset` kadar içeride aynı
- * sol hattan başlar. Telefonda yüzeyler ekran kenarına taşar ve iç payları
- * metin hattını tutar.
+ * `data-part` kancalarını okur; burada yerleşim sınıfı yok. Tek hat:
+ * gövde, başlıklar ve yüzeyler (kod, tablo, rakam, karşılaştırma, not)
+ * okuma sütununun aynı sol kenarından başlar.
  */
 export function PostBody({ blocks, sections }: { blocks: Block[]; sections: Map<number, PostSection> }) {
   return (
@@ -51,10 +49,9 @@ function BlockView({ block, section }: { block: Block; section?: PostSection }) 
 
     case 'h2':
       return (
+        /* Numara yok: "03" gibi mono bir sayı başlığın önünde okumayı
+           yavaşlatıyordu; sıra içindekilerde zaten görünüyor. */
         <h2 id={section?.id}>
-          <span className="post-h2-num" aria-hidden="true">
-            {section?.number}
-          </span>
           <Inline text={block.text} />
         </h2>
       )
@@ -91,7 +88,7 @@ function BlockView({ block, section }: { block: Block; section?: PostSection }) 
           {block.items.map((item, i) => (
             <li key={i}>
               <span data-part="marker" aria-hidden="true">
-                {String(i + 1).padStart(2, '0')}
+                {i + 1}.
               </span>
               <span>
                 <Inline text={item} />
@@ -226,7 +223,7 @@ function BlockView({ block, section }: { block: Block; section?: PostSection }) 
           {block.items.map((item, i) => (
             <li key={item.title}>
               <span data-part="marker" aria-hidden="true">
-                {String(i + 1).padStart(2, '0')}
+                {i + 1}
               </span>
               <div>
                 <p data-part="title">{item.title}</p>

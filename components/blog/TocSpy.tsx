@@ -8,11 +8,18 @@ import { useEffect } from 'react'
  * `aria-current="location"` yazar. JavaScript yoksa içindekiler yine
  * çalışır, yalnızca işaret olmaz.
  *
- * Kaydırma dinleyicisi yok; IntersectionObserver ekranın üst bandını
- * izler. Başlık banda girince etkin olur; yukarı kaydırırken bandın
- * ALTINA inen başlık bir öncekine devreder.
+ * Kare başına kaydırma dinleyicisi yok; IntersectionObserver başlıkların ekranın üst
+ * bandına girip çıkmasını haber verir, etkin bölüm her seferinde baştan
+ * hesaplanır: üst çizgiyi (ekranın %30'u) geçmiş SON başlık. Hiçbiri
+ * geçmediyse işaret yok.
+ *
+ * Önceki sürüm etkin bölümü olayın kendisinden çıkarıyordu ("banda giren
+ * başlık etkin, bandın altına inen bir öncekine devreder"). Sayfa ilk
+ * açıldığında bütün başlıklar bandın altında olduğu için her biri bir
+ * öncekini işaretliyor ve en sonuncusu kazanıyordu: okur yazının en
+ * başındayken içindekilerde sondan ikinci bölüm seçili duruyordu.
  */
-const BAND = '-72px 0px -70% 0px'
+const LINE = 0.3
 
 export function TocSpy({ ids }: { ids: string[] }) {
   useEffect(() => {
@@ -20,29 +27,32 @@ export function TocSpy({ ids }: { ids: string[] }) {
     const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-toc] a[href^="#"]'))
     if (headings.length === 0 || links.length === 0) return
 
-    function mark(id: string | null) {
+    function update() {
+      const line = window.innerHeight * LINE
+      let current: string | null = null
+      for (const heading of headings) {
+        if (heading.getBoundingClientRect().top <= line) current = heading.id
+        else break
+      }
       for (const link of links) {
-        if (id !== null && link.hash === `#${id}`) link.setAttribute('aria-current', 'location')
+        if (current !== null && link.hash === `#${current}`) link.setAttribute('aria-current', 'location')
         else link.removeAttribute('aria-current')
       }
     }
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          const index = headings.indexOf(entry.target as HTMLElement)
-          if (entry.isIntersecting) {
-            mark(entry.target.id)
-          } else if (entry.rootBounds && entry.boundingClientRect.top > entry.rootBounds.bottom) {
-            mark(index > 0 ? headings[index - 1].id : null)
-          }
-        }
-      },
-      { rootMargin: BAND },
-    )
-
+    const observer = new IntersectionObserver(update, { rootMargin: `0px 0px -${(1 - LINE) * 100}% 0px` })
     headings.forEach((heading) => observer.observe(heading))
-    return () => observer.disconnect()
+    /* Gözlemci başlık çizgiyi GEÇERKEN haber veriyor; yumuşak kaydırmada
+       (içindekilerden bir bölüme atlama) o an başlık henüz çizginin
+       birkaç piksel altında olabiliyor ve işaret bir önceki bölümde
+       kalıyordu (ölçüldü). Kaydırma bitince bir kez daha hesaplanır;
+       `scrollend` kare başına değil, hareket başına bir kez ateşlenir. */
+    window.addEventListener('scrollend', update, { passive: true })
+    update()
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('scrollend', update)
+    }
   }, [ids])
 
   return null

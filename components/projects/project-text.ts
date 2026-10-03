@@ -16,11 +16,12 @@ export const GROUP_LABELS = {
 export const FILTER_PARAM = 'kategori'
 
 /**
- * Süzgecin `data-filter` yazdığı ızgaranın kimliği. Burada, istemci
- * modülünde değil: `"use client"` bir modülden dışa aktarılan değer sunucu
- * bileşenine gerçek değer olarak gelmez, istemci referansına dönüşür.
+ * Süzgecin `data-filter`, önizlemenin `--px/--py` yazdığı listenin kabı.
+ * Burada, istemci modülünde değil: `"use client"` bir modülden dışa
+ * aktarılan değer sunucu bileşenine gerçek değer olarak gelmez, istemci
+ * referansına dönüşür.
  */
-export const GRID_ID = 'proje-izgara'
+export const LIST_ID = 'proje-listesi'
 
 export function isProjectGroup(value: unknown): value is ProjectGroup {
   return typeof value === 'string' && (PROJECT_GROUPS as readonly string[]).includes(value)

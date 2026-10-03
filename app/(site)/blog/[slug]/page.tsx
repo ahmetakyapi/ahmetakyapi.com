@@ -17,7 +17,10 @@ import { formatPostDate, readingTime } from '@/lib/reading-time'
 import '../blog.css'
 
 /*
- * Yazı sayfası, SUNUCU bileşeni. İstemciye inen yalnızca üç adacık: kod
+ * Yazı sayfası, SUNUCU bileşeni. Düzen tek sütun: başlık, kapak (başlığın
+ * ALTINDA, ekranın en çok %45'i), gövde ve yazı sonu aynı okuma sütununda;
+ * masaüstünde sağda yapışkan içindekiler. Ayrıntı blog.css başındaki notta.
+ * İstemciye inen yalnızca üç adacık: kod
  * kopyala (CopyCode), içindekilerin etkin bölüm işareti (TocSpy) ve
  * kimlikleri tanımlıysa Giscus. Okuma ilerlemesi CSS'te
  * (`animation-timeline: scroll()`), desteklemeyen tarayıcıda hiç görünmez.
@@ -98,33 +101,33 @@ export default async function BlogPostPage({ params }: PageProps<'/blog/[slug]'>
 
       <article className="post">
         <Container className="pt-6 sm:pt-10">
-          <header className="post-head">
-            <Link
-              href="/blog"
-              transitionTypes={['nav-back']}
-              className="-ml-1 inline-flex min-h-11 items-center gap-2 px-1 text-sm font-medium text-body transition-colors hover:text-strong"
-            >
-              <ArrowLeft className="size-4" aria-hidden="true" />
-              Tüm Yazılar
-            </Link>
-            <KunyeLine
-              className="mt-6 sm:mt-8"
-              items={[post.tag, <time key="t" dateTime={post.date}>{formatPostDate(post.date)}</time>, `${readingTime(post)} Okuma`]}
-            />
-            <h1 className="post-title">
-              <Inline text={post.title} />
-            </h1>
-            <p className="post-excerpt">
-              <Inline text={post.excerpt} />
-            </p>
-          </header>
+          <div className="post-grid">
+            <div className="post-main">
+              <header>
+                <Link
+                  href="/blog"
+                  transitionTypes={['nav-back']}
+                  className="-ml-1 inline-flex min-h-11 items-center gap-2 px-1 text-sm font-medium text-body transition-colors hover:text-strong pointer-fine:min-h-9"
+                >
+                  <ArrowLeft className="size-4" aria-hidden="true" />
+                  Tüm Yazılar
+                </Link>
+                <KunyeLine
+                  className="mt-6 sm:mt-8"
+                  items={[post.tag, <time key="t" dateTime={post.date}>{formatPostDate(post.date)}</time>, `${readingTime(post)} Okuma`]}
+                />
+                <h1 className="post-title">
+                  <Inline text={post.title} />
+                </h1>
+                <p className="post-excerpt">
+                  <Inline text={post.excerpt} />
+                </p>
+              </header>
 
-          <PostCover post={post} variant="hero" priority className="mt-8 sm:mt-12" />
-
-          <div className="post-layout">
-            <div className="min-w-0">
+              <PostCover post={post} variant="hero" priority />
               <PostTocInline sections={sections} />
               <PostBody blocks={post.content} sections={byIndex} />
+
               <footer className="post-end">
                 <KunyeLine items={[AUTHOR, formatPostDate(post.date)]} />
                 <a href="/rss.xml" className="tap-y font-mono text-small text-muted transition-colors hover:text-strong">
@@ -132,6 +135,11 @@ export default async function BlogPostPage({ params }: PageProps<'/blog/[slug]'>
                 </a>
               </footer>
               <Comments />
+
+              <div className="post-after">
+                {project ? <RelatedProject project={project} /> : null}
+                <MorePosts posts={more} />
+              </div>
             </div>
             <aside className="hidden lg:block">
               <PostTocAside sections={sections} />
@@ -139,11 +147,6 @@ export default async function BlogPostPage({ params }: PageProps<'/blog/[slug]'>
           </div>
         </Container>
       </article>
-
-      <Container as="div" className="post-after">
-        {project ? <RelatedProject project={project} /> : null}
-        <MorePosts posts={more} />
-      </Container>
     </PageTransition>
   )
 }

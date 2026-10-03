@@ -1,21 +1,24 @@
 'use client'
 
+import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { useEffect } from 'react'
-import { FILTER_PARAM, GRID_ID, GROUP_LABELS, isProjectGroup } from '@/components/projects/project-text'
-import { ChipLink } from '@/components/ui/Tag'
+import { FILTER_PARAM, GROUP_LABELS, LIST_ID, isProjectGroup } from '@/components/projects/project-text'
 import { PROJECT_GROUPS, type ProjectGroup } from '@/lib/content/types'
+import { cx } from '@/lib/utils'
 
 /**
  * /projeler süzgeci: adres parametresi (`?kategori=oyun`), `scroll={false}`.
  *
  * Sayfa STATİK kalsın diye süzgeç sunucuda değil burada: `searchParams`
- * okuyan bir sayfa her istekte yeniden çizilir. Kartların tamamı HTML'de;
- * bu ada yalnız ızgaraya `data-filter` yazıyor ve gizleme CSS'te
+ * okuyan bir sayfa her istekte yeniden çizilir. Satırların tamamı HTML'de;
+ * bu ada yalnız listeye `data-filter` yazıyor ve gizleme CSS'te
  * (projects.css). JavaScript yoksa ya da ada henüz yüklenmediyse bütün
  * projeler görünür, hiçbir şey kaybolmaz.
  *
- * Bilinmeyen değer ("?kategori=xyz") "Tümü" sayılır.
+ * Görünüm çip değil METİN SEKMESİ: dört kutu yan yana listenin üstünde
+ * ikinci bir başlık gibi duruyordu. Seçili olan koyu ve altı çizili, sayı
+ * yanında sessiz tonda. Bilinmeyen değer ("?kategori=xyz") "Tümü" sayılır.
  */
 type Counts = Record<ProjectGroup | 'all', number>
 
@@ -24,12 +27,12 @@ export function ProjectFilter({ counts }: { counts: Counts }) {
   const active = isProjectGroup(raw) ? raw : null
 
   useEffect(() => {
-    document.getElementById(GRID_ID)?.setAttribute('data-filter', active ?? 'all')
+    document.getElementById(LIST_ID)?.setAttribute('data-filter', active ?? 'all')
   }, [active])
 
   return (
     <>
-      <FilterChips active={active} counts={counts} />
+      <FilterTabs active={active} counts={counts} />
       <p className="sr-only" aria-live="polite">
         {active ? `${GROUP_LABELS[active]}: ${counts[active]} Proje` : `Tümü: ${counts.all} Proje`}
       </p>
@@ -37,25 +40,29 @@ export function ProjectFilter({ counts }: { counts: Counts }) {
   )
 }
 
-/** Sunucu çiziminde (Suspense yedeği) ve istemcide aynı çipler. */
-export function FilterChips({ active, counts }: { active: ProjectGroup | null; counts: Counts }) {
+/** Sunucu çiziminde (Suspense yedeği) ve istemcide aynı sekmeler. */
+export function FilterTabs({ active, counts }: { active: ProjectGroup | null; counts: Counts }) {
   return (
-    <nav aria-label="Projeleri süz" className="flex flex-wrap gap-2">
-      <ChipLink href="/projeler" active={active === null}>
-        Tümü <Count n={counts.all} active={active === null} />
-      </ChipLink>
+    <nav aria-label="Projeleri süz" className="pfilter">
+      <Tab href="/projeler" active={active === null} label="Tümü" count={counts.all} />
       {PROJECT_GROUPS.map((group) => (
-        <ChipLink key={group} href={`/projeler?${FILTER_PARAM}=${group}`} active={active === group}>
-          {GROUP_LABELS[group]} <Count n={counts[group]} active={active === group} />
-        </ChipLink>
+        <Tab
+          key={group}
+          href={`/projeler?${FILTER_PARAM}=${group}`}
+          active={active === group}
+          label={GROUP_LABELS[group]}
+          count={counts[group]}
+        />
       ))}
     </nav>
   )
 }
 
-/* Sayı `opacity-70` ile soluyordu ve seçili olmayan çipte AA'nın altına
-   düşüyordu; artık sessiz metin rengi. Seçili çipin zemini koyu (açık
-   temada) ya da açık (koyu temada): orada çipin kendi rengini alır. */
-function Count({ n, active }: { n: number; active: boolean }) {
-  return <span className={active ? 'ml-1.5 font-mono text-small' : 'ml-1.5 font-mono text-small text-muted'}>{n}</span>
+function Tab({ href, active, label, count }: { href: string; active: boolean; label: string; count: number }) {
+  return (
+    <Link href={href} scroll={false} aria-current={active ? 'page' : undefined} className={cx('pfilter-tab', active && 'is-active')}>
+      {label}
+      <span className="pfilter-count">{count}</span>
+    </Link>
+  )
 }

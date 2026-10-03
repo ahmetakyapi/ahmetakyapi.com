@@ -6,8 +6,8 @@ import { TocSpy } from './TocSpy'
 /**
  * İçindekiler, iki biçimde ve ikisi de sunucuda basılı:
  *   - masaüstünde (lg) metnin sağında yapışkan liste,
- *   - telefonda gövdenin başında katlanır `<details>`: JavaScript'siz açılır.
- * Numaralar gövdedeki ara başlık numarasıyla aynı ("03" iki yerde de 03).
+ *   - telefonda başlığın altında katlanır `<details>`: JavaScript'siz açılır.
+ * Numara yok: gövdedeki ara başlıklar da numarasız.
  * Etkin bölüm işaretini yalnızca TocSpy koyar.
  */
 function TocList({ sections }: { sections: PostSection[] }) {
@@ -16,10 +16,7 @@ function TocList({ sections }: { sections: PostSection[] }) {
       {sections.map((section) => (
         <li key={section.id}>
           <a href={`#${section.id}`}>
-            <span aria-hidden="true">{section.number}</span>
-            <span>
-              <Inline text={section.text} />
-            </span>
+            <Inline text={section.text} />
           </a>
         </li>
       ))}

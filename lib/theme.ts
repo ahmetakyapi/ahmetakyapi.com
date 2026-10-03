@@ -22,8 +22,12 @@ export const THEME_COOKIE = 'theme'
 export const THEMES = ['dark', 'light'] as const
 export type Theme = (typeof THEMES)[number]
 
-/** Portfolyo: varsayılan KOYU. Açık tema eksiksiz, çerezle seçilir. */
-export const DEFAULT_THEME: Theme = 'dark'
+/**
+ * Varsayılan AÇIK (Ekim 2026, sahibinin kararı). Önceki karar "portfolyo:
+ * varsayılan koyu" idi; açık tema yeniden çizildikten sonra ilk izlenim
+ * için açık seçildi. Koyu tema eksiksiz, çerezle seçilir.
+ */
+export const DEFAULT_THEME: Theme = 'light'
 
 /**
  * Renk paleti: `<html data-palette>`. Değerler app/globals.css'te; bu site
@@ -36,7 +40,7 @@ export const PALETTE = 'signature' as const
  * `themeColor`, manifest, paylaşım görseli). Kaynak `app/globals.css` →
  * `--page-bg`; orada değişirse burada da değişir.
  */
-export const THEME_COLOR = { dark: '#070d16', light: '#f7f9fb' } as const satisfies Record<Theme, string>
+export const THEME_COLOR = { dark: '#070d16', light: '#f5f7fa' } as const satisfies Record<Theme, string>
 
 /** Çerez bir yıl yaşar; tercih her ziyarette yenilenmek zorunda kalmaz. */
 export const THEME_COOKIE_MAX_AGE = 60 * 60 * 24 * 365

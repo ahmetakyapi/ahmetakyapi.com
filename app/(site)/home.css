@@ -10,167 +10,414 @@
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   Hero: isim imzası, satır satır maskeli açılış.
-   Neden: sayfanın tek "sayfa ölçeğinde" hareketi; ilk okunacak şeyi (kim)
-   kimliğin kendisi yapar. Satır %60'tan başlar, tümden dışarıdan değil:
-   ilk karede harflerin üstü boyalı, LCP animasyonu beklemez.
+   Hero: isim sahnenin kendisi, küre arkasında yükselir.
+   Telefon ve dikey tablet: isim üstte (iki satır), blok altta.
+   Geniş ekran: blok üstte, isim sahnenin tabanında tek satır, kenardan
+   kenara. Yükseklik ilk ekran; başlık 4rem (64px) + güvenli alan.
    -------------------------------------------------------------------------- */
-.home-sign-line {
-  display: block;
+.home-hero {
+  position: relative;
+  isolation: isolate;
   overflow: clip;
-  /* Maske y, p, ı gibi alta inen harfleri kesmesin. */
-  padding-bottom: 0.1em;
-  margin-bottom: -0.1em;
+  display: flex;
+  min-height: calc(100svh - 4rem - env(safe-area-inset-top));
 }
 
-.home-sign-inner {
+.home-hero-inner {
+  container-type: inline-size;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 2.5rem;
+  min-width: 0;
+  padding: clamp(1.25rem, 3.5svh, 2.5rem) max(1rem, env(safe-area-inset-right)) clamp(1.75rem, 5svh, 3.5rem)
+    max(1rem, env(safe-area-inset-left));
+}
+
+@media (min-width: 640px) {
+  .home-hero-inner {
+    padding-inline: 1.5rem;
+  }
+}
+@media (min-width: 1024px) {
+  .home-hero-inner {
+    padding-inline: 2rem;
+  }
+}
+
+/* İsim. Punto kabın genişliğinden (`cqi`) ve kelime boylarından
+   (`--w1n`/`--w2n`, name-metrics.ts) hesaplanır: telefonda uzun kelime
+   kabın %93'ü, geniş ekranda iki kelime + aralık kabın tamamı. Yükseklik
+   tavanı yatay telefonda iki satırın ekranı taşmaması için. */
+.home-name {
+  /* İsim başlık fontunda; harf ölçüleri (name-metrics.ts) bu fonta göre. */
+  font-family: var(--font-display);
+  --lh: 0.86em;
+  --gap: 0.24em;
+  --nw: max(var(--w1), var(--w2));
+  --nh: calc(var(--lh) * 2 + 0.2em);
+  display: flex;
+  flex-direction: column;
+  font-size: min(calc(93cqi / max(var(--w1n), var(--w2n))), 24svh);
+  line-height: var(--lh);
+  font-weight: 560;
+  letter-spacing: -0.055em;
+  color: var(--text-strong);
+  /* "A"nın sol çıkıntısı kenar hattına optik olarak otursun. */
+  margin-left: -0.045em;
+}
+
+@media (min-width: 1024px) {
+  .home-hero-inner {
+    justify-content: flex-end;
+  }
+  .home-name {
+    --nw: calc(var(--w1) + var(--gap) + var(--w2));
+    --nh: calc(var(--lh) + 0.2em);
+    flex-direction: row;
+    column-gap: var(--gap);
+    order: 2;
+    font-size: min(calc(100cqi / (var(--w1n) + 0.24 + var(--w2n))), 40svh);
+    /* Kuyruklu harflerin (y, p) payı: -0.04em'de "Akyapı"nın y ve p'si
+       kahramanın `overflow: clip` sınırında kesiliyordu (1440×900,
+       3 Ekim 2026, ekran görüntüsünde görüldü). */
+    margin-bottom: 0.14em;
+  }
+}
+
+/* Satır maskesi: harfler bunun içinde aşağıdan yükselir. Üst/alt pay alta
+   inen harfi (y, p) ve kalınlaşan harfin taşan mürekkebini kesmesin diye;
+   eksi kenar boşluğu satır aralığını değiştirmez. */
+.home-name-line {
+  --lx: 0em;
+  --ly: 0em;
   display: block;
+  width: fit-content;
+  white-space: nowrap;
+  overflow: clip;
+  padding: 0.06em 0.08em 0.2em;
+  margin: -0.06em -0.08em -0.2em;
+}
+.home-name-l2 {
+  --ly: var(--lh);
+}
+@media (min-width: 1024px) {
+  .home-name-l2 {
+    --lx: calc(var(--w1) + var(--gap));
+    --ly: 0em;
+  }
 }
 
-@keyframes home-sign-rise {
+.home-glyph {
+  display: inline-block;
+  text-align: center;
+  /* Degradenin boyandığı alan kutunun kendisi: alta inen harfin kuyruğu
+     kutudan taşar, pay olmadan boyasız kalırdı. */
+  padding-bottom: 0.2em;
+  margin-bottom: -0.2em;
+}
+
+/* Degrade iki kelimeyi tek yüzey gibi kaplar: her harfte aynı boyda
+   (`--nw` × `--nh`, ismin tamamı) ve harfin isim içindeki yeri kadar
+   kaydırılmış. Telefonda iki satır, geniş ekranda tek satır üstünde. */
+@supports (background-clip: text) or (-webkit-background-clip: text) {
+  .home-glyph {
+    background-image: var(--name-gradient);
+    background-size: var(--nw) var(--nh);
+    background-position: calc(-1 * (var(--gx) + var(--lx))) calc(-1 * var(--ly));
+    background-repeat: no-repeat;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+}
+
+@media (forced-colors: active) {
+  .home-glyph {
+    background: none;
+    -webkit-text-fill-color: currentColor;
+    color: CanvasText;
+  }
+}
+
+.home-hero-foot {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Tek cümle: gri gövde metni değil, büyük ve net. */
+.home-hero-line {
+  max-width: 34ch;
+  font-size: clamp(1.375rem, 1rem + 1.4vw, 2.375rem);
+  line-height: 1.25;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+@media (min-width: 1024px) {
+  .home-hero-foot {
+    order: 1;
+    flex: 1;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 2rem;
+    padding-bottom: 2rem;
+  }
+}
+
+/* Küre: işaretçiye kapalı (kaydırmayı ve isim dalgasını asla tutmaz),
+   ismin arkasında. Alt kenarı söner: cümle ve düğmeler çizgilerin
+   üstünde okunmalı. */
+.home-hero-globe {
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  aspect-ratio: 1;
+  width: min(165vw, 56rem);
+  left: 50%;
+  top: 14vw;
+  translate: -50% 0;
+  mask-image: linear-gradient(to bottom, black 45%, transparent 82%);
+}
+
+/* Geniş ekran: sahnenin tabanından yükselen büyük bir küre; alt yarısı
+   ismin arkasında kalır, üst kubbesi blokla isim arasındaki boşluğu tutar. */
+@media (min-width: 1024px) {
+  .home-hero-globe {
+    width: min(78vw, 130svh);
+    left: 60%;
+    top: 14%;
+    mask-image: linear-gradient(to bottom, black 40%, transparent 72%);
+  }
+}
+
+.home-globe-box {
+  width: 100%;
+  height: 100%;
+}
+
+.home-globe-canvas {
+  display: block;
+  opacity: 0;
+  transition: opacity 1.6s var(--ease-brand);
+}
+.home-globe-canvas[data-ready] {
+  opacity: 1;
+}
+
+@keyframes home-glyph-rise {
   from {
-    transform: translateY(60%);
+    transform: translateY(0.62em);
   }
 }
 
 @keyframes home-fade-in {
   from {
     opacity: 0.01;
-    transform: translateY(8px);
+    transform: translateY(10px);
   }
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .home-sign-inner {
-    animation: home-sign-rise 0.8s var(--ease-brand) both;
+  /* Harf harf: 34 ms aralık, 11 harf, toplam ~860 ms. */
+  .home-glyph {
+    animation: home-glyph-rise 520ms var(--ease-brand) calc(var(--d) * 34ms) both;
   }
-  .home-sign-delay {
-    animation-delay: 90ms;
+  .home-rise {
+    animation: home-fade-in 0.6s var(--ease-brand) 0.32s both;
   }
-  /* Cümle ve düğmeler imzadan hemen sonra; opaklık 0'dan değil 0,01'den
-     (tarayıcı "boyanmamış" saymasın). */
-  .home-fade {
-    animation: home-fade-in 0.6s var(--ease-brand) 0.25s both;
+
+  /* Açılış perdesi varken (globals.css → "Açılış perdesi") giriş perdenin
+     kalkışıyla BAŞLAR, onu beklemez de onunla yarışmaz da: perde 760 ms'de
+     kalkmaya başlıyor ve alttan yukarı açıldığı için ilk açığa çıkan yer
+     sahnenin tabanı, yani isim. Harfler o anda yükselmeye başlıyor; tek
+     bir hareket gibi okunuyor, iki ayrı animasyon gibi değil. */
+  :root[data-intro] .home-glyph {
+    animation-delay: calc(760ms + var(--d) * 34ms);
+  }
+  /* Telefonda isim sahnenin TEPESİNDE: perde oraya ~1050 ms'de ulaşıyor.
+     Harfler biraz daha geç kalkar ki okuyucu yarısı bitmiş bir girişi
+     değil, açılan perdenin altından yükselen harfleri görsün. Son harf
+     ≈ 1760 ms'de oturur; öznitelik 1900'da kalkar (lib/intro.ts). */
+  @media (max-width: 1023px) {
+    :root[data-intro] .home-glyph {
+      animation-delay: calc(900ms + var(--d) * 34ms);
+    }
+  }
+  :root[data-intro] .home-rise {
+    animation-delay: 1.08s;
+  }
+}
+
+/* Kaydırınca sahne değişiyor: isim yukarı kayıp solar, küre aşağı iner ve
+   küçülür. Zamanlayıcı hero'nun kendi çıkışı; desteksiz ya da hareketsiz
+   okuyucuda hiçbiri olmaz. */
+@keyframes home-name-leave {
+  to {
+    transform: translateY(-18%);
+    opacity: 0.12;
+  }
+}
+@keyframes home-globe-leave {
+  to {
+    transform: translateY(16%) scale(0.88);
+    opacity: 0.25;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .home-hero {
+      view-timeline-name: --home-hero;
+    }
+    .home-name {
+      animation: home-name-leave linear both;
+      animation-timeline: --home-hero;
+      animation-range: exit 0% exit 75%;
+    }
+    .home-globe-box {
+      animation: home-globe-leave linear both;
+      animation-timeline: --home-hero;
+      animation-range: exit 0% exit 100%;
+    }
   }
 }
 
 /* --------------------------------------------------------------------------
-   Proje şeridi: yatay kaydırma, kenar hizası kapla aynı.
+   Ne Yaptım: tipografik bölüm (components/home/WhatIBuilt.tsx).
+   Asimetrik: solda tek dev rakam, sağda iki küçük rakam üst üste; altında
+   alanlar büyük ama hafif bir satırda. Görsel yok, kart yok.
    -------------------------------------------------------------------------- */
-.home-strip {
-  --gutter: max(1rem, env(safe-area-inset-left));
-  /* İlk kart sayfa kabının sol kenarından başlar, şerit ekranın sağına
-     taşar: geniş ekranda da "devamı var" okunur. */
-  --inset: max(var(--gutter), calc((100% - 88rem) / 2 + var(--gutter)));
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  scroll-snap-type: x mandatory;
-  scroll-padding-inline: var(--inset);
-  scrollbar-width: none;
-  /* Sağ kenarda solma: kesilen kart "devamı var" der, sınır çizgisi gibi
-     durmaz. Maske yalnız alfa okur; renk değeri anlamsız. */
-  mask-image: linear-gradient(to right, black calc(100% - 4rem), transparent);
-  border-radius: 4px;
+.home-built-grid {
+  display: grid;
+  gap: 2.5rem;
+  align-items: end;
 }
 
-.home-strip::-webkit-scrollbar {
-  display: none;
-}
-
-/* Odak halkası: şerit hem kaydırma kabı (taşmayı keser) hem maskeli
-   (maske kabın kendi halkasını da siler). Halka içeri çizilir ve odak
-   şeridin içindeyken maske kalkar; aksi hâlde sağ kenardaki kartın
-   halkası solmanın içinde kayboluyordu. */
-.home-strip:focus-visible,
-.home-strip a:focus-visible {
-  outline-offset: -2px;
-}
-
-.home-strip:focus-within {
-  mask-image: none;
-}
-
-@media (min-width: 640px) {
-  .home-strip {
-    --gutter: 1.5rem;
-  }
-}
-@media (min-width: 1024px) {
-  .home-strip {
-    --gutter: 2rem;
+@media (min-width: 768px) {
+  .home-built-grid {
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: 3rem;
   }
 }
 
-.home-strip-track {
+.home-built-main,
+.home-built-side > div {
   display: flex;
-  gap: 1rem;
-  width: max-content;
-  padding-inline: var(--inset) 4rem;
-  padding-block: 0.25rem 0.5rem;
+  flex-direction: column-reverse;
 }
 
-.home-strip-item {
-  width: min(78vw, 22rem);
-  scroll-snap-align: start;
+.home-built-side {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
 }
 
-@media (min-width: 1024px) {
-  .home-strip-track {
-    gap: 1.25rem;
-  }
-  .home-strip-item {
-    width: 25rem;
+/* Geniş ekranda iki küçük rakam yan yana, dev rakamın tabanında: sağ
+   yarı boş bir sütun gibi durmasın (ilk turda üst üste duruyorlardı). */
+@media (min-width: 768px) {
+  .home-built-side {
+    gap: 2.5rem;
   }
 }
 
-.home-strip-more {
-  width: min(60vw, 14rem);
-}
-.home-strip-more > a {
-  aspect-ratio: auto;
-  min-height: 100%;
-}
-
-.home-strip-frame {
-  overflow: hidden;
-  aspect-ratio: 16 / 10;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-card);
-  background: var(--surface);
-  transition: border-color 180ms var(--ease-brand);
+.home-built-label {
+  margin-top: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  line-height: var(--text-small--line-height);
+  font-weight: 500;
+  color: var(--text-muted);
 }
 
-a:hover .home-strip-frame {
-  border-color: var(--line-strong);
+.home-built-num {
+  font-size: clamp(4rem, 9vw, 7.5rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  color: var(--text-strong);
 }
 
-.home-strip-shot {
-  height: 100%;
-}
-.home-strip-shot img {
-  height: 100%;
-  object-fit: cover;
-  object-position: top;
+.home-built-num-xl {
+  font-size: clamp(9rem, 30vw, 22rem);
+  font-weight: 560;
+  letter-spacing: -0.07em;
+  margin-left: -0.05em;
 }
 
-/* Hafif paralaks: görsel kartından biraz geride akar.
-   Neden: şeridin yatay olduğunu ilk dokunuşta anlatır ve düz bir küçük
-   resim dizisine derinlik verir. Zamanlayıcı kartın şerit içindeki
-   kendi görünümü (`view(inline)`); JS yok. */
-@keyframes home-strip-drift {
+.home-built-domains {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.5rem;
+  font-size: clamp(1.75rem, 4.2vw, 3.25rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+  color: var(--text-strong);
+}
+
+.home-built-sup {
+  margin-left: 0.2em;
+  font-family: var(--font-mono);
+  font-size: 0.36em;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--text-muted);
+  vertical-align: super;
+}
+
+/* Yuvarlanan rakam: her basamak 0-9 şeridinin `--v` kadar yukarı kaymış
+   hâli. Bu hâl animasyonsuz da doğru (son hâl); animasyon yalnız 0'dan
+   başlatır. Basamak penceresi tek satır, rakamlar tablo genişliğinde. */
+.home-odo {
+  display: inline-flex;
+  font-variant-numeric: tabular-nums;
+}
+
+.home-odo-digit {
+  display: inline-block;
+  height: 1lh;
+  overflow: clip;
+  /* Rakamın yanları kesilmesin (sıkı harf aralığında komşuya taşar). */
+  padding-inline: 0.04em;
+  margin-inline: -0.04em;
+}
+
+.home-odo-strip {
+  display: flex;
+  flex-direction: column;
+  transform: translateY(calc(var(--v) * -1lh));
+}
+
+.home-odo-strip > span {
+  display: block;
+  height: 1lh;
+}
+
+@keyframes home-odo-roll {
   from {
-    transform: scale(1.08) translateX(3%);
-  }
-  to {
-    transform: scale(1.08) translateX(-3%);
+    transform: translateY(0);
   }
 }
 
-@supports (animation-timeline: view(inline)) {
+@supports (animation-timeline: view()) and (timeline-scope: --a) {
   @media (prefers-reduced-motion: no-preference) {
-    .home-strip-shot {
-      animation: home-strip-drift linear both;
-      animation-timeline: view(inline);
+    .home-built {
+      view-timeline-name: --home-built;
+      timeline-scope: --home-built;
+    }
+    /* Bölüm ekrana girerken yuvarlanır ve ekranın alt üçte birini
+       geçmeden durur: okuyucu hareketli bir sayı okumak zorunda kalmaz.
+       Sağdaki basamak (birler) biraz daha geç oturur. */
+    .home-odo-strip {
+      animation: home-odo-roll var(--ease-brand) both;
+      animation-timeline: --home-built;
+      animation-range: entry calc(5% + var(--k) * -4%) cover calc(32% - var(--k) * 4%);
     }
   }
 }
@@ -298,29 +545,24 @@ a:hover .home-strip-frame {
 }
 
 /* --------------------------------------------------------------------------
-   Kinetik paragraf: kelime kelime aydınlanma.
-   Her kelimenin dilimi bileşende (`--ws`, `--we`); zamanlayıcı paragrafın
-   görünümü. Desteksiz ya da hareketsiz okuyucuda paragraf baştan parlak.
+   Hakkımda: paragraflar görünüme girerken hafifçe belirir.
+   Neden: uzun metin tek seferde değil paragraf paragraf "gelir"; ama
+   okumayı bekletmez, paragraf ekranın alt çeyreğindeyken tamamen okunur.
+   Opaklık 0'dan değil 0,01'den; desteksiz ya da hareketsiz okuyucuda yok.
    -------------------------------------------------------------------------- */
-@keyframes home-word-light {
+@keyframes home-about-in {
   from {
-    opacity: 0.2;
-  }
-  to {
-    opacity: 1;
+    opacity: 0.01;
+    transform: translateY(1rem);
   }
 }
 
-@supports (animation-timeline: view()) and (timeline-scope: --a) {
+@supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
-    .home-kinetic {
-      view-timeline-name: --home-kinetic;
-      timeline-scope: --home-kinetic;
-    }
-    .home-word {
-      animation: home-word-light linear both;
-      animation-timeline: --home-kinetic;
-      animation-range: cover var(--ws) cover var(--we);
+    .home-about-p {
+      animation: home-about-in var(--ease-brand) both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 70%;
     }
   }
 }
@@ -452,4 +694,115 @@ a:hover .home-strip-frame {
     object-fit: cover;
     object-position: top;
   }
+}
+
+/* --------------------------------------------------------------------------
+   Bölüm başlıkları: maskeli açılış (components/home/MaskTitle.tsx).
+   Neden: her bölüm aynı hareketle başlar; ana sayfa ayrı kutular değil, bir
+   hikâyenin sıradaki başlıkları gibi okunur. Başlık ekranın alt kenarından
+   girerken yükselir, ekranın alt üçte birini geçmeden yerine oturur:
+   okuyucu hareketli bir başlık okumak zorunda kalmaz.
+   -------------------------------------------------------------------------- */
+.home-mask {
+  display: block;
+  overflow: clip;
+  /* Alta inen harfler (y, ş, ç) ve sola taşan büyük harf kesilmesin;
+     eksi kenar boşluğu satır düzenini değiştirmez. */
+  padding: 0.04em 0.06em 0.16em;
+  margin: -0.04em -0.06em -0.16em;
+}
+
+.home-mask-in {
+  display: inline-block;
+}
+
+@keyframes home-mask-up {
+  from {
+    transform: translateY(108%);
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* Adsız `view()`: başlıkların her biri kendi görünümüne bağlı; adlı
+       bir çizelge beş başlıkta aynı adı taşıyacaktı. Görünüm çizelgesi
+       öğenin yerleşim kutusunu ölçer, dönüşümü değil: yükselen iç öğe
+       kendi zamanlayıcısını kaydırmaz (ölçüldü: başlık ekranın alt
+       kenarından 120 piksel içerideyken %47, 200 pikselde %80, 400'de
+       bitmiş). */
+    .home-mask-in {
+      animation: home-mask-up var(--ease-brand) both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 32%;
+    }
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Hakkımda: sayfanın TEK renk bloğu. Zemin kenardan kenara `surface-sunken`;
+   kaydırdıkça yumuşakça gelir ve bölüm biterken geri açılır.
+   Neden: hero'dan sonra "isim"den "kişi"ye geçildiği zeminden de okunsun;
+   sert bir kutu kenarı yerine ton yavaşça değişiyor. Öne Çıkan Projeler'in
+   kendi hareketi (yapışan paneller) bu bloğun bittiği yerde başlıyor, ikisi
+   aynı anda oynamıyor.
+   Desteksiz ya da hareketsiz okuyucuda zemin baştan sona sabit ton: blok
+   yine var, yalnız geçişi yok.
+   -------------------------------------------------------------------------- */
+.home-about {
+  position: relative;
+  isolation: isolate;
+  /* Bloğun tonu. Açıkta çukur yüzey; koyuda çukur yüzey (zemine %30 siyah)
+     neredeyse siyah zeminle aynı tonda kalıyor ve blok görünmüyordu
+     (3 Ekim 2026). Koyuda zeminin bir tık açık, mavimsi hâli. */
+  --about-tone: var(--surface-sunken);
+}
+:root[data-theme="dark"] .home-about {
+  --about-tone: color-mix(in oklab, var(--page-bg) 90%, var(--primary) 10%);
+}
+
+.home-about::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--about-tone);
+  pointer-events: none;
+  /* Kenarları yumuşak: ton bir çizgiyle değil 8rem boyunca değişir.
+     Sert kenar (ilk tur, ekran görüntüsü) hero'nun hemen altında bloğu
+     ayrı bir kutu gibi gösteriyordu; geçiş zeminden okunmuyordu. */
+  mask-image: linear-gradient(to bottom, transparent, black 8rem, black calc(100% - 8rem), transparent);
+}
+
+@keyframes home-about-tone {
+  0% {
+    opacity: 0;
+  }
+  22%,
+  84% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .home-about {
+      view-timeline-name: --home-about;
+    }
+    .home-about::before {
+      animation: home-about-tone linear both;
+      animation-timeline: --home-about;
+      animation-range: cover 0% cover 100%;
+    }
+  }
+}
+
+
+/* Başlık işlevi gören büyük rakamlar ve alanlar başlık fontunda
+   (Schibsted Grotesk; gövde Bricolage Grotesque — layout.tsx). */
+.home-built-num,
+.home-built-domains {
+  font-family: var(--font-display);
 }
