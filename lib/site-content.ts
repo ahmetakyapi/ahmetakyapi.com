@@ -48,7 +48,11 @@ export const defaultHomeContent: HomeContent = {
      kalktı, alanları da (`now`, `stack`): bağlantılar kapanışta ve alt
      bilgide, tech stack kendi marquee'sinde. Hero yalnız isim, unvan, bu
      cümle ve iki düğme. */
-  intro: 'Web ürünlerini fikirden yayına kendim götürüyorum. İşimin büyük kısmını yapay zekâ ajanlarıyla yapıyorum.',
+  /* Hero cümlesi (3 Ekim 2026, ikinci sürüm). Önceki "fikirden yayına
+     kendim götürüyorum" cümlesi sahibine göre sönüktü. Bu cümle Hakkımda'daki
+     ilkeden geliyor ("iyi bir ürün sessizdir: hızlı açılır, rahat okunur,
+     doğru bilgi verir") ve işin kapsamını tek nefeste söylüyor. */
+  intro: 'Hızlı açılan, rahat okunan ve doğru bilgi veren web ürünleri yapıyorum. Tasarımı, kodu ve içindeki yapay zekâyı tek elden.',
   /* Unvan her yerde birebir bu yazımla (lib/nav.ts → JOB_TITLE): tireli
      "Full-Stack", iki parçası da büyük; tiresiz "Fullstack" yok. Yapay zekâ
      kısmı gerçek işe dayanıyor: Açılış Zili'nde Claude API ile haber
@@ -76,12 +80,14 @@ export const defaultHomeContent: HomeContent = {
      Çalışırım" vardı ve çalışma ilkelerini anlatıyordu (ölçmek, bayat
      veri, klavye odağı); okuyan kişi kim olduğumu öğrenmeden ilkeleri
      okuyordu. İkinci kısım (iş deneyimi ve kendi ürünlerim) okunabilirlik
-     için iki paragraf; metin aynı. */
+     için iki paragraf; metin aynı. Nar Sistem paragrafı sahibinin isteğiyle
+     güncellendi (3 Ekim 2026): "Thor ve Lena gibi iki büyük projede" ve
+     Ar-Ge ile TÜBİTAK projeleri. */
   about: {
     title: 'Merhaba, Ben Ahmet.',
     paragraphs: [
       'Web ürünleri geliştiriyorum. Bir fikri alıp tasarımından veritabanına, oradan da yayına kadar kendim götürmeyi seviyorum. Bana göre iyi bir ürün sessizdir. Hızlı açılır, rahat okunur, kullanana ne yapacağını söyler ve doğru bilgi verir. Benim peşinde olduğum şey de bu sessizlik.',
-      "Nar Sistem Teknoloji'de enerji sektörüne yönelik iki projede görev aldım. Thor, iş emirlerinin, faturaların ve tahakkukların oluşturulup takip edildiği bir sistem. Lena ise akıllı sayaçlardan gelen veriyi toplayıp yöneten bir platform.",
+      "Nar Sistem Teknoloji'de enerji sektörüne yönelik Thor ve Lena gibi iki büyük projede görev aldım. Thor, iş emirlerinin, faturaların ve tahakkukların oluşturulup takip edildiği bir sistem. Lena ise akıllı sayaçlardan gelen veriyi toplayıp yöneten bir platform. Bunların dışında Ar-Ge ve TÜBİTAK projelerinde de görev aldım.",
       "Kendi tarafımda da birkaç ürün geliştirdim. Açılış Zili, ABD borsalarını Türkçe takip eden bir site. Derinay, bir psikoloğun danışanlarını takip ettiği bir panel. Bir de Ramazan Vakitleri ve arkadaşlarımla oynamak için yaptığım çok oyunculu oyun Dungeon Mates var. Bunları çoğunlukla Next.js, TypeScript ve PostgreSQL ile yapıyorum.",
       "İşin büyük kısmını artık yapay zekâ ajanlarıyla birlikte yürütüyorum. Araştırma, tasarım kontrolü, test ve metin düzeltme gibi işleri kendi kurduğum ajanlara bırakıyorum. Neyin yapılacağına ve neyin yayına çıkacağına ise ben karar veriyorum. Açılış Zili'ndeki bültenleri ve bilanço analizlerini de her gün bu ajanlar yazıyor.",
       'Ekran dışında saatlere meraklıyım. Bir kadranın neden kolay okunduğunu düşünmek, bir ekranın neden kolay okunduğunu düşünmekten pek farklı değil. Oyun oynamayı severim, Fenerbahçeliyim. Gezmeyi, yeni yerler görmeyi ve o gezileri önceden en ince ayrıntısına kadar planlamayı severim. İyi bir yemek için yol yapmaya da her zaman varım.',

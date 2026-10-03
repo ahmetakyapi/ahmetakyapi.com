@@ -4,7 +4,7 @@ export const post: BlogPost = {
   slug: 'socket-io-ile-oda-tabanli-multiplayer',
   tag: 'Gerçek Zamanlı',
   tagColor: '#22d3ee',
-  title: "Karalama: Türkçe Kelimelerle Çiz ve Tahmin Et",
+  title: "Karalama: Çiz ve Tahmin Et",
   excerpt:
     'Bir çizim oyunu yazdım. Kodun en çok dikkat isteyen yeri, "İSTANBUL" yazanın doğru bildiğine karar veren fonksiyon oldu, çünkü toLowerCase() Türkçe bilmiyor.',
   date: '2026-05-15',

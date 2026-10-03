@@ -4,7 +4,7 @@ export const post: BlogPost = {
   slug: 'firebase-realtime-chat-uygulamasi',
   tag: 'Gerçek Zamanlı',
   tagColor: '#f59e0b',
-  title: "İlk Sohbet Uygulamam: Socket.io ile Gerçek Zamanlı Mesajlaşma",
+  title: "Sohbet Uygulaması: Anlık Mesajlaşma",
   excerpt:
     '2021\'deki ilk sohbet uygulamamın sunucusu on beş satırdı; mesajın kimden geldiğini istemci söylüyordu. Beş yıl sonra bir çizim oyununda kararı sunucuya bıraktım.',
   date: '2026-05-16',

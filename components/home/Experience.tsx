@@ -44,12 +44,12 @@ export function Experience({ experience, projects }: { experience: HomeContent['
 
   return (
     <Container as="section" size="wide" aria-labelledby="deneyim" className="pt-16 sm:pt-24">
-      <h2 id="deneyim" className="text-title font-semibold tracking-[-0.02em] text-strong">
+      <h2 id="deneyim" className="ink text-heading font-bold tracking-[-0.03em]">
         Deneyim
       </h2>
 
       <div className="home-xp mt-6">
-        <div className="home-xp-row">
+        <div className="home-xp-row reveal">
           <p className="home-xp-head">
             <span className="text-strong">{experience.company}</span>
             <span className="home-xp-tag">
@@ -71,7 +71,7 @@ export function Experience({ experience, projects }: { experience: HomeContent['
           </ol>
         </div>
 
-        <div className="home-xp-row">
+        <div className="home-xp-row reveal">
           <p className="home-xp-head">
             <span className="text-strong">Kendi Ürünlerim</span>
             <span className="home-xp-tag">{projects.length} Proje</span>

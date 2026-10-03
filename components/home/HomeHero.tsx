@@ -1,5 +1,6 @@
 import { ArrowRight } from 'lucide-react'
 import { GlobeIsland } from '@/components/home/GlobeIsland'
+import { SketchArrow } from '@/components/ui/Sketch'
 import { ButtonLink } from '@/components/ui/Button'
 import type { HomeContent } from '@/lib/site-content'
 
@@ -47,7 +48,10 @@ export function HomeHero({ home }: { home: HomeContent }) {
 
         <div className="home-hero-art">
           <GlobeIsland />
-          <p className="home-globe-hint">Sürükleyerek döndürebilirsin.</p>
+          <p className="home-globe-hint">
+            <SketchArrow />
+            Basılı tutup sürükleyerek döndürebilirsin.
+          </p>
         </div>
       </div>
     </section>
