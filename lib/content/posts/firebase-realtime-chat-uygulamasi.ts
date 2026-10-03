@@ -2,7 +2,7 @@ import type { BlogPost } from '../types'
 
 export const post: BlogPost = {
   slug: 'firebase-realtime-chat-uygulamasi',
-  tag: 'Realtime',
+  tag: 'Gerçek Zamanlı',
   tagColor: '#f59e0b',
   title: "İlk Sohbet Uygulamam: Socket.io ile Gerçek Zamanlı Mesajlaşma",
   excerpt:

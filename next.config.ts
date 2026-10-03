@@ -68,6 +68,12 @@ const nextConfig: NextConfig = {
         destination: '/blog/spoiler-vermeyen-wiki',
         permanent: true,
       },
+      // Yeni Açılış Zili yazısı 3 Ekim'de kısa bir süre bu adresle yayındaydı.
+      {
+        source: '/blog/acilis-zili-ucretsiz-veri-guvenilir-ekran',
+        destination: '/blog/acilis-zili-abd-borsalarini-takip',
+        permanent: true,
+      },
     ]
   },
   async headers() {

@@ -1,19 +1,19 @@
 import type { BlogPost } from '../types'
 
 export const post: BlogPost = {
-  slug: 'acilis-zili-ucretsiz-veri-guvenilir-ekran',
+  slug: 'acilis-zili-abd-borsalarini-takip',
   tag: 'Ürün',
   tagColor: '#0d74c4',
-  title: 'Açılış Zili: Ücretsiz Veriyle Güvenilir Bir Borsa Ekranı',
+  title: 'Açılış Zili: ABD Borsalarını Takip Etmek',
   excerpt:
-    'Açılış Zili\'nde ABD borsalarını, haberleri, teknik analizleri ve bilançoları ücretsiz veriyle takip ediyorsun. Kaynak sustuğunda ekran bunu nasıl fark ediyor?',
+    'Fiyat, teknik analiz, bilanço ve haber: Açılış Zili\'nde ABD borsalarını bu dördüyle takip ediyorsun. Dördünün de aynı günü göstermesi için yaptıklarım.',
   date: '2026-10-03',
   coverGradient: 'linear-gradient(135deg, #0d74c4 0%, #0a5a9a 45%, #101c2b 100%)',
   project: 'acilis-zili',
   content: [
     {
       type: 'lead',
-      text: 'Açılış Zili, ABD borsalarını Türkiye\'den takip etmek için yazdığım bir uygulama. Açılış ve kapanış zilini sayıyor, endeksleri ve hisse fiyatlarını gösteriyor, günün haberlerini topluyor, hisseler için teknik analiz ve bilanço özetleri veriyor. Verinin hepsi ücretsiz kaynaklardan geliyor, çoğu Alpaca\'nın ücretsiz katmanından. Endeks fiyatları seans içinde anlık, hacim ve seans dışı veriler 15 dakika gecikmeli; ekran bunu her panelin altında yazıyor. Gecikmeyi okur biliyor. Ücretsiz veriyle çalışmanın zor tarafı, kaynak sustuğunda ekranın bunu fark etmesi ve dünkü bir sayıyı bugünün sayısı gibi göstermemesi.',
+      text: 'Açılış Zili\'nde ABD borsalarını dört şeyle takip ediyorsun: hisse ve endeks fiyatları, teknik analiz, bilanço özetleri ve günün haberleri. Açılış ve kapanış zili Türkiye saatiyle sayılıyor, verinin bir kısmı ücretsiz kaynaktan geldiği için 15 dakika gecikmeli ve ekran bunu yazıyor. Gecikmeyi okur biliyor. Önemli olan, bu dört parçanın aynı günü göstermesi: fiyat bugünü, grafik dünü anlatıyorsa okur yan yana iki uyumsuz sayı görür.',
     },
     {
       type: 'p',
