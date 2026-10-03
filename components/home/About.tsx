@@ -68,14 +68,11 @@ export function About({ about }: { about: HomeContent['about'] }) {
 
   return (
     <section id="hakkimda" aria-labelledby="hakkimda-baslik" className="home-about">
-      <Container size="wide" className="py-24 sm:py-36">
+      <Container size="wide" className="pt-24 pb-4 sm:pt-32 sm:pb-8">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
           <div>
-            <h2
-              id="hakkimda-baslik"
-              className="text-[clamp(2.75rem,6.5vw,5.5rem)] font-semibold leading-[0.98] tracking-[-0.045em] text-strong lg:sticky lg:top-28"
-            >
-              <MaskTitle>{about.title}</MaskTitle>
+            <h2 id="hakkimda-baslik" className="home-title lg:sticky lg:top-28">
+              <MaskTitle accentLast>{about.title}</MaskTitle>
             </h2>
           </div>
 

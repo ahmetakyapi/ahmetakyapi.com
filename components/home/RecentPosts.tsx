@@ -33,7 +33,8 @@ export function RecentPosts({ posts, projects }: { posts: BlogPost[]; projects: 
     <Container as="section" size="wide" aria-labelledby="son-yazilar" className="pt-24 sm:pt-32">
       <SectionHeading
         id="son-yazilar"
-        title={<MaskTitle>Son Yazılar</MaskTitle>}
+        title={<MaskTitle accentLast>Son Yazılar</MaskTitle>}
+        size="home"
         action={
           <ButtonLink href="/blog" variant="ghost">
             Tüm Yazılar

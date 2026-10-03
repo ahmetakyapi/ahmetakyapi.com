@@ -81,9 +81,9 @@ export function WhatIBuilt({ projects, posts }: { projects: Project[]; posts: Bl
   const domains = [...counts.entries()].sort((a, b) => b[1] - a[1])
 
   return (
-    <Container as="section" size="wide" aria-labelledby="ne-yaptim" className="home-built pt-24 sm:pt-36">
-      <h2 id="ne-yaptim" className="text-heading font-semibold tracking-[-0.03em] text-strong sm:text-[2.25rem] sm:leading-[1.1]">
-        <MaskTitle>Ne Yaptım</MaskTitle>
+    <Container as="section" size="wide" aria-labelledby="ne-yaptim" className="home-built pt-24 sm:pt-32">
+      <h2 id="ne-yaptim" className="home-title">
+        <MaskTitle accentLast>Ne Yaptım</MaskTitle>
       </h2>
 
       <dl className="home-built-grid mt-10 sm:mt-14">

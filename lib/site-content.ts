@@ -42,7 +42,7 @@ export const defaultHomeContent: HomeContent = {
      kalktı, alanları da (`now`, `stack`): bağlantılar kapanışta ve alt
      bilgide, tech stack kendi marquee'sinde. Hero yalnız isim, unvan, bu
      cümle ve iki düğme. */
-  intro: 'Web ürünleri tasarlayıp geliştiriyorum.',
+  intro: 'Web ürünlerini fikirden yayına kendim götürüyorum. İşimin büyük kısmını yapay zekâ ajanlarıyla yapıyorum.',
   /* Unvan her yerde birebir bu yazımla (lib/nav.ts → JOB_TITLE): tireli
      "Full-Stack", iki parçası da büyük; tiresiz "Fullstack" yok. Yapay zekâ
      kısmı gerçek işe dayanıyor: Açılış Zili'nde Claude API ile haber

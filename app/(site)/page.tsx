@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 
 /*
  * Ana sayfa, yedi bölüm ve yedi ayrı düzen ailesi. SIRA bir hikâye:
- *   1. Hero: isim.
+ *   1. Hero: solda isim ve tek cümle, sağda etkileşimli küre.
  *   2. Hakkımda: kim olduğum (sayfanın tek renk bloğu, `surface-sunken`).
  *      Sahibinin isteği (Ekim 2026): beni tanıtan kısım projelerden önce.
  *      Okuyucu ilk önce ismi, sonra o ismin arkasındaki kişiyi okuyor.
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
  * Aynı düzen iki kez kullanılmıyor; bölüm başlıkları aynı maskeli
  * açılışla gelir (MaskTitle), bölümler birbirine bağlanır.
  *
- * Tamamı sunucu bileşeni. İstemciye giden adalar: küre, isim dalgası,
+ * Tamamı sunucu bileşeni. İstemciye giden adalar: küre,
  * yazı önizlemesi ve e-posta kopyalama düğmesi. Bölüm
  * hareketlerinin hepsi CSS (./home.css); rota statik kalır.
  */

@@ -32,10 +32,11 @@ export function SelectedWork({ home, projects }: { home: HomeContent; projects: 
   })
 
   return (
-    <Container as="section" size="wide" aria-labelledby="secili-isler" className="pt-20 sm:pt-28">
+    <Container as="section" size="wide" aria-labelledby="secili-isler" className="pt-16 sm:pt-20">
       <SectionHeading
         id="secili-isler"
-        title={<MaskTitle>Öne Çıkan Projeler</MaskTitle>}
+        title={<MaskTitle accentLast>Öne Çıkan Projeler</MaskTitle>}
+        size="home"
         className="mb-8 sm:mb-10"
       />
 
