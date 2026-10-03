@@ -145,8 +145,12 @@
      Eski gövde #54677c 5,5:1'di. */
   /* "Beyaz çok beyaz" (3 Ekim 2026): zemin kırık beyazdan bir ton mavi
      griye indi; kart hâlâ zeminden açık, çukur yüzey bir ton koyu. */
-  --page-bg: #e9eff6;
-  --surface: #f6f9fc;
+  /* 4 Ekim 2026: kart beyazı göz alıyordu; zemin ve kart bir kademe
+     yumuşadı (#e9eff6 → #e3e9f0, #f6f9fc → #edf1f6); bütün ekranlar
+     bu iki token'dan okuyor.
+     Gövde metni #3a4a5c bu zeminde ≈ 8,0:1, kartta ≈ 8,5:1. */
+  --page-bg: #e3e9f0;
+  --surface: #edf1f6;
   --surface-raised: rgb(16 32 52 / 0.06);
   --surface-sunken: #dce5ef;
 

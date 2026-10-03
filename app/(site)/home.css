@@ -1227,7 +1227,8 @@
   display: grid;
   gap: 0.9rem;
   margin-inline: calc(-1 * var(--own-pad));
-  mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+  /* Kenar sönmesi (maske) yok: iki yanda parıltı gibi duruyordu (4 Ekim
+     2026). Kapaklar kartın kenarında temiz kesiliyor. */
 }
 
 .home-own-row {
