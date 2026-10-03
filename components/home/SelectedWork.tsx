@@ -57,7 +57,7 @@ export function SelectedWork({ home, projects }: { home: HomeContent; projects: 
 
               <div className="flex min-w-0 flex-col lg:py-2">
                 <p className="font-mono text-small text-muted">{project.category}</p>
-                <h3 className="mt-3 text-display font-semibold tracking-[-0.04em] text-strong">{project.title}</h3>
+                <h3 className="ink mt-3 text-display font-bold tracking-[-0.045em]">{project.title}</h3>
                 <p className="mt-4 max-w-[34rem] text-read text-body">{summary}</p>
 
                 {project.stats ? (

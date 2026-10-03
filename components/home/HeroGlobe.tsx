@@ -43,26 +43,16 @@ type Particle = { x: number; y: number; vx: number; vy: number; life: number; ma
 type Ripple = { x: number; y: number; radius: number; maxRadius: number; life: number; tone: number }
 
 /*
- * Hareket SÜREYE bağlı, kareye değil (3 Ekim akşamı, telefonda "döndürmede
- * sorun var"): ilk sürüm 30 kare/sn'de kare başına sabit adım atıyordu;
- * sürükleme kesik kesik, bırakınca dönüş bir anda geri geliyordu ve
- * telefonda dikey kaydırmaya niyetlenen parmak küreyi de eğiyordu.
- * Şimdi: 60 kare/sn, hızlar radyan/ms, atalet üstel sönüm, kendiliğinden
- * dönüş bırakıştan sonra yavaşça hızlanır, eğim dinlenme açısına döner.
+ * Küre YALNIZ basılı tutup sürükleyince döner (3 Ekim 2026 gecesi, sahibinin
+ * isteği). Kendiliğinden dönüş, bırakınca süren atalet ve eğimin geri
+ * dönmesi kaldırıldı: bıraktığın yerde durur. Sahne yine canlı; yaylarda
+ * paketler akar, şehirler nabız gibi atar. Kare hızı 60, adımlar süreye
+ * bağlı (ilk sürüm 30 kare/sn'de kare başına sabit adım atıyordu).
  */
-/** Kendiliğinden dönüş, radyan/ms (~0,054 rad/sn, bir tur ~2 dakika). */
-const AUTO_SPEED = 0.000054
 /** Sürüklemede piksel başına dönüş (radyan). */
 const DRAG_SENSITIVITY = 0.0062
-/** Bırakınca atalet bu sürede ~%63 söner (ms). */
-const FRICTION_MS = 420
-/** Bırakıştan sonra kendiliğinden dönüşün tam hıza çıkma süresi (ms). */
-const RESUME_MS = 1600
-/** Eğimin dinlenme açısı ve oraya dönüş süresi (ms). */
+/** Eğimin başlangıç açısı. */
 const REST_TILT = 0.15
-const TILT_RETURN_MS = 900
-/** Sürükleme hızını yumuşatma oranı (son olayın ağırlığı). */
-const VELOCITY_BLEND = 0.35
 /** Bu kadar pikselden kısa hareket "dokunma" sayılır: kıvılcım çıkar. */
 const TAP_SLOP = 6
 /** Dokunmatikte yön kararı için gereken hareket (piksel). */
@@ -241,8 +231,6 @@ export default function HeroGlobe() {
     const s = {
       rotY: 0.5,
       rotX: REST_TILT,
-      velY: 0,
-      velX: 0,
       dragging: false,
       /** Dokunmatikte yön kilidi: karar yok, yatay (küre), dikey (sayfa). */
       lock: 'none' as 'none' | 'x' | 'y',
@@ -251,10 +239,7 @@ export default function HeroGlobe() {
       startY: 0,
       lastX: 0,
       lastY: 0,
-      lastT: 0,
       moved: false,
-      /** Kendiliğinden dönüşün ağırlığı: 0 sürüklerken, bırakınca 1'e yükselir. */
-      auto: 1,
       time: 0,
       particles: [] as Particle[],
       ripples: [] as Ripple[],
@@ -557,18 +542,6 @@ export default function HeroGlobe() {
       const dt = Math.min(elapsed, MAX_STEP_MS)
       s.step = dt
       s.time += (dt / 1000) * TIME_RATE
-      if (!s.dragging) {
-        // Atalet: bırakıştaki hız üstel söner; eğim dinlenme açısına döner;
-        // kendiliğinden dönüş sıfırdan tam hıza yavaşça çıkar.
-        const decay = Math.exp(-dt / FRICTION_MS)
-        s.rotY += s.velY * dt
-        s.rotX += s.velX * dt
-        s.velY *= decay
-        s.velX *= decay
-        s.rotX += (REST_TILT - s.rotX) * (1 - Math.exp(-dt / TILT_RETURN_MS))
-        s.auto = Math.min(1, s.auto + dt / RESUME_MS)
-        s.rotY += AUTO_SPEED * dt * s.auto * s.auto
-      }
       s.rotX = Math.max(-ROT_X_LIMIT, Math.min(ROT_X_LIMIT, s.rotX))
       draw()
     }
@@ -626,15 +599,11 @@ export default function HeroGlobe() {
       s.lock = s.touch ? 'none' : 'x'
       s.startX = s.lastX = event.clientX
       s.startY = s.lastY = event.clientY
-      s.lastT = event.timeStamp
       s.moved = false
       if (!s.touch) startDrag(event)
     }
     const startDrag = (event: PointerEvent) => {
       s.dragging = true
-      s.auto = 0
-      s.velY = 0
-      s.velX = 0
       canvas.setPointerCapture(event.pointerId)
       canvas.dataset.dragging = ''
     }
@@ -651,28 +620,17 @@ export default function HeroGlobe() {
       if (!s.dragging) return
       const dx = event.clientX - s.lastX
       const dy = s.touch ? 0 : event.clientY - s.lastY
-      const dt = Math.max(1, event.timeStamp - s.lastT)
-      const turnY = dx * DRAG_SENSITIVITY
-      const turnX = -dy * DRAG_SENSITIVITY
-      s.rotY += turnY
-      s.rotX += turnX
-      s.velY = s.velY * (1 - VELOCITY_BLEND) + (turnY / dt) * VELOCITY_BLEND
-      s.velX = s.velX * (1 - VELOCITY_BLEND) + (turnX / dt) * VELOCITY_BLEND
+      s.rotY += dx * DRAG_SENSITIVITY
+      s.rotX -= dy * DRAG_SENSITIVITY
       s.lastX = event.clientX
       s.lastY = event.clientY
-      s.lastT = event.timeStamp
       if (still) draw()
     }
-    const onUp = (event: PointerEvent) => {
+    const onUp = () => {
       s.lock = 'none'
       if (!s.dragging) return
       s.dragging = false
       delete canvas.dataset.dragging
-      // Parmak durup sonra kalktıysa atalet yok: son olaydan beri geçen süre.
-      if (event.timeStamp - s.lastT > 80) {
-        s.velY = 0
-        s.velX = 0
-      }
     }
     const onClick = (event: MouseEvent) => {
       // Sürüklemenin sonundaki tıklama kıvılcım çıkarmaz.

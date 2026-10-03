@@ -91,6 +91,7 @@
   --globe-core-3: #050d1c;
   --globe-grid: #3a93d6;
   --globe-ring: #1f86e0;
+  /* Dış halkalar açık zeminde soluk kalıyordu ("light temada zayıf"). */
   --globe-c1: #35b8ff;
   --globe-c2: #7fd2ff;
   --globe-c3: #5c9dff;
@@ -167,7 +168,13 @@
   --primary-ink: #0b66ae;
   --on-primary: #ffffff;
 
-  --display-gradient: linear-gradient(112deg, #0a2140 0%, #0e4a8f 44%, #1272c9 76%, #2493dd 100%);
+  /* Başlık mürekkebi (3 Ekim 2026: "başlıklar hep degrade olsun, düz siyah
+     olmasın"). Koyu lacivertten markanın mavisine; en açık uç #1166bb /
+     #e9eff6 ≈ 5,0:1, gövde metni kadar okunur. */
+  --display-gradient: linear-gradient(105deg, #0a1a30 0%, #0c3a72 50%, #1166bb 100%);
+  /* Vurgu kelimesi ve üzerine gelinen başlık: markanın mavisi içinde kalan
+     kısa degrade. En açık uç #1b7bd6 / #e9eff6 ≈ 3,9:1 (büyük metin ≥ 3). */
+  --accent-gradient: linear-gradient(105deg, #0d6ac2 0%, #1b7bd6 100%);
   --display-gradient-tight: linear-gradient(100deg, #0a2547 0%, #1e6fbe 100%);
   /* Ana sayfadaki isim: iki kelimeyi tek yüzey gibi kaplar, koyu
      laciverten derin maviye. En açık uç #1066b8 / #f5f7fa ≈ 5,5:1. */
@@ -175,8 +182,8 @@
   /* Hero ismi, dikey: üst satır koyu, alt satır mavi uçta biter.
      En açık uç #0d74c4 / #e9eff6 ≈ 4,4:1, büyük metin için AA (≥ 3). */
   --name-top: #0a1a30;
-  --name-mid: #0c3b73;
-  --name-bottom: #0d74c4;
+  --name-mid: #0c3a72;
+  --name-bottom: #1270d0;
   /* Marka karosu: açık ucu beyaz metinle AA'yı geçmez, üstüne yazı konmaz.
      Duraklar ayrı da okunuyor: Logo'nun SVG degradesi `stop-color` ister. */
   --brand-from: #5cc4ff;
@@ -221,7 +228,8 @@
   --primary-ink: #35b8ff;
   --on-primary: #06121f;
 
-  --display-gradient: linear-gradient(112deg, #f2f7fc 0%, #b6e2ff 44%, #74caff 76%, #3fbcff 100%);
+  --display-gradient: linear-gradient(105deg, #ffffff 0%, #d6edff 55%, #8fd3ff 100%);
+  --accent-gradient: linear-gradient(105deg, #35b8ff 0%, #8fd3ff 100%);
   --display-gradient-tight: linear-gradient(100deg, #eef5fc 0%, #58c4ff 100%);
   /* İsim: mavimsi beyazdan maviye. En koyu uç #3fbcff / #070d16 ≈ 9,4:1. */
   --name-gradient: linear-gradient(118deg, #f2f7fc 0%, #d4ecff 34%, #8fd3ff 70%, #3fbcff 100%);
@@ -1159,5 +1167,225 @@ html.theme-switching::view-transition-new(root) {
       animation-timeline: view();
       animation-range: entry 0% entry 55%;
     }
+  }
+}
+
+/* ==========================================================================
+   Başlık mürekkebi: bütün başlıklar degrade (3 Ekim 2026, sahibinin isteği:
+   "başlıklar hep gradient tonda olsun, düz siyah olmasın").
+
+   `.ink` sınıfı ya da aşağıdaki seçiciler. Degrade metin (`--display-
+   gradient`), vurgu kelimesi (`.home-title-accent`) ve üzerine gelinen
+   başlık (`.ink-hover`) markanın mavisi (`--accent-gradient`).
+   TUZAK (`.display-ink` ile aynı): degrade taşıyan öğenin İÇİNDEKİ bir
+   çocuğa transform verilirse çocuk boyama alanından çıkar ve görünmez
+   olur. Hareket eden öğe degradeyi KENDİSİ taşır (`.home-mask-in`).
+   ========================================================================== */
+@supports (background-clip: text) or (-webkit-background-clip: text) {
+  :is(
+      .ink,
+      .home-title .home-mask-in,
+      .pfeat-title,
+      .prest-title,
+      .bl-archive-title,
+      .bl-featured-title,
+      .post-title,
+      .post-prose > h2,
+      .post-prose > h3
+    ) {
+    background-image: var(--display-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    /* Alta inen harfler (g, y, ş, ç) boyama alanında kalsın. */
+    padding-bottom: 0.1em;
+    margin-bottom: -0.1em;
+  }
+
+  .home-title-accent {
+    background-image: var(--accent-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Bölüm numarası degradenin dışında, kendi renginde. */
+  .post-prose > h2::before {
+    -webkit-text-fill-color: var(--primary-ink);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .group:hover .ink-hover,
+    .pfeat-in:hover .pfeat-title {
+      background-image: var(--accent-gradient);
+    }
+  }
+}
+
+@media (forced-colors: active) {
+  :is(.ink, .home-title .home-mask-in, .home-title-accent, .pfeat-title, .prest-title, .bl-archive-title, .bl-featured-title, .post-title, .post-prose > h2, .post-prose > h3) {
+    background: none;
+    -webkit-text-fill-color: currentColor;
+    color: CanvasText;
+  }
+}
+
+/* ==========================================================================
+   Kara Kalem (components/ui/Sketch.tsx). Elle çizilmiş gibi duran ince
+   çizgiler; Açılış Zili'nin mürekkep sahnelerinin hafif bir akrabası.
+   Her yol `pathLength=1`: çizim `stroke-dashoffset` 1 → 0. Hareketi
+   azaltan okuyucuda ve desteksiz tarayıcıda çizgi baştan çizili.
+   ========================================================================== */
+.sketch {
+  overflow: visible;
+  pointer-events: none;
+  color: var(--primary);
+}
+
+.sketch path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  vector-effect: non-scaling-stroke;
+}
+
+.sketch .sketch-second {
+  stroke-width: 1.2;
+  opacity: 0.55;
+}
+
+/* Alt çizgi: kelimenin altında, kelime kadar geniş. */
+.sketch-host {
+  position: relative;
+  display: inline-block;
+}
+
+.sketch-underline {
+  position: absolute;
+  left: -3%;
+  bottom: -0.02em;
+  width: 106%;
+  height: 0.2em;
+}
+
+.sketch-arrow {
+  width: 1.75rem;
+  height: 1.5rem;
+  flex: none;
+}
+
+.sketch-mark {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+@keyframes sketch-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Ok ve alt çizgiler sayfa açılınca bir kez çizilir; ikinci geçiş biraz
+     sonra, kalem ikinci kez üstünden geçiyormuş gibi. */
+  .sketch-arrow path,
+  .sketch-underline path {
+    animation: sketch-draw 900ms var(--ease-brand) 600ms both;
+  }
+  .sketch-arrow .sketch-tip {
+    animation-delay: 1350ms;
+    animation-duration: 300ms;
+  }
+  .sketch .sketch-second {
+    animation-delay: 1000ms;
+  }
+
+  /* Bölüm başlıklarındaki çizgi görünüme girerken çizilir. */
+  @supports (animation-timeline: view()) {
+    .home-title .sketch-underline path {
+      animation: sketch-draw linear both;
+      animation-timeline: view();
+      animation-range: entry 60% cover 35%;
+    }
+  }
+
+  /* Yükleme: üçgen çizilir, durur, silinir; döngü. */
+  @keyframes sketch-loop {
+    0% {
+      stroke-dashoffset: 1;
+    }
+    55%,
+    70% {
+      stroke-dashoffset: 0;
+    }
+    100% {
+      stroke-dashoffset: -1;
+    }
+  }
+  .sketch-mark path {
+    animation: sketch-loop 1400ms var(--ease-brand) infinite;
+  }
+  .sketch-mark .sketch-second {
+    animation-delay: 160ms;
+  }
+}
+
+/* Gezinme beklerken altta beliren hap (components/site/RouteProgress.tsx). */
+.route-loader {
+  position: fixed;
+  left: 50%;
+  bottom: max(1.25rem, env(safe-area-inset-bottom));
+  z-index: 60;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.55rem 1rem 0.55rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--overlay);
+  box-shadow: var(--shadow-md);
+  font-size: var(--text-small);
+  font-weight: 500;
+  color: var(--text-body);
+  translate: -50% 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .route-loader {
+    animation: route-loader-in 260ms var(--ease-brand) both;
+  }
+  @keyframes route-loader-in {
+    from {
+      opacity: 0;
+      translate: -50% 0.5rem;
+    }
+  }
+}
+
+/* Dizin sayfalarının başı açılışta sahneye girer: başlık kendi satırından
+   yükselir, açıklama ve süzgeç ardından gelir. Rota geçişinin perde
+   silmesiyle aynı ritimde (globals.css → --vt-wipe). */
+@keyframes page-head-rise {
+  from {
+    opacity: 0.01;
+    translate: 0 0.35em;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .page-title {
+    animation: page-head-rise 760ms var(--ease-brand) both;
+  }
+  .page-lead,
+  .page-top .tabs,
+  .page-top .bl-filter {
+    animation: page-head-rise 760ms var(--ease-brand) 120ms both;
+  }
+  .page-top .tabs,
+  .page-top .bl-filter {
+    animation-delay: 220ms;
   }
 }

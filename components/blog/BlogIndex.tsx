@@ -2,6 +2,7 @@ import { ArrowRight, Rss } from 'lucide-react'
 import Link from 'next/link'
 import { Fragment } from 'react'
 import { Container } from '@/components/ui/Container'
+import { SketchUnderline } from '@/components/ui/Sketch'
 import { KunyeLine } from '@/components/ui/Kunye'
 import type { BlogPost } from '@/lib/content/types'
 import { formatPostDate, readingTime } from '@/lib/reading-time'
@@ -35,11 +36,14 @@ export function BlogIndex({ posts }: { posts: readonly BlogPost[] }) {
   const tagIndex = (post: BlogPost) => tags.findIndex((t) => t.name === post.tag) + 1
 
   return (
-    <Container as="section" aria-labelledby="blog-baslik" className="bl-scope page-top pb-4 pt-10 sm:pb-8 sm:pt-16">
+    <Container as="section" size="wide" aria-labelledby="blog-baslik" className="bl-scope page-top pb-4 pt-10 sm:pb-8 sm:pt-16">
       <style>{filterCss(tags, featured ? tagIndex(featured) : 0, rest.map(tagIndex))}</style>
       <header className="max-w-3xl">
         <h1 id="blog-baslik" className="page-title">
-          <span className="display-ink">Yazılar</span>
+          <span className="sketch-host">
+            <span className="display-ink">Yazılar</span>
+            <SketchUnderline />
+          </span>
         </h1>
         <p className="page-lead">
           Yaptığım projelerden çıkan notlar. Çoğu bir şeyin neden çalışmadığıyla başlıyor.
@@ -94,7 +98,7 @@ function Featured({ post, tag }: { post: BlogPost; tag: number }) {
         <PostCover post={post} variant="feature" priority />
         <div className="bl-featured-text">
           <KunyeLine items={['En Yeni', formatPostDate(post.date), readingTime(post)]} />
-          <h2 className="bl-featured-title mt-3 text-strong transition-colors group-hover:text-primary-ink">
+          <h2 className="bl-featured-title ink-hover mt-3">
             <Inline text={post.title} />
           </h2>
           <p className="mt-3 text-read text-body">
@@ -122,7 +126,7 @@ function Row({ post }: { post: BlogPost }) {
       </span>
       <span className="bl-row-main">
         <span className="block text-small font-medium text-primary-ink">{post.tag}</span>
-        <span className="mt-1.5 block font-display text-title font-semibold tracking-[-0.02em] text-strong transition-colors group-hover:text-primary-ink sm:text-[1.375rem] sm:leading-[1.25]">
+        <span className="ink ink-hover mt-1.5 block font-display text-title font-bold tracking-[-0.025em] sm:text-[1.5rem] sm:leading-[1.2]">
           <Inline text={post.title} />
         </span>
         <span className="mt-2 line-clamp-2 block text-sm leading-relaxed text-body sm:text-base">

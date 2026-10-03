@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
+import { SketchMark } from '@/components/ui/Sketch'
 
 /**
  * Gezinme göstergesi: başlığın altında ince, süresiz bir çizgi; yalnız
@@ -101,5 +102,15 @@ export function RouteProgress() {
     window.clearTimeout(timers.current.brake)
   }, [pathname])
 
-  return shownAt === pathname ? <span aria-hidden="true" className="route-progress" /> : null
+  /* Çizginin yanında altta küçük bir hap: marka üçgeni kara kalemle çizilip
+     silinir. Okuyucu beklediğini görür; yüzde yok (kalan süreyi bilmiyoruz). */
+  return shownAt === pathname ? (
+    <>
+      <span aria-hidden="true" className="route-progress" />
+      <span role="status" className="route-loader">
+        <SketchMark />
+        <span>Yükleniyor</span>
+      </span>
+    </>
+  ) : null
 }

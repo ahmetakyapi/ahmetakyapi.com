@@ -1,5 +1,6 @@
 import { ArrowRight, ArrowUpRight } from 'lucide-react'
 import Link from 'next/link'
+import { Inline } from '@/components/blog/Inline'
 import { MaskTitle } from '@/components/home/MaskTitle'
 import { PostPreview } from '@/components/home/PostPreview'
 import { ButtonLink } from '@/components/ui/Button'
@@ -11,8 +12,11 @@ import type { BlogPost, Project } from '@/lib/content/types'
 import { formatPostDate, readingTime } from '@/lib/reading-time'
 
 /**
- * Son Yazılar: editoryal liste, kart değil. Satır başına büyük başlık,
- * mono künye (tarih + okuma süresi) ve etiket.
+ * Son Yazılar: editoryal liste, kart değil. Satır başına degrade başlık,
+ * altında tek satırlık özet, mono künye (tarih + okuma süresi), sağda hap
+ * etiket ve yuvarlak ok. 3 Ekim 2026: önceden yalnız başlık vardı ve
+ * başlıklar uzunluk olarak birbirini tutmuyordu (biri bir satır, öteki
+ * iki); başlıklar kısaltıldı, özet satırı eklendi.
  *
  * Fare ile gezen okuyucuya imleci izleyen küçük bir önizleme (yazının
  * anlattığı projenin ekran görüntüsü; bkz. PostPreview). Projesi ya da
@@ -55,25 +59,28 @@ export function RecentPosts({ posts, projects }: { posts: BlogPost[]; projects: 
       >
         <ol className="border-t border-line">
           {recent.map(({ post, shot }) => (
-            <li key={post.slug} className="border-b border-line" data-reveal>
+            <li key={post.slug} className="reveal border-b border-line">
               <Link
                 href={`/blog/${post.slug}`}
                 data-preview={shot ? post.slug : undefined}
-                className="group grid gap-3 py-7 sm:py-9 md:grid-cols-[11rem_minmax(0,1fr)_auto] md:items-baseline md:gap-8"
+                className="home-post group"
               >
-                <span className="font-mono text-small text-muted">
+                <span className="home-post-meta">
                   <time dateTime={post.date}>{formatPostDate(post.date)}</time>
-                  <span className="block">{readingTime(post)}</span>
+                  <span aria-hidden="true">·</span>
+                  <span>{readingTime(post)}</span>
                 </span>
-                <span className="font-display text-[clamp(1.5rem,3vw,2.375rem)] font-semibold leading-[1.12] tracking-[-0.03em] text-balance text-strong transition-colors group-hover:text-primary-ink">
-                  {post.title}
+                <span className="home-post-main">
+                  <span className="home-post-title ink ink-hover">{post.title}</span>
+                  <span className="home-post-excerpt">
+                    <Inline text={post.excerpt} />
+                  </span>
                 </span>
-                <span className="flex items-center gap-3 text-small text-body">
-                  {post.tag}
-                  <ArrowUpRight
-                    aria-hidden="true"
-                    className="size-5 text-muted transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-primary-ink"
-                  />
+                <span className="home-post-side">
+                  <span className="home-post-tag">{post.tag}</span>
+                  <span className="home-post-arrow" aria-hidden="true">
+                    <ArrowUpRight className="size-4" />
+                  </span>
                 </span>
               </Link>
             </li>

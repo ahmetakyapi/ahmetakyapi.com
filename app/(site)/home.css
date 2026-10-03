@@ -33,7 +33,7 @@
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  background-image: radial-gradient(circle, color-mix(in oklab, var(--primary) 22%, transparent) 1px, transparent 1.6px);
+  background-image: radial-gradient(circle, color-mix(in oklab, var(--primary) var(--dot-mix, 22%), transparent) 1px, transparent 1.6px);
   background-size: 24px 24px;
   mask-image: radial-gradient(ellipse 75% 70% at 72% 40%, black, transparent 78%);
 }
@@ -45,6 +45,10 @@
   z-index: -2;
   pointer-events: none;
   background: linear-gradient(180deg, color-mix(in oklab, var(--surface) 70%, transparent), transparent 55%);
+}
+:root:not([data-theme="dark"]) .home-hero {
+  /* Açık zeminde noktalar biraz daha koyu; yoksa ızgara kayboluyordu. */
+  --dot-mix: 32%;
 }
 :root[data-theme="dark"] .home-hero::after {
   background: linear-gradient(180deg, color-mix(in oklab, var(--primary) 7%, transparent), transparent 55%);
@@ -227,6 +231,9 @@
 }
 
 .home-globe-hint {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 0.4rem;
   margin-top: 0.5rem;
   font-family: var(--font-mono);
   font-size: var(--text-micro);
@@ -813,4 +820,118 @@
 
 .home-title-accent {
   color: var(--primary-ink);
+}
+
+/* --------------------------------------------------------------------------
+   Son Yazılar satırı (components/home/RecentPosts.tsx).
+   Telefonda üst üste: künye, başlık, özet, etiket. 768+ üç sütun: künye ·
+   başlık + özet · etiket + ok. Ok yuvarlak bir düğme gibi, üstüne
+   gelince dolar.
+   -------------------------------------------------------------------------- */
+.home-post {
+  display: grid;
+  gap: 0.6rem;
+  padding-block: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .home-post {
+    grid-template-columns: 9.5rem minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 2rem;
+    padding-block: 1.75rem;
+  }
+}
+
+.home-post-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  color: var(--text-muted);
+}
+
+@media (min-width: 768px) {
+  .home-post-meta {
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+  .home-post-meta > [aria-hidden] {
+    display: none;
+  }
+}
+
+.home-post-main {
+  display: grid;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.home-post-title {
+  font-size: clamp(1.375rem, 1rem + 1.4vw, 2rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.home-post-excerpt {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  max-width: 60ch;
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--text-body);
+}
+
+@media (min-width: 768px) {
+  .home-post-excerpt {
+    -webkit-line-clamp: 1;
+  }
+}
+
+.home-post-side {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.home-post-tag {
+  padding: 0.3rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  font-size: var(--text-small);
+  font-weight: 500;
+  color: var(--text-body);
+}
+
+.home-post-arrow {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .home-post-arrow {
+    display: inline-grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--text-body);
+    transition:
+      background-color 200ms,
+      border-color 200ms,
+      color 200ms,
+      translate 300ms var(--ease-brand);
+  }
+  .home-post:hover .home-post-arrow {
+    border-color: var(--primary);
+    background: var(--primary);
+    color: var(--on-primary);
+    translate: 0.15rem -0.15rem;
+  }
 }

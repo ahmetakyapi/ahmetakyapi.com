@@ -4,7 +4,7 @@ export const post: BlogPost = {
   slug: 'bsp-ile-prosedurel-zindan-uretmek',
   tag: 'Oyun',
   tagColor: '#a855f7',
-  title: "Dungeon Mates: Arkadaşlarla Oynanan, Her Seferinde Yeni Bir Zindan",
+  title: "Dungeon Mates: Her Seferinde Yeni Zindan",
   excerpt:
     'Rastgele zindan üretmek kolay; zor olan, her katın oynanabilir çıkması. BSP ile nasıl kurduğumu ve hiçbir odaya ait olmayan boşlukları nasıl kapattığımı yazdım.',
   date: '2026-08-03',

@@ -6,6 +6,7 @@ import { FeaturedRow, ProjectRow } from '@/components/projects/ProjectRow'
 import { LIST_ID } from '@/components/projects/project-text'
 import { PageTransition } from '@/components/site/PageTransition'
 import { Container } from '@/components/ui/Container'
+import { SketchUnderline } from '@/components/ui/Sketch'
 import { projects } from '@/lib/content/projects'
 import { PROJECT_GROUPS, type ProjectGroup } from '@/lib/content/types'
 import { getOrderedProjects } from '@/lib/project-order'
@@ -75,7 +76,10 @@ export default function ProjectsPage() {
       <Container as="section" size="wide" className="page-top pb-4 pt-10 sm:pb-8 sm:pt-16" aria-labelledby="projeler-baslik">
         <header className="max-w-3xl">
           <h1 id="projeler-baslik" className="page-title">
-            <span className="display-ink">Projeler</span>
+            <span className="sketch-host">
+              <span className="display-ink">Projeler</span>
+              <SketchUnderline />
+            </span>
           </h1>
           <p className="page-lead">
             {projects.length} proje, {liveCount} tanesi yayında. Hepsinin kodu açık; {withPost} tanesinin nasıl

@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { SketchUnderline } from '@/components/ui/Sketch'
 
 /**
  * Bölüm başlığının maskeli açılışı: metin kendi satırının altından yükselir.
@@ -12,7 +13,8 @@ import type { ReactNode } from 'react'
  *
  * `accentLast`: son kelime markanın mavisinde ("Gece Mavisi" yönü, 3 Ekim
  * 2026). Bütün bölüm başlıkları aynı kalıpta; renk yalnız metin rengi,
- * degrade değil. `.display-ink` taşıyan bir başlığa konmaz
+ * Vurgu kelimesinin altında kara kalem bir çizgi kendini çizer (Sketch.tsx).
+ * `.display-ink` taşıyan bir başlığa konmaz
  * (globals.css → TUZAK).
  */
 export function MaskTitle({ children, accentLast = false }: { children: ReactNode; accentLast?: boolean }) {
@@ -22,7 +24,11 @@ export function MaskTitle({ children, accentLast = false }: { children: ReactNod
     if (cut > 0) {
       content = (
         <>
-          {children.slice(0, cut)} <span className="home-title-accent">{children.slice(cut + 1)}</span>
+          {children.slice(0, cut)}{' '}
+          <span className="sketch-host">
+            <span className="home-title-accent">{children.slice(cut + 1)}</span>
+            <SketchUnderline />
+          </span>
         </>
       )
     }
