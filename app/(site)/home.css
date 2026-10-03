@@ -1346,33 +1346,29 @@
   }
 }
 
-/* İş Deneyimi kartının dibi: ölçüler ve Ar-Ge notu, kartın en altında. */
-.home-xp-foot {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 1.25rem 2rem;
-  margin-top: auto;
-  padding-top: 1.5rem;
-  border-top: 1px solid color-mix(in oklab, var(--tint) 22%, transparent);
+/* Bir rolde birden çok proje: ad ve açıklama yan yana, hizalı satırlar. */
+.home-xp-items {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+}
+.home-xp-items li {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: baseline;
+}
+.home-xp-items .home-xp-project {
+  margin-top: 0;
+}
+.home-xp-items .home-xp-desc {
+  margin-top: 0;
 }
 
-.home-xp-note {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  max-width: 26rem;
-  padding: 0.6rem 0.9rem;
-  border-radius: 0.875rem;
-  background: color-mix(in oklab, var(--tint) 12%, transparent);
-  font-size: 0.9375rem;
-  line-height: 1.45;
-  color: var(--text-body);
-}
-.home-xp-note svg {
-  flex: none;
-  width: 1.125rem;
-  height: 1.125rem;
-  color: var(--tint-ink);
+/* Ar-Ge satırı: zaman çizgisinin sonunda, noktası soluk ve kesik. */
+.home-xp-roles > li.home-xp-extra::before {
+  background: transparent;
+  box-shadow: inset 0 0 0 2px color-mix(in oklab, var(--tint) 35%, transparent);
+  outline: 1px dashed color-mix(in oklab, var(--tint) 45%, transparent);
+  outline-offset: 2px;
 }
