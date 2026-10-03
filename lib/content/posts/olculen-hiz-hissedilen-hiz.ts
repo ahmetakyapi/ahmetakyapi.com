@@ -4,7 +4,7 @@ export const post: BlogPost = {
   slug: 'olculen-hiz-hissedilen-hiz',
   tag: 'Performans',
   tagColor: '#8b5cf6',
-  title: "ahmetakyapi.com: Hızlı Ölçüldü, Yavaş Hissedildi",
+  title: "ahmetakyapi.com: Portfolyonun Gerçekten Hızlı Hissettirmesi",
   excerpt:
     '"Windows\'ta takılıyor" dediler. Profiler sıfır uzun görev gösterdi; gecikme JavaScript ile çizilen imleçteydi. Bu arada 76 KB\'lık animasyon kütüphanesi de gitti.',
   date: '2026-08-15',

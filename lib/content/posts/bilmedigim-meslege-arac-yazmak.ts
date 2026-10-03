@@ -4,7 +4,7 @@ export const post: BlogPost = {
   slug: 'bilmedigim-meslege-arac-yazmak',
   tag: 'Ürün',
   tagColor: '#2b62f5',
-  title: "Mimio: Seansı Kaydet, İlerlemeyi Gör",
+  title: "Mimio: Ergoterapistler için Seans ve Gelişim Takibi",
   excerpt:
     'Mimio ergoterapistler için bir panel; başladığımda ergoterapiyi bilmiyordum. Seans notunu kafama göre kurdum, mesleğin oturmuş not biçimi altı gün sonra geldi.',
   date: '2026-08-06',

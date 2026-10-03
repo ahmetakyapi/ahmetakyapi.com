@@ -4,7 +4,7 @@ export const post: BlogPost = {
   slug: 'acilis-zili-nasil-yapildi',
   tag: 'Ürün',
   tagColor: '#0d74c4',
-  title: "Açılış Zili: Piyasayı Tek Yerden Takip Et",
+  title: "Açılış Zili: ABD Borsalarını Türkiye'den Tek Ekranda Takip Et",
   excerpt:
     'ABD borsasını Türkiye saatiyle tek ekrandan izlemek için yazdım. Veriyi çekmek kolaydı; zor olan, bir sayının hata vermeden yanlışa döndüğü anı yakalamaktı.',
   date: '2026-08-12',

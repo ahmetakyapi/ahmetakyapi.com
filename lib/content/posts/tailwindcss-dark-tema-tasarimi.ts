@@ -4,7 +4,7 @@ export const post: BlogPost = {
   slug: 'tailwindcss-dark-tema-tasarimi',
   tag: 'Tasarım',
   tagColor: '#06b6d4',
-  title: "ahmetakyapi.com: Dark Tema Sessizce Bozulmuştu",
+  title: "ahmetakyapi.com: Açık ve Koyu Temayı Birlikte Tutarlı Tutmak",
   excerpt:
     'Bu sitede yazdığım bazı Tailwind sınıfları hiç CSS üretmiyordu. Ne hata çıkıyordu ne de bir uyarı; koyu tema yer yer açık temanın renkleriyle çiziliyordu.',
   date: '2026-08-17',
