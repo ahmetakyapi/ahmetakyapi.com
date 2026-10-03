@@ -7,7 +7,7 @@ import { buttonClass, type ButtonSize, type ButtonVariant } from '@/components/u
 /**
  * Panoya kopyalama düğmesi.
  *
- *   <CopyButton value="ahmet@ahmetakyapi.com">E-postayı Kopyala</CopyButton>
+ *   <CopyButton value="ahmetakyapii@gmail.com">E-postayı Kopyala</CopyButton>
  *   <CopyButton value={kod} variant="ghost" size="sm" copiedLabel="Kopyalandı" />
  *
  * Sonuç ekran okuyucuya `aria-live` ile söylenir; görsel etiket 1,8 sn

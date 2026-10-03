@@ -96,12 +96,12 @@ export function ProjectCover({ project, morph = false, priority = false, layout 
         aria-label={alt ?? `${project.title} kapağı`}
         className={cx(FRAME, 'flex aspect-[16/10] flex-col justify-end p-[6%] @container', className)}
       >
-        <span aria-hidden="true" className="font-mono text-[max(0.75rem,2.6cqw)] text-muted">
+        <span aria-hidden="true" className="pcover-kicker font-mono text-[max(0.75rem,2.6cqw)] text-muted">
           Portfolyo ve Blog
         </span>
         <span
           aria-hidden="true"
-          className="display-ink mt-[1.5cqw] block text-[10.5cqw] leading-[0.95] font-semibold tracking-[-0.045em]"
+          className="display-ink mt-[1.5cqw] block font-display text-[10.5cqw] leading-[0.95] font-semibold tracking-[-0.045em]"
         >
           {project.title}
         </span>

@@ -3,6 +3,7 @@ import type { PaletteLink } from '@/components/site/CommandPalette'
 import { CommandPaletteLauncher } from '@/components/site/CommandPaletteLauncher'
 import { Footer } from '@/components/site/Footer'
 import { Header } from '@/components/site/Header'
+import { RouteProgress } from '@/components/site/RouteProgress'
 import { blogPosts } from '@/lib/content/posts'
 import { projects } from '@/lib/content/projects'
 import { getOrderedProjects } from '@/lib/project-order'
@@ -32,6 +33,7 @@ export default function SiteLayout({ children }: { children: ReactNode }) {
   return (
     <>
       <Header />
+      <RouteProgress />
       <CommandPaletteLauncher projects={paletteProjects} posts={palettePosts} />
       <main id="main-content" tabIndex={-1} className="outline-none">
         {children}

@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Projeler: dizin ızgarası, süzgeç, proje morfu ve galeri penceresi.
+   Projeler: dizin listesi, süzgeç, önizleme, proje morfu ve galeri penceresi.
 
    Bu dosya yalnız /projeler ve /projeler/[slug] sayfalarında yükleniyor
    (iki sayfa da import ediyor; morfun iki ucu da kuralı görsün diye).
@@ -12,113 +12,396 @@
    hangisinin kazandığını tahmin ettirir.
    ========================================================================== */
 
-/* --- Izgara ---------------------------------------------------------------
-   Telefon tek sütun, 640+ iki sütun, 1024+ on iki sütun. Boylar
-   ProjectCard'daki `data-size`: wide 12, feature 6, major 7, minor 5. */
-.pgrid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  column-gap: 1.5rem;
-  row-gap: 3rem;
-  align-items: start;
+/* --- Süzgeç: metin sekmeleri ------------------------------------------------
+   Seçili sekme koyu ve altı çizili; sayı yanında sessiz tonda (AA). Kaba
+   imleçte her sekme 44 piksel yüksek. */
+.pfilter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.1rem;
 }
 
 @media (min-width: 640px) {
-  .pgrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    row-gap: 3.5rem;
-  }
-  .pgrid > .pcard[data-size="wide"] {
-    grid-column: 1 / -1;
+  .pfilter {
+    gap: 0 1.75rem;
   }
 }
 
-@media (min-width: 1024px) {
-  .pgrid {
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    column-gap: 2rem;
-    row-gap: 4.5rem;
-  }
-  .pgrid > .pcard[data-size="wide"] {
-    grid-column: 1 / -1;
-    display: grid;
-    grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
-    align-items: center;
-    column-gap: 3rem;
-  }
-  .pgrid > .pcard[data-size="wide"] > .pcard-body {
-    margin-top: 0;
-  }
-  .pgrid > .pcard[data-size="feature"] {
-    grid-column: span 6;
-  }
-  .pgrid > .pcard[data-size="major"] {
-    grid-column: span 7;
-  }
-  .pgrid > .pcard[data-size="minor"] {
-    grid-column: span 5;
+.pfilter-tab {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 2.75rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--text-body);
+  transition: color 160ms;
+}
+
+@media (min-width: 640px) {
+  .pfilter-tab {
+    font-size: 1rem;
   }
 }
 
-/* --- Süzgeç ---------------------------------------------------------------
-   ProjectFilter ızgaraya `data-filter` yazar. Süzgeç açıkken satır ritmi
-   (7/5, 5/7) anlamını yitirir: kalan dört-beş kart eşit iki sütuna iner,
-   ilk öne çıkanın yatay düzeni de dikeye döner. */
-.pgrid[data-filter="platform"] > .pcard:not([data-group="platform"]),
-.pgrid[data-filter="oyun"] > .pcard:not([data-group="oyun"]),
-.pgrid[data-filter="arac"] > .pcard:not([data-group="arac"]) {
+.pfilter-tab:hover {
+  color: var(--text-strong);
+}
+
+.pfilter-tab.is-active {
+  color: var(--text-strong);
+}
+
+.pfilter-tab.is-active::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0.3rem;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--primary);
+}
+
+.pfilter-count {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* --- Süzgecin gizlemesi ---------------------------------------------------
+   ProjectFilter listenin kabına `data-filter` yazar; bölümlerin boş kalma
+   kuralları sayfada veriden üretiliyor (page.tsx → sectionRules). */
+.pscope[data-filter="platform"] :is(.pfeat, .prow):not([data-group="platform"]),
+.pscope[data-filter="oyun"] :is(.pfeat, .prow):not([data-group="oyun"]),
+.pscope[data-filter="arac"] :is(.pfeat, .prow):not([data-group="arac"]) {
   display: none;
 }
 
-/* `display` burada DEĞİŞMEZ: gizleme kuralı da `display` yazıyor ve bu
-   seçici daha özgül; süzgeçteki geniş karta `display: block` verilince
-   gizlenmesi gereken kartlar geri geliyordu (ölçüldü). Geniş kart ızgara
-   kalır, sütunu teke iner. */
-@media (min-width: 640px) {
-  .pgrid[data-filter]:not([data-filter="all"]) > .pcard[data-size] {
-    grid-column: auto;
-  }
-}
-
-@media (min-width: 1024px) {
-  .pgrid[data-filter]:not([data-filter="all"]) > .pcard[data-size] {
-    grid-column: span 6;
-  }
-  .pgrid[data-filter]:not([data-filter="all"]) > .pcard[data-size="wide"] {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .pgrid[data-filter]:not([data-filter="all"]) > .pcard[data-size="wide"] > .pcard-body {
-    margin-top: 1.25rem;
-  }
-}
-
-/* Süzgeç değişince yeniden görünen kart yerine solarak oturur. Sayfa ilk
-   yüklenirken tetiklenmez: @starting-style yalnız `display: none`dan
-   çıkan öğede çalışır, ilk çizimdeki kartlar zaten görünür. */
+/* Süzgeç değişince yeniden görünen satır solarak oturur. İlk çizimde
+   tetiklenmez: @starting-style yalnız `display: none`dan çıkan öğede. */
 @media (prefers-reduced-motion: no-preference) {
-  .pgrid > .pcard {
+  :is(.pfeat, .prow) {
     transition:
-      opacity 360ms var(--ease-brand),
-      translate 420ms var(--ease-brand);
+      opacity 320ms var(--ease-brand),
+      translate 380ms var(--ease-brand);
   }
   @starting-style {
-    .pgrid[data-filter] > .pcard {
+    .pscope[data-filter] :is(.pfeat, .prow) {
       opacity: 0;
-      translate: 0 14px;
+      translate: 0 10px;
     }
   }
 }
 
-/* --- Kart üzerinde durma --------------------------------------------------
-   Görsel kutusunun içinde hafif yakınlaşma; kutu yerinde kalır. Yalnız
-   gerçek imleçte: dokunmatikte "hover" ilk dokunuşa yapışıyor. */
+/* --- Öne çıkanlar ----------------------------------------------------------
+   Telefonda görsel üstte, ad altında. 1024+ ad solda, görsel sağda (5/6);
+   ad sayfanın en büyük metni. Satırlar arasında tek çizgi. */
+.pfeat-list,
+.prow-list {
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+
+.pfeat,
+.prow {
+  border-bottom: 1px solid var(--line);
+}
+
+.pfeat-in {
+  display: grid;
+  gap: 1.25rem;
+  padding-block: 1.75rem 2rem;
+}
+
+.pfeat-cover {
+  order: -1;
+}
+
+@media (min-width: 1024px) {
+  .pfeat-in {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    column-gap: clamp(2.5rem, 4vw, 4.5rem);
+    align-items: center;
+    padding-block: 3rem;
+  }
+  .pfeat-cover {
+    order: 0;
+  }
+}
+
+.pfeat-title {
+  font-size: clamp(2.5rem, 1.1rem + 4.4vw, 5.5rem);
+  line-height: 0.96;
+  font-weight: 600;
+  letter-spacing: -0.05em;
+  color: var(--text-strong);
+  text-wrap: balance;
+  transition: color 200ms;
+}
+
+.pfeat-meta {
+  margin-top: 0.9rem;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+.pfeat-lead {
+  margin-top: 1rem;
+  max-width: 44ch;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--text-body);
+  text-wrap: pretty;
+}
+
+@media (min-width: 640px) {
+  .pfeat-lead {
+    font-size: 1.1875rem;
+  }
+}
+
+.pfeat-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--primary-ink);
+}
+
+/* --- Diğer projeler: tek satırlık liste -------------------------------------
+   Telefonda (ve dokunmatik tablette) satırın başında küçük görsel:
+     [görsel] Ad              →
+              Kategori
+   Ince imleçli geniş ekranda görsel satırdan çıkar ve önizlemeye döner:
+     Ad ....................... Kategori      → */
+.prest-title {
+  margin-top: 3.5rem;
+  padding-bottom: 1rem;
+  font-size: 1.25rem;
+  line-height: 1.3;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--text-strong);
+}
+
+@media (min-width: 1024px) {
+  .prest-title {
+    margin-top: 5rem;
+  }
+}
+
+.prow-in {
+  display: grid;
+  grid-template-columns: 6.5rem minmax(0, 1fr) auto;
+  grid-template-areas:
+    "cover title arrow"
+    "cover meta arrow";
+  column-gap: 1rem;
+  align-items: center;
+  padding-block: 0.9rem;
+}
+
+.prow-title {
+  grid-area: title;
+  align-self: end;
+  font-size: 1.375rem;
+  line-height: 1.15;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: var(--text-strong);
+  transition:
+    color 200ms,
+    translate 300ms var(--ease-brand);
+}
+
+.prow-meta {
+  grid-area: meta;
+  align-self: start;
+  display: grid;
+  gap: 0.15rem;
+  margin-top: 0.3rem;
+  min-width: 0;
+}
+
+.prow-cat {
+  font-size: 0.9375rem;
+  line-height: 1.35;
+  color: var(--text-body);
+}
+
+.prow-stack {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.35;
+  color: var(--text-muted);
+}
+
+/* Küçük görselde kart yarıçapı (20px) fazla yuvarlak; tipografik kapağın
+   üst satırı ("Portfolyo ve Blog") bu ölçüde okunmuyor. */
+.prow .pprev > * {
+  border-radius: 0.625rem;
+}
+
+.prow .pcover-kicker {
+  display: none;
+}
+
+.prow-badge::before {
+  content: "·";
+  margin-inline: 0.5rem;
+}
+
+.prow-arrow {
+  grid-area: arrow;
+  width: 1.125rem;
+  height: 1.125rem;
+  color: var(--text-muted);
+  transition:
+    color 200ms,
+    translate 300ms var(--ease-brand);
+}
+
+.pprev {
+  grid-area: cover;
+}
+
+/* Telefonda teknoloji satırı yok: kategoriyle iki mono satır üst üste
+   dar sütunda kalabalık. */
+@media (max-width: 767.98px) {
+  .prow-stack {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .prow-in {
+    grid-template-columns: 9rem minmax(0, 1fr) minmax(10rem, 16rem) 1.5rem;
+    grid-template-areas: "cover title meta arrow";
+    column-gap: 2rem;
+    padding-block: 1.25rem;
+  }
+  .prow-title {
+    align-self: center;
+    font-size: clamp(1.75rem, 0.9rem + 1.9vw, 2.75rem);
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+  }
+  .prow-meta {
+    align-self: center;
+    margin-top: 0;
+  }
+}
+
+/* --- Önizleme (ince imleç, 768+) -------------------------------------------
+   Görsel satırdan çıkar. Varsayılan (JavaScript yok ya da hareketi
+   azaltan okur, `data-preview="still"`): satırın sağında, kategori
+   sütununun solunda sabit bir yerde yalnızca solarak belirir. PreviewFollow
+   `data-preview="follow"` yazınca önizleme sabit konuma geçer ve imleci
+   izler (`--px`, `--py`). Görseller liste kabına ilk girişe kadar
+   `display: none`: tembel yükleme onları istemez. */
+@media (hover: hover) and (pointer: fine) and (min-width: 768px) {
+  .prow-in {
+    grid-template-columns: minmax(0, 1fr) minmax(10rem, 16rem) 1.5rem;
+    grid-template-areas: "title meta arrow";
+    padding-block: 1.4rem;
+  }
+
+  .pprev {
+    --pp-width: 22rem;
+    --pp-gap: 2rem;
+    position: absolute;
+    top: 50%;
+    /* kategori sütunu (en çok 16rem) + ok (1,5rem) + iki aralık (2rem)
+       + nefes payı: önizleme kategori metnine değmesin (ölçüldü). */
+    right: calc(16rem + 1.5rem + 4rem + 2rem);
+    z-index: 30;
+    width: var(--pp-width);
+    pointer-events: none;
+    opacity: 0;
+    translate: 0 -50%;
+    transition: opacity 220ms var(--ease-brand);
+  }
+
+  .prow .pprev > * {
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-overlay);
+  }
+
+  .pscope:not([data-armed]) .pprev {
+    display: none;
+  }
+
+  .pscope:not([data-preview="follow"]) .prow-in:is(:hover, :focus-within) .pprev,
+  .pscope[data-preview="follow"] .prow-in:hover .pprev {
+    opacity: 1;
+  }
+
+  .pscope[data-preview="follow"] .pprev {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: auto;
+    translate: calc(var(--px, 0px) + var(--pp-gap)) calc(var(--py, 0px) - 50%);
+    scale: 0.94;
+    transition:
+      opacity 220ms var(--ease-brand),
+      scale 320ms var(--ease-brand);
+  }
+
+  .pscope[data-preview="follow"] .prow-in:hover .pprev {
+    scale: 1;
+  }
+
+  /* Üstünde durulan satır öne çıkar, ötekiler bir ton geri çekilir
+     (sessiz metin rengi: AA'nın üstünde kalır). */
+  .prow-list:hover .prow-in:not(:hover) .prow-title {
+    color: var(--text-muted);
+  }
+}
+
+/* Üstünde durma: ad hafifçe sağa, ok birincil renge. Yalnız gerçek
+   imleçte; dokunmatikte "hover" ilk dokunuşa yapışıyor. */
+@media (hover: hover) and (pointer: fine) {
+  .pfeat-in:hover .pfeat-title,
+  .prow-in:hover .prow-title {
+    color: var(--primary-ink);
+  }
+  .prow-in:hover .prow-arrow {
+    color: var(--primary-ink);
+  }
+}
+
 @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-  .pcard .pcover-img {
+  .prow-in:hover .prow-title {
+    translate: 0.375rem 0;
+  }
+  .prow-in:hover .prow-arrow,
+  .pfeat-in:hover .pfeat-more svg {
+    translate: 0.25rem 0;
+  }
+  .pfeat-more svg {
+    transition: translate 300ms var(--ease-brand);
+  }
+  .pfeat .pcover-img {
     transition: scale 700ms var(--ease-brand);
   }
-  .pcard:hover .pcover-img {
+  .pfeat-in:hover .pcover-img {
     scale: 1.025;
   }
+}
+
+/* --- Proje detayı: kahraman ------------------------------------------------
+   Görsel ekranın tamamını kaplamasın: genişlik, yüksekliği ekranın %64'ünü
+   geçmeyecek kadar (16/10 oranla). 1440×900'de ad ilk ekranda görünür. */
+.phero-frame {
+  width: min(100%, calc(64svh * 1.6));
 }
 
 /* Paylaşılan öğe morfunun süresi, eğrisi ve kırpması ortak:

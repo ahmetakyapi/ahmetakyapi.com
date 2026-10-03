@@ -19,7 +19,7 @@ export const SOCIAL_LINKS = [
 
 export type SocialId = (typeof SOCIAL_LINKS)[number]['id']
 
-export const EMAIL = 'ahmet@ahmetakyapi.com'
+export const EMAIL = 'ahmetakyapii@gmail.com'
 
 /**
  * Unvan, tek yazım: başlık, künye, başlık çubuğu, JSON-LD, OG ve manifest

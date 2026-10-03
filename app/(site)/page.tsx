@@ -1,14 +1,14 @@
 import type { Metadata } from 'next'
+import { About } from '@/components/home/About'
 import { Closing } from '@/components/home/Closing'
 import { HomeHero } from '@/components/home/HomeHero'
-import { HowIWork } from '@/components/home/HowIWork'
-import { ProjectStrip } from '@/components/home/ProjectStrip'
 import { RecentPosts } from '@/components/home/RecentPosts'
 import { SelectedWork } from '@/components/home/SelectedWork'
 import { StackMarquee } from '@/components/home/StackMarquee'
+import { WhatIBuilt } from '@/components/home/WhatIBuilt'
 import { PageTransition } from '@/components/site/PageTransition'
 import { personJsonLd, websiteJsonLd } from '@/lib/seo'
-import { getOrderedProjects, getSiteContent } from '@/lib/site-content'
+import { getSiteContent } from '@/lib/site-content'
 import './home.css'
 
 export const metadata: Metadata = {
@@ -16,21 +16,29 @@ export const metadata: Metadata = {
 }
 
 /*
- * Ana sayfa, yedi bölüm ve yedi ayrı düzen ailesi: künye + isim imzası
- * (hero), yatay şerit, üst üste binen paneller, kinetik paragraf, marquee,
- * editoryal liste, kapanış. Aynı düzen iki kez kullanılmıyor; sayfa
- * kaydırıldıkça ritim değişiyor.
+ * Ana sayfa, yedi bölüm ve yedi ayrı düzen ailesi. SIRA bir hikâye:
+ *   1. Hero: isim.
+ *   2. Hakkımda: kim olduğum (sayfanın tek renk bloğu, `surface-sunken`).
+ *      Sahibinin isteği (Ekim 2026): beni tanıtan kısım projelerden önce.
+ *      Okuyucu ilk önce ismi, sonra o ismin arkasındaki kişiyi okuyor.
+ *   3. Öne Çıkan Projeler: üst üste binen paneller.
+ *   4. Ne Yaptım: tipografik sayılar; üç projeden bütün işin ölçüsüne.
+ *   5. Tech stack şeridi: Ne Yaptım'ın hemen altında, "neyle" sorusunun
+ *      cevabı olarak. Listelenen sırada (yazılardan sonra) iş bölümünden
+ *      kopuyor ve yazılarla kapanış arasına giren bir süs gibi duruyordu;
+ *      burada "iş" bölümünü kapatan bir çizgi, yazılar ve kapanış ise
+ *      sayfanın "konuşma" yarısı.
+ *   6. Son Yazılar: editoryal liste.
+ *   7. Kapanış.
+ * Aynı düzen iki kez kullanılmıyor; bölüm başlıkları aynı maskeli
+ * açılışla gelir (MaskTitle), bölümler birbirine bağlanır.
  *
- * Tamamı sunucu bileşeni. İstemciye giden üç ada var: küre (yalnız geniş
- * ekranda istenir), yazı önizlemesi ve e-posta kopyalama düğmesi. Bölüm
+ * Tamamı sunucu bileşeni. İstemciye giden adalar: küre, isim dalgası,
+ * yazı önizlemesi ve e-posta kopyalama düğmesi. Bölüm
  * hareketlerinin hepsi CSS (./home.css); rota statik kalır.
  */
 export default function HomePage() {
   const { home, projects, blogPosts } = getSiteContent()
-  const ordered = getOrderedProjects(projects)
-  // Öne çıkan üçü hemen altta Seçili İşler'de büyük panel olarak duruyor;
-  // şeritte de olurlarsa okuyucu aynı ekran görüntüsünü iki kez görüyor.
-  const stripProjects = ordered.filter((project) => !project.featured)
 
   return (
     <PageTransition>
@@ -40,9 +48,9 @@ export default function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify([personJsonLd(), websiteJsonLd()]) }}
       />
       <HomeHero home={home} />
-      <ProjectStrip projects={stripProjects} total={projects.length} />
+      <About about={home.about} />
       <SelectedWork home={home} projects={projects} />
-      <HowIWork text={home.approach} />
+      <WhatIBuilt projects={projects} posts={blogPosts} />
       <StackMarquee />
       <RecentPosts posts={blogPosts} projects={projects} />
       <Closing closing={home.closing} />

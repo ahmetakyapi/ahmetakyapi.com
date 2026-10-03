@@ -36,7 +36,9 @@
 :root {
   color-scheme: light;
 
-  --scrim: rgb(16 32 52 / 0.4);
+  /* Açık temada örtü hafif: sayfa ⌘K'nın arkasında okunur kalsın,
+     yalnız geri çekilsin. */
+  --scrim: rgb(16 32 52 / 0.26);
   /* Derinlik gölgeyle değil TON FARKIYLA kurulur; gölge yalnızca gerçekten
      sayfanın üstünde yüzen katmanda (açılır pencere, menü). */
   --shadow-sm: 0 1px 2px rgb(16 32 52 / 0.05);
@@ -55,9 +57,11 @@
   /* Degrade düğme ve karo üstündeki metin her palette beyaz. */
   --on-brand: #ffffff;
 
-  /* Paletten türeyenler. */
+  /* Paletten türeyenler. Açık temada opak yüzey (⌘K, mobil menü, camın
+     yedeği) kâğıt kartla aynı ton: zeminin %8 koyusu gri bir kutu gibi
+     duruyordu (Ekim 2026, ekran görüntüsü). Koyuda zeminden bir ton açık. */
   --line-focus: var(--primary);
-  --surface-solid: color-mix(in srgb, var(--page-bg) 92%, var(--text-strong));
+  --surface-solid: var(--surface);
   --overlay: color-mix(in srgb, var(--page-bg) 96%, transparent);
   --glass-bg: color-mix(in srgb, var(--page-bg) 72%, transparent);
 
@@ -65,6 +69,18 @@
   --vt-exit: 140ms;
   --vt-enter: 220ms;
   --vt-move: 380ms;
+  /* Perde silme: rotalar arası. 460 ms sayfa ölçeği (hareket rehberi
+     400-600); başı ve sonu yavaş, ortası hızlı: çizgi "çekilen" bir
+     perde gibi okunur, sabit hızla kayan bir tarayıcı gibi değil. */
+  --vt-wipe: 460ms;
+  --ease-wipe: cubic-bezier(0.7, 0, 0.2, 1);
+
+  /* Açılış perdesi (components/site/IntroCurtain.tsx). Açık temada TERS:
+     koyu lacivert perde açık sayfanın üstünden kalkar; kalkış ancak ton
+     farkı büyükse okunur. Kenar çizgisi markanın açık mavisi. */
+  --intro-bg: #0e1a28;
+  --intro-ink: #eef3f8;
+  --intro-edge: #3a93d6;
 }
 
 /* --- Sistem: koyu ---------------------------------------------------------- */
@@ -85,34 +101,58 @@
   --accent-warm: #d3a04a;
 
   --surface-solid: color-mix(in srgb, var(--page-bg) 90%, var(--text-strong));
+
+  /* Koyu temada perde ters ÇEVRİLMEZ: koyu sayfayı seçmiş okuyucunun
+     ekranında bir saniyelik beyaz parlama olurdu. Perde zeminden bir ton
+     açık; kalkışı mavi kenar çizgisi taşır. */
+  --intro-bg: #0f1a29;
+  --intro-ink: #eaf1f8;
+  --intro-edge: #35b8ff;
 }
 
 /* --- Palet: signature, açık ------------------------------------------------ */
 :root,
 :root[data-palette="signature"] {
-  --page-bg: #f7f9fb;
-  --surface: rgb(16 32 52 / 0.028);
-  --surface-raised: rgb(16 32 52 / 0.07);
-  --surface-sunken: rgb(16 32 52 / 0.045);
+  /* AÇIK TEMA KENDİ BAŞINA ÇİZİLDİ (Ekim 2026, varsayılan oldu).
+     Önceki hâl koyu temanın tersiydi: kartlar zeminin üstüne lacivert bir
+     örtüyle (%2,8) basılıyordu, yani zeminden KOYU duruyordu ve sayfa gri
+     bir kâğıda çizilmiş koyu tema gibi okunuyordu. Şimdi üç katman ışıkla
+     kuruluyor: zemin soğuk kırık beyaz, kart ondan AÇIK (masadaki kâğıt),
+     çukur yüzey (Hakkımda bloğu, görsel çerçeveleri) bir ton mavimsi
+     koyu. Hepsi aynı soğuk aileden; bej/krem yok, marka mavisiyle
+     çatışmasın. Kontrast (ölçüldü, zemin / kart / çukur):
+       strong #0e1a28   16,4 / 17,2 / 15,2
+       body   #3a4a5c    8,5 /  8,9 /  7,9   (gövde ≥ 7)
+       muted  #536477    5,7 /  6,0 /  5,3   (soluk ≥ 4,5)
+     Eski gövde #54677c 5,5:1'di. */
+  --page-bg: #f5f7fa;
+  --surface: #fcfdfe;
+  --surface-raised: rgb(16 32 52 / 0.06);
+  --surface-sunken: #ebf0f6;
 
-  --text-strong: #101c2b;
-  --text-body: #54677c;
-  --text-soft: #54677c;
-  --text-muted: #586a7c;
+  --text-strong: #0e1a28;
+  --text-body: #3a4a5c;
+  --text-soft: #3a4a5c;
+  --text-muted: #536477;
 
-  --line: rgb(16 32 52 / 0.1);
-  --line-soft: rgb(16 32 52 / 0.06);
-  --line-strong: rgb(16 32 52 / 0.17);
+  /* Kâğıt kartlar zeminden açık olduğu için kenarı biraz daha belirgin. */
+  --line: rgb(16 32 52 / 0.11);
+  --line-soft: rgb(16 32 52 / 0.065);
+  --line-strong: rgb(16 32 52 / 0.2);
 
   --primary: #0d74c4;
   --primary-hover: #0a5a9a;
   --primary-soft: #3a93d6;
   --primary-wash: rgb(13 116 196 / 0.1);
-  --primary-ink: #0c69b1;
+  /* Metin olarak mavi: çukur yüzeyde de AA (5,2:1). */
+  --primary-ink: #0b66ae;
   --on-primary: #ffffff;
 
   --display-gradient: linear-gradient(112deg, #0a2140 0%, #0e4a8f 44%, #1272c9 76%, #2493dd 100%);
   --display-gradient-tight: linear-gradient(100deg, #0a2547 0%, #1e6fbe 100%);
+  /* Ana sayfadaki isim: iki kelimeyi tek yüzey gibi kaplar, koyu
+     laciverten derin maviye. En açık uç #1066b8 / #f5f7fa ≈ 5,5:1. */
+  --name-gradient: linear-gradient(118deg, #0a1a30 0%, #0b2f5c 38%, #0c4f96 72%, #1066b8 100%);
   /* Marka karosu: açık ucu beyaz metinle AA'yı geçmez, üstüne yazı konmaz.
      Duraklar ayrı da okunuyor: Logo'nun SVG degradesi `stop-color` ister. */
   --brand-from: #5cc4ff;
@@ -128,7 +168,7 @@
   --code-number: #a4720f;
   --code-type: #0c69b1;
   --code-fn: #101c2b;
-  --code-comment: #586a7c;
+  --code-comment: #536477;
 }
 
 /* --- Palet: signature, koyu ------------------------------------------------ */
@@ -157,6 +197,8 @@
 
   --display-gradient: linear-gradient(112deg, #f2f7fc 0%, #b6e2ff 44%, #74caff 76%, #3fbcff 100%);
   --display-gradient-tight: linear-gradient(100deg, #eef5fc 0%, #58c4ff 100%);
+  /* İsim: mavimsi beyazdan maviye. En koyu uç #3fbcff / #070d16 ≈ 9,4:1. */
+  --name-gradient: linear-gradient(118deg, #f2f7fc 0%, #d4ecff 34%, #8fd3ff 70%, #3fbcff 100%);
 
   --code-keyword: #7fd2ff;
   --code-string: #3ddc97;
@@ -188,9 +230,6 @@
   --text-heading--line-height: 1.2;
   --text-display: clamp(2.25rem, 5vw, 3.75rem);
   --text-display--line-height: 1.04;
-  /* İsim imzası: ~4rem → 9.5rem. */
-  --text-hero: clamp(4rem, 12vw, 9.5rem);
-  --text-hero--line-height: 0.92;
 
   /* Yarıçap sistemi: kart 20, düğme 12, çip tam yuvarlak (`rounded-full`). */
   --radius-card: 1.25rem;
@@ -204,6 +243,7 @@
 
 @theme inline {
   --font-sans: var(--font-sans-face), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display-face), var(--font-sans-face), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-mono-face), ui-monospace, "SFMono-Regular", monospace;
 
   --color-page: var(--page-bg);
@@ -285,6 +325,17 @@
     overflow-x: clip;
     /* Son satırda tek kelime kalmasın. */
     text-wrap: pretty;
+  }
+
+  /* Başlıklar Schibsted Grotesk, gövde Bricolage Grotesque (layout.tsx).
+     Katmanda: bir yardımcı sınıf (font-sans/font-mono) gerekirse ezer. */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
   }
 
   h1,
@@ -557,8 +608,8 @@
    Rota geçişi: View Transitions (template.tsx'teki `route-in`in yerine).
 
    Sayfalar içeriklerini components/site/PageTransition.tsx ile sarar.
-   Türsüz gezinme (çoğu bağlantı, tarayıcının geri tuşu) kısa bir solma +
-   yükselme alır; `transitionTypes={['nav-forward']}` / `['nav-back']`
+   Türsüz gezinme (çoğu bağlantı) perde silme alır, tarayıcının geri tuşu
+   yalnız solma; `transitionTypes={['nav-forward']}` / `['nav-back']`
    taşıyan bağlantılar yönlü kayar. Başlık sabit kalır: kayan içerikte
    okuyucunun tek dayanak noktası o.
    -------------------------------------------------------------------------- */
@@ -595,13 +646,67 @@
   }
 }
 
-::view-transition-old(.page-fade) {
-  animation: var(--vt-exit) ease-in both vt-fade reverse;
+/* Türsüz gezinme (başlıktaki bağlantılar, kartlar): PERDE SİLME.
+   Yeni sayfa başlığın altından aşağı doğru açılır; açılan kenarda 2
+   piksellik marka mavisi bir çizgi. Eski sayfa ilk 180 ms'de söner.
+   Neden: okuyucu bir yerden başka bir yere geçtiğini görür, başlık yerinde
+   durur; bağlantıya basmak "sayfa yenilendi" değil "sayfa çevrildi" gibi
+   okunur. Açılış perdesinin kalkan kenarıyla aynı çizgi.
+
+   Çizgi ayrı bir öğe değil: yeni sayfa grubunun görüntü çiftinin ZEMİNİ.
+   Çift, yeni görüntüden 2 piksel daha aşağıya kadar kırpılıyor; zemin
+   yalnız o 2 pikselde görünüyor (görüntü opak, PageTransition.tsx).
+   Eski ve yeni sayfa EŞLEŞMİYOR (iki ayrı öğe, iki ayrı grup); eski
+   sayfanın kutusu kaydırılmışsa ekranın çok üstünde başlıyor, o yüzden
+   eskisi kırpılmıyor, yalnız söndürülüyor.
+
+   Kırpma piksel cinsinden ve yalnız İLK EKRAN boyunca (0 → 100svh):
+   yüzde verilseydi ölçü sayfanın tamamı (5000 piksel) olurdu ve görünen
+   kısım sürenin son %20'sinde bir anda açılırdı. */
+::view-transition-group(.page-in) {
+  z-index: 1;
 }
-::view-transition-new(.page-fade) {
-  animation:
-    var(--vt-enter) var(--ease-brand) var(--vt-exit) both vt-fade,
-    var(--vt-move) var(--ease-brand) both vt-rise;
+::view-transition-image-pair(.page-in) {
+  background: var(--primary);
+  animation: var(--vt-wipe) var(--ease-wipe) both vt-wipe-edge;
+}
+::view-transition-new(.page-in) {
+  animation: var(--vt-wipe) var(--ease-wipe) both vt-wipe-new;
+}
+::view-transition-old(.page-out) {
+  animation: 180ms ease-in both vt-fade reverse;
+}
+@keyframes vt-wipe-new {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 max(0px, calc(100% - 100svh)) 0);
+  }
+}
+@keyframes vt-wipe-edge {
+  from {
+    clip-path: inset(0 0 calc(100% - 2px) 0);
+  }
+  to {
+    clip-path: inset(0 0 max(0px, calc(100% - 100svh - 2px)) 0);
+  }
+}
+
+/* Tarayıcının geri/ileri tuşu: yön bilgisi yok ve okuyucu zaten bildiği
+   bir sayfaya dönüyor. Chrome'da Next geri tuşunda geçiş hiç başlatmıyor
+   (ölçüldü, Ekim 2026: içerik anında değişiyor); başlatan bir tarayıcıda
+   perde yerine yalnız kısa bir solma oynar
+   (components/site/RouteProgress.tsx `data-nav-pop` koyar). */
+:root[data-nav-pop]::view-transition-image-pair(.page-in) {
+  background: none;
+  animation: none;
+}
+:root[data-nav-pop]::view-transition-new(.page-in) {
+  animation: var(--vt-enter) var(--ease-brand) var(--vt-exit) both vt-fade;
+}
+:root[data-nav-pop]::view-transition-old(.page-out) {
+  animation: var(--vt-exit) ease-in both vt-fade reverse;
 }
 
 ::view-transition-old(.nav-forward) {
@@ -649,11 +754,6 @@
     opacity: 0;
   }
 }
-@keyframes vt-rise {
-  from {
-    transform: translateY(8px);
-  }
-}
 @keyframes vt-slide {
   from {
     translate: var(--vt-offset);
@@ -690,6 +790,168 @@ html.theme-switching::view-transition-new(root) {
   }
   to {
     clip-path: circle(150vmax at var(--vt-x, 50%) var(--vt-y, 0));
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Açılış perdesi (components/site/IntroCurtain.tsx, karar lib/intro.ts).
+   Varsayılan YOK; yalnız `<html data-intro>` varken. Toplam 1180 ms.
+   Hareket azaltılmışsa betik özniteliği hiç koymaz; yine de koyulmuşsa
+   aşağıdaki reduced-motion kuralı perdeyi gizler.
+   -------------------------------------------------------------------------- */
+.intro {
+  display: none;
+}
+
+:root[data-intro] .intro {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  background: var(--intro-bg);
+  color: var(--intro-ink);
+  animation: intro-lift 420ms var(--ease-wipe) 760ms both;
+}
+
+/* Kalkan perdenin alt kenarı: rota geçişindeki silmeyle aynı mavi çizgi,
+   ilk izlenim ile sonraki gezinmeler aynı dili konuşsun. */
+:root[data-intro] .intro::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--intro-edge);
+}
+
+.intro-stage {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  animation: intro-stage-out 300ms var(--ease-brand) 740ms both;
+}
+
+.intro-tile {
+  stroke: var(--intro-ink);
+  stroke-width: 1.25;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: intro-draw 340ms var(--ease-brand) both;
+}
+
+.intro-fill {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: intro-fill 280ms var(--ease-brand) 300ms both;
+}
+
+.intro-tri {
+  stroke: var(--on-brand);
+  stroke-width: 2.6;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: intro-draw 380ms var(--ease-brand) 340ms both;
+}
+
+.intro-name {
+  font-family: var(--font-display);
+  overflow: clip;
+  padding-block: 0.08em 0.14em;
+  font-size: clamp(1.5rem, 1.2rem + 1.4vw, 2.125rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+  white-space: nowrap;
+}
+
+.intro-name > span {
+  display: inline-block;
+  animation: intro-name 440ms var(--ease-brand) 300ms both;
+}
+
+@keyframes intro-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes intro-fill {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes intro-name {
+  from {
+    transform: translateY(115%);
+  }
+}
+@keyframes intro-stage-out {
+  to {
+    opacity: 0;
+    transform: translateY(-1.5rem);
+  }
+}
+@keyframes intro-lift {
+  to {
+    transform: translateY(calc(-100% - 2px));
+    visibility: hidden;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root[data-intro] .intro {
+    display: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Gezinme çizgisi (components/site/RouteProgress.tsx). Yalnız gezinme
+   300 ms'yi geçerse; yüzde göstermez, ne kadar kaldığını bilmiyoruz.
+   Başlığın alt kenarında, marka mavisinde, süresiz bir salınım.
+   -------------------------------------------------------------------------- */
+.route-progress {
+  position: fixed;
+  inset-inline: 0;
+  top: calc(4rem + env(safe-area-inset-top));
+  z-index: 60;
+  height: 2px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.route-progress::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: 40%;
+  background: var(--primary);
+  animation: route-progress 1.1s var(--ease-wipe) infinite;
+}
+
+@keyframes route-progress {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(250%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route-progress::before {
+    width: 100%;
+    animation: none;
+    opacity: 0.6;
   }
 }
 
@@ -732,9 +994,13 @@ html.theme-switching::view-transition-new(root) {
     scroll-behavior: auto;
   }
 
+  /* Çift de dahil: perde silmenin kırpması çiftte (globals.css → "PERDE
+     SİLME"); dışarıda kalınca hareketi azaltan okuyucuda da sayfa
+     460 ms boyunca aşağı doğru açılıyordu (ölçüldü). */
   ::view-transition-old(*),
   ::view-transition-new(*),
-  ::view-transition-group(*) {
+  ::view-transition-group(*),
+  ::view-transition-image-pair(*) {
     animation-duration: 0s !important;
     animation-delay: 0s !important;
   }

@@ -35,7 +35,7 @@ function Logos({ hidden = false }: { hidden?: boolean }) {
 
 export function StackMarquee() {
   return (
-    <section aria-labelledby="tech-stack" className="border-y border-line py-10 sm:py-12">
+    <section aria-labelledby="tech-stack" className="mt-24 border-y border-line py-10 sm:mt-32 sm:py-12">
       <h2 id="tech-stack" className="sr-only">
         Tech Stack
       </h2>

@@ -37,28 +37,26 @@ export function BlogIndex({ posts }: { posts: readonly BlogPost[] }) {
   return (
     <Container as="section" aria-labelledby="blog-baslik" className="bl-scope pb-20 pt-10 sm:pb-28 sm:pt-16">
       <style>{filterCss(tags, featured ? tagIndex(featured) : 0, rest.map(tagIndex))}</style>
-      <header className="flex flex-wrap items-end justify-between gap-x-8 gap-y-5">
-        <div className="min-w-0 max-w-3xl">
-          <h1 id="blog-baslik" className="text-display font-semibold tracking-[-0.04em]">
-            <span className="display-ink">Yazılar</span>
-          </h1>
-          <p className="mt-4 max-w-2xl text-read text-body">
-            Yaptığım projelerden çıkan notlar. Çoğu bir şeyin neden çalışmadığıyla başlıyor.
-          </p>
-        </div>
-        <div className="flex items-center gap-4">
-          <span className="font-mono text-small text-muted">{posts.length} Yazı</span>
+      <header className="max-w-3xl">
+        <h1 id="blog-baslik" className="text-display font-semibold tracking-[-0.04em]">
+          <span className="display-ink">Yazılar</span>
+        </h1>
+        <p className="mt-4 max-w-2xl text-read text-body">
+          Yaptığım projelerden çıkan notlar. Çoğu bir şeyin neden çalışmadığıyla başlıyor.
+        </p>
+        <p className="mt-3 flex flex-wrap items-center gap-x-4 text-sm text-muted">
+          <span>{posts.length} Yazı</span>
           <a
             href="/rss.xml"
-            className="inline-flex min-h-11 items-center gap-2 rounded-button px-3 text-sm font-medium text-body transition-colors hover:bg-primary-wash hover:text-strong"
+            className="inline-flex min-h-11 items-center gap-1.5 font-medium text-body transition-colors hover:text-strong pointer-fine:min-h-8"
           >
             <Rss className="size-4" aria-hidden="true" />
-            RSS
+            RSS ile Takip Et
           </a>
-        </div>
+        </p>
       </header>
 
-      <fieldset className="bl-filter mt-8 sm:mt-10">
+      <fieldset className="bl-filter mt-6 sm:mt-8">
         <legend className="sr-only">Etikete göre süz</legend>
         <Chip id="bl-f-0" label="Tümü" count={posts.length} defaultChecked />
         {tags.map((tag, i) => (
@@ -69,13 +67,10 @@ export function BlogIndex({ posts }: { posts: readonly BlogPost[] }) {
       {featured ? <Featured post={featured} tag={tagIndex(featured)} /> : null}
 
       {rest.length > 0 ? (
-        <section aria-labelledby="arsiv" className="bl-archive mt-20 sm:mt-28">
-          <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-b border-line pb-5">
-            <h2 id="arsiv" className="text-heading font-semibold tracking-[-0.03em]">
-              Arşiv
-            </h2>
-            <span className="font-mono text-small text-muted">Yeniden Eskiye</span>
-          </div>
+        <section aria-labelledby="arsiv" className="bl-archive mt-16 sm:mt-20">
+          <h2 id="arsiv" className="text-title font-semibold tracking-[-0.02em] text-strong">
+            Önceki Yazılar
+          </h2>
 
           <ol className="bl-list">
             {rest.map((post) => (
@@ -97,13 +92,13 @@ function Featured({ post, tag }: { post: BlogPost; tag: number }) {
         <PostCover post={post} variant="feature" priority />
         <div className="bl-featured-text">
           <KunyeLine items={['En Yeni', formatPostDate(post.date), readingTime(post)]} />
-          <h2 className="mt-4 text-heading font-semibold tracking-[-0.03em] text-strong transition-colors group-hover:text-primary-ink sm:text-[2.5rem] sm:leading-[1.08]">
+          <h2 className="mt-3 text-heading font-semibold tracking-[-0.03em] text-strong transition-colors group-hover:text-primary-ink sm:text-[2.125rem] sm:leading-[1.12]">
             <Inline text={post.title} />
           </h2>
-          <p className="mt-4 text-read text-body">
+          <p className="mt-3 text-read text-body">
             <Inline text={post.excerpt} />
           </p>
-          <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-strong">
+          <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-strong">
             Yazıyı Oku
             <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
           </span>
@@ -125,7 +120,7 @@ function Row({ post }: { post: BlogPost }) {
       </span>
       <span className="bl-row-main">
         <span className="block text-small font-medium text-primary-ink">{post.tag}</span>
-        <span className="mt-1.5 block text-title font-semibold tracking-[-0.02em] text-strong transition-colors group-hover:text-primary-ink sm:text-[1.375rem] sm:leading-[1.25]">
+        <span className="mt-1.5 block font-display text-title font-semibold tracking-[-0.02em] text-strong transition-colors group-hover:text-primary-ink sm:text-[1.375rem] sm:leading-[1.25]">
           <Inline text={post.title} />
         </span>
         <span className="mt-2 line-clamp-2 block text-sm leading-relaxed text-body sm:text-base">
@@ -145,7 +140,7 @@ function Chip({ id, label, count, defaultChecked }: { id: string; label: string;
       <input type="radio" name="bl-tag" id={id} defaultChecked={defaultChecked} className="bl-chip-input" />
       <label htmlFor={id} className="bl-chip">
         {label}
-        <span className="bl-chip-count font-mono text-micro">{count}</span>
+        <span className="bl-chip-count">{count}</span>
       </label>
     </Fragment>
   )

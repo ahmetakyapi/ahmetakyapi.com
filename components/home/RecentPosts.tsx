@@ -1,5 +1,6 @@
 import { ArrowRight, ArrowUpRight } from 'lucide-react'
 import Link from 'next/link'
+import { MaskTitle } from '@/components/home/MaskTitle'
 import { PostPreview } from '@/components/home/PostPreview'
 import { ButtonLink } from '@/components/ui/Button'
 import { Container } from '@/components/ui/Container'
@@ -32,7 +33,7 @@ export function RecentPosts({ posts, projects }: { posts: BlogPost[]; projects: 
     <Container as="section" size="wide" aria-labelledby="son-yazilar" className="pt-24 sm:pt-32">
       <SectionHeading
         id="son-yazilar"
-        title="Son Yazılar"
+        title={<MaskTitle>Son Yazılar</MaskTitle>}
         action={
           <ButtonLink href="/blog" variant="ghost">
             Tüm Yazılar
@@ -63,7 +64,7 @@ export function RecentPosts({ posts, projects }: { posts: BlogPost[]; projects: 
                   <time dateTime={post.date}>{formatPostDate(post.date)}</time>
                   <span className="block">{readingTime(post)}</span>
                 </span>
-                <span className="text-[clamp(1.5rem,3vw,2.375rem)] font-semibold leading-[1.12] tracking-[-0.03em] text-balance text-strong transition-colors group-hover:text-primary-ink">
+                <span className="font-display text-[clamp(1.5rem,3vw,2.375rem)] font-semibold leading-[1.12] tracking-[-0.03em] text-balance text-strong transition-colors group-hover:text-primary-ink">
                   {post.title}
                 </span>
                 <span className="flex items-center gap-3 text-small text-body">

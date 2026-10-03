@@ -8,7 +8,7 @@ import { EMAIL, NAV_ITEMS, SOCIAL_LINKS } from '@/lib/nav'
  * Alt bilgi: sade, sunucu bileşeni (istemciye JavaScript göndermez).
  *
  * Kontrast: metin `text-muted` (koyuda #8497a9 / #070d16 ≈ 6,4:1, açıkta
- * #586a7c / #f7f9fb ≈ 5,5:1). Eski `dark:text-gray-600` 2,6:1'di.
+ * #536477 / #f5f7fa ≈ 5,7:1). Eski `dark:text-gray-600` 2,6:1'di.
  */
 const ICON_LINK =
   'inline-grid size-11 place-items-center rounded-full text-body transition-colors hover:bg-surface-raised hover:text-strong pointer-fine:size-9'
@@ -36,7 +36,7 @@ export function Footer() {
           </a>
         </nav>
 
-        <ul className="-ml-2.5 flex items-center gap-1 md:ml-0" aria-label="Bağlantılar">
+        <ul className="-ml-2.5 flex flex-wrap items-center gap-1 md:ml-0" aria-label="Bağlantılar">
           {SOCIAL_LINKS.map((link) => (
             <li key={link.id}>
               <a href={link.href} target="_blank" rel="noopener noreferrer" aria-label={link.label} className={ICON_LINK}>
@@ -45,8 +45,13 @@ export function Footer() {
             </li>
           ))}
           <li>
-            <a href={`mailto:${EMAIL}`} aria-label="E-posta gönder" className={ICON_LINK}>
+            {/* Adres yazıyla görünür: ikon tek başına adresi söylemiyordu. */}
+            <a
+              href={`mailto:${EMAIL}`}
+              className="tap-y ml-1 inline-flex items-center gap-2 rounded-full px-2 font-mono text-small text-body transition-colors hover:text-strong"
+            >
               <Mail className="size-4" aria-hidden="true" />
+              {EMAIL}
             </a>
           </li>
         </ul>

@@ -1,5 +1,6 @@
 import { ArrowRight, ArrowUpRight } from 'lucide-react'
 import Link from 'next/link'
+import { MaskTitle } from '@/components/home/MaskTitle'
 import { trTitle } from '@/components/home/tr-title'
 import { Container } from '@/components/ui/Container'
 import { SectionHeading } from '@/components/ui/SectionHeading'
@@ -9,15 +10,16 @@ import type { Project } from '@/lib/content/types'
 import type { HomeContent } from '@/lib/site-content'
 
 /**
- * Seçili İşler: üç proje, üst üste binen paneller (sticky-stack).
+ * Öne Çıkan Projeler: üç proje, üst üste binen paneller (sticky-stack).
  *
  * Hareket tamamen CSS (home.css → "Seçili İşler"): her panel yapışır, bir
  * sonraki panel alttan gelirken öncekini hafifçe küçültür. Zamanlayıcı bir
  * sonraki panelin kendi görünüm zaman çizelgesi; JavaScript yok. Destek
  * yoksa, hareket azaltılmışsa ya da ekran panel boyuna yetmiyorsa düz liste.
  *
- * Görseller `project-<slug>` adını TAŞIMAZ: o ad ana sayfada proje
- * şeridinde; aynı ad iki öğede olursa morf bozulur.
+ * Görseller `project-<slug>` adını TAŞIMAZ: paneller kaydırmayla küçülüyor
+ * (transform) ve morfun başlangıç kutusu o an ölçülen küçülmüş hâl olurdu.
+ * Ana sayfadan proje sayfasına morf yok; bilinçli takas.
  */
 const LINK =
   'inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-primary-ink underline decoration-primary-soft/40 underline-offset-4 transition-colors hover:decoration-primary-ink pointer-fine:min-h-9'
@@ -33,7 +35,7 @@ export function SelectedWork({ home, projects }: { home: HomeContent; projects: 
     <Container as="section" size="wide" aria-labelledby="secili-isler" className="pt-20 sm:pt-28">
       <SectionHeading
         id="secili-isler"
-        title="Seçili İşler"
+        title={<MaskTitle>Öne Çıkan Projeler</MaskTitle>}
         className="mb-8 sm:mb-10"
       />
 
@@ -70,11 +72,11 @@ export function SelectedWork({ home, projects }: { home: HomeContent; projects: 
 
                 <div className="mt-auto flex flex-wrap items-center gap-x-6 gap-y-1 pt-6">
                   <Link href={`/projeler/${project.slug}`} className={LINK}>
-                    Vaka Çalışması
+                    Projeyi İncele
                     <ArrowRight aria-hidden="true" className="size-4" />
                   </Link>
                   <a href={project.link} target="_blank" rel="noopener noreferrer" className={LINK}>
-                    Canlı Site
+                    Siteyi Aç
                     <ArrowUpRight aria-hidden="true" className="size-4" />
                   </a>
                 </div>

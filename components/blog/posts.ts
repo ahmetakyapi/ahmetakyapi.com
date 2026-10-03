@@ -73,7 +73,7 @@ function slugify(text: string): string {
     .replace(/^-+|-+$/g, '')
 }
 
-export type PostSection = { id: string; text: string; number: string }
+export type PostSection = { id: string; text: string }
 
 /** Blok sırası → çapa (yalnız h2). İçindekiler ve gövde aynı haritayı okur. */
 export function postSections(post: BlogPost): { sections: PostSection[]; byIndex: Map<number, PostSection> } {
@@ -87,7 +87,7 @@ export function postSections(post: BlogPost): { sections: PostSection[]; byIndex
     let id = base
     for (let n = 2; used.has(id); n++) id = `${base}-${n}`
     used.add(id)
-    const section = { id, text: block.text, number: String(sections.length + 1).padStart(2, '0') }
+    const section = { id, text: block.text }
     byIndex.set(index, section)
     sections.push(section)
   })

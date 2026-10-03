@@ -6,11 +6,11 @@
  * Kendi `<html>` ve `<body>`sini basmak zorunda; globals.css'in yüklendiğine
  * güvenilemez. Renkler bu yüzden satır içi ve `signature` paletinin
  * değerleriyle aynı (token tekrarı bilinçli bir istisna). Tema çerezi
- * okunamadığı için işletim sistemi tercihine bakılır; varsayılan koyu.
+ * okunamadığı için işletim sistemi tercihine bakılır.
  */
 const STYLES = `
 :root{color-scheme:dark light;--bg:#070d16;--fg:#eaf1f8;--soft:#94a7ba;--btn:#35b8ff;--on:#06121f}
-@media (prefers-color-scheme:light){:root{--bg:#f7f9fb;--fg:#101c2b;--soft:#54677c;--btn:#0d74c4;--on:#fff}}
+@media (prefers-color-scheme:light){:root{--bg:#f5f7fa;--fg:#0e1a28;--soft:#3a4a5c;--btn:#0d74c4;--on:#fff}}
 body{margin:0;min-height:100dvh;display:grid;place-items:center;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,sans-serif;padding:1rem}
 main{max-width:28rem;text-align:center}
 h1{font-size:1.5rem;margin:0 0 .75rem}
