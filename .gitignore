@@ -14,4 +14,3 @@ pnpm-debug.log*
 
 .DS_Store
 
-data/*.json

@@ -1,8 +1,8 @@
-/** @type {import('postcss').Config} */
+/** Tailwind v4 tek eklentiyle gelir; autoprefixer ve ayrı config dosyası yok. */
 const config = {
   plugins: {
-    tailwindcss: {},
-    autoprefixer: {},
+    '@tailwindcss/postcss': {},
   },
 }
+
 export default config

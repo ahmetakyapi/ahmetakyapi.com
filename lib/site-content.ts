@@ -1,63 +1,74 @@
 import { blogPosts as defaultBlogPosts, projects as defaultProjects } from '@/lib/data'
 import type { BlogPost, Project } from '@/lib/data'
+import { JOB_TITLE } from '@/lib/nav'
 
-export interface HomeValueProp {
-  icon: string
-  title: string
-  description: string
-  color: string
-  glow: string
-}
-
-export interface HomeContent {
-  roleLabel: string
+/**
+ * Ana sayfanın metni. Tek kaynak burası; bileşenler metin yazmaz.
+ *
+ * Eski giriş ("Fullstack Developer", "Angular, React ve TypeScript ile…")
+ * hem eskimişti hem de site metadata'sıyla çelişiyordu: başlıkta
+ * başka bir unvan yazarken ana sayfa başka bir
+ * kimlik anlatıyordu. Son işlerin tamamı Next.js + TypeScript + Postgres;
+ * metin ona göre. Uydurma rakam, müşteri ya da ödül yok: buradaki her
+ * cümle depodaki bir projeyle doğrulanabilir.
+ */
+export type HomeContent = {
   firstName: string
   lastName: string
-  introPrimary: string
-  introSecondary: string
-  expertise: string[]
-  valueProps: HomeValueProp[]
+  /** Hero cümlesi: en fazla 20 kelime. */
+  intro: string
+  role: string
+  /** "Şu An" künyesi: gerçek, canlı bir iş. */
+  now: { label: string; href: string; host: string }
+  stack: readonly string[]
+  /** Seçili İşler: sırası ekranda da geçerli, proje başına tek cümle. */
+  selectedWork: readonly { slug: string; summary: string }[]
+  /** Nasıl Çalışırım: tek paragraf, kaydırdıkça kelime kelime aydınlanır. */
+  approach: string
+  closing: { title: string; text: string }
 }
 
-export interface SiteContent {
+export type SiteContent = {
   home: HomeContent
   projects: Project[]
   blogPosts: BlogPost[]
 }
 
 export const defaultHomeContent: HomeContent = {
-  roleLabel: 'Fullstack Developer',
   firstName: 'Ahmet',
   lastName: 'Akyapı',
-  introPrimary: 'Angular, React ve TypeScript ile sade, hızlı ve detay kalitesi yüksek arayüzler geliştiriyorum.',
-  introSecondary: 'Benim için iyi bir ürün deneyimi; yalnızca çalışması değil, doğru kurgu içermesi ve görsel olarak dengeli olmasıdır.',
-  expertise: ['UI Systems', 'Design', 'Performance', 'Web'],
-  valueProps: [
+  intro:
+    'Arayüzden veritabanına, yapay zekâ katmanına kadar uçtan uca web ürünleri kuruyorum. Hız, okunabilirlik ve doğru veri benim için tasarımın parçası.',
+  /* Unvan her yerde birebir bu yazımla (lib/nav.ts → JOB_TITLE): tireli
+     "Full-Stack", iki parçası da büyük; tiresiz "Fullstack" yok. Yapay zekâ
+     kısmı gerçek işe dayanıyor: Açılış Zili'nde Claude API ile haber
+     çevirisi ve analiz, dev-starter'da agentic arayüz (AG-UI) şablonu. */
+  role: JOB_TITLE,
+  now: { label: 'Açılış Zili', href: 'https://aciliszili.com', host: 'aciliszili.com' },
+  stack: ['Next.js', 'TypeScript', 'Postgres', 'Claude API'],
+  selectedWork: [
     {
-      icon: '⚡',
-      title: 'Hız ve Akış',
-      description:
-        'Arayüz deneyiminin akıcı, tutarlı ve gecikmesiz hissedilmesi; yalnızca görünen katmanın değil, veri akışının ve sistem kurgusunun da doğru tasarlanmasına bağlıdır. API yapısından UI render sürecine kadar her katmanda performans, sadelik ve kullanıcı ritmi ön planda tutulur.',
-      color: '#f59e0b',
-      glow: 'rgba(245,158,11,0.18)',
+      slug: 'acilis-zili',
+      summary:
+        'ABD piyasasını Türkçe takip etmek için kurduğum site: bilanço takvimi, analizler, makro göstergeler ve günlük bülten aynı yerde.',
     },
     {
-      icon: '◈',
-      title: 'Sistem Düşüncesi',
-      description:
-        'Ölçeklenebilir arayüzler; bileşen sınırlarının, veri yapılarının ve tip güvenliğinin en baştan net kurulmasıyla güç kazanır. Framework bağımsız bir bakışla, kod tabanının büyüdükçe karmaşıklaşmayan; aksine daha okunabilir, sürdürülebilir ve yönetilebilir bir yapıda kalması hedeflenir.',
-      color: '#8b5cf6',
-      glow: 'rgba(139,92,246,0.18)',
+      slug: 'mimio',
+      summary:
+        'Ergoterapistlerin danışan takibini, seans planını ve terapi oyunlarını tek panelde yönettiği klinik platform.',
     },
     {
-      icon: '✦',
-      title: 'Detay ve Hareket',
-      description:
-        'Mikro etkileşimler, geçişler, yüklenme durumları ve boş ekranlar; ürün kalitesini görünür kılan ince katmandır. Hareket dili ve görsel ritim, yalnızca estetik bir tercih değil; algıyı güçlendiren ve deneyimi rafine eden bir tasarım unsuru olarak ele alınır.',
-      color: '#22d3ee',
-      glow: 'rgba(34,211,238,0.18)',
+      slug: 'onepiece-hub',
+      summary:
+        'One Piece evrenini Türkçe içerikle düzenleyen fan wikisi. Hangi arkta olduğunu söylüyorsun, sonrası bulanık kalıyor.',
     },
   ],
+  approach:
+    'Bir boşluk fazla duruyorsa önce ölçerim, sonra değiştiririm ve ölçümü koda not düşerim. Kaynak dakikayı vermiyorsa saati uydurmam, bayat veriyi büyük puntoyla göstermem. Klavyeyle gezen okuyucu odağın nerede olduğunu her an görür; hareketi kapatan okuyucu hiçbir içeriği kaçırmaz.',
+  closing: {
+    title: 'Birlikte Çalışalım',
+    text: 'Bir ürün fikri, yarım kalmış bir arayüz ya da yalnızca bir soru. En kısa yol e-posta.',
+  },
 }
 
 export const defaultSiteContent: SiteContent = {
@@ -66,19 +77,16 @@ export const defaultSiteContent: SiteContent = {
   blogPosts: defaultBlogPosts,
 }
 
-export function normalizeSiteContent(input?: Partial<SiteContent> | null): SiteContent {
-  return {
-    home: {
-      ...defaultHomeContent,
-      ...(input?.home ?? {}),
-      expertise: Array.isArray(input?.home?.expertise) ? input?.home?.expertise.filter(Boolean) : defaultHomeContent.expertise,
-      valueProps: Array.isArray(input?.home?.valueProps) && input.home.valueProps.length > 0
-        ? input.home.valueProps
-        : defaultHomeContent.valueProps,
-    },
-    projects: Array.isArray(input?.projects) && input.projects.length > 0 ? input.projects : defaultProjects,
-    blogPosts: Array.isArray(input?.blogPosts) && input.blogPosts.length > 0 ? input.blogPosts : defaultBlogPosts,
-  }
+/**
+ * Sitenin bütün içeriği, saf TypeScript'ten.
+ *
+ * Eskiden `data/site-content.json` okunuyor ve yönetim paneli oraya
+ * yazıyordu; Vercel'in dosya sistemi salt okunur olduğu için üretimde o
+ * yol hiç çalışmadı (EROFS) ve içerik zaten bu dosyadan geliyordu. Panel
+ * kaldırıldı, tek kaynak kaldı; fonksiyon artık eşzamanlı.
+ */
+export function getSiteContent(): SiteContent {
+  return defaultSiteContent
 }
 
 export { getOrderedProjects } from './project-order'

@@ -1,6 +1,5 @@
-import { getSiteContent } from '@/lib/server/content-store'
-
-const BASE_URL = 'https://ahmetakyapi.com'
+import { postsByDate } from '@/components/blog/posts'
+import { SITE_NAME, SITE_URL } from '@/lib/seo'
 
 function escapeXml(value: string) {
   return value
@@ -11,19 +10,23 @@ function escapeXml(value: string) {
     .replace(/'/g, '&apos;')
 }
 
-export async function GET() {
-  const content = await getSiteContent()
-  const posts = [...content.blogPosts].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-  )
+/** İçerik derleme anında belli: istek başına üretmeye gerek yok. */
+export const dynamic = 'force-static'
+
+export function GET() {
+  /* Yeniden eskiye; sıra dizinle aynı kaynaktan (components/blog/posts.ts). */
+  const posts = postsByDate
+  /* `lastBuildDate` en yeni yazının tarihi: derleme anı her derlemede
+     değişip okuyuculara "yeni bir şey var" dedirtiyordu. */
+  const lastBuild = posts[0] ? new Date(posts[0].date) : new Date(0)
 
   const items = posts
     .map(
       (p) => `
     <item>
       <title>${escapeXml(p.title)}</title>
-      <link>${BASE_URL}/blog/${p.slug}</link>
-      <guid isPermaLink="true">${BASE_URL}/blog/${p.slug}</guid>
+      <link>${SITE_URL}/blog/${p.slug}</link>
+      <guid isPermaLink="true">${SITE_URL}/blog/${p.slug}</guid>
       <pubDate>${new Date(p.date).toUTCString()}</pubDate>
       <category>${escapeXml(p.tag)}</category>
       <description>${escapeXml(p.excerpt)}</description>
@@ -34,12 +37,12 @@ export async function GET() {
   const body = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Ahmet Akyapı — Blog</title>
-    <link>${BASE_URL}</link>
-    <atom:link href="${BASE_URL}/rss.xml" rel="self" type="application/rss+xml"/>
-    <description>React, TypeScript, Next.js ve detaylı arayüz geliştirme üstüne notlar.</description>
+    <title>${escapeXml(`Blog · ${SITE_NAME}`)}</title>
+    <link>${SITE_URL}/blog</link>
+    <atom:link href="${SITE_URL}/rss.xml" rel="self" type="application/rss+xml"/>
+    <description>Yazdığım projelerden çıkan teknik notlar: Next.js, TypeScript, Postgres ve arayüz kararları.</description>
     <language>tr-TR</language>
-    <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>${items}
+    <lastBuildDate>${lastBuild.toUTCString()}</lastBuildDate>${items}
   </channel>
 </rss>`
 

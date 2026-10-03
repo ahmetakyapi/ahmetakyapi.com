@@ -69,7 +69,7 @@ export function readingMinutes(post: Pick<BlogPost, 'content'>): number {
 }
 
 export function readingTime(post: Pick<BlogPost, 'content'>): string {
-  return `${readingMinutes(post)} dk`
+  return `${readingMinutes(post)} Dakika`
 }
 
 /** Yazı listelerinde ve künyede kullanılan tek tarih biçimi. */

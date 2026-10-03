@@ -1,8 +1,7 @@
+import { projects } from '@/lib/content/projects'
 import { OG_CONTENT_TYPE, OG_SIZE, renderOgCard } from '@/lib/og'
-import { projects } from '@/lib/data'
 
-export const runtime = 'edge'
-export const alt = 'Projeler — Ahmet Akyapı'
+export const alt = 'Projeler · Ahmet Akyapı'
 export const size = OG_SIZE
 export const contentType = OG_CONTENT_TYPE
 
@@ -12,9 +11,7 @@ export default async function Image() {
   return renderOgCard({
     eyebrow: 'Projeler',
     title: 'Yazdığım, yayınladığım ve hâlâ uğraştığım işler.',
-    subtitle:
-      'Açılış Zili, Mimio, One Piece Hub, Harfiyen, ElevenForge ve diğerleri — hepsi canlı, hepsinin kodu açık.',
-    accent: '#8b5cf6',
-    badges: [`${live} canlı proje`, 'Next.js', 'Drizzle'],
+    subtitle: 'Açılış Zili, Mimio, One Piece Hub, Harfiyen, ElevenForge ve diğerleri. Hepsinin kodu açık.',
+    badges: [`${projects.length} Proje`, `${live} Canlı`, 'Next.js'],
   })
 }

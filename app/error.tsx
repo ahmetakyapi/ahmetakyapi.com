@@ -1,51 +1,44 @@
 'use client'
 
-import { useEffect } from 'react'
-import { RefreshCw, Home } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
-export default function Error({
-  error,
-  reset,
-}: {
-  error: Error & { digest?: string }
-  reset: () => void
-}) {
-  useEffect(() => {
-    console.error(error)
-  }, [error])
+/**
+ * Segment hata sınırı.
+ *
+ * `retry` (Next 16.3'te kararlı) segmenti sunucudan YENİDEN İSTER ve sonra
+ * çizer; yalnızca `reset()` ağa çıkmaz ve sunucuda doğan hata aynı yükle
+ * anında geri gelir.
+ *
+ * Bilerek yalın: hata sınırı HER sayfanın ilk yüküne giriyor. Button,
+ * Link ve lucide ikonlarıyla ~4,7 KB (gzip) tutuyordu; düz öğe ve
+ * sınıf dizeleriyle ~1 KB (yönlendirici zaten çerçevede).
+ *
+ * Hata MESAJI gösterilmez: sunucu hatası dosya yolu ya da yanıt
+ * taşıyabilir. Kullanıcının iletebileceği tek şey `digest`.
+ */
+const PRIMARY =
+  'inline-flex min-h-11 items-center justify-center rounded-button bg-cta px-4 text-sm font-semibold text-on-brand hover:brightness-110'
+const GHOST =
+  'inline-flex min-h-11 items-center justify-center rounded-button px-4 text-sm font-semibold text-body hover:bg-primary-wash hover:text-strong'
 
+export default function ErrorBoundary({ error, retry }: { error: Error & { digest?: string }; retry: () => void }) {
+  const router = useRouter()
   return (
-    <div className="flex min-h-screen items-center justify-center px-6">
-      <div data-reveal
-        className="text-center max-w-md"
-      >
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-red-500/10 border border-red-500/20 mb-6">
-          <span className="text-2xl">⚠</span>
-        </div>
-
-        <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-          Bir şeyler ters gitti
-        </h2>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-8">
-          Sayfa yüklenirken beklenmeyen bir hata oluştu.
+    <div className="mx-auto grid min-h-[60svh] max-w-xl place-items-center px-4 py-16 text-center">
+      <div>
+        <h1 className="text-heading font-semibold">Bir Şeyler Ters Gitti</h1>
+        <p className="mt-3 text-base text-body">
+          Bu sayfa yüklenemedi. Çoğu zaman geçici bir sorundur; tekrar denemek genellikle yeter.
         </p>
-
-        <div className="flex items-center justify-center gap-3">
-          <button
-            onClick={reset}
-            className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 hover:bg-indigo-500/20 transition-colors"
-          >
-            <RefreshCw className="w-4 h-4" />
+        <div className="mt-6 flex flex-wrap justify-center gap-3">
+          <button type="button" className={PRIMARY} onClick={() => retry()}>
             Tekrar Dene
           </button>
-          <a
-            href="/"
-            className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-xl text-gray-400 hover:text-gray-200 border border-white/10 hover:border-white/20 transition-colors"
-          >
-            <Home className="w-4 h-4" />
+          <button type="button" className={GHOST} onClick={() => router.push('/')}>
             Ana Sayfa
-          </a>
+          </button>
         </div>
+        {error.digest ? <p className="mt-6 font-mono text-small text-muted">Hata Kimliği {error.digest}</p> : null}
       </div>
     </div>
   )

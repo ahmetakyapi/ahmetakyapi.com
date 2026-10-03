@@ -1,20 +1,28 @@
 /**
- * Kart içindeki mini önizleme çizimi.
- * Sıralamaya göre değil, projenin kendisine göre seçilir — liste değişince
- * yanlış maket gösterilmesin.
+ * /projeler süzgecinin kümeleri. `category` on bir farklı değer taşıyor
+ * ("Klinik SaaS", "Günlük Oyun"…); süzgeçte on bir çip okunmaz, üç küme
+ * okunur. Adres parametresi (`?kategori=oyun`) bu değerlerle aynı.
  */
-export type ProjectPreview =
-  | 'ticker'
-  | 'notes'
-  | 'chart'
-  | 'grid'
-  | 'board'
-  | 'browser'
+export const PROJECT_GROUPS = ['platform', 'oyun', 'arac'] as const
+export type ProjectGroup = (typeof PROJECT_GROUPS)[number]
 
 export interface Project {
   id: number
   category: string
+  group: ProjectGroup
+  /**
+   * Ürünün kendisi yalnız koyu temada çalışıyor (karalama, dungeon-mates):
+   * ekran görüntüsü tema ile değişmez, detayda künye notu çıkar.
+   */
+  onlyDark?: boolean
   title: string
+  /**
+   * Adres kimliği: `/projeler/[slug]` ve ekran görüntüsü klasörü
+   * (`public/projects/<slug>/`). Hangi görünümlerin olduğu
+   * lib/content/project-shots.ts envanterinde; eski `shot` alanı kalktı. Değişirse eski
+   * adres kırılır; next.config.ts'e kalıcı yönlendirme eklenmeli.
+   */
+  slug: string
   description: string
   /** Kartın altına düşen tek satırlık teknik detay. */
   detail?: string
@@ -25,9 +33,6 @@ export interface Project {
   gradient: string
   badge: 'Canlı' | 'GitHub'
   featured: boolean
-  preview?: ProjectPreview
-  /** public/projects/ altındaki gerçek ekran görüntüsü (uzantısız ad). */
-  shot?: string
   /** Bu projeyi anlatan blog yazısının slug'ı. */
   postSlug?: string
   /** Kart üzerinde gösterilen kısa öne çıkan rakamlar. */
@@ -35,7 +40,7 @@ export interface Project {
 }
 
 export type Block =
-  /** Giriş paragrafı — yazının ilk cümlesi, gövdeden bir punto büyük. */
+  /** Giriş paragrafı: yazının ilk cümlesi, gövdeden bir punto büyük. */
   | { type: 'lead'; text: string }
   | { type: 'p'; text: string }
   | { type: 'h2'; text: string }
@@ -44,12 +49,12 @@ export type Block =
   | { type: 'ul'; items: string[] }
   | { type: 'ol'; items: string[] }
   | { type: 'callout'; variant: 'tip' | 'info' | 'warning'; text: string }
-  /** Vurgulu tek cümle — bölümü kapatan ya da açan cümle. */
+  /** Vurgulu tek cümle: bölümü kapatan ya da açan cümle. */
   | { type: 'quote'; text: string }
   | { type: 'table'; head: string[]; rows: string[][] }
-  /** Rakam ızgarası — büyük değer, altında etiketi. */
+  /** Rakam ızgarası: büyük değer, altında etiketi. */
   | { type: 'stats'; label?: string; items: { value: string; note: string }[] }
-  /** İki hâlin karşılaştırması — öncesi / sonrası. */
+  /** İki hâlin karşılaştırması: öncesi / sonrası. */
   | {
       type: 'compare'
       label?: string
@@ -57,7 +62,7 @@ export type Block =
       after: { label: string; value: string }
       note?: string
     }
-  /** Numaralı akış — her adımın kendi başlığı ve açıklaması var. */
+  /** Numaralı akış: her adımın kendi başlığı ve açıklaması var. */
   | { type: 'steps'; items: { title: string; text: string }[] }
 
 export interface BlogPost {
@@ -67,8 +72,6 @@ export interface BlogPost {
   title: string
   excerpt: string
   date: string
-  /** Artık elle yazılmıyor — lib/reading-time.ts içerikten hesaplıyor. */
-  readTime?: string
   coverGradient: string
   content: Block[]
 }
@@ -76,7 +79,4 @@ export interface BlogPost {
 export interface TechStackItem {
   name: string
   tagline: string
-  color: string
-  bg: string
-  border: string
 }
