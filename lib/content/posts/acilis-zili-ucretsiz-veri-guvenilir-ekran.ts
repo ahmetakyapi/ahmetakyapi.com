@@ -1,19 +1,19 @@
 import type { BlogPost } from '../types'
 
 export const post: BlogPost = {
-  slug: 'acilis-zili-eski-veriye-dusmemek',
+  slug: 'acilis-zili-ucretsiz-veri-guvenilir-ekran',
   tag: 'Ürün',
   tagColor: '#0d74c4',
-  title: 'Açılış Zili: ABD Borsasını Takip Ederken Eski Veriye Düşmemek',
+  title: 'Açılış Zili: Ücretsiz Veriyle Güvenilir Bir Borsa Ekranı',
   excerpt:
-    'Açılış Zili\'nde ABD borsalarını, haberleri, teknik analizleri ve bilançoları takip ediyorsun. Ekrandaki her fiyatın bugüne ait olduğundan nasıl emin oluyorum?',
+    'Açılış Zili\'nde ABD borsalarını, haberleri, teknik analizleri ve bilançoları ücretsiz veriyle takip ediyorsun. Kaynak sustuğunda ekran bunu nasıl fark ediyor?',
   date: '2026-10-03',
   coverGradient: 'linear-gradient(135deg, #0d74c4 0%, #0a5a9a 45%, #101c2b 100%)',
   project: 'acilis-zili',
   content: [
     {
       type: 'lead',
-      text: 'Açılış Zili, ABD borsalarını Türkiye\'den takip etmek için yazdığım bir uygulama. Açılış ve kapanış zilini sayıyor, endeksleri ve hisse fiyatlarını gösteriyor, günün haberlerini topluyor, hisseler için teknik analiz ve bilanço özetleri veriyor. Böyle bir uygulamada en çok korktuğum hata, dünkü bir fiyatı bugünün fiyatıymış gibi göstermek. Okur o sayıya bakıp karar veriyor.',
+      text: 'Açılış Zili, ABD borsalarını Türkiye\'den takip etmek için yazdığım bir uygulama. Açılış ve kapanış zilini sayıyor, endeksleri ve hisse fiyatlarını gösteriyor, günün haberlerini topluyor, hisseler için teknik analiz ve bilanço özetleri veriyor. Verinin hepsi ücretsiz kaynaklardan geliyor, çoğu Alpaca\'nın ücretsiz katmanından. Endeks fiyatları seans içinde anlık, hacim ve seans dışı veriler 15 dakika gecikmeli; ekran bunu her panelin altında yazıyor. Gecikmeyi okur biliyor. Ücretsiz veriyle çalışmanın zor tarafı, kaynak sustuğunda ekranın bunu fark etmesi ve dünkü bir sayıyı bugünün sayısı gibi göstermemesi.',
     },
     {
       type: 'p',
