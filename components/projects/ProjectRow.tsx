@@ -30,7 +30,7 @@ export function FeaturedRow({ project, priority = false }: { project: Project; p
     <li className="pfeat" data-group={project.group}>
       <ArmedMorph
         name={`project-${project.slug}`}
-        className="pfeat-in group relative"
+        className="pfeat-in reveal group relative"
         coverClassName="pfeat-cover"
         coverHidden
         content={
@@ -67,7 +67,7 @@ export function ProjectRow({ project }: { project: Project }) {
     <li className="prow" data-group={project.group}>
       <ArmedMorph
         name={`project-${project.slug}`}
-        className="prow-in group relative"
+        className="prow-in reveal group relative"
         coverClassName="pprev"
         coverHidden
         content={

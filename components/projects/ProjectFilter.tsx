@@ -43,7 +43,7 @@ export function ProjectFilter({ counts }: { counts: Counts }) {
 /** Sunucu çiziminde (Suspense yedeği) ve istemcide aynı sekmeler. */
 export function FilterTabs({ active, counts }: { active: ProjectGroup | null; counts: Counts }) {
   return (
-    <nav aria-label="Projeleri süz" className="pfilter">
+    <nav aria-label="Projeleri süz" className="tabs">
       <Tab href="/projeler" active={active === null} label="Tümü" count={counts.all} />
       {PROJECT_GROUPS.map((group) => (
         <Tab
@@ -60,9 +60,9 @@ export function FilterTabs({ active, counts }: { active: ProjectGroup | null; co
 
 function Tab({ href, active, label, count }: { href: string; active: boolean; label: string; count: number }) {
   return (
-    <Link href={href} scroll={false} aria-current={active ? 'page' : undefined} className={cx('pfilter-tab', active && 'is-active')}>
+    <Link href={href} scroll={false} aria-current={active ? 'page' : undefined} className={cx('tab', active && 'is-active')}>
       {label}
-      <span className="pfilter-count">{count}</span>
+      <span className="tab-count">{count}</span>
     </Link>
   )
 }

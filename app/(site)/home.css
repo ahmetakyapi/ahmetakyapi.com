@@ -47,7 +47,7 @@
   width: 100%;
   max-width: 88rem;
   margin-inline: auto;
-  padding: clamp(2.5rem, 7vw, 4rem) max(1rem, env(safe-area-inset-right)) clamp(3.5rem, 8vw, 5rem)
+  padding: clamp(2.5rem, 7vw, 4rem) max(1rem, env(safe-area-inset-right)) 1rem
     max(1rem, env(safe-area-inset-left));
 }
 
@@ -248,7 +248,9 @@
   }
 }
 
-/* Kaydırınca sahne çekilir: isim ve küre yukarı kayıp solar. */
+/* Kaydırınca sahne çekilir: isim ve küre yukarı kayıp solar. Yalnız iki
+   kolonlu düzende: telefonda küre hero'nun DİBİNDE ve okuyucu ona
+   bakarken soluyordu (3 Ekim, iPhone ekran görüntüsü). */
 @keyframes home-hero-leave {
   to {
     transform: translateY(-10%);
@@ -257,7 +259,7 @@
 }
 
 @supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
+  @media (prefers-reduced-motion: no-preference) and (min-width: 1024px) {
     .home-hero {
       view-timeline-name: --home-hero;
     }
@@ -271,137 +273,78 @@
 }
 
 /* --------------------------------------------------------------------------
-   Ne Yaptım: tipografik bölüm (components/home/WhatIBuilt.tsx).
-   Asimetrik: solda tek dev rakam, sağda iki küçük rakam üst üste; altında
-   alanlar büyük ama hafif bir satırda. Görsel yok, kart yok.
+   Deneyim (components/home/Experience.tsx). Bilerek sessiz: gövde puntosu,
+   kutu yok, satırlar arasında tek çizgi. Masaüstünde iki sütun: solda
+   kurum ve alan, sağda işler.
    -------------------------------------------------------------------------- */
-.home-built-grid {
+.home-xp {
+  border-top: 1px solid var(--line);
+}
+
+.home-xp-row {
   display: grid;
-  gap: 2.5rem;
-  align-items: end;
+  gap: 0.75rem;
+  padding-block: 1.5rem;
+  border-bottom: 1px solid var(--line);
 }
 
 @media (min-width: 768px) {
-  .home-built-grid {
-    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
-    gap: 3rem;
+  .home-xp-row {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: 2rem;
+    padding-block: 1.75rem;
   }
 }
 
-.home-built-main,
-.home-built-side > div {
-  display: flex;
-  flex-direction: column-reverse;
-}
-
-.home-built-side {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-}
-
-/* Geniş ekranda iki küçük rakam yan yana, dev rakamın tabanında: sağ
-   yarı boş bir sütun gibi durmasın (ilk turda üst üste duruyorlardı). */
-@media (min-width: 768px) {
-  .home-built-side {
-    gap: 2.5rem;
-  }
-}
-
-.home-built-label {
-  margin-top: 0.75rem;
-  font-family: var(--font-mono);
-  font-size: var(--text-small);
-  line-height: var(--text-small--line-height);
-  font-weight: 500;
-  color: var(--text-muted);
-}
-
-.home-built-num {
-  font-size: clamp(4rem, 9vw, 7.5rem);
-  font-weight: 600;
-  line-height: 1;
-  letter-spacing: -0.05em;
-  color: var(--text-strong);
-}
-
-.home-built-num-xl {
-  font-size: clamp(9rem, 30vw, 22rem);
-  font-weight: 560;
-  letter-spacing: -0.07em;
-  margin-left: -0.05em;
-}
-
-.home-built-domains {
+.home-xp-head {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.25rem 1.5rem;
-  font-size: clamp(1.75rem, 4.2vw, 3.25rem);
-  font-weight: 500;
-  line-height: 1.15;
-  letter-spacing: -0.035em;
-  color: var(--text-strong);
+  align-items: baseline;
+  gap: 0.25rem 0.75rem;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
 }
 
-.home-built-sup {
-  margin-left: 0.2em;
+.home-xp-tag,
+.home-xp-count {
   font-family: var(--font-mono);
-  font-size: 0.36em;
+  font-size: var(--text-small);
   font-weight: 500;
   letter-spacing: 0;
   color: var(--text-muted);
-  vertical-align: super;
 }
 
-/* Yuvarlanan rakam: her basamak 0-9 şeridinin `--v` kadar yukarı kaymış
-   hâli. Bu hâl animasyonsuz da doğru (son hâl); animasyon yalnız 0'dan
-   başlatır. Basamak penceresi tek satır, rakamlar tablo genişliğinde. */
-.home-odo {
-  display: inline-flex;
-  font-variant-numeric: tabular-nums;
+.home-xp-list {
+  display: grid;
+  gap: 0.75rem;
 }
 
-.home-odo-digit {
-  display: inline-block;
-  height: 1lh;
-  overflow: clip;
-  /* Rakamın yanları kesilmesin (sıkı harf aralığında komşuya taşar). */
-  padding-inline: 0.04em;
-  margin-inline: -0.04em;
+.home-xp-list li {
+  display: grid;
+  gap: 0.15rem;
+  font-size: 1rem;
+  line-height: 1.55;
 }
 
-.home-odo-strip {
+@media (min-width: 640px) {
+  .home-xp-list li {
+    grid-template-columns: 6rem minmax(0, 1fr);
+    gap: 1rem;
+  }
+}
+
+.home-xp-domains {
   display: flex;
-  flex-direction: column;
-  transform: translateY(calc(var(--v) * -1lh));
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-strong);
 }
 
-.home-odo-strip > span {
-  display: block;
-  height: 1lh;
-}
-
-@keyframes home-odo-roll {
-  from {
-    transform: translateY(0);
-  }
-}
-
-@supports (animation-timeline: view()) and (timeline-scope: --a) {
-  @media (prefers-reduced-motion: no-preference) {
-    .home-built {
-      view-timeline-name: --home-built;
-      timeline-scope: --home-built;
-    }
-    /* Bölüm ekrana girerken yuvarlanır ve ekranın alt üçte birini
-       geçmeden durur: okuyucu hareketli bir sayı okumak zorunda kalmaz.
-       Sağdaki basamak (birler) biraz daha geç oturur. */
-    .home-odo-strip {
-      animation: home-odo-roll var(--ease-brand) both;
-      animation-timeline: --home-built;
-      animation-range: entry calc(5% + var(--k) * -4%) cover calc(32% - var(--k) * 4%);
-    }
-  }
+.home-xp-count {
+  margin-left: 0.35rem;
 }
 
 /* --------------------------------------------------------------------------

@@ -72,12 +72,12 @@ export default function ProjectsPage() {
       />
       <style>{sectionRules(featured.map((p) => p.group), rest.map((p) => p.group))}</style>
 
-      <Container as="section" size="wide" className="pb-20 pt-12 sm:pb-28 sm:pt-20" aria-labelledby="projeler-baslik">
+      <Container as="section" size="wide" className="page-top pb-20 pt-12 sm:pb-28 sm:pt-20" aria-labelledby="projeler-baslik">
         <header className="max-w-3xl">
-          <h1 id="projeler-baslik" className="text-display font-semibold tracking-[-0.04em]">
+          <h1 id="projeler-baslik" className="page-title">
             <span className="display-ink">Projeler</span>
           </h1>
-          <p className="mt-4 max-w-[52ch] text-read text-body">
+          <p className="page-lead">
             {projects.length} proje, {liveCount} tanesi yayında. Hepsinin kodu açık; {withPost} tanesinin nasıl
             yapıldığını blogda anlattım.
           </p>

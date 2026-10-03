@@ -899,16 +899,58 @@
 /* Öne çıkan yazı: masaüstünde kapak ve metin eşit iki sütun. Kapak
    bir dönem 1,35 kat genişti ve sayfanın ilk ekranını tek başına
    kaplıyordu; öne çıkan yazı abartısız, listenin bir kademe büyüğü. */
+/* 3 Ekim 2026: kart oldu (projelerdeki öne çıkanlarla aynı dil). Önce
+   zeminde serbest duruyordu ve telefonda kapak, künye ve başlık arşivle
+   aynı akışta karışıyordu. */
 .bl-featured {
   display: grid;
-  gap: 1.5rem;
+  gap: 1.25rem;
   align-items: center;
+  padding: 0.75rem 0.75rem 1.5rem;
+  border-radius: var(--radius-card, 1.25rem);
+  background: var(--surface);
+  transition: background-color 240ms;
+}
+
+:root:not([data-theme="dark"]) .bl-featured {
+  box-shadow: 0 0 0 1px var(--line-soft);
+}
+
+.bl-featured-text {
+  padding-inline: 0.5rem;
+}
+
+.bl-featured-title {
+  font-size: clamp(1.75rem, 1.2rem + 1.9vw, 2.625rem);
+  line-height: 1.08;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+@media (min-width: 640px) {
+  .bl-featured {
+    padding: 1rem 1rem 2rem;
+  }
+  .bl-featured-text {
+    padding-inline: 1rem;
+  }
 }
 
 @media (min-width: 1024px) {
   .bl-featured {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 3rem;
+    gap: 2.5rem;
+    padding: 1.25rem;
+  }
+  .bl-featured-text {
+    padding-inline: 0 1.5rem;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .bl-featured:hover {
+    background: color-mix(in oklab, var(--surface) 92%, var(--primary) 8%);
   }
 }
 
@@ -925,23 +967,12 @@
   border-radius: var(--radius-card, 1.25rem);
 }
 
-/* Etiket süzgeci: radyo grubu, METİN SEKMESİ görünümünde (proje
-   dizinindeki süzgeçle aynı dil). Giriş görünmez ama erişilebilir; odak
-   halkası etiketin üstüne çizilir. */
+/* Etiket süzgeci: radyo grubu; görünümü ortak hap düğme
+   (app/globals.css → `.tabs`, `.tab`). Giriş görünmez ama erişilebilir;
+   odak halkası etiketin üstüne çizilir. */
 .bl-filter {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0 1.1rem;
-  margin-inline: 0;
-  padding: 0;
   border: 0;
   min-width: 0;
-}
-
-@media (min-width: 640px) {
-  .bl-filter {
-    gap: 0 1.75rem;
-  }
 }
 
 .bl-chip-input {
@@ -952,54 +983,24 @@
   pointer-events: none;
 }
 
-.bl-chip {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  min-height: 2.75rem;
-  font-size: 0.9375rem;
-  font-weight: 500;
-  color: var(--text-body);
-  cursor: pointer;
-  user-select: none;
-  transition: color 160ms;
+.bl-chip-input:checked + .tab {
+  border-color: var(--text-strong);
+  background: var(--text-strong);
+  color: var(--page-bg);
 }
 
-@media (min-width: 640px) {
-  .bl-chip {
-    font-size: 1rem;
-  }
-}
-
-.bl-chip:hover {
-  color: var(--text-strong);
-}
-
-.bl-chip-input:checked + .bl-chip {
-  color: var(--text-strong);
-}
-
-.bl-chip-input:checked + .bl-chip::after {
-  content: "";
-  position: absolute;
-  inset-inline: 0;
-  bottom: 0.3rem;
-  height: 2px;
-  border-radius: 2px;
-  background: var(--primary);
-}
-
-.bl-chip-count {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--text-muted);
-}
-
-.bl-chip-input:focus-visible + .bl-chip {
+.bl-chip-input:focus-visible + .tab {
   outline: 2px solid var(--line-focus);
   outline-offset: 2px;
-  border-radius: 4px;
+}
+
+/* Arşiv başlığı: projelerdeki "Diğer Projeler" ile aynı ölçü. */
+.bl-archive-title {
+  font-size: clamp(1.75rem, 1.2rem + 2vw, 2.75rem);
+  line-height: 1.05;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  color: var(--text-strong);
 }
 
 /* Arşiv satırı: telefonda üst üste, masaüstünde üç sütun

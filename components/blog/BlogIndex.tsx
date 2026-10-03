@@ -35,13 +35,13 @@ export function BlogIndex({ posts }: { posts: readonly BlogPost[] }) {
   const tagIndex = (post: BlogPost) => tags.findIndex((t) => t.name === post.tag) + 1
 
   return (
-    <Container as="section" aria-labelledby="blog-baslik" className="bl-scope pb-20 pt-10 sm:pb-28 sm:pt-16">
+    <Container as="section" aria-labelledby="blog-baslik" className="bl-scope page-top pb-20 pt-12 sm:pb-28 sm:pt-20">
       <style>{filterCss(tags, featured ? tagIndex(featured) : 0, rest.map(tagIndex))}</style>
       <header className="max-w-3xl">
-        <h1 id="blog-baslik" className="text-display font-semibold tracking-[-0.04em]">
+        <h1 id="blog-baslik" className="page-title">
           <span className="display-ink">Yazılar</span>
         </h1>
-        <p className="mt-4 max-w-2xl text-read text-body">
+        <p className="page-lead">
           Yaptığım projelerden çıkan notlar. Çoğu bir şeyin neden çalışmadığıyla başlıyor.
         </p>
         <p className="mt-3 flex flex-wrap items-center gap-x-4 text-sm text-muted">
@@ -56,7 +56,7 @@ export function BlogIndex({ posts }: { posts: readonly BlogPost[] }) {
         </p>
       </header>
 
-      <fieldset className="bl-filter mt-6 sm:mt-8">
+      <fieldset className="bl-filter tabs mt-8 sm:mt-10">
         <legend className="sr-only">Etikete göre süz</legend>
         <Chip id="bl-f-0" label="Tümü" count={posts.length} defaultChecked />
         {tags.map((tag, i) => (
@@ -68,14 +68,16 @@ export function BlogIndex({ posts }: { posts: readonly BlogPost[] }) {
 
       {rest.length > 0 ? (
         <section aria-labelledby="arsiv" className="bl-archive mt-16 sm:mt-20">
-          <h2 id="arsiv" className="text-title font-semibold tracking-[-0.02em] text-strong">
+          <h2 id="arsiv" className="bl-archive-title">
             Önceki Yazılar
           </h2>
 
           <ol className="bl-list">
             {rest.map((post) => (
               <li key={post.slug} className="bl-row" data-tag={tagIndex(post)}>
-                <Row post={post} />
+                <div className="reveal">
+                  <Row post={post} />
+                </div>
               </li>
             ))}
           </ol>
@@ -87,12 +89,12 @@ export function BlogIndex({ posts }: { posts: readonly BlogPost[] }) {
 
 function Featured({ post, tag }: { post: BlogPost; tag: number }) {
   return (
-    <article className="bl-featured-item mt-12 sm:mt-16" data-tag={tag}>
+    <article className="bl-featured-item reveal mt-10 sm:mt-12" data-tag={tag}>
       <Link href={`/blog/${post.slug}`} transitionTypes={['nav-forward']} className="group bl-featured">
         <PostCover post={post} variant="feature" priority />
         <div className="bl-featured-text">
           <KunyeLine items={['En Yeni', formatPostDate(post.date), readingTime(post)]} />
-          <h2 className="mt-3 text-heading font-semibold tracking-[-0.03em] text-strong transition-colors group-hover:text-primary-ink sm:text-[2.125rem] sm:leading-[1.12]">
+          <h2 className="bl-featured-title mt-3 text-strong transition-colors group-hover:text-primary-ink">
             <Inline text={post.title} />
           </h2>
           <p className="mt-3 text-read text-body">
@@ -138,9 +140,9 @@ function Chip({ id, label, count, defaultChecked }: { id: string; label: string;
   return (
     <Fragment>
       <input type="radio" name="bl-tag" id={id} defaultChecked={defaultChecked} className="bl-chip-input" />
-      <label htmlFor={id} className="bl-chip">
+      <label htmlFor={id} className="bl-chip tab">
         {label}
-        <span className="bl-chip-count">{count}</span>
+        <span className="tab-count">{count}</span>
       </label>
     </Fragment>
   )
