@@ -9,7 +9,7 @@ import type { HomeContent } from '@/lib/site-content'
 /**
  * Hero: üstte künye ızgarası, sol altta isim imzası, sağda küre.
  *
- * Künye eyebrow'un yerini tutuyor: rol, şu anki iş, yığın ve bağlantı
+ * Künye eyebrow'un yerini tutuyor: rol, şu anki iş, tech stack ve bağlantı
  * okuyucunun ilk soracağı dört şey; ayrıca bir üst etiket yok.
  *
  * İsim satır satır maskeli açılır (home.css → `.home-sign-line`). Satır
@@ -45,7 +45,7 @@ export function HomeHero({ home }: { home: HomeContent }) {
               </>
             ),
           },
-          { label: 'Yığın', value: home.stack.join(', ') },
+          { label: 'Tech Stack', value: home.stack.join(', ') },
           {
             label: 'Bağlantı',
             value: (
