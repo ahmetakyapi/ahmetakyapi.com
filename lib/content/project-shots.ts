@@ -29,6 +29,8 @@ export type ShotSet = {
    * açık dosyaların ortalama parlaklığı bu yedisinde 24-36 / 255.
    */
   darkInk?: boolean
+  /** İki temada da koyu görsel gösterilir (açık görsel okunmuyorsa). */
+  alwaysDark?: boolean
 }
 
 const FULL = { desktop: { width: 2160, height: 1350 }, 'desktop-2': { width: 2160, height: 1350 }, mobile: { width: 780, height: 1688 } } as const
@@ -39,7 +41,9 @@ const DESKTOP_ONLY = ['desktop'] as const
 export const PROJECT_SHOTS = {
   'acilis-zili': { views: ALL_VIEWS, themed: true, size: FULL },
   mimio: { views: ALL_VIEWS, themed: true, size: FULL },
-  'onepiece-hub': { views: ALL_VIEWS, themed: true, size: FULL },
+  /* Açık temanın görselinde başlık altın rengi ve parlak bir resmin üstünde
+     okunmuyordu (3 Ekim 2026); iki temada da koyu görsel. */
+  'onepiece-hub': { views: ALL_VIEWS, themed: true, size: FULL, alwaysDark: true, darkInk: true },
   karalama: { views: ALL_VIEWS, themed: false, size: FULL, darkInk: true },
   'dungeon-mates': { views: ALL_VIEWS, themed: false, size: FULL, darkInk: true },
   harfiyen: { views: DESKTOP_ONLY, themed: false, size: LEGACY, darkInk: true },
@@ -74,8 +78,8 @@ export function shotSources(slug: string, view: ShotView): ShotSources | null {
   const size = set.size[view]
   if (!set.views.includes(view) || !size) return null
   return {
-    light: projectShot(slug, view, 'light'),
-    dark: set.themed ? projectShot(slug, view, 'dark') : undefined,
+    light: projectShot(slug, view, set.alwaysDark ? 'dark' : 'light'),
+    dark: set.themed && !set.alwaysDark ? projectShot(slug, view, 'dark') : undefined,
     width: size.width,
     height: size.height,
   }

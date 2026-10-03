@@ -2,6 +2,7 @@ import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { ImageResponse } from 'next/og'
 import type { ReactElement } from 'react'
+import { SIGNATURE_MARK_A, SIGNATURE_MARK_FLOURISH } from '@/lib/brand/signature'
 import { JOB_TITLE } from '@/lib/nav'
 
 /**
@@ -34,6 +35,7 @@ const C = {
   brandMid: '#1f86e0',
   brandTo: '#0b3f86',
   onBrand: '#ffffff',
+  brandGlow: '#bfe6ff',
 } as const
 
 /**
@@ -81,8 +83,10 @@ function BrandMark({ size = 64, radius = size * 0.29 }: { size?: number; radius?
         backgroundImage: `linear-gradient(150deg, ${C.brandFrom} 0%, ${C.brandMid} 48%, ${C.brandTo} 100%)`,
       }}
     >
-      <svg width={size * 0.58} height={size * 0.58} viewBox="0 0 42 42" fill="none">
-        <path d="M21 12L30 29H12L21 12Z" stroke={C.onBrand} strokeWidth="2.8" strokeLinejoin="round" strokeLinecap="round" />
+      {/* İmza "A"sı ve kara kalem kuyruğu (lib/brand/signature.ts). */}
+      <svg width={size} height={size} viewBox="0 0 42 42" fill="none">
+        <path d={SIGNATURE_MARK_A} fill={C.onBrand} />
+        <path d={SIGNATURE_MARK_FLOURISH} stroke={C.brandGlow} strokeWidth="1.7" strokeLinecap="round" />
       </svg>
     </div>
   )

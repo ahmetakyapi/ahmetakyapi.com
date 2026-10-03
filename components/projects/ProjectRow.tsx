@@ -1,5 +1,6 @@
 import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'
+import type { CSSProperties } from 'react'
 import { ArmedMorph } from '@/components/projects/ArmedMorph'
 import { ProjectCover } from '@/components/projects/ProjectCover'
 import { badgeLabel, splitLead } from '@/components/projects/project-text'
@@ -27,25 +28,26 @@ const STACK_PREVIEW = 2
 export function FeaturedRow({ project, priority = false }: { project: Project; priority?: boolean }) {
   const { lead } = splitLead(project.description)
   return (
-    <li className="pfeat" data-group={project.group}>
+    <li className="pfeat" data-group={project.group} style={{ '--tint': project.tint ?? project.accent } as CSSProperties}>
       <ArmedMorph
         name={`project-${project.slug}`}
-        className="pfeat-in reveal group relative"
+        className="pfeat-in tint-card reveal group relative"
         coverClassName="pfeat-cover"
         coverHidden
         content={
           <div className="pfeat-text">
-            <h3 className="pfeat-title">
+            <span aria-hidden="true" className="tint-card-glow" />
+            <p className="tint-card-kicker">
+              {project.category}
+              {project.badge !== 'Canlı' ? <span> · {badgeLabel(project.badge)}</span> : null}
+            </p>
+            <h3 className="pfeat-title tint-card-title mt-4">
               <Link href={`/projeler/${project.slug}`} transitionTypes={['nav-forward']} className={LINK}>
                 {project.title}
               </Link>
             </h3>
-            <p className="pfeat-meta">
-              {project.category}
-              {project.badge !== 'Canlı' ? <span> · {badgeLabel(project.badge)}</span> : null}
-            </p>
             <p className="pfeat-lead">{lead}</p>
-            <span className="pfeat-more" aria-hidden="true">
+            <span className="pfeat-more tint-card-btn" aria-hidden="true">
               Projeyi İncele
               <ArrowRight className="size-4" />
             </span>
@@ -67,7 +69,7 @@ export function ProjectRow({ project }: { project: Project }) {
     <li className="prow" data-group={project.group}>
       <ArmedMorph
         name={`project-${project.slug}`}
-        className="prow-in reveal group relative"
+        className="prow-in group relative"
         coverClassName="pprev"
         coverHidden
         content={

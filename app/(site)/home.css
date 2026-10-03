@@ -306,119 +306,6 @@
 }
 
 /* --------------------------------------------------------------------------
-   Deneyim (components/home/Experience.tsx). Bilerek sessiz: gövde puntosu,
-   kutu yok, satırlar arasında tek çizgi. Masaüstünde iki sütun: solda
-   kurum ve alan, sağda işler.
-   -------------------------------------------------------------------------- */
-.home-xp {
-  border-top: 1px solid var(--line);
-}
-
-.home-xp-row {
-  display: grid;
-  gap: 0.75rem;
-  padding-block: 1.5rem;
-  border-bottom: 1px solid var(--line);
-}
-
-@media (min-width: 768px) {
-  .home-xp-row {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
-    gap: 2rem;
-    padding-block: 1.75rem;
-  }
-}
-
-.home-xp-head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.25rem 0.75rem;
-  font-size: 1.0625rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
-}
-
-.home-xp-tag,
-.home-xp-count {
-  font-family: var(--font-mono);
-  font-size: var(--text-small);
-  font-weight: 500;
-  letter-spacing: 0;
-  color: var(--text-muted);
-}
-
-.home-xp-list {
-  display: grid;
-  gap: 0.75rem;
-}
-
-/* Roller: solda ince çizgi, her rolün başında küçük nokta; en yeni rol
-   markanın renginde, eskiler sessiz. */
-.home-xp-roles {
-  display: grid;
-  gap: 1.25rem;
-  padding-left: 1.25rem;
-  border-left: 1px solid var(--line);
-}
-
-.home-xp-roles > li {
-  position: relative;
-  font-size: 1rem;
-  line-height: 1.55;
-}
-
-.home-xp-roles > li::before {
-  content: "";
-  position: absolute;
-  top: 0.5rem;
-  left: calc(-1.25rem - 4px);
-  width: 7px;
-  height: 7px;
-  border-radius: 999px;
-  background: var(--line-strong);
-  box-shadow: 0 0 0 3px var(--page-bg);
-}
-
-.home-xp-roles > li:first-child::before {
-  background: var(--primary);
-}
-
-.home-xp-role {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.15rem 0.75rem;
-}
-
-.home-xp-list li {
-  display: grid;
-  gap: 0.15rem;
-  font-size: 1rem;
-  line-height: 1.55;
-}
-
-@media (min-width: 640px) {
-  .home-xp-list li {
-    grid-template-columns: 6rem minmax(0, 1fr);
-    gap: 1rem;
-  }
-}
-
-.home-xp-domains {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem 1.5rem;
-  font-size: 1rem;
-  font-weight: 500;
-  color: var(--text-strong);
-}
-
-.home-xp-count {
-  margin-left: 0.35rem;
-}
-
-/* --------------------------------------------------------------------------
    Seçili İşler: sticky-stack.
    Düz hâl (varsayılan): alt alta üç panel. Kart zemini opak; panel üst
    üste bindiğinde alttaki görünmesin diye tonu zemin üstüne bindiriyoruz.
@@ -430,7 +317,6 @@
 
 .home-stack-card {
   position: relative;
-  background: linear-gradient(var(--surface), var(--surface)), var(--page-bg);
   transform-origin: 50% 0;
   /* Metin sütununun z-index'i kartın içinde kalsın: sonraki panelin
      üstüne çıkmasın. */
@@ -457,7 +343,7 @@
    ve sonraki panel gelirken künye hâlâ görünür durumda (1280×800'de
    örtünün bittiği anda üst 144 piksel açıkta). Görsel kararıyor, metin
    AA'da kalıyor. */
-.home-stack-card > :not(.home-stack-media) {
+.home-stack-card > :not(.home-stack-media, .tint-card-glow) {
   position: relative;
   z-index: 1;
 }
@@ -475,7 +361,6 @@
   bottom: 0;
   width: 22%;
   border-radius: var(--radius-button);
-  box-shadow: var(--shadow-md);
 }
 
 /* Yapışma ve küçülme yalnız: destek var, hareket açık, ekran bir paneli
@@ -591,16 +476,92 @@
 .home-marquee-list {
   display: flex;
   align-items: center;
-  gap: clamp(2.5rem, 6vw, 4.5rem);
+  gap: clamp(1rem, 2.5vw, 1.75rem);
   /* Listenin sonundaki boşluk aradakiyle aynı: -%50 kayınca dikiş görünmez. */
-  padding-right: clamp(2.5rem, 6vw, 4.5rem);
+  padding-right: clamp(1rem, 2.5vw, 1.75rem);
+  padding-block: 0.75rem;
   color: var(--text-body);
 }
 
-.home-marquee-list svg {
-  display: block;
-  width: clamp(1.75rem, 3vw, 2.25rem);
-  height: auto;
+.home-stack-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.home-stack-logo {
+  display: grid;
+  place-items: center;
+  width: clamp(4.5rem, 8vw, 6rem);
+  aspect-ratio: 1;
+  border-radius: 1.25rem;
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1px var(--line);
+  color: var(--text-strong);
+  transition:
+    translate 400ms var(--ease-brand),
+    color 200ms,
+    box-shadow 200ms;
+}
+
+.home-stack-logo svg {
+  width: 46%;
+  height: 46%;
+}
+
+.home-stack-tile {
+  position: relative;
+}
+
+.home-stack-name {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* İnce imleçte ad yalnız üzerine gelince, karonun üstünde küçük bir hap
+   olarak belirir (3 Ekim 2026, sahibinin isteği). Dokunmatikte üzerine
+   gelme yok; orada ad karonun altında hep görünür. Opaklıkla gizli,
+   ekran okuyucu adı yine okur. */
+@media (hover: hover) and (pointer: fine) {
+  .home-stack-name {
+    position: absolute;
+    bottom: calc(100% + 0.15rem);
+    left: 50%;
+    z-index: 2;
+    padding: 0.3rem 0.65rem;
+    border-radius: 999px;
+    background: var(--text-strong);
+    color: var(--page-bg);
+    font-weight: 500;
+    opacity: 0;
+    translate: -50% 0.4rem;
+    pointer-events: none;
+    transition:
+      opacity 180ms var(--ease-brand),
+      translate 280ms var(--ease-brand);
+  }
+  /* Üstte ad hapına yer: hap karonun üstünde açılıyor ve şerit taşmayı
+     kesiyor. */
+  .home-marquee-list {
+    padding-top: 2.75rem;
+  }
+  .home-stack-tile:hover .home-stack-name {
+    opacity: 1;
+    translate: -50% -0.35rem;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .home-stack-tile:hover .home-stack-logo {
+    translate: 0 -6px;
+    color: var(--primary);
+    box-shadow:
+      inset 0 0 0 1px color-mix(in oklab, var(--primary) 40%, transparent),
+      0 18px 36px -18px color-mix(in oklab, var(--primary) 60%, transparent);
+  }
 }
 
 @keyframes home-marquee {
@@ -933,5 +894,349 @@
     background: var(--primary);
     color: var(--on-primary);
     translate: 0.15rem -0.15rem;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   İş Deneyimi kartları (components/home/Experience.tsx). İki kart; geniş
+   ekranda yan yana (3/2). İkinci kart markanın sıcak vurgusunda.
+   -------------------------------------------------------------------------- */
+.home-title-sm {
+  font-size: clamp(2.25rem, 1.4rem + 3.4vw, 4rem);
+}
+
+.home-xp {
+  display: grid;
+  gap: 1rem;
+}
+@media (min-width: 1024px) {
+  .home-xp {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    gap: 1.25rem;
+  }
+}
+
+.home-xp-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  padding: clamp(1.25rem, 3vw, 2.25rem);
+  border-radius: var(--radius-card);
+}
+
+@media (max-width: 639.98px) {
+  .home-xp-card {
+    gap: 1.4rem;
+  }
+  .home-xp-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.75rem;
+  }
+  .home-xp-roles {
+    gap: 1.25rem;
+    padding-left: 1.25rem;
+  }
+  .home-xp-roles > li::before {
+    left: calc(-1.25rem - 4px);
+  }
+}
+
+.home-xp-own {
+  --tint: var(--accent-warm);
+}
+
+.home-xp-card-head {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.home-xp-icon {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.875rem;
+  background: var(--tint-ink);
+  color: var(--on-brand);
+}
+.home-xp-icon svg {
+  width: 1.375rem;
+  height: 1.375rem;
+}
+
+.home-xp-company {
+  font-size: clamp(1.25rem, 1.05rem + 0.8vw, 1.625rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  color: var(--text-strong);
+}
+
+.home-xp-tag,
+.home-xp-count {
+  font-family: var(--font-mono);
+  font-size: var(--text-small);
+  font-weight: 500;
+  color: var(--text-muted);
+}
+.home-xp-tag {
+  margin-top: 0.2rem;
+}
+
+/* Roller: soldaki çizgi bölüm görünüme girerken yukarıdan aşağı çizilir;
+   en yeni rolün noktası tonun renginde ve yavaşça nabız atar. */
+.home-xp-roles {
+  position: relative;
+  display: grid;
+  gap: 1.4rem;
+  padding-left: 1.5rem;
+}
+.home-xp-roles::before {
+  content: "";
+  position: absolute;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  left: 0;
+  width: 2px;
+  border-radius: 2px;
+  background: linear-gradient(var(--tint), color-mix(in oklab, var(--tint) 15%, transparent));
+  transform-origin: top;
+}
+
+.home-xp-roles > li {
+  position: relative;
+  font-size: 1rem;
+  line-height: 1.55;
+}
+.home-xp-roles > li::before {
+  content: "";
+  position: absolute;
+  top: 0.45rem;
+  left: calc(-1.5rem - 4px);
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--page-bg);
+  box-shadow: inset 0 0 0 2px color-mix(in oklab, var(--tint) 55%, transparent);
+}
+.home-xp-roles > li:first-child::before {
+  background: var(--tint);
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--tint) 22%, transparent);
+}
+
+.home-xp-role {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-start;
+  gap: 0.35rem;
+  font-size: 1.0625rem;
+}
+
+/* Geniş ekranda unvan ve dönem yan yana; telefonda dönem unvanın üstünde
+   (yan yana sığmayıp hap bir alt satıra kırılıyordu, 3 Ekim ekran
+   görüntüsü). */
+@media (min-width: 640px) {
+  .home-xp-role {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem 0.75rem;
+  }
+}
+
+.home-xp-project {
+  display: block;
+  margin-top: 0.5rem;
+  font-weight: 650;
+  color: var(--tint-ink);
+}
+
+.home-xp-desc {
+  margin-top: 0.15rem;
+  color: var(--text-body);
+}
+
+.home-xp-period {
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--tint) 13%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--tint-ink);
+}
+
+.home-xp-big {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+.home-xp-big-num {
+  font-size: clamp(4rem, 3rem + 4vw, 6rem);
+  font-weight: 700;
+  line-height: 0.85;
+  letter-spacing: -0.06em;
+  color: var(--tint-ink);
+}
+.home-xp-big-label {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-strong);
+}
+
+.home-xp-domains {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+.home-xp-domains li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.8rem 0.45rem 0.65rem;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--page-bg) 70%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--tint) 25%, transparent);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--text-strong);
+}
+.home-xp-domains svg {
+  width: 1rem;
+  height: 1rem;
+  color: var(--tint-ink);
+}
+.home-xp-count {
+  margin-left: 0.1rem;
+}
+
+@keyframes home-xp-line {
+  from {
+    scale: 1 0;
+  }
+}
+@keyframes home-xp-pulse {
+  50% {
+    box-shadow: 0 0 0 7px color-mix(in oklab, var(--tint) 10%, transparent);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .home-xp-roles > li:first-child::before {
+    animation: home-xp-pulse 2.4s ease-in-out infinite;
+  }
+  @supports (animation-timeline: view()) {
+    .home-xp-roles::before {
+      animation: home-xp-line linear both;
+      animation-timeline: view();
+      animation-range: entry 30% cover 45%;
+    }
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Hakkımda → Öne Çıkan Projeler geçişi (3 Ekim 2026: "Merhaba, Ben Ahmet
+   biterken alttaki başlıkla iç içe görünüyor"). Hakkımda'nın içeriği
+   ekrandan çıkarken geri çekilir (yukarı kayar, solar, hafif bulanıklaşır);
+   projelerin başlığı aynı anda bulanıktan netleşip büyüyerek gelir. İki
+   blok aynı anda tam görünür kalmıyor. Başlığın maskeli yükselişi aynen
+   duruyor; bu katman onun ÜSTÜNE ekleniyor.
+   -------------------------------------------------------------------------- */
+@keyframes home-about-recede {
+  to {
+    opacity: 0.12;
+    translate: 0 -5vh;
+    filter: blur(3px);
+  }
+}
+@keyframes home-work-arrive {
+  from {
+    opacity: 0.01;
+    scale: 0.92;
+    filter: blur(10px);
+  }
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .home-about-recede {
+      animation: home-about-recede linear both;
+      animation-timeline: view();
+      animation-range: exit 25% exit 100%;
+    }
+    .home-work-head {
+      transform-origin: left bottom;
+      animation: home-work-arrive linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 30%;
+    }
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Öne Çıkan Projeler kartı: GÖRSEL ODAKLI (3 Ekim 2026 gecesi, "kartlar çok
+   büyük, görselle orantısız"). Görsel kartın ~%65'i, metin bloğu sıkı ve
+   küçük puntoda; ad 3,25rem'i geçmez. Kart görünüme girerken masaüstü
+   görseli aşağıdan yükselip netleşir, telefon görüntüsü sağdan kayarak
+   yerine oturur. Görsel üzerine gelinince hafifçe büyür.
+   -------------------------------------------------------------------------- */
+.home-card-title {
+  font-size: clamp(2rem, 1.4rem + 2.2vw, 3.25rem);
+}
+
+.home-stack-media {
+  padding-bottom: 5%;
+}
+
+.home-stack-media > :first-child {
+  overflow: hidden;
+}
+.home-stack-media > :first-child img {
+  transition: scale 900ms var(--ease-brand);
+}
+@media (hover: hover) and (pointer: fine) {
+  .home-stack-card:hover .home-stack-media > :first-child img {
+    scale: 1.035;
+  }
+}
+
+@keyframes home-card-shot-in {
+  from {
+    opacity: 0.01;
+    translate: 0 2.5rem;
+    scale: 0.96;
+  }
+}
+@keyframes home-card-phone-in {
+  from {
+    opacity: 0.01;
+    translate: 3rem 1rem;
+    rotate: 4deg;
+  }
+}
+@keyframes home-card-text-in {
+  from {
+    opacity: 0.01;
+    translate: 0 1.25rem;
+  }
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .home-stack-media > :first-child {
+      animation: home-card-shot-in linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 80%;
+    }
+    .home-stack-phone {
+      animation: home-card-phone-in linear both;
+      animation-timeline: view();
+      animation-range: entry 20% cover 35%;
+    }
+    .home-card-text {
+      animation: home-card-text-in linear both;
+      animation-timeline: view();
+      animation-range: entry 10% entry 90%;
+    }
   }
 }

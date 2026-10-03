@@ -65,9 +65,9 @@ export const defaultHomeContent: HomeContent = {
         'ABD piyasasını Türkçe takip etmek için kurduğum site: bilanço takvimi, analizler, makro göstergeler ve günlük bülten aynı yerde.',
     },
     {
-      slug: 'mimio',
+      slug: 'derinay',
       summary:
-        'Ergoterapistlerin danışan takibini, seans planını ve terapi oyunlarını tek panelde yönettiği klinik platform.',
+        'Tek kişilik bir klinik pratiğin yönetim paneli: gelir-gider, danışan, seans, fatura, ödeme ve vergi takibi tek sakin arayüzde.',
     },
     {
       slug: 'onepiece-hub',
@@ -86,7 +86,7 @@ export const defaultHomeContent: HomeContent = {
   about: {
     title: 'Merhaba, Ben Ahmet.',
     paragraphs: [
-      'Web ürünleri geliştiriyorum. Bir fikri alıp tasarımından veritabanına, oradan da yayına kadar kendim götürmeyi seviyorum. Bana göre iyi bir ürün sessizdir. Hızlı açılır, rahat okunur, kullanana ne yapacağını söyler ve doğru bilgi verir. Benim peşinde olduğum şey de bu sessizlik.',
+      'Web ürünleri geliştiriyorum. Tasarımından geliştirmesine, oradan da yayına almasına kadar işi uçtan uca yapmayı seviyorum. Bana göre iyi bir ürün kendini anlatmak zorunda kalmaz. Hızlı açılır, rahat okunur, kullanana ne yapacağını söyler ve doğru bilgi verir. Ben de tam olarak bunu yapmaya çalışıyorum.',
       "Nar Sistem Teknoloji'de enerji sektörüne yönelik Thor ve Lena gibi iki büyük projede görev aldım. Thor, iş emirlerinin, faturaların ve tahakkukların oluşturulup takip edildiği bir sistem. Lena ise akıllı sayaçlardan gelen veriyi toplayıp yöneten bir platform. Bunların dışında Ar-Ge ve TÜBİTAK projelerinde de görev aldım.",
       "Kendi tarafımda da birkaç ürün geliştirdim. Açılış Zili, ABD borsalarını Türkçe takip eden bir site. Derinay, bir psikoloğun danışanlarını takip ettiği bir panel. Bir de Ramazan Vakitleri ve arkadaşlarımla oynamak için yaptığım çok oyunculu oyun Dungeon Mates var. Bunları çoğunlukla Next.js, TypeScript ve PostgreSQL ile yapıyorum.",
       "İşin büyük kısmını artık yapay zekâ ajanlarıyla birlikte yürütüyorum. Araştırma, tasarım kontrolü, test ve metin düzeltme gibi işleri kendi kurduğum ajanlara bırakıyorum. Neyin yapılacağına ve neyin yayına çıkacağına ise ben karar veriyorum. Açılış Zili'ndeki bültenleri ve bilanço analizlerini de her gün bu ajanlar yazıyor.",

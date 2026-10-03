@@ -1,4 +1,5 @@
 import { ViewTransition, type ReactNode } from 'react'
+import { CoverArt } from '@/components/ui/CoverArt'
 import { ThemedImage } from '@/components/ui/ThemedImage'
 import { DEV_STARTER_BANNER, isDarkInk, shotSources } from '@/lib/content/project-shots'
 import type { Project } from '@/lib/content/types'
@@ -88,23 +89,15 @@ export function ProjectCover({ project, morph = false, priority = false, layout 
     )
   }
 
-  /* Tipografik kapak: kap sorgusu birimiyle punto kutuya göre ölçeklenir. */
+  /* Görsel yok: hareketli tipografik sahne (CoverArt). */
   return (
     <Morph name={name} on={morph}>
       <div
         role="img"
         aria-label={alt ?? `${project.title} kapağı`}
-        className={cx(FRAME, 'flex aspect-[16/10] flex-col justify-end p-[6%] @container', className)}
+        className={cx(FRAME, 'aspect-[16/10]', className)}
       >
-        <span aria-hidden="true" className="pcover-kicker font-mono text-[max(0.75rem,2.6cqw)] text-muted">
-          Portfolyo ve Blog
-        </span>
-        <span
-          aria-hidden="true"
-          className="display-ink mt-[1.5cqw] block font-display text-[10.5cqw] leading-[0.95] font-semibold tracking-[-0.045em]"
-        >
-          {project.title}
-        </span>
+        <CoverArt word={project.title} kicker="Portfolyo ve Blog" />
       </div>
     </Morph>
   )

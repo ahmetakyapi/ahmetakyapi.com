@@ -30,6 +30,13 @@ export interface Project {
   link: string
   github?: string
   accent: string
+  /**
+   * Ana sayfa ve dizin kartının zemin tonu (3 Ekim 2026, "projenin kendi
+   * rengi"). Ekran görüntüsünden alındı: Derinay'ın verideki `accent`i
+   * gök mavisi ama arayüzü yeşil-turkuaz, One Piece Hub'ınki kırmızı ama
+   * arayüzü altın. Yoksa `accent` kullanılır.
+   */
+  tint?: string
   gradient: string
   badge: 'Canlı' | 'GitHub'
   featured: boolean

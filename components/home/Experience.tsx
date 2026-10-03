@@ -1,5 +1,6 @@
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, BookOpen, Gamepad2, HeartPulse, Shapes, Sparkles, TrendingUp, Wrench, Zap, type LucideIcon } from 'lucide-react'
 import Link from 'next/link'
+import { MaskTitle } from '@/components/home/MaskTitle'
 import { Container } from '@/components/ui/Container'
 import type { Project } from '@/lib/content/types'
 import type { HomeContent } from '@/lib/site-content'
@@ -9,9 +10,11 @@ import type { HomeContent } from '@/lib/site-content'
  * Kurumdaki roller en yeniden eskiye, ince bir zaman çizgisi üstünde.
  *
  * Yerinde "Ne Yaptım" vardı: 22rem'lik dev bir "13" ve yanında iki rakam.
- * Sahibi kaldırılmasını istedi (3 Ekim 2026, "çok büyük"); yerine bu
- * bölüm geldi ve bilerek göz almıyor: bölüm başlığı küçük, satırlar gövde
- * puntosunda, kutu yok. Sayfanın büyük başlıkları projeler ve kapanışta.
+ * Sahibi kaldırılmasını istedi (3 Ekim 2026, "çok büyük"). İlk hâli
+ * bilerek sessizdi (küçük başlık, kutusuz satırlar); aynı akşam "daha
+ * zengin, havalı" istendi. Şimdi iki tonlu kart (`.tint-card`): solda
+ * kurum ve kendini çizen bir zaman çizgisi üstünde roller, sağda kendi
+ * ürünlerimin sayısı ve ikonlu alan hapları.
  *
  * Alan sayıları veriden HESAPLANIR (lib/content/projects.ts): proje
  * eklenince burası kendiliğinden doğru kalır. Eşleşmeyen kategori
@@ -26,6 +29,15 @@ const DOMAINS = {
 } as const satisfies Record<string, readonly string[]>
 
 type Domain = keyof typeof DOMAINS | 'Diğer'
+
+const DOMAIN_ICONS = {
+  Finans: TrendingUp,
+  Sağlık: HeartPulse,
+  Oyun: Gamepad2,
+  Araçlar: Wrench,
+  İçerik: BookOpen,
+  Diğer: Shapes,
+} as const satisfies Record<Domain, LucideIcon>
 
 function domainOf(category: string): Domain {
   for (const [domain, categories] of Object.entries(DOMAINS) as [keyof typeof DOMAINS, readonly string[]][]) {
@@ -44,56 +56,70 @@ export function Experience({ experience, projects }: { experience: HomeContent['
 
   return (
     <Container as="section" size="wide" aria-labelledby="deneyim" className="pt-16 sm:pt-24">
-      <h2 id="deneyim" className="ink text-heading font-bold tracking-[-0.03em]">
-        Deneyim
+      <h2 id="deneyim" className="home-title home-title-sm">
+        <MaskTitle accentLast>İş Deneyimi</MaskTitle>
       </h2>
 
-      <div className="home-xp mt-6">
-        <div className="home-xp-row reveal">
-          <p className="home-xp-head">
-            <span className="text-strong">{experience.company}</span>
-            <span className="home-xp-tag">
-              {experience.sector} · {experience.period}
+      <div className="home-xp mt-8 sm:mt-10">
+        <article className="tint-card home-xp-card reveal">
+          <span aria-hidden="true" className="tint-card-glow" />
+          <header className="home-xp-card-head">
+            <span className="home-xp-icon" aria-hidden="true">
+              <Zap />
             </span>
-          </p>
+            <div>
+              <h3 className="home-xp-company">{experience.company}</h3>
+              <p className="home-xp-tag">
+                {experience.sector} · {experience.period}
+              </p>
+            </div>
+          </header>
           <ol className="home-xp-roles">
             {experience.roles.map((role) => (
               <li key={role.title}>
                 <p className="home-xp-role">
                   <span className="font-semibold text-strong">{role.title}</span>
-                  <span className="home-xp-tag">{role.period}</span>
+                  <span className="home-xp-period">{role.period}</span>
                 </p>
-                <p className="mt-1 text-body">
-                  <span className="font-medium text-strong">{role.project}:</span> {role.text}
-                </p>
+                <p className="home-xp-project">{role.project}</p>
+                <p className="home-xp-desc">{role.text}</p>
               </li>
             ))}
           </ol>
-        </div>
+        </article>
 
-        <div className="home-xp-row reveal">
-          <p className="home-xp-head">
-            <span className="text-strong">Kendi Ürünlerim</span>
-            <span className="home-xp-tag">{projects.length} Proje</span>
+        <article className="tint-card home-xp-card home-xp-own reveal">
+          <span aria-hidden="true" className="tint-card-glow" />
+          <header className="home-xp-card-head">
+            <span className="home-xp-icon" aria-hidden="true">
+              <Sparkles />
+            </span>
+            <div>
+              <h3 className="home-xp-company">Kendi Ürünlerim</h3>
+              <p className="home-xp-tag">Kendi Fikirlerimden</p>
+            </div>
+          </header>
+          <p className="home-xp-big">
+            <span className="home-xp-big-num">{projects.length}</span>
+            <span className="home-xp-big-label">Proje</span>
           </p>
-          <div>
-            <ul className="home-xp-domains" aria-label="Alanlar">
-              {domains.map(([domain, count]) => (
+          <ul className="home-xp-domains" aria-label="Alanlar">
+            {domains.map(([domain, count]) => {
+              const Icon = DOMAIN_ICONS[domain]
+              return (
                 <li key={domain}>
+                  <Icon aria-hidden="true" />
                   {domain}
                   <span className="home-xp-count">{count}</span>
                 </li>
-              ))}
-            </ul>
-            <Link
-              href="/projeler"
-              className="group mt-4 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-primary-ink pointer-fine:min-h-8"
-            >
-              Tüm Projeler
-              <ArrowRight aria-hidden="true" className="size-4 transition-transform group-hover:translate-x-1" />
-            </Link>
-          </div>
-        </div>
+              )
+            })}
+          </ul>
+          <Link href="/projeler" className="tint-card-btn mt-auto w-fit">
+            Tüm Projeler
+            <ArrowRight aria-hidden="true" className="size-4" />
+          </Link>
+        </article>
       </div>
     </Container>
   )
