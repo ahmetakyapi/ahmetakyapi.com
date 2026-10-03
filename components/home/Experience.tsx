@@ -6,6 +6,7 @@ import type { HomeContent } from '@/lib/site-content'
 
 /**
  * Deneyim: çalıştığım yer ve kendi ürünlerimin alanları, kısa ve sessiz.
+ * Kurumdaki roller en yeniden eskiye, ince bir zaman çizgisi üstünde.
  *
  * Yerinde "Ne Yaptım" vardı: 22rem'lik dev bir "13" ve yanında iki rakam.
  * Sahibi kaldırılmasını istedi (3 Ekim 2026, "çok büyük"); yerine bu
@@ -42,7 +43,7 @@ export function Experience({ experience, projects }: { experience: HomeContent['
   const domains = [...counts.entries()].sort((a, b) => b[1] - a[1])
 
   return (
-    <Container as="section" size="wide" aria-labelledby="deneyim" className="pt-24 sm:pt-32">
+    <Container as="section" size="wide" aria-labelledby="deneyim" className="pt-16 sm:pt-24">
       <h2 id="deneyim" className="text-title font-semibold tracking-[-0.02em] text-strong">
         Deneyim
       </h2>
@@ -51,16 +52,23 @@ export function Experience({ experience, projects }: { experience: HomeContent['
         <div className="home-xp-row">
           <p className="home-xp-head">
             <span className="text-strong">{experience.company}</span>
-            <span className="home-xp-tag">{experience.sector}</span>
+            <span className="home-xp-tag">
+              {experience.sector} · {experience.period}
+            </span>
           </p>
-          <ul className="home-xp-list">
-            {experience.projects.map((project) => (
-              <li key={project.name}>
-                <span className="font-semibold text-strong">{project.name}</span>
-                <span className="text-body">{project.text}</span>
+          <ol className="home-xp-roles">
+            {experience.roles.map((role) => (
+              <li key={role.title}>
+                <p className="home-xp-role">
+                  <span className="font-semibold text-strong">{role.title}</span>
+                  <span className="home-xp-tag">{role.period}</span>
+                </p>
+                <p className="mt-1 text-body">
+                  <span className="font-medium text-strong">{role.project}:</span> {role.text}
+                </p>
               </li>
             ))}
-          </ul>
+          </ol>
         </div>
 
         <div className="home-xp-row">

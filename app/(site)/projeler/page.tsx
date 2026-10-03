@@ -72,7 +72,7 @@ export default function ProjectsPage() {
       />
       <style>{sectionRules(featured.map((p) => p.group), rest.map((p) => p.group))}</style>
 
-      <Container as="section" size="wide" className="page-top pb-20 pt-12 sm:pb-28 sm:pt-20" aria-labelledby="projeler-baslik">
+      <Container as="section" size="wide" className="page-top pb-4 pt-10 sm:pb-8 sm:pt-16" aria-labelledby="projeler-baslik">
         <header className="max-w-3xl">
           <h1 id="projeler-baslik" className="page-title">
             <span className="display-ink">Projeler</span>

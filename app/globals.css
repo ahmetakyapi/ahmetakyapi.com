@@ -1040,7 +1040,9 @@ html.theme-switching::view-transition-new(root) {
   isolation: isolate;
 }
 
-/* Işık sayfa genişliğinde, kabın dışına taşar (kök `overflow-x: clip`). */
+/* Zemin hero'yla aynı dil: sağ üstten sönen noktalı ızgara. Dağınık mavi
+   pus kaldırıldı (3 Ekim 2026). Sayfa genişliğinde, kabın dışına taşar
+   (kök `overflow-x: clip`). */
 .page-top::before {
   content: "";
   position: absolute;
@@ -1048,13 +1050,12 @@ html.theme-switching::view-transition-new(root) {
   left: 50%;
   z-index: -1;
   width: 100vw;
-  height: 34rem;
+  height: 30rem;
   translate: -50% 0;
   pointer-events: none;
-  background: radial-gradient(48rem 26rem at 72% 0%, color-mix(in oklab, var(--primary-soft) 26%, transparent), transparent 70%);
-}
-:root[data-theme="dark"] .page-top::before {
-  background: radial-gradient(48rem 26rem at 72% 0%, color-mix(in oklab, var(--primary) 22%, transparent), transparent 70%);
+  background-image: radial-gradient(circle, color-mix(in oklab, var(--primary) 22%, transparent) 1px, transparent 1.6px);
+  background-size: 24px 24px;
+  mask-image: radial-gradient(ellipse 60% 80% at 80% 10%, black, transparent 75%);
 }
 
 .page-title {
