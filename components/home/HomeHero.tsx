@@ -40,7 +40,7 @@ export function HomeHero({ home }: { home: HomeContent }) {
               <ArrowRight aria-hidden="true" />
             </ButtonLink>
             <ButtonLink href="/#iletisim" variant="secondary" size="lg">
-              Benimle Çalış
+              İletişime Geç
             </ButtonLink>
           </div>
         </div>

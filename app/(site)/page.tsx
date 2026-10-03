@@ -1,11 +1,11 @@
 import type { Metadata } from 'next'
 import { About } from '@/components/home/About'
+import { Experience } from '@/components/home/Experience'
 import { Closing } from '@/components/home/Closing'
 import { HomeHero } from '@/components/home/HomeHero'
 import { RecentPosts } from '@/components/home/RecentPosts'
 import { SelectedWork } from '@/components/home/SelectedWork'
 import { StackMarquee } from '@/components/home/StackMarquee'
-import { WhatIBuilt } from '@/components/home/WhatIBuilt'
 import { PageTransition } from '@/components/site/PageTransition'
 import { personJsonLd, websiteJsonLd } from '@/lib/seo'
 import { getSiteContent } from '@/lib/site-content'
@@ -22,8 +22,9 @@ export const metadata: Metadata = {
  *      Sahibinin isteği (Ekim 2026): beni tanıtan kısım projelerden önce.
  *      Okuyucu ilk önce ismi, sonra o ismin arkasındaki kişiyi okuyor.
  *   3. Öne Çıkan Projeler: üst üste binen paneller.
- *   4. Ne Yaptım: tipografik sayılar; üç projeden bütün işin ölçüsüne.
- *   5. Tech stack şeridi: Ne Yaptım'ın hemen altında, "neyle" sorusunun
+ *   4. Deneyim: çalıştığım yer ve ürünlerimin alanları, küçük ve sessiz
+ *      (eskiden "Ne Yaptım": dev rakamlar; sahibi "çok büyük" dedi).
+ *   5. Tech stack şeridi: Deneyim'in hemen altında, "neyle" sorusunun
  *      cevabı olarak. Listelenen sırada (yazılardan sonra) iş bölümünden
  *      kopuyor ve yazılarla kapanış arasına giren bir süs gibi duruyordu;
  *      burada "iş" bölümünü kapatan bir çizgi, yazılar ve kapanış ise
@@ -50,7 +51,7 @@ export default function HomePage() {
       <HomeHero home={home} />
       <About about={home.about} />
       <SelectedWork home={home} projects={projects} />
-      <WhatIBuilt projects={projects} posts={blogPosts} />
+      <Experience experience={home.experience} projects={projects} />
       <StackMarquee />
       <RecentPosts posts={blogPosts} projects={projects} />
       <Closing closing={home.closing} />

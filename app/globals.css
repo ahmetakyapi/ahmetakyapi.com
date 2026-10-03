@@ -1028,3 +1028,135 @@ html.theme-switching::view-transition-new(root) {
     animation-delay: 0s !important;
   }
 }
+
+/* ==========================================================================
+   Dizin sayfalarının başı (/projeler, /blog). 3 Ekim 2026: iki sayfanın
+   başlığı 60 piksellik bir `text-display` idi ve telefonda süzgecin
+   sekmeleriyle aynı ağırlıkta duruyordu. Artık ana sayfanın bölüm
+   başlıklarıyla aynı aile: büyük, kalın, sıkı; arkasında hero'nun ışığı.
+   ========================================================================== */
+.page-top {
+  position: relative;
+  isolation: isolate;
+}
+
+/* Işık sayfa genişliğinde, kabın dışına taşar (kök `overflow-x: clip`). */
+.page-top::before {
+  content: "";
+  position: absolute;
+  top: -4rem;
+  left: 50%;
+  z-index: -1;
+  width: 100vw;
+  height: 34rem;
+  translate: -50% 0;
+  pointer-events: none;
+  background: radial-gradient(48rem 26rem at 72% 0%, color-mix(in oklab, var(--primary-soft) 26%, transparent), transparent 70%);
+}
+:root[data-theme="dark"] .page-top::before {
+  background: radial-gradient(48rem 26rem at 72% 0%, color-mix(in oklab, var(--primary) 22%, transparent), transparent 70%);
+}
+
+.page-title {
+  font-size: clamp(3.25rem, 1.8rem + 6vw, 6.5rem);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+}
+
+.page-lead {
+  margin-top: 1.25rem;
+  max-width: 46ch;
+  font-size: clamp(1.0625rem, 0.95rem + 0.4vw, 1.25rem);
+  line-height: 1.55;
+  color: var(--text-body);
+  text-wrap: pretty;
+}
+
+/* Süzgeç: hap düğmeler. Telefonda tek satır ve yana kayar (iki satıra
+   kırılıp listenin üstünde ikinci bir başlık gibi duruyordu); kenarlar
+   maskeyle söner, "devamı var" okunur. */
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-inline: calc(-1 * max(1rem, env(safe-area-inset-left)));
+  padding: 0.25rem max(1rem, env(safe-area-inset-left));
+  overflow-x: auto;
+  scrollbar-width: none;
+  mask-image: linear-gradient(to right, transparent, black 1rem, black calc(100% - 2rem), transparent);
+}
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+@media (min-width: 640px) {
+  .tabs {
+    flex-wrap: wrap;
+    margin-inline: 0;
+    padding-inline: 0;
+    overflow: visible;
+    mask-image: none;
+  }
+}
+
+.tab {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding-inline: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--text-body);
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background-color 180ms,
+    border-color 180ms,
+    color 180ms;
+}
+@media (pointer: fine) {
+  .tab {
+    min-height: 2.5rem;
+  }
+}
+.tab:hover {
+  border-color: var(--line-strong);
+  color: var(--text-strong);
+}
+.tab[aria-current],
+.tab.is-active {
+  border-color: var(--text-strong);
+  background: var(--text-strong);
+  color: var(--page-bg);
+}
+
+.tab-count {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+/* Kaydırınca belirme: satırlar ve kartlar görünüme girerken hafifçe
+   yükselir. Opaklık 0'dan değil 0,01'den; desteksiz ya da hareketi
+   azaltan okuyucuda yok. Yalnız iç kaba konur: dış öğenin `translate`
+   geçişi süzgeç animasyonunda kullanılıyor. */
+@keyframes reveal-up {
+  from {
+    opacity: 0.01;
+    translate: 0 1.25rem;
+  }
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: reveal-up var(--ease-brand) both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 55%;
+    }
+  }
+}

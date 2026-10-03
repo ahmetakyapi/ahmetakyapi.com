@@ -23,6 +23,11 @@ export type HomeContent = {
   selectedWork: readonly { slug: string; summary: string }[]
   /** Hakkımda: sahibinin kendi metni. Son paragraf ekran dışı hayat. */
   about: { title: string; paragraphs: readonly string[] }
+  experience: {
+    company: string
+    sector: string
+    projects: readonly { name: string; text: string }[]
+  }
   closing: { title: string; text: string }
 }
 
@@ -72,13 +77,25 @@ export const defaultHomeContent: HomeContent = {
      okuyordu. İkinci kısım (iş deneyimi ve kendi ürünlerim) okunabilirlik
      için iki paragraf; metin aynı. */
   about: {
-    title: 'Merhaba, ben Ahmet.',
+    title: 'Merhaba, Ben Ahmet.',
     paragraphs: [
       'Web ürünleri geliştiriyorum. Bir fikri alıp tasarımından veritabanına, oradan da yayına kadar kendim götürmeyi seviyorum. Bana göre iyi bir ürün sessizdir. Hızlı açılır, rahat okunur, kullanana ne yapacağını söyler ve doğru bilgi verir. Benim peşinde olduğum şey de bu sessizlik.',
       "Nar Sistem Teknoloji'de enerji sektörüne yönelik iki projede görev aldım. Thor, iş emirlerinin, faturaların ve tahakkukların oluşturulup takip edildiği bir sistem. Lena ise akıllı sayaçlardan gelen veriyi toplayıp yöneten bir platform.",
       "Kendi tarafımda da birkaç ürün geliştirdim. Açılış Zili, ABD borsalarını Türkçe takip eden bir site. Derinay, bir psikoloğun danışanlarını takip ettiği bir panel. Bir de Ramazan Vakitleri ve arkadaşlarımla oynamak için yaptığım çok oyunculu oyun Dungeon Mates var. Bunları çoğunlukla Next.js, TypeScript ve PostgreSQL ile yapıyorum.",
       "İşin büyük kısmını artık yapay zekâ ajanlarıyla birlikte yürütüyorum. Araştırma, tasarım kontrolü, test ve metin düzeltme gibi işleri kendi kurduğum ajanlara bırakıyorum. Neyin yapılacağına ve neyin yayına çıkacağına ise ben karar veriyorum. Açılış Zili'ndeki bültenleri ve bilanço analizlerini de her gün bu ajanlar yazıyor.",
       'Ekran dışında saatlere meraklıyım. Bir kadranın neden kolay okunduğunu düşünmek, bir ekranın neden kolay okunduğunu düşünmekten pek farklı değil. Oyun oynamayı severim, Fenerbahçeliyim. Gezmeyi, yeni yerler görmeyi ve o gezileri önceden en ince ayrıntısına kadar planlamayı severim. İyi bir yemek için yol yapmaya da her zaman varım.',
+    ],
+  },
+  /* Ana sayfanın Deneyim bölümü (Ekim 2026, "Ne Yaptım"ın yerine). Thor ve
+     Lena sahibinin Hakkımda metninden; MDM (Sayaç Veri Yönetimi) satırı
+     sahibinin onayladığı açıklama. */
+  experience: {
+    company: 'Nar Sistem Teknoloji',
+    sector: 'Enerji',
+    projects: [
+      { name: 'Thor', text: 'İş emirlerinin, faturaların ve tahakkukların oluşturulup takip edildiği sistem.' },
+      { name: 'Lena', text: 'Akıllı sayaçlardan gelen veriyi toplayıp yöneten platform.' },
+      { name: 'MDM', text: 'Sayaçlardan gelen ölçüm verisini doğrulayıp faturalamaya hazırlayan sistem.' },
     ],
   },
   closing: {
