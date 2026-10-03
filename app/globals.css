@@ -174,20 +174,33 @@
   /* 4 Ekim 2026: "yazılar siyah yerine mavi gradient olarak başlasın".
      Başlangıç artık lacivert değil marka mavisinin koyu ucu. En açık uç
      #1a7fd8 / #e9eff6 ≈ 3,8:1 (büyük metin ≥ 3). */
-  --display-gradient: linear-gradient(105deg, #0b3f86 0%, #0f5fb4 50%, #1a7fd8 100%);
+  /* İki aile (4 Ekim 2026, sahibiyle): büyük display başlıklar (isim,
+     bölüm ve sayfa başlıkları, yazı başlığı) koyu lacivertten maviye;
+     "her şey mavi" olunca büyük başlıklar ağırlığını kaybediyordu. Küçük
+     başlıklar ve kart adları baştan sona mavi (`--inkb-*`). */
+  --display-gradient: linear-gradient(105deg, #0a1a30 0%, #0c3a72 50%, #1a7fd8 100%);
   /* Vurgu kelimesi ve üzerine gelinen başlık: markanın mavisi içinde kalan
      kısa degrade. En açık uç #1b7bd6 / #e9eff6 ≈ 3,9:1 (büyük metin ≥ 3). */
   --accent-gradient: linear-gradient(105deg, #1270d0 0%, #2b8fe6 100%);
   /* Degradenin bittiği renk: uzun başlıkta 11em'den sonrası. */
   --ink-end: #1a7fd8;
+  /* Başlık degradesinin durakları ve üzerine gelinen hâli (aynı aile). */
+  --ink-1: #0a1a30;
+  --ink-2: #0c3a72;
+  --ink-3: #1a7fd8;
+  --inkb-1: #0b3f86;
+  --inkb-2: #0f5fb4;
+  --inkb-3: #1a7fd8;
+  --acc-1: #1270d0;
+  --acc-2: #2b8fe6;
   --display-gradient-tight: linear-gradient(100deg, #0a2547 0%, #1e6fbe 100%);
   /* Ana sayfadaki isim: iki kelimeyi tek yüzey gibi kaplar, koyu
      laciverten derin maviye. En açık uç #1066b8 / #f5f7fa ≈ 5,5:1. */
   --name-gradient: linear-gradient(118deg, #0a1a30 0%, #0b2f5c 38%, #0c4f96 72%, #1066b8 100%);
   /* Hero ismi, dikey: üst satır koyu, alt satır mavi uçta biter.
      En açık uç #0d74c4 / #e9eff6 ≈ 4,4:1, büyük metin için AA (≥ 3). */
-  --name-top: #0b3f86;
-  --name-mid: #0f5fb4;
+  --name-top: #0a1a30;
+  --name-mid: #0c3a72;
   --name-bottom: #1a7fd8;
   /* Marka karosu: açık ucu beyaz metinle AA'yı geçmez, üstüne yazı konmaz.
      Duraklar ayrı da okunuyor: Logo'nun SVG degradesi `stop-color` ister. */
@@ -197,7 +210,7 @@
   /* Logonun kara kalem kuyruğu: karonun üstünde açık buz mavisi. */
   --brand-glow: #bfe6ff;
   /* İmza (başlıktaki ad): başlık mürekkebiyle aynı uçlar. */
-  --sig-from: #0b3f86;
+  --sig-from: #0a1a30;
   --sig-to: #1a7fd8;
   --brand-gradient: linear-gradient(150deg, var(--brand-from) 0%, var(--brand-mid) 48%, var(--brand-to) 100%);
   /* Birincil CTA: aynı ailenin koyu yarısı, beyaz metinle her noktada AA. */
@@ -238,17 +251,25 @@
   --primary-ink: #35b8ff;
   --on-primary: #06121f;
 
-  --display-gradient: linear-gradient(105deg, #cfe9ff 0%, #7fd2ff 50%, #35b8ff 100%);
+  --display-gradient: linear-gradient(105deg, #ffffff 0%, #cfe9ff 45%, #35b8ff 100%);
   --accent-gradient: linear-gradient(105deg, #5cc4ff 0%, #a8ddff 100%);
   --ink-end: #35b8ff;
-  --sig-from: #cfe9ff;
+  --ink-1: #ffffff;
+  --ink-2: #cfe9ff;
+  --ink-3: #35b8ff;
+  --inkb-1: #cfe9ff;
+  --inkb-2: #7fd2ff;
+  --inkb-3: #35b8ff;
+  --acc-1: #5cc4ff;
+  --acc-2: #a8ddff;
+  --sig-from: #ffffff;
   --sig-to: #35b8ff;
   --display-gradient-tight: linear-gradient(100deg, #eef5fc 0%, #58c4ff 100%);
   /* İsim: mavimsi beyazdan maviye. En koyu uç #3fbcff / #070d16 ≈ 9,4:1. */
   --name-gradient: linear-gradient(118deg, #f2f7fc 0%, #d4ecff 34%, #8fd3ff 70%, #3fbcff 100%);
   /* Hero ismi, dikey: beyazdan buz mavisine, alt satır markanın
      mavisinde biter. En koyu uç #35b8ff / #050a14 ≈ 9,6:1. */
-  --name-top: #e6f4ff;
+  --name-top: #ffffff;
   --name-mid: #8fd3ff;
   --name-bottom: #35b8ff;
 
@@ -290,7 +311,8 @@
   --ease-brand: cubic-bezier(0.22, 1, 0.36, 1);
   /* Her `transition-*` sınıfı marka eğrisini kendiliğinden alır. */
   --default-transition-timing-function: var(--ease-brand);
-  --default-transition-duration: 180ms;
+  /* 180 ms'ydi; sahibine göre üzerine gelme "anlık, tuhaf" duruyordu (4 Ekim 2026). */
+  --default-transition-duration: 320ms;
 }
 
 @theme inline {
@@ -892,14 +914,30 @@ html.theme-switching::view-transition-new(root) {
   animation: intro-fill 280ms var(--ease-brand) 300ms both;
 }
 
-.intro-tri {
-  stroke: var(--on-brand);
-  stroke-width: 2.6;
-  stroke-linejoin: round;
+.intro-a {
+  fill: var(--on-brand);
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: intro-fill 320ms var(--ease-brand) 360ms both;
+}
+
+.intro-tail {
+  fill: none;
+  stroke: var(--brand-glow);
+  stroke-width: 1.7;
   stroke-linecap: round;
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
-  animation: intro-draw 380ms var(--ease-brand) 340ms both;
+  animation: intro-draw 360ms var(--ease-brand) 520ms both;
+}
+
+/* Perdedeki imza: perdenin kendi mürekkep rengiyle, soldan sağa yazılır. */
+.intro-signature {
+  --sig-from: var(--intro-ink);
+  --sig-to: var(--intro-edge);
+  height: 1.6em;
+  animation: signature-write 640ms cubic-bezier(0.45, 0, 0.25, 1) 300ms both;
 }
 
 .intro-name {
@@ -913,10 +951,7 @@ html.theme-switching::view-transition-new(root) {
   white-space: nowrap;
 }
 
-.intro-name > span {
-  display: inline-block;
-  animation: intro-name 440ms var(--ease-brand) 300ms both;
-}
+
 
 @keyframes intro-draw {
   to {
@@ -1137,9 +1172,9 @@ html.theme-switching::view-transition-new(root) {
   cursor: pointer;
   user-select: none;
   transition:
-    background-color 180ms,
-    border-color 180ms,
-    color 180ms;
+    background-color 380ms var(--ease-brand),
+    border-color 380ms var(--ease-brand),
+    color 380ms var(--ease-brand);
 }
 @media (pointer: fine) {
   .tab {
@@ -1183,6 +1218,23 @@ html.theme-switching::view-transition-new(root) {
   }
 }
 
+/* Degrade durakları: kayıtlı renk, böylece geçiş yapabiliyorlar. */
+@property --g1 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+@property --g2 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+@property --g3 {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
 /* ==========================================================================
    Başlık mürekkebi: bütün başlıklar degrade (3 Ekim 2026, sahibinin isteği:
    "başlıklar hep gradient tonda olsun, düz siyah olmasın").
@@ -1210,7 +1262,20 @@ html.theme-switching::view-transition-new(root) {
        degradenin yalnız koyu ucunu gösterip düz lacivert okunuyordu
        ("başlıklar hep gradient olsun"). En çok 18em (11em'de uzun başlık
        iki renkli gibi okunuyordu); ötesi uç rengiyle. */
-    background: var(--display-gradient) 0 0 / min(100%, 18em) 100% no-repeat var(--ink-end);
+    /* Duraklar kayıtlı renk değişkeni (`@property --g1/2/3`, aşağıda):
+       üzerine gelince degrade bir anda değişmiyor, renkler yumuşakça
+       kayıyor. `background-image` geçiş yapamaz; değişken yapabilir. */
+    --g1: var(--ink-1);
+    --g2: var(--ink-2);
+    --g3: var(--ink-3);
+    background: linear-gradient(105deg, var(--g1) 0%, var(--g2) 50%, var(--g3) 100%) 0 0 / min(100%, 18em) 100%
+      no-repeat var(--g3);
+    transition:
+      --g1 520ms var(--ease-brand),
+      --g2 520ms var(--ease-brand) 40ms,
+      --g3 520ms var(--ease-brand) 80ms,
+      opacity 420ms var(--ease-brand),
+      translate 420ms var(--ease-brand);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -1221,8 +1286,28 @@ html.theme-switching::view-transition-new(root) {
     margin-block: -0.22em -0.1em;
   }
 
+  /* Küçük başlıklar ve kart adları: baştan sona mavi. */
+  :is(
+      .ink-blue,
+      .home-post-title,
+      .prest-title,
+      .bl-archive-title,
+      .bl-featured-title,
+      .prow-title,
+      .post-prose > h2,
+      .post-prose > h3,
+      .bl-row-link .ink
+    ) {
+    --g1: var(--inkb-1);
+    --g2: var(--inkb-2);
+    --g3: var(--inkb-3);
+  }
+
   .home-title-accent {
-    background-image: var(--accent-gradient);
+    --g1: var(--acc-1);
+    --g2: var(--acc-2);
+    --g3: var(--acc-2);
+    background: linear-gradient(105deg, var(--g1) 0%, var(--g3) 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -1236,7 +1321,9 @@ html.theme-switching::view-transition-new(root) {
   @media (hover: hover) and (pointer: fine) {
     .group:hover .ink-hover,
     .prow-in:hover .prow-title {
-      background-image: var(--accent-gradient);
+      --g1: var(--acc-1);
+      --g2: var(--acc-2);
+      --g3: var(--acc-2);
     }
   }
 }
@@ -1298,8 +1385,14 @@ html.theme-switching::view-transition-new(root) {
 }
 
 .sketch-mark {
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.sketch .sketch-mark-a {
+  fill: currentColor;
+  stroke: none;
+  stroke-dasharray: none;
 }
 
 @keyframes sketch-draw {
@@ -1348,8 +1441,8 @@ html.theme-switching::view-transition-new(root) {
   .sketch-mark path {
     animation: sketch-loop 1400ms var(--ease-brand) infinite;
   }
-  .sketch-mark .sketch-second {
-    animation-delay: 160ms;
+  .sketch-mark .sketch-mark-a {
+    animation: none;
   }
 }
 
@@ -1540,8 +1633,8 @@ html.theme-switching::view-transition-new(root) {
   font-size: 0.9375rem;
   font-weight: 600;
   transition:
-    background-color 200ms,
-    color 200ms,
+    background-color 380ms var(--ease-brand),
+    color 380ms var(--ease-brand),
     gap 300ms var(--ease-brand);
 }
 .tint-card-btn {
