@@ -23,11 +23,12 @@ export const THEMES = ['dark', 'light'] as const
 export type Theme = (typeof THEMES)[number]
 
 /**
- * Varsayılan KOYU (4 Ekim 2026, sahibinin kararı). 3 Ekim'de koyu → açık
- * → koyu arasında gidip geldi; son karar koyu. Açık tema eksiksiz, çerezle
- * seçilir.
+ * Varsayılan AÇIK (4 Ekim 2026 akşamı, sahibinin son kararı). Ekim'in ilk
+ * günlerinde koyu ile açık arasında birkaç kez gidip geldi; açık tema
+ * yumuşatılmış beyazıyla (globals.css) varsayılan oldu. Koyu tema
+ * eksiksiz, çerezle seçilir.
  */
-export const DEFAULT_THEME: Theme = 'dark'
+export const DEFAULT_THEME: Theme = 'light'
 
 /**
  * Renk paleti: `<html data-palette>`. Değerler app/globals.css'te; bu site
