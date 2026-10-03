@@ -89,7 +89,7 @@ ring.current.y += (mouse.current.y - ring.current.y) * 0.14`,
     },
     {
       type: 'table',
-      head: ['Nerede', 'Ne İçin', 'Yerine Ne Koydum'],
+      head: ['Nerede', 'Ne için', 'Yerine Ne Koydum'],
       rows: [
         ['Gezinme', 'Etkin sekme göstergesinin kayması', 'Ölçülen konum ve CSS geçişi'],
         ['Proje Kartları', 'İmlece göre eğim ve parlaklık', 'Doğrudan style yazımı'],

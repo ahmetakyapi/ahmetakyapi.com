@@ -146,7 +146,7 @@ if (this.rooms.length > targetMax) {
       text: 'Sunucu haritayı üretiyor ama oyuncudan saklamıyor. Keşfetme hissi tamamen çizimden geliyor.',
     },
 
-    { type: 'h2', text: 'Rakamlarla' },
+    { type: 'h2', text: 'Sayılarla' },
     {
       type: 'stats',
       label: 'Dungeon Mates · Harita Üretimi',

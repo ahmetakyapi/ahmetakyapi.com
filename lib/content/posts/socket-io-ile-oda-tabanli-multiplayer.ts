@@ -2,7 +2,7 @@ import type { BlogPost } from '../types'
 
 export const post: BlogPost = {
   slug: 'socket-io-ile-oda-tabanli-multiplayer',
-  tag: 'Realtime',
+  tag: 'Gerçek Zamanlı',
   tagColor: '#22d3ee',
   title: "Karalama: Türkçe Kelimelerle Çiz ve Tahmin Et",
   excerpt:

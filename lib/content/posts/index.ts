@@ -2,7 +2,7 @@ import { typeset } from '@/lib/typeset'
 import type { BlogPost } from '../types'
 
 import acilisZili from './acilis-zili-nasil-yapildi'
-import acilisZiliYuzde from './acilis-zili-ucretsiz-veri-guvenilir-ekran'
+import acilisZiliYuzde from './acilis-zili-abd-borsalarini-takip'
 import spoilerWiki from './spoiler-vermeyen-wiki'
 import socketIo from './socket-io-ile-oda-tabanli-multiplayer'
 import mimio from './bilmedigim-meslege-arac-yazmak'
