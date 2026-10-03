@@ -23,8 +23,17 @@ export function findPost(slug: string): BlogPost | undefined {
   return blogPosts.find((post) => post.slug === slug)
 }
 
-/** Yazıyı anlatan proje: projects.ts'teki `postSlug` eşleşmesi. */
+/**
+ * Yazıyı anlatan proje. Önce yazının kendi `project` alanı (bir projenin
+ * ikinci yazısı da kapağını alsın diye), yoksa projects.ts'teki `postSlug`
+ * eşleşmesi.
+ */
 export function projectForPost(slug: string): Project | undefined {
+  const own = findPost(slug)?.project
+  if (own) {
+    const project = projects.find((p) => p.slug === own)
+    if (project) return project
+  }
   return projects.find((project) => project.postSlug === slug)
 }
 

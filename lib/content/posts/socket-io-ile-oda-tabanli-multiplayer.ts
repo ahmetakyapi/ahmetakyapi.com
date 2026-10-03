@@ -6,23 +6,23 @@ export const post: BlogPost = {
   tagColor: '#22d3ee',
   title: "Karalama: “İSTANBUL” Yazan Doğru Bildi mi?",
   excerpt:
-    'Çok oyunculu bir çizim oyunu yazdım. En zor kısmı çizimi senkronlamak olmadı; "İSTANBUL" yazan birinin doğru bildiğini JavaScript\'e kabul ettirmek oldu.',
+    'Bir çizim oyunu yazdım. Kodun en çok dikkat isteyen yeri, "İSTANBUL" yazanın doğru bildiğine karar veren fonksiyon oldu, çünkü toLowerCase() Türkçe bilmiyor.',
   date: '2026-05-15',
   coverGradient: 'linear-gradient(135deg, #22d3ee 0%, #0ea5e9 50%, #6366f1 100%)',
   content: [
     {
       type: 'lead',
-      text: 'Karalama\'nın test dosyasında iki satır var ve oyunun en önemli kuralını onlar taşıyor: "İSTANBUL" yazan "istanbul"u, "KIŞ" yazan "kış"ı bilmiş sayılmalı. JavaScript\'in `toLowerCase()` fonksiyonu ikisini de yanlış yapıyor. Bu oyunun asıl zorluğu WebSocket değil, Türkçe çıktı.',
+      text: 'Karalama\'nın test dosyasında iki satır var ve oyunun temel kuralını onlar tutuyor: "İSTANBUL" yazan "istanbul"u, "KIŞ" yazan "kış"ı bilmiş sayılmalı. JavaScript\'in `toLowerCase()` fonksiyonu ikisini de yanlış yapıyor. WebSocket tarafı hazır bir kütüphaneyle çözüldü; Türkçe harfler için kendi kodumu yazmam gerekti.',
     },
     {
       type: 'p',
-      text: 'Karalama, kayıt olmadan arkadaşlarla oynanan bir çizim-tahmin oyunu. Bir kişi çiziyor, diğerleri tahmin ediyor, süre doluyor, sıra değişiyor. Basit görünüyor; arkasında bir monorepo, üç paket ve birkaç ders var.',
+      text: 'Karalama, kayıt olmadan arkadaşlarla oynanan bir çizim-tahmin oyunu. Biri çiziyor, ötekiler tahmin ediyor, süre dolunca sıra değişiyor. Arkasında bir monorepo ve üç paket var.',
     },
 
     { type: 'h2', text: 'Önce Mimari: Neden Monorepo' },
     {
       type: 'p',
-      text: 'Oyun iki ayrı yerde çalışıyor: Next.js istemcisi Vercel\'de, Socket.io sunucusu Railway\'de. İkisi de aynı tiplere ihtiyaç duyuyor: oda durumu, oyuncu, çizim verisi, olay adları. Bunları iki yere kopyalamak, bir tarafta alan adı değişip ötekinde değişmediği gün sessizce bozulan bir oyun demek. Bu yüzden tipler en baştan ortak bir pakette.',
+      text: 'Oyun iki ayrı yerde çalışıyor: Next.js istemcisi Vercel\'de, Socket.io sunucusu Railway\'de. İkisi de aynı tipleri kullanıyor: oda durumu, oyuncu, çizim verisi, olay adları. Bunları iki yere kopyalarsan, bir tarafta alan adı değişip ötekinde değişmediği gün oyun hata vermeden bozulur. Bu yüzden tipler en baştan ortak bir pakette.',
     },
     {
       type: 'steps',
@@ -36,11 +36,11 @@ export const post: BlogPost = {
     { type: 'h2', text: 'Türkçe Küçük Harf Tuzağı' },
     {
       type: 'p',
-      text: 'Tahmin karşılaştırması normalde tek satırlık iş: `a.toLowerCase() === b.toLowerCase()`. Türkçede değil.',
+      text: 'Tahmini cevapla karşılaştırmak normalde tek satır: `a.toLowerCase() === b.toLowerCase()`. Türkçede bu yetmiyor.',
     },
     {
       type: 'p',
-      text: '`toLowerCase()` dilden bağımsız Unicode kurallarını uyguluyor. Büyük "İ"yi "i" yapıyor ama arkasına birleştirici bir nokta (U+0307) bırakıyor. Büyük "I"yı da "i" yapıyor, oysa Türkçede "ı" olmalı.',
+      text: '`toLowerCase()` dile bakmadan genel Unicode kurallarını uyguluyor. Büyük "İ"yi "i" yapıyor ama arkasına birleştirici bir nokta (U+0307) ekliyor. Büyük "I"yı da "i" yapıyor, oysa Türkçede "ı" olmalı.',
     },
     {
       type: 'compare',
@@ -66,18 +66,18 @@ export const post: BlogPost = {
     },
     {
       type: 'p',
-      text: 'Sondaki `replace` noktalama ve rakamları atıyor; testte `"  ,Kedi!"` girdisi `"kedi"` oluyor. Şapkalı harfleri listede tuttum, çünkü kelime havuzunda "rüzgâr", "hâkim" ve "yapay zekâ" var.',
+      text: 'Sondaki `replace` noktalamayı ve rakamları siliyor; testte `"  ,Kedi!"` girdisi `"kedi"` oluyor. Şapkalı harfler listede, çünkü kelime havuzunda "rüzgâr", "hâkim" ve "yapay zekâ" var.',
     },
     {
       type: 'callout',
       variant: 'tip',
-      text: 'Bugün yazsam elle değiştirme yapmazdım: `"İSTANBUL".toLocaleLowerCase("tr-TR")` doğrudan "istanbul", `"KIŞ".toLocaleLowerCase("tr-TR")` doğrudan "kış" veriyor. İki `replace` satırı, dile duyarlı tek bir çağrının elle yazılmış hâli.',
+      text: 'Bugün yazsam harfleri elle değiştirmezdim: `"İSTANBUL".toLocaleLowerCase("tr-TR")` doğrudan "istanbul", `"KIŞ".toLocaleLowerCase("tr-TR")` doğrudan "kış" veriyor. O iki `replace` satırı, dile göre çalışan tek bir çağrının elle yazılmış hâli.',
     },
 
     { type: 'h3', text: 'Yakın Tahmin' },
     {
       type: 'p',
-      text: 'Hızlı yazan biri harf atlıyor: "bisiklet" yerine "bisklet". Doğru sayılmamalı, ama "çok yaklaştın" demek oyuna bir şey katıyor. Sunucu tahmini cevapla Levenshtein uzaklığıyla karşılaştırıyor ve fark en fazla iki harfse yalnızca yazan kişiye haber veriyor.',
+      text: 'Hızlı yazan biri harf atlıyor: "bisiklet" yerine "bisklet". Bu doğru sayılmamalı, ama oyuncuya "çok yaklaştın" demek işe yarıyor. Sunucu tahmini cevapla Levenshtein uzaklığına göre karşılaştırıyor; fark en fazla iki harfse yalnızca yazan kişiye haber veriyor.',
     },
     {
       type: 'code',
@@ -94,13 +94,13 @@ if (answer.length > 3 && levenshtein(normalized, answer) <= 2) {
     },
     {
       type: 'p',
-      text: 'Burada iki karar var. Birincisi `answer.length > 3`: kısa kelimelerde iki harflik eşik anlamsızlaşıyor. Cevap "at" iken "el" yazan biri de iki harf uzakta; o kontrol olmasa oyun ona "çok yakınsın" derdi. İkincisi `return null`: yakın tahmin sohbete düşmüyor. Düşseydi, "bisklet" yazan birinin mesajı herkese cevabı fısıldamış olurdu.',
+      text: 'Burada iki karar var. Birincisi `answer.length > 3`: kısa kelimelerde iki harflik eşik bir şey ifade etmiyor. Cevap "at" iken "el" yazan biri de iki harf uzakta; o kontrol olmasa oyun ona "çok yakınsın" derdi. İkincisi `return null`: yakın tahmin sohbete düşmüyor. Düşseydi "bisklet" mesajı herkese cevabı ele verirdi.',
     },
 
     { type: 'h2', text: 'Çizimi Nasıl Gönderiyorum' },
     {
       type: 'p',
-      text: 'Fare her kıpırdadığında bir paket göndermek, ekranın yenileme hızı kadar mesaj demek. Çizim olayları bu yüzden 33 milisaniyede bir sınırlı, yani saniyede yaklaşık 30. Sohbetin de kendi sınırı var.',
+      text: 'Fare her kıpırdadığında paket göndermek, ekranın yenileme hızı kadar mesaj demek. Bu yüzden çizim olayları 33 milisaniyede bire, yani saniyede yaklaşık 30\'a sınırlı. Sohbetin de kendi sınırı var.',
     },
     {
       type: 'code',
@@ -112,7 +112,7 @@ export const DRAW_RATE_LIMIT_MS = 33; // ~30fps`,
     },
     {
       type: 'p',
-      text: 'Koordinatlar 0 ile 1 arasında normalize ediliyor. Telefonda çizilen bir ev, masaüstündeki geniş tuvalde de aynı yere düşüyor; telefonu yatay çevirince de çizim orantılı büyüyor.',
+      text: 'Koordinatlar piksel yerine 0 ile 1 arasında bir oran olarak gidiyor. Telefonda çizilen bir ev masaüstündeki geniş tuvalde de aynı yere düşüyor; telefonu yan çevirince çizim orantılı büyüyor.',
     },
     {
       type: 'code',
@@ -126,17 +126,17 @@ export const DRAW_RATE_LIMIT_MS = 33; // ~30fps`,
     },
     {
       type: 'p',
-      text: 'Aynı karar botlara da yaradı. Sırası gelen bot, 0-1 aralığında tanımlı hazır şekillerden birini çiziyor: daire, kare, ev, ağaç, yıldız, kalp, güneş, balık. Şekli rastgele seçiyor, kelimeye bakmıyor. Yani cevap "merdiven" iken ekrana bir balık gelebiliyor.',
+      text: 'Aynı biçim botların işine de yaradı. Sırası gelen bot, 0-1 aralığında tanımlı hazır şekillerden birini çiziyor: daire, kare, ev, ağaç, yıldız, kalp, güneş, balık. Şekli rastgele seçiyor. `startBotDrawing` fonksiyonu kelimeyi parametre olarak alıyor ama gövdesinde hiç kullanmıyor; yani cevap "merdiven" iken ekrana bir balık gelebiliyor. Kodun başındaki yorum "basit, tanınabilir şekiller" diyor ve bu davranışı ekleyen commit\'in mesajı neden böyle olduğunu söylemiyor. Şu hâliyle bot çizdiğinde çizim cevaba ancak tesadüfen benziyor.',
     },
 
     { type: 'h2', text: 'Puanı Kim Hesaplıyor' },
     {
       type: 'p',
-      text: 'Gerçek zamanlı bir oyunda ilk sorulması gereken soru bu ve Karalama\'da cevabı sunucu. Tahmin sohbet kanalından düz metin olarak geliyor; kimin yazdığını istemci söylemiyor, sunucu bağlantının kendi kimliğinden (`socket.id`) biliyor. Kelime de tur bitene kadar yalnızca çizen kişide. Tahmin edenlere giden tek şey ipucu ve harf sayısı.',
+      text: 'Karalama\'da puanı sunucu hesaplıyor. Tahmin sohbetten düz metin olarak geliyor; kimin yazdığını istemci söylemiyor, sunucu bunu bağlantının kendi kimliğinden (`socket.id`) biliyor. Kelime de tur bitene kadar yalnızca çizen kişide. Tahmin edenlere yalnızca ipucu ve harf sayısı gidiyor.',
     },
     {
       type: 'p',
-      text: 'Puan formülü `packages/shared` içinde, ama onu yalnızca sunucu çağırıyor. İstemci aynı fonksiyonu import edebilir; sonucu önceden göstermek için, karar vermek için değil.',
+      text: 'Puan formülü `packages/shared` içinde ama onu yalnızca sunucu çağırıyor. İstemci de aynı fonksiyonu import edebilir; sonucu önceden göstermek için kullanabilir, karar vermek için kullanamaz.',
     },
     {
       type: 'code',
@@ -153,13 +153,13 @@ export const DRAW_RATE_LIMIT_MS = 33; // ~30fps`,
     },
     {
       type: 'p',
-      text: '`speedBonus` kaçıncı bildiğini ödüllendiriyor: ilk bilen 50, ikinci 35, üçüncü 20, dördüncü 5, sonrası sıfır. Zorluk çarpanı 1; 1,2 ve 1,5. Çizen kişinin puanı ayrı: kaç kişinin bildiğine oranlı, tavanı 200. Kimse bilemezse sıfır alıyor, yani herkesi elemek için kasten kötü çizmek ödüllendirilmiyor.',
+      text: '`speedBonus` kaçıncı bildiğine bakıyor: ilk bilen 50, ikinci 35, üçüncü 20, dördüncü 5, sonrası sıfır. Zorluk çarpanı kolayda 1, ortada 1,2, zorda 1,5. Çizen kişinin puanı ayrı hesaplanıyor: kaç kişinin bildiğiyle orantılı, en fazla 200. Kimse bilemezse sıfır alıyor; yani herkesi elemek için kasten kötü çizmek işe yaramıyor.',
     },
 
     { type: 'h2', text: 'Odalar Bellekte' },
     {
       type: 'p',
-      text: 'Veritabanı yok. Oda kodu altı karakter, oda nesnesi sunucunun belleğinde bir `Map` içinde. Beş dakikada bir temizlik koşuyor ve 30 dakika boyunca hareketsiz kalan oda siliniyor.',
+      text: 'Veritabanı yok. Oda kodu altı karakter, oda nesnesi sunucunun belleğinde bir `Map` içinde duruyor. Beş dakikada bir temizlik çalışıyor ve 30 dakika hareketsiz kalan oda siliniyor.',
     },
     {
       type: 'table',
@@ -176,36 +176,36 @@ export const DRAW_RATE_LIMIT_MS = 33; // ~30fps`,
     },
     {
       type: 'p',
-      text: 'Bu kararın bedeli var ve bir kısmını ödedim. Sunucu yeniden başlarsa bütün odalar gidiyor; bunu baştan kabul ettim. Kabul etmediğim ama yaşadığım şey bağlantı kopmalarıydı. Oyun ortasında bağlantısı kopup geri gelen oyuncu "oyun devam ediyor" hatasına çarpıp dışarıda kalıyordu. Çizen kişi tur bitmeden ayrılınca da tur, kelime açıklanmadan ve skor gösterilmeden atlanıyordu. İkisini de sonradan düzelttim: geri gelen oyuncu oyuna dönebiliyor, çizen ayrılırsa tur normal biçimde kapanıyor.',
+      text: 'Bu kararın bir bedeli var. Sunucu yeniden başlarsa bütün odalar gidiyor; bunu baştan kabul ettim. Bağlantı kopmaları ise iki hata çıkardı. Oyun ortasında bağlantısı kopup geri gelen oyuncu "oyun devam ediyor" hatasına takılıp dışarıda kalıyordu. Çizen kişi tur bitmeden çıkınca da tur, kelime açıklanmadan ve skor gösterilmeden geçiliyordu. İkisini de 15 Mayıs\'taki bir commit\'le düzelttim: geri gelen oyuncu oyuna dönebiliyor, çizen çıkarsa tur kelimeyi ve skorları gösterip kapanıyor.',
     },
     {
       type: 'callout',
       variant: 'info',
-      text: 'İki kişi oynamak isterse boş yerleri bot doldurabiliyor. İsimleri Türkçe: Fırça, Kalem, Palet, Tuval, Piksel. Tahmin ederken her bot önce iki-dört yanlış deniyor, sonra sürenin %30 ile %80\'i arasında bir anda doğruyu buluyor. Her zaman ilk bilen olsaydı insanlar için oyun biterdi.',
+      text: 'İki kişi oynamak isterse boş yerleri bot doldurabiliyor. İsimleri Türkçe: Fırça, Kalem, Palet, Tuval, Piksel. Tahmin ederken her bot önce bir ile üç arası yanlış kelime yazıyor, sonra sürenin %30 ile %80\'i arasında bir anda doğruyu buluyor. Koddaki yorum iki ile dört yanlış tahmin yazıyor, ama hesap `1 + Math.floor(Math.random() * 3)` ve bu 1, 2 ya da 3 veriyor. Botlar her seferinde ilk bilen olsaydı insanlar puan alamazdı.',
     },
 
     { type: 'h2', text: 'Kelime Havuzu' },
     {
       type: 'p',
-      text: 'Havuzda 1071 kelime var ve üç zorluk seviyesine ayrılmış: 390 kolay, 527 orta, 154 zor. Zorluk hem puan çarpanını hem seçenekleri belirliyor; çizecek kişiye her turda üç kelime sunuluyor, mümkünse her zorluktan bir tane.',
+      text: 'Havuzda 1071 kelime var ve üç zorluğa ayrılmış: 390 kolay, 527 orta, 154 zor. Zorluk hem puan çarpanını hem seçenekleri belirliyor; çizecek kişiye her turda üç kelime sunuluyor, mümkünse her zorluktan bir tane.',
     },
     {
       type: 'p',
-      text: 'Kelimeleri seçerken en çok çizilebilirliği düşündüm. "Merdiven" iyi bir kelime. "Özgürlük" ise havuzda zor seviyede duruyor ve onu nasıl çizeceğimi ben de bilmiyorum. Zor seviyenin anlamı biraz da bu: çizmesi zor, bilmesi daha zor, puanı 1,5 kat.',
+      text: '"Merdiven" gibi bir kelime birkaç çizgiyle anlatılabiliyor. "Özgürlük" ise havuzda zor seviyede duruyor; çizmesi de bilmesi de zor, karşılığında puanı 1,5 kat.',
     },
 
     { type: 'h2', text: 'Bugün Olsa Neyi Değiştirirdim' },
     {
       type: 'p',
-      text: 'Düz WebSocket\'i ciddi biçimde denerdim. Socket.io\'nun yeniden bağlanması ve oda yönetimi işimi çok kolaylaştırdı, ama bunun karşılığında istemciye ayrı bir paket indiriyorum (belgelerine göre küçültülmüş hâli sıkıştırılmış olarak 14,7 KB) ve özelliklerinin yalnızca bir kısmını kullanıyorum.',
+      text: 'Düz WebSocket\'i ciddi olarak denerdim. Yeniden bağlanmayı ve odaları Socket.io hazır veriyor, ama karşılığında istemciye ayrı bir paket iniyor (belgelerine göre küçültülmüş ve sıkıştırılmış hâli 14,7 KB) ve özelliklerinin yalnızca bir kısmını kullanıyorum.',
     },
     {
       type: 'p',
-      text: 'Tur akışını da en baştan bir durum makinesi olarak yazardım. Şu an `Room.ts` içinde 17 ayrı `this.phase` kontrolü var. Çalışıyor, ama yeni bir faz eklemek o 17 yeri tek tek dolaşmak demek.',
+      text: 'Tur akışını da en baştan bir durum makinesi (state machine) olarak yazardım. Şu an `Room.ts` içinde 17 ayrı `this.phase` kontrolü var. Çalışıyor, ama yeni bir aşama eklemek o 17 yeri tek tek gezmek demek.',
     },
     {
       type: 'p',
-      text: 'Emin olamadığım tek karar odaların bellekte olması. Bir gün biri "on dakika önce oynadığımız oda nerede" diye sorarsa cevabım olmayacak. O gün gelene kadar bu sadeliği bir veritabanına tercih ediyorum.',
+      text: 'Emin olamadığım karar odaların bellekte durması. Bir gün biri "on dakika önce oynadığımız oda nerede" diye sorarsa verecek cevabım yok. O gün gelene kadar veritabanı eklemeyeceğim.',
     },
   ],
 }

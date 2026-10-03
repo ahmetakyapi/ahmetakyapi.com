@@ -2,6 +2,7 @@ import { typeset } from '@/lib/typeset'
 import type { BlogPost } from '../types'
 
 import acilisZili from './acilis-zili-nasil-yapildi'
+import acilisZiliYuzde from './acilis-zili-yuzde-hangi-gune-ait'
 import spoilerWiki from './spoiler-vermeyen-wiki'
 import socketIo from './socket-io-ile-oda-tabanli-multiplayer'
 import mimio from './bilmedigim-meslege-arac-yazmak'
@@ -22,6 +23,7 @@ import firebase from './firebase-realtime-chat-uygulamasi'
  * değişmez, dönüşüm burada bir kez yapılır.
  */
 export const blogPosts: BlogPost[] = [
+  acilisZiliYuzde,
   acilisZili,
   spoilerWiki,
   socketIo,

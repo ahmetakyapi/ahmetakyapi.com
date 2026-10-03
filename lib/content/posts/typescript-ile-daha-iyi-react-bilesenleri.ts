@@ -6,19 +6,19 @@ export const post: BlogPost = {
   tagColor: '#3178c6',
   title: "ahmetakyapi.com: İçeriği Tek Bir Union Tipi Ayakta Tutuyor",
   excerpt:
-    'Bu blogun markdown\'ı yok; her yazı bir blok dizisi. Renderer bir blok tipini unutursa derleme duruyor. Bu düzeni nasıl kurduğumu ve nerede yetmediğini yazdım.',
-  date: '2026-02-20',
+    'Bu blogda markdown yok; her yazı bir blok dizisi. Renderer bir blok tipini unutursa build kırılıyor. Bu düzeni nasıl kurduğumu ve nerede yetmediğini anlattım.',
+  date: '2026-08-14',
   coverGradient: 'linear-gradient(135deg, #3178c6 0%, #235a97 100%)',
   content: [
     {
       type: 'lead',
-      text: 'Bu blogun markdown\'ı yok. Her yazı bir TypeScript dosyası ve içerik bir `Block[]` dizisi. Kulağa fazladan iş gibi geliyor. Pratikte tersi oldu: bir gün blok tiplerinin sayısını tek seferde altıdan on üçe çıkardım ve hiçbirini çizmeyi unutmam mümkün değildi, çünkü unutsam derleme kırılırdı.',
+      text: 'Bu blogda markdown yok. Her yazı bir TypeScript dosyası, içerik de bir `Block[]` dizisi. Kulağa fazladan iş gibi geliyor. 13 Ağustos\'ta blok tiplerinin sayısını tek commit\'te altıdan on üçe çıkardım ve birini çizmeyi unutmam mümkün değildi, çünkü unutsam build kırılırdı.',
     },
 
-    { type: 'h2', text: 'Discriminated Union: Ortak Alan Ayrıştırıcıdır' },
+    { type: 'h2', text: 'Discriminated Union: Tipi Ortak Alan Söyler' },
     {
       type: 'p',
-      text: 'Bir yazının içeriğini temsil etmenin ilk akla gelen yolu tek bir esnek nesne:',
+      text: 'Bir yazının içeriğini tutmanın ilk akla gelen yolu tek, esnek bir nesne:',
     },
     {
       type: 'code',
@@ -35,11 +35,11 @@ interface Block {
     },
     {
       type: 'p',
-      text: 'Bu tip hiçbir şey söylemiyor. `type: "table"` olan bir bloğun `rows` alanı olduğunu bilmiyorsun, renderer\'ın her yerinde `block.rows ?? []` yazmak gerekiyor ve `type: "p"` olan bir bloğa yanlışlıkla `rows` verdiğinde kimse itiraz etmiyor.',
+      text: 'Bu tip hiçbir şey söylemiyor. `type: "table"` olan bloğun `rows` alanı olduğunu bilmiyorsun, renderer\'ın her yerinde `block.rows ?? []` yazman gerekiyor ve `type: "p"` olan bir bloğa yanlışlıkla `rows` verirsen kimse itiraz etmiyor.',
     },
     {
       type: 'p',
-      text: 'Discriminated union bunu tersine çeviriyor. Her varyantın kendi şekli var ve `type` alanı hangisi olduğunu söylüyor:',
+      text: 'Discriminated union bunu tersine çeviriyor. Her varyantın kendi şekli var ve hangisi olduğunu `type` alanı söylüyor:',
     },
     {
       type: 'code',
@@ -68,13 +68,13 @@ interface Block {
     },
     {
       type: 'p',
-      text: '`switch (block.type)` içinde TypeScript her dalda tipi daraltıyor. `case "table"` dalında `block.rows` doğrudan `string[][]`: isteğe bağlı değil, kontrol gerekmiyor.',
+      text: '`switch (block.type)` içinde TypeScript her dalda tipi daraltıyor. `case "table"` dalında `block.rows` doğrudan `string[][]`; isteğe bağlı değil, kontrol etmene gerek yok.',
     },
 
     { type: 'h3', text: 'Kapsama Kontrolü: Unuttuğunu Derleyici Söylesin' },
     {
       type: 'p',
-      text: 'Union\'ın asıl faydası burada çıkıyor. Bu sitede blok tipi uzun süre altı taneydi: `p`, `h2`, `h3`, `code`, `ul`, `callout`. Renderer\'daki `switch` de `default: return null` ile bitiyordu. Sonra tek bir değişiklikte yedi tip ekledim: `lead`, `ol`, `quote`, `table`, `stats`, `compare`, `steps`. O `default` dalı kalsaydı, yedisinden birini çizmeyi unuttuğum an blok sayfadan sessizce kaybolurdu. Ne derleyici konuşurdu ne tarayıcı.',
+      text: 'Union\'ın işe yaradığı yer burası. Bu sitede blok tipi uzun süre altı taneydi: `p`, `h2`, `h3`, `code`, `ul`, `callout`. Renderer\'daki `switch` de `default: return null` ile bitiyordu. Sonra tek değişiklikte yedi tip ekledim: `lead`, `ol`, `quote`, `table`, `stats`, `compare`, `steps`. O `default` dalı kalsaydı, yedisinden birini çizmeyi unuttuğum an blok sayfadan sessizce kaybolurdu. Ne derleyici bir şey derdi ne tarayıcı.',
     },
     {
       type: 'p',
@@ -101,13 +101,13 @@ switch (block.type) {
     {
       type: 'callout',
       variant: 'tip',
-      text: 'Bu desenin değeri hatayı zamanda öne çekmesi. `default: return null` ile eksik durum çalışma zamanında sessizce kaybolur; `assertNever` ile aynı eksiklik derleme anında, dosyayı kaydettiğin saniye ortaya çıkar.',
+      text: 'Bu desen hatayı öne çekiyor. `default: return null` ile eksik dal çalışırken sessizce kaybolur; `assertNever` ile aynı eksik, dosyayı kaydettiğin anda editörde kırmızı çizgi olarak çıkar.',
     },
 
     { type: 'h2', text: 'as const: Veriyi Tipe Çevirmek' },
     {
       type: 'p',
-      text: '`as const` küçük bir ek ama iki iş birden yapıyor: değerleri salt okunur kılıyor ve literal tipleri koruyor.',
+      text: '`as const` küçük bir ek ama iki iş yapıyor: değerleri salt okunur yapıyor ve literal tipleri koruyor.',
     },
     {
       type: 'code',
@@ -123,17 +123,17 @@ export type NavItem = (typeof NAV_ITEMS)[number]`,
     },
     {
       type: 'p',
-      text: '`as const` olmadan `href` alanının tipi `string` olurdu. Onunla birlikte `"/" | "/projeler" | "/blog"`. İkinci satır da önemli: tipi elle yazmıyorum, veriden türetiyorum. Başlık, komut paleti, 404 önerileri ve site haritası aynı listeyi okuyor; listeye bir öğe eklediğimde tip de dört yer de kendiliğinden genişliyor.',
+      text: '`as const` olmadan `href` alanının tipi `string` olurdu. Onunla birlikte `"/" | "/projeler" | "/blog"`. İkinci satırda tipi elle yazmıyorum, veriden türetiyorum. Başlık, komut paleti, 404 önerileri ve site haritası aynı listeyi okuyor; listeye bir öğe eklediğimde hem tip hem bu dört yer kendiliğinden güncelleniyor.',
     },
 
     { type: 'h2', text: 'Union\'ın Yakalayamadığı Şey' },
     {
       type: 'p',
-      text: 'Proje kartlarındaki küçük önizleme çizimleri bir dönem sıraya bağlıydı: `i === 0` ise not listesi, `i === 1` ise çubuk grafik. Proje sırasını değiştirdiğim gün DigyNotes\'un maketi Mimio\'nun kartında çizildi.',
+      text: 'Proje kartlarındaki küçük önizleme çizimleri bir dönem sıraya bağlıydı: `i === 0` ise not listesi, `i === 1` ise çubuk grafik. Sıra değişince DigyNotes\'un maketi başka bir projenin kartında görünüyordu.',
     },
     {
       type: 'p',
-      text: 'Düzeltme görseli veriye bağlamaktı. Her proje kendi önizlemesini bir union üyesiyle söylüyordu ve önizleme bileşeni o alana göre `switch` yapıyordu:',
+      text: 'Düzeltme, görseli veriye bağlamaktı. Her proje kendi önizlemesini bir union üyesiyle söylüyor, önizleme bileşeni de o alana göre `switch` yapıyordu:',
     },
     {
       type: 'code',
@@ -151,31 +151,31 @@ export interface Project {
     },
     {
       type: 'p',
-      text: 'Aynı gün maketleri tümden kaldırıp yerlerine projelerin gerçek ekran görüntülerini koydum. Soyut çubuklar ve boş kutular projeyi anlatmıyordu. Ama `preview` alanı tipte kaldı, her proje onu doldurmaya devam etti ve hiçbir bileşen okumadı. Derleyici bunu hiç söylemedi.',
+      text: 'Aynı gün maketleri tamamen kaldırıp yerlerine projelerin gerçek ekran görüntülerini koydum. Renkli çubuklar ve boş kutular projeyi anlatmıyordu. Ama `preview` alanı tipte kaldı, her proje onu doldurmaya devam etti ve hiçbir bileşen okumadı. Derleyici bunu hiç söylemedi.',
     },
     {
       type: 'quote',
-      text: 'Kapsama kontrolü yalnızca bir switch\'in olduğu yerde çalışır. Kimsenin okumadığı bir alan, tip sistemine göre kusursuz bir alandır.',
+      text: 'Kapsama kontrolü yalnızca bir switch\'in olduğu yerde çalışır. Kimsenin okumadığı bir alan, tip sistemine göre hatasız bir alandır.',
     },
     {
       type: 'p',
-      text: 'Benzer bir şeyi `readTime` alanında da yaşadım. Okuma süresi elle yazılıyordu ve tutmuyordu: 287 kelimelik bir yazıda "11 dk" yazıyordu. Tip `string` istiyordu ve "11 dk" geçerli bir `string`. Alanı içerikten hesaplanan bir değere çevirdim. Tip bir alanın şeklini doğrular, doğru olup olmadığını değil.',
+      text: '`readTime` alanında da aynısı oldu. Okuma süresi elle yazılıyordu ve tutmuyordu: 287 kelimelik bir yazıda "11 dk" yazıyordu. Tip `string` istiyordu ve "11 dk" geçerli bir `string`. Alanı kaldırıp süreyi içerikten hesaplattım. Tip, alanın şeklini kontrol eder; içindeki değerin doğru olup olmadığını bilmez.',
     },
 
     { type: 'h2', text: 'type mı, interface mi' },
     {
       type: 'p',
-      text: 'Bu sitede kural basit: union olan her şey `type` (`Block` gibi), düz nesne olanlar `interface` (`Project`, `BlogPost`). Union\'ı `interface` ile yazamıyorsun; bir değerden tip türetmek de (`typeof NAV_ITEMS[number]`) ancak `type` ile oluyor. Geri kalanı alışkanlık, ama proje içinde tutarlı.',
+      text: 'Bu sitede kural basit: union olan her şey `type` (`Block` gibi), düz nesneler `interface` (`Project`, `BlogPost`). Union\'ı `interface` ile yazamıyorsun; bir değerden tip türetmek de (`typeof NAV_ITEMS[number]`) ancak `type` ile oluyor. Gerisi alışkanlık, ama proje içinde tutarlı.',
     },
 
     { type: 'h2', text: 'Nerede Duruyorum' },
     {
       type: 'p',
-      text: '`Block` union\'ı uzun bir tip ama tek dosyada duruyor ve okunduğunda ne olduğu anlaşılıyor. Değerini buradan alıyor: yeni bir blok tipi eklemek, derleyicinin bana gösterdiği yerleri doldurmaktan ibaret.',
+      text: '`Block` union\'ı uzun bir tip ama tek dosyada duruyor ve okuyunca ne olduğu anlaşılıyor. Yeni bir blok tipi eklemek, derleyicinin gösterdiği yerleri doldurmaktan ibaret.',
     },
     {
       type: 'p',
-      text: 'Yetmediği yer de belli. Union bir şeyi unuttuğumu söylüyor, kullanmayı bıraktığım bir şeyi söylemiyor. Ölü alanları yakalamanın tip sistemi içinde temiz bir yolunu henüz bulmadım; şimdilik `grep` ve dikkat.',
+      text: 'Yetmediği yer de belli. Union bir şeyi unuttuğumu söylüyor, kullanmayı bıraktığım bir şeyi söylemiyor. Kimsenin okumadığı alanları tip sistemiyle yakalamanın temiz bir yolunu henüz bulmadım; şimdilik `grep` ve dikkat.',
     },
   ],
 }

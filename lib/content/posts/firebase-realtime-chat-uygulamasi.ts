@@ -6,13 +6,13 @@ export const post: BlogPost = {
   tagColor: '#f59e0b',
   title: "İlk Sohbet Uygulamam: Gerçek Zamanlıda Otorite Kimde?",
   excerpt:
-    '2021\'de yazdığım ilk sohbet uygulamasının sunucusu on beş satırdı ve hiçbir şeye karar vermiyordu. Beş yıl sonra aynı soruyu bir oyunda bambaşka cevapladım.',
-  date: '2026-01-05',
+    '2021\'deki ilk sohbet uygulamamın sunucusu on beş satırdı; mesajın kimden geldiğini istemci söylüyordu. Beş yıl sonra bir çizim oyununda kararı sunucuya bıraktım.',
+  date: '2026-05-16',
   coverGradient: 'linear-gradient(135deg, #f59e0b 0%, #ea580c 50%, #dc2626 100%)',
   content: [
     {
       type: 'lead',
-      text: 'Haziran 2021\'de ilk sohbet uygulamamı yazdım: React istemcisi, Express ve Socket.io sunucusu. Sunucu on beş satırdı ve tek bir iş yapıyordu: gelen her mesajı herkese geri yollamak. İki tarayıcı penceresinde mesajların karşılıklı aktığını görmek o gün büyülü gelmişti. Bu büyünün neyi sakladığını beş yıl sonra, Karalama\'yı yazarken anladım.',
+      text: 'Haziran 2021\'de ilk sohbet uygulamamı yazdım: React istemcisi, Express ve Socket.io sunucusu. Sunucu on beş satırdı ve tek iş yapıyordu: gelen her mesajı herkese geri yollamak. Mesajın kimden geldiğini ise istemci söylüyordu. Beş yıl sonra Karalama\'yı yazarken aynı soruya bambaşka bir cevap verdim.',
     },
 
     { type: 'h2', text: 'Sunucu Yalnızca Yankı Yapıyordu' },
@@ -33,7 +33,7 @@ export const post: BlogPost = {
     },
     {
       type: 'p',
-      text: 'Bağlanan her istemciye kendi kimliğini söylüyor, sonra gelen her mesajı olduğu gibi herkese yayıyor. İstemci tarafında mesaj şöyle kuruluyordu:',
+      text: 'Bağlanan her istemciye kendi kimliğini söylüyor, sonra gelen mesajı olduğu gibi herkese yayıyor. İstemci mesajı şöyle kuruyordu:',
     },
     {
       type: 'code',
@@ -51,17 +51,17 @@ export const post: BlogPost = {
     },
     {
       type: 'p',
-      text: 'Mesajın kimden geldiğini istemci söylüyor: `id: yourID`. Sunucu gerçek kimliği zaten biliyordu, `socket.id` elinin altındaydı, ama kullanmıyordu. Gelen `id` alanını kontrol etmeden herkese iletiyordu. Ekranda mesajı sağa mı sola mı koyacağına da `message.id === yourID` karşılaştırması karar veriyordu. Yani biri başkasının kimliğiyle mesaj gönderseydi, o mesaj karşı tarafın ekranında onun kendi mesajı gibi, sağ tarafta görünürdü.',
+      text: 'Mesajın sahibini istemci yazıyor: `id: yourID`. Sunucu gerçek kimliği zaten biliyordu, `socket.id` elinin altındaydı, ama kullanmıyordu. Gelen `id` alanına bakmadan mesajı herkese iletiyordu. Mesajın ekranda sağa mı sola mı düşeceğine de `message.id === yourID` karar veriyordu. Yani biri başkasının kimliğiyle mesaj atsaydı, o mesaj karşı tarafın ekranında sanki kendi yazmış gibi sağda görünürdü.',
     },
     {
       type: 'p',
-      text: 'O gün bunu hiç düşünmedim. Uygulama çalışıyordu, çünkü sohbette herkes dürüst olduğu sürece otoriteye ihtiyaç yok. İstemci kodunda hâlâ bir `console.log("here")` duruyor; o dönemki hata ayıklama yöntemimin de özeti.',
+      text: 'Kodda buna karşı tek bir kontrol yok. Uygulama yine de çalışıyordu: sohbette herkes kendi adıyla yazdığı sürece kimin haklı olduğuna karar verecek bir sunucuya gerek kalmıyor. İstemci kodunda hâlâ bir `console.log("here")` duruyor; o dönem hata ayıklamayı böyle yapıyordum.',
     },
 
     { type: 'h2', text: 'Bir Ay Önce: Firebase' },
     {
       type: 'p',
-      text: 'Ondan bir ay önce, Mayıs 2021\'de React, Tailwind ve Firebase ile bir Twitter klonu yazmıştım. Orada sunucu kodu hiç yoktu. İstemci doğrudan Firestore\'a yazıyor, akışı da doğrudan oradan dinliyordu:',
+      text: 'Bundan bir ay önce, Mayıs 2021\'de React, Tailwind ve Firebase ile bir Twitter klonu yazmıştım. Orada hiç sunucu kodu yoktu. İstemci doğrudan Firestore\'a yazıyor, akışı da oradan dinliyordu:',
     },
     {
       type: 'code',
@@ -86,7 +86,7 @@ export const post: BlogPost = {
     },
     {
       type: 'p',
-      text: 'Burada da kim olduğunu istemci söylüyor; adım ve kullanıcı adım koda gömülü. Kimin yazabileceğine karar verecek tek yer Firestore\'un güvenlik kurallarıydı ve depoda bir kural dosyası yok. Sunucunun gerçekten karar verdiği tek şey zamandı: `serverTimestamp()` sıralamayı istemcinin saatine bırakmıyor.',
+      text: 'Burada da kim olduğunu istemci söylüyor; adım ve kullanıcı adım koda gömülü. Kimin yazabileceğine karar verecek tek yer Firestore\'un güvenlik kurallarıydı ve depoda kural dosyası yok. Sunucunun karar verdiği tek şey zamandı: `serverTimestamp()` sıralamayı istemcinin saatine bırakmıyor.',
     },
     {
       type: 'quote',
@@ -96,11 +96,11 @@ export const post: BlogPost = {
     { type: 'h2', text: 'Beş Yıl Sonra: Karalama' },
     {
       type: 'p',
-      text: 'Karalama bir çizim-tahmin oyunu ve orada aynı soruyu sormadan tek satır yazamazdım. Bir tahmin doğru mu? Cevabı kim biliyor? Puanı kim veriyor?',
+      text: 'Karalama bir çizim-tahmin oyunu. Orada bu soru en baştan karşıma çıktı, çünkü oyunun kendisi üç karara dayanıyor: tahmin doğru mu, cevabı kim biliyor, puanı kim veriyor.',
     },
     {
       type: 'p',
-      text: 'Cevapların hepsi sunucu. Tahmin sohbet kanalından düz metin olarak geliyor ve oyuncunun kimliği mesajın içinden değil, bağlantının kendisinden okunuyor:',
+      text: 'Üçünün de cevabı sunucu. Tahmin sohbetten düz metin olarak geliyor ve oyuncunun kimliği mesajın içinden değil, bağlantının kendisinden okunuyor:',
     },
     {
       type: 'code',
@@ -131,36 +131,36 @@ export const post: BlogPost = {
     },
     {
       type: 'p',
-      text: '`this.currentWord` tahmin edenlere tur boyunca hiç gönderilmiyor. Onlara giden tek şey ipucu ve harf sayısı; kelimenin kendisi yalnızca çizen kişide ve tur bittiğinde herkese açıklanıyor. Puanı da sunucu hesaplıyor. 2021\'deki sunucunun ilettiği `id` alanının yerini burada `socket.id` almış durumda: kimin konuştuğunu artık istemci değil, bağlantı söylüyor.',
+      text: '`this.currentWord` tahmin edenlere tur boyunca hiç gönderilmiyor. Onlara yalnızca ipucu ve harf sayısı gidiyor; kelime çizen kişide duruyor ve tur bitince herkese açıklanıyor. Puanı da sunucu hesaplıyor. 2021\'de istemcinin yazdığı `id` alanının yerini burada `socket.id` aldı: kimin konuştuğunu artık bağlantı söylüyor.',
     },
 
     { type: 'h2', text: 'Firebase\'de Aynısı Nasıl Olurdu' },
     {
       type: 'p',
-      text: 'Firebase\'in modelinde veritabanı bir depo, karar verici değil. Güvenlik kuralları "bu kullanıcı kendi adına mı yazıyor" sorusunu cevaplayabiliyor; Twitter klonunda eksik olan da buydu. Ama "bu tahmin doğru mu" sorusu başka. Doğru cevap okunabilir bir yerde duruyorsa istemci onu okur. Okunamaz bir yere koyarsan, karşılaştırmayı yapacak bir sunucu fonksiyonuna ihtiyacın var. Yani sonunda yine sunucu kodu yazıyorsun, yalnızca başka bir yerde.',
+      text: 'Firebase\'te veritabanı veriyi tutar, karar vermez. Güvenlik kuralları "bu kullanıcı kendi adına mı yazıyor" sorusunu cevaplayabiliyor; Twitter klonunda eksik olan da buydu. "Bu tahmin doğru mu" sorusu başka. Doğru cevap okunabilir bir yerde duruyorsa istemci onu okur. Okunamaz bir yere koyarsan, karşılaştırmayı yapacak bir sunucu fonksiyonu gerekir. Sonunda yine sunucu kodu yazıyorsun, sadece başka bir yerde.',
     },
 
     { type: 'h2', text: 'Bugün Hangisini Seçerdim' },
     {
       type: 'p',
-      text: 'Cevap tek bir soruya bakıyor: sunucunun, istemcinin bilmediği bir şeyi bilmesi gerekiyor mu?',
+      text: 'Ben şu soruya bakıyorum: sunucu, istemcinin bilmemesi gereken bir şey tutuyor mu?',
     },
     {
       type: 'steps',
       items: [
         {
           title: 'Gerekmiyorsa Barındırılan Bir Gerçek Zamanlı Veritabanı',
-          text: 'Sohbet, bildirim, canlı sayaç, ortak liste. Herkes her şeyi görebilir; kurallar yalnızca kimin neyi yazabileceğini sınırlar. Bu senaryoda kendi sunucunu yazmak boşa emek.',
+          text: 'Sohbet, bildirim, canlı sayaç, ortak liste. Herkes her şeyi görebilir; kurallar yalnızca kimin neyi yazabileceğini sınırlar. Böyle bir işte kendi sunucunu yazmak boşa emek.',
         },
         {
           title: 'Gerekiyorsa Kendi Sunucun',
-          text: 'Oyun mantığı, gizli durum, sunucuda işleyen zamanlayıcı, hileye karşı kontrol. Karar veren tarafın kodu senin elinde olmalı.',
+          text: 'Oyun mantığı, gizli kalması gereken bilgi, sunucuda işleyen zamanlayıcı, hileye karşı kontrol. Kararı veren kod senin elinde olmalı.',
         },
       ],
     },
     {
       type: 'p',
-      text: '2021\'deki iki projede bu soruyu hiç sormamıştım ve ikisi de çalıştı, çünkü ikisinde de saklanacak bir şey yoktu. Karalama\'da ilk saklanması gereken şey bir kelimeydi ve bütün mimari o kelimenin etrafında şekillendi. Merak ettiğim, bir sonraki projede ilk saklanması gereken şeyin ne olacağı ve onu bu kez baştan görüp göremeyeceğim.',
+      text: '2021\'deki iki projenin kodunda bu soruya verilmiş bir cevap yok. İkisi de çalıştı, çünkü ikisinde de saklanacak bir şey yoktu. Karalama\'da saklanması gereken ilk şey bir kelimeydi ve sunucu o kelimenin etrafında kuruldu. Bir sonraki projede saklanacak şeyin ne olacağını henüz bilmiyorum; bu kez onu kodun ilk gününde görmek istiyorum.',
     },
   ],
 }

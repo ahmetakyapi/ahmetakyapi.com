@@ -6,29 +6,29 @@ export const post: BlogPost = {
   tagColor: '#ef4444',
   title: "One Piece Hub: Spoiler'a Girmeden Gez",
   excerpt:
-    'Bin bölümlük bir seriyi 300. bölümden izleyen biri siteyi açınca ne görmeli? İçerik toplamak kolaydı; zor olan, onu okuyucunun kaldığı yere göre saklamaktı.',
-  date: '2026-04-15',
+    'Bin bölümlük seriyi 300. bölümden izleyen biri siteyi açınca ne görmeli? İçeriği toplamak kolaydı; onu okuyucunun kaldığı yere göre saklamak daha uzun sürdü.',
+  date: '2026-09-01',
   coverGradient: 'linear-gradient(135deg, #ef4444 0%, #f59e0b 50%, #eab308 100%)',
   content: [
     {
       type: 'lead',
-      text: 'One Piece Hub\'da en çok vaktimi alan şey karakter sayfaları ya da arama olmadı. Şu soru oldu: siteyi 300. bölümde olan biri açınca ne görmeli? Bir wiki doğası gereği her şeyi bilir. Okuyucunun henüz bilmediğini ona göstermek, yıllardır izlediği bir hikâyeyi elinden almak demek.',
+      text: 'One Piece Hub\'da en çok uğraştığım soru şuydu: siteyi 300. bölümde olan biri açınca ne görmeli? Bir wiki her şeyi bilir. Okuyucunun henüz izlemediği bir olayı ona göstermek, yıllardır takip ettiği bir hikâyeyi elinden almak demek.',
     },
     {
       type: 'p',
-      text: 'Türkçe kaynak arayan biri genelde iki seçenekle karşılaşıyor: ya İngilizce ve devasa bir wiki, ya da dağınık forum başlıkları. İkisinde de aynı risk var. Bir karakterin sayfasını açıyorsun, sağ üstteki kutuda "Durum: Ölü" yazıyor.',
+      text: 'Wikilerde bunun tipik örneği karakter sayfası: sayfayı açıyorsun, sağ üstteki kutuda "Durum: Ölü" yazıyor.',
     },
 
     { type: 'h2', text: 'Sitede Ne Var' },
     {
       type: 'p',
-      text: 'Problemin büyüklüğü içerikten anlaşılıyor:',
+      text: 'Saklanacak şeyin ne kadar olduğu içerikten belli:',
     },
     {
       type: 'stats',
       label: 'One Piece Hub · İçerik',
       items: [
-        { value: '67', note: 'Karakter' },
+        { value: '66', note: 'Karakter' },
         { value: '36', note: 'Ark, 10 Saga Altında' },
         { value: '43', note: 'Şeytan Meyvesi' },
         { value: '38', note: 'Ödül Kaydı' },
@@ -38,17 +38,17 @@ export const post: BlogPost = {
     },
     {
       type: 'p',
-      text: 'Bunların üstünde ark ve bölüm takibi, tayfa sayfaları, güç sıralaması, haki rehberi ve başarımlar var. Sayfaların neredeyse tamamı, doğal hâliyle spoiler taşıyor.',
+      text: 'Bunların yanında ark ve bölüm takibi, tayfa sayfaları, güç sıralaması, haki rehberi ve başarımlar var. Sayfaların neredeyse hepsi spoiler taşıyabiliyor.',
     },
 
     { type: 'h2', text: 'Spoiler Nedir, Kod Açısından' },
     {
       type: 'p',
-      text: 'Somut bir tanım olmadan tek satır kod yazılmıyor. İlk aklıma gelen tanım "önemli olay"dı ve işe yaramazdı: neyin önemli olduğu bir yargı ve her içerik parçasında yeniden verilmesi gerekiyor.',
+      text: 'Kod yazmak için somut bir tanım lazım. "Önemli olay" gibi bir tanım işe yaramazdı: neyin önemli olduğu bir yargı ve her içerik parçası için ayrı ayrı verilmesi gerekir.',
     },
     {
       type: 'p',
-      text: 'Çok daha basit bir tanıma indim. One Piece doğrusal ilerliyor; her içerik parçası bir arka ait ve arklar sıralı. Okuyucu da bir arkta. Gerisi karşılaştırma.',
+      text: 'Kodda çok daha basit bir tanım var. One Piece sırayla ilerliyor; her içerik bir arka ait ve arklar sıralı. Okuyucu da bir arkta. Gerisi iki sayıyı karşılaştırmak.',
     },
     {
       type: 'code',
@@ -65,30 +65,30 @@ const isSpoiler = useCallback((arcSlug: string | undefined) => {
     },
     {
       type: 'p',
-      text: '`targetIndex === -1` kontrolü kasıtlı. Bir içeriğin arkı etiketlenmemişse gizlemiyorum. Öteki seçenek "bilmiyorsan sakla" olurdu ve o kural, etiketi eksik tek bir kayıt yüzünden sayfaları sebepsiz karartırdı. Belirsizlikte göstermek daha az zararlı.',
+      text: '`targetIndex === -1` kontrolü bilinçli. Bir içeriğin arkı etiketlenmemişse gizlemiyorum. Öteki seçenek "bilmiyorsan sakla" olurdu ve o kural, etiketi eksik tek bir kayıt yüzünden sayfaları sebepsiz yere karartırdı. Emin değilken göstermek daha az zarar veriyor.',
     },
     {
       type: 'p',
-      text: '`active` içindeki `mounted` da önemli. Tercih `localStorage`\'da duruyor, yani sunucu bilmiyor. Bu kontrol olmasa sayfa önce her şeyi gösterip sonra karartırdı; spoiler koruması için bundan kötü bir hata düşünemiyorum.',
+      text: '`active` içindeki `mounted` da bir iş görüyor. Tercih `localStorage`\'da duruyor, yani sunucu onu bilmiyor. Bu kontrol olmasa sayfa önce her şeyi gösterip sonra karartabilirdi; spoiler koruması için bundan kötüsü yok.',
     },
     {
       type: 'callout',
       variant: 'warning',
-      text: 'Gizleme mantığı istemcide. Teknik olarak isteyen HTML kaynağından her şeyi okuyabilir. Bunu kabul ettim, çünkü korunmak istenen kişi bir saldırgan değil, kendi gözünü korumaya çalışan bir okuyucu. Kilit değil, perde.',
+      text: 'Gizleme mantığı tarayıcıda çalışıyor. İsteyen HTML kaynağından her şeyi okuyabilir. Bunu kabul ettim, çünkü burada korunan kişi kendi gözünü korumaya çalışan bir okuyucu. Bu bir kilit olarak tasarlanmadı, bir perde olarak tasarlandı.',
     },
 
-    { type: 'h2', text: 'Kullanıcıya "Neredesin" Diye Sormak' },
+    { type: 'h2', text: 'Okuyucuya "Neredesin" Diye Sormak' },
     {
       type: 'p',
-      text: 'Doğru soruyu bulmak ayrı bir işti. İlk denemem "kaçıncı bölümdesin?" diye bir sayı kutusuydu ve kendim bile dolduramadım. İnsanlar kaçıncı bölümde olduklarını hatırlamıyor ama hangi olayda olduklarını gayet iyi biliyor.',
+      text: 'Okuyucuya kaçıncı bölümde olduğu sorulmuyor; sitede bölüm numarası girilen bir kutu yok, deponun geçmişinde de hiç olmamış. Okuyucu bir ark seçiyor. Bölüm numarası akılda kalmayabilir, ama Alabasta\'yı bitirip bitirmediğini herkes bilir.',
     },
     {
       type: 'p',
-      text: 'Ark seçtirmeye geçince iş kendiliğinden çözüldü. Arkları saga başlıkları altında gruplamak da gerekliydi: 36 ark düz bir liste olarak korkutucu görünüyor, 10 saga altında toplanınca değil.',
+      text: 'Seçici 36 arkı 10 saga başlığı altında gruplayarak gösteriyor. Düz bir liste uzun bir kaydırma demek; saga başlıkları okuyucunun kendi yerini bulmasını kolaylaştırıyor.',
     },
     {
       type: 'p',
-      text: 'Ekranın köşesindeki düğme durumu sürekli gösteriyor. Koruma açıkken kaçıncı arkta olduğunu yazıyor; açık ama ark seçilmemişse koruma iddia etmiyor, ark seçmeni istiyor.',
+      text: 'Ekranın köşesindeki düğme durumu sürekli gösteriyor. Koruma açıkken kaçıncı arkta olduğunu yazıyor; açık ama ark seçilmemişse korumanın çalıştığını iddia etmiyor, ark seçmeni istiyor. Telefonda bu düğme yalnızca bir göz ikonu, yazı sm kırılımından itibaren görünüyor.',
     },
     {
       type: 'code',
@@ -102,54 +102,54 @@ const isSpoiler = useCallback((arcSlug: string | undefined) => {
     { type: 'h2', text: 'Kapı Aylarca Hiçbir Şeyi Kapatmamış' },
     {
       type: 'p',
-      text: 'Bu bölümü sonradan ekledim, çünkü yukarıdaki düğme dört aydan uzun bir süre yalan söyledi.',
+      text: 'Yukarıdaki düğme dört aydan uzun bir süre yanlış bilgi verdi. Kapı 18 Nisan\'da eklendi, 31 Ağustos\'ta düzeldi.',
     },
     {
       type: 'p',
-      text: '`useSpoilerGate` başta düz bir hook\'tu ve çağıran her bileşen kendi `useState`\'ini kuruyordu. Köşedeki düğmenin bir kopyası vardı, listedeki her ark kartının ayrı bir kopyası. 36 ark, 36 bağımsız durum. Düğmeden ark seçince yalnızca düğmenin kopyası değişiyordu: düğme "Spoiler: 14/36" yazıyor, kartlar sayfa yenilenene kadar hiçbir şeyi gizlemiyordu.',
+      text: '`useSpoilerGate` başta düz bir hook\'tu ve onu çağıran her bileşen kendi `useState`\'ini kuruyordu. Köşedeki düğmenin bir kopyası vardı, listedeki her ark kartının da ayrı bir kopyası. 36 ark, 36 ayrı state. Düğmeden ark seçince yalnızca düğmenin kopyası değişiyordu: düğme "Spoiler: 14/36" yazıyor, kartlar ise sayfa yenilenene kadar hiçbir şeyi gizlemiyordu.',
     },
     {
       type: 'compare',
       label: 'Koruma Aç, Ark Seç, Sayfayı Yenileme',
       before: { label: 'Düz Hook', value: '0 Kart Gizli' },
       after: { label: 'Context Sağlayıcı', value: '35 Kart Gizli' },
-      note: 'Mantık baştan doğruydu: tercihi elle yazıp sayfayı yenileyince aynı 35 kart gizleniyordu. Eksik olan paylaşımdı.',
+      note: 'Mantık baştan doğruydu: tercihi localStorage\'a elle yazıp sayfayı yenileyince aynı 35 kart gizleniyordu. Eksik olan, state\'in bileşenler arasında paylaşılmasıydı.',
     },
     {
       type: 'p',
-      text: 'Düzeltme, hook\'u tema ve oturum sağlayıcılarıyla aynı desende bir Context sağlayıcıya çevirmek oldu. Yanına iki küçük karar ekledim. Ark seçmek korumayı kendiliğinden açıyor, çünkü niyeti belli eden eylem o; eskiden iki ayrı adım gerekiyordu ve birini atlayınca hiçbir şey olmuyor, sebebi de söylenmiyordu. Ayrıca durum artık her zaman yazıyla bildiriliyor: kaç arkın gizlendiği, ark seçmen gerektiği ya da korumanın duraklatıldığı.',
+      text: 'Düzeltme, hook\'u tema ve oturum sağlayıcılarıyla aynı yapıda bir Context sağlayıcıya çevirmek oldu. Yanına iki küçük karar ekledim. Ark seçmek korumayı kendiliğinden açıyor, çünkü niyeti belli eden adım o; eskiden iki ayrı adım gerekiyordu ve birini atlayınca hiçbir şey olmuyor, sebebi de söylenmiyordu. Ayrıca durum artık her zaman yazıyla bildiriliyor: kaç arkın gizlendiği, ark seçmen gerektiği ya da korumanın duraklatıldığı.',
     },
     {
       type: 'quote',
-      text: 'Görünmeyen bir koruma güvenilmez. Görünüp çalışmayan bir koruma ondan da kötü, çünkü güveni boşuna kazanır.',
+      text: 'Görünmeyen bir korumaya kimse güvenmez. Görünüp çalışmayan bir koruma daha kötü, çünkü güveni hak etmeden kazanır.',
     },
 
     { type: 'h2', text: 'Gizlenen Şey Nasıl Görünmeli' },
     {
       type: 'p',
-      text: 'İki seçenek vardı: içeriği tamamen kaldırmak ya da üstünü örtmek. Kaldırmak ark listesini ortadan keserdi ve okuyucu sitenin bozuk olduğunu sanırdı. Üstelik bir şeyin var olduğunu bilmek spoiler değil; ne olduğunu bilmek spoiler.',
+      text: 'İki seçenek vardı: içeriği tamamen kaldırmak ya da üstünü örtmek. Kaldırmak ark listesini ortasından keserdi ve okuyucu sitenin bozuk olduğunu sanırdı. Üstelik bir arkın var olduğunu bilmek spoiler sayılmaz; içinde ne olduğunu bilmek sayılır.',
     },
     {
       type: 'p',
-      text: 'Kart yerinde duruyor; görseli bulanık, adı gizli ve üstünde "Spoiler" yazıyor. Tıklayınca yalnızca o kart açılıyor. Koruma kapanmıyor, sadece o kart için taviz veriliyor.',
+      text: 'Kodda gizli bir kart şöyle duruyor: görsel bulanık, ark adı ve özet metni de bulanık ve seçilemiyor, saga rozeti ile bölüm sayısı hiç çizilmiyor, üstünde "Spoiler" ve "Göstermek için tıkla" yazıyor. Tıklayınca yalnızca o kart açılıyor; koruma kapanmıyor. Gizlenmeyen şeyler de var. Kartın alt satırındaki ilk iki tema etiketi bulanıklaşmıyor; Egghead arkında bu etiketlerden biri "Void Century". Kartın listedeki yeri de görünüyor, yani kaç ark kaldığı belli.',
     },
     {
       type: 'quote',
-      text: 'İyi bir spoiler koruması, korumayı kaldırma kararını da okuyucuya bırakır. "Bunu görmek istiyor musun" sorusu, sorunun kendisi spoiler olmadığı sürece adil bir soru.',
+      text: 'İyi bir spoiler koruması, korumayı kaldırma kararını da okuyucuya bırakır. "Bunu görmek istiyor musun" sorusu, sorunun kendisi bir şey ele vermediği sürece adil.',
     },
     {
       type: 'p',
-      text: 'Erişilebilirlik tarafında da bir ayrıntı var. Bulanıklık CSS\'te, ama ekran okuyucu CSS görmez. Gizli kartın `aria-label`\'ı ark adını okumuyor; "Spoiler: … gizli arc. Göstermek için tıkla." diyor ve görselin `alt` metni "Spoiler gizli" oluyor. Boşluğa saganın adı giriyor. Saga adının kendisinin ipucu olup olmadığından hâlâ emin değilim.',
+      text: 'Erişilebilirlik tarafında bir tutarsızlık var. Bulanıklık CSS\'te, ekran okuyucu ise CSS görmez. Gizli kartın `aria-label`\'ı ark adını okumuyor; "Spoiler: … gizli arc. Göstermek için tıkla." diyor ve görselin `alt` metni "Spoiler gizli" oluyor. Üç noktanın yerine saganın adı giriyor. Yani gören okuyucudan saklanan saga rozeti, ekran okuyucu kullanan okuyucuya yüksek sesle söyleniyor. İki taraf aynı kuralı izlemiyor.',
     },
 
     { type: 'h2', text: 'Karakter İlişkileri: Neden Çember' },
     {
       type: 'p',
-      text: 'Sitenin ikinci uğraştırıcı parçası karakter ilişkileri ekranıydı. Elimde 25 karakter ve aralarında elle yazılmış 29 bağ var: nakama, aile, rakiplik, düşmanlık, hoca-öğrenci, ittifak.',
+      text: 'Sitenin uğraştıran ikinci parçası karakter ilişkileri ekranıydı. Elimde 25 karakter ve aralarında elle yazılmış 29 bağ var: nakama, aile, rakiplik, düşmanlık, hoca-öğrenci, ittifak.',
     },
     {
       type: 'p',
-      text: 'Veri dosyasının başındaki yorum hâlâ "force-directed graph için kullanılır" diyor. Planım buydu: düğümler birbirini iter, bağlı olanlar çeker, sistem kendi dengesini bulur. Depoya giren ekranda ise ilk günden beri düğümler bir çemberin üzerinde eşit aralıklarla duruyor. Sekiz satır, fizik yok, rastgelelik yok.',
+      text: 'Veri dosyasının başındaki yorum hâlâ "force-directed graph için kullanılır" diyor: düğümler birbirini iter, bağlı olanlar birbirini çeker, sistem kendi dengesini bulur. Depoya giren ekranda ise ilk günden beri düğümler bir çemberin üzerinde eşit aralıklarla duruyor. Sekiz satır; fizik yok, rastgelelik yok.',
     },
     {
       type: 'code',
@@ -168,21 +168,21 @@ const isSpoiler = useCallback((arcSlug: string | undefined) => {
     },
     {
       type: 'p',
-      text: 'Çemberin asıl kazancı sabit olması. Luffy her ziyarette aynı yerde duruyor ve ilişki türüne göre filtre anlamlı hâle geliyor: "sadece düşmanlıklar" dediğinde çember aynı kalıyor, yalnızca çizgiler değişiyor, yani iki görünümü yan yana karşılaştırabiliyorsun. Fizik yerleşiminde her filtre yeni bir düzen demek olurdu.',
+      text: 'Çemberin kazancı yerinden oynamaması. Luffy her ziyarette aynı yerde duruyor ve ilişki türüne göre filtre bir anlam kazanıyor: "sadece düşmanlıklar" dediğinde çember aynı kalıyor, yalnızca çizgiler değişiyor. İki görünümü bu sayede karşılaştırabiliyorsun. Fizik tabanlı yerleşimde her filtre yeni bir düzen demek olurdu.',
     },
     {
       type: 'quote',
-      text: 'Force-directed yerleşim bir keşif aracı: yapısını bilmediğin bir grafta küme aramak için iyidir. Ben yapıyı zaten biliyordum; 25 karakter ve elle yazdığım 29 bağ.',
+      text: 'Force-directed yerleşim, yapısını bilmediğin bir grafta küme aramak için iyidir. Ben yapıyı zaten biliyordum: 25 karakter ve elle yazdığım 29 bağ.',
     },
 
     { type: 'h2', text: 'Ne Öğrendim' },
     {
       type: 'p',
-      text: 'İki parçada da işe yarayan çözüm, teknik olarak daha sade olanıydı. Spoiler kapısı "önemli olayı" tespit etmeye çalışmıyor, sıralı bir dizide indeks karşılaştırıyor. Graf fiziği simüle etmiyor, düğümleri çembere diziyor.',
+      text: 'İki parçada da işe yarayan çözüm daha sade olanıydı. Spoiler kapısı sıralı bir dizide iki indeksi karşılaştırıyor. Graf, fizik hesaplamak yerine düğümleri çembere diziyor.',
     },
     {
       type: 'p',
-      text: 'Spoiler kapısının asıl dersi ise sonradan geldi. Mantığı doğru yazmıştım ve düğme durumu doğru gösteriyordu; ikisi birbirine bağlı değildi ve kapı Nisan\'dan Ağustos sonuna kadar öyle kaldı. Bir korumayı test etmenin yolu ekranda yazana bakmak değil, gizlenmesi gereken kartı saymakmış.',
+      text: 'Kapının kapsamı da hâlâ dar. `isSpoiler` bugün yalnızca ark listesindeki kartlarda çağrılıyor. Karakterlerin ilk göründüğü ark (`firstArc`) veride var, ama karakter sayfaları kapıya bağlı değil. Girişteki "Durum: Ölü" örneğine karşı site henüz bir şey yapmıyor.',
     },
   ],
 }
