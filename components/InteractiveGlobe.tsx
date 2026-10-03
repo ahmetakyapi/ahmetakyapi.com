@@ -1,13 +1,16 @@
 'use client'
 
-import React, { useRef, useEffect, useCallback, useState } from 'react'
+import { useCallback, useEffect, useRef, useState, type MouseEvent, type PointerEvent } from 'react'
 
 // ─── Types ───────────────────────────────────────────────────────────────────
+/** Şehir rengi bir ROL: `home` sıcak vurgu (tek nokta), geri kalanı vurgu ailesi. */
+type Tone = 'primary' | 'soft' | 'warm' | 'ink'
+
 interface City {
   name: string
   lat: number
   lng: number
-  color: string
+  tone: Tone
   size?: number
   labelDir?: 'above' | 'below' | 'left' | 'right'
 }
@@ -24,7 +27,7 @@ interface Particle {
   vy: number
   life: number
   maxLife: number
-  color: string
+  tone: Tone
   size: number
 }
 
@@ -34,7 +37,7 @@ interface Ripple {
   radius: number
   maxRadius: number
   life: number
-  color: string
+  tone: Tone
 }
 
 // ─── Constants ───────────────────────────────────────────────────────────────
@@ -46,19 +49,19 @@ const TARGET_FPS = 30
 const FRAME_INTERVAL = 1000 / TARGET_FPS
 
 const CITIES: City[] = [
-  { name: 'Istanbul',     lat: 41.01,  lng: 28.98,   color: '#22d3ee', size: 5.5, labelDir: 'above' },
-  { name: 'New York',     lat: 40.71,  lng: -74.01,  color: '#fb923c', size: 4 },
-  { name: 'Tokyo',        lat: 35.68,  lng: 139.69,  color: '#f0abfc', size: 4 },
-  { name: 'London',       lat: 51.51,  lng: -0.13,   color: '#34d399', size: 3.5 },
-  { name: 'Sydney',       lat: -33.87, lng: 151.21,  color: '#60a5fa', size: 3.5 },
-  { name: 'Singapore',    lat: 1.35,   lng: 103.82,  color: '#86efac', size: 3 },
-  { name: 'Dubai',        lat: 25.20,  lng: 55.27,   color: '#f472b6', size: 3.5 },
-  { name: 'Mumbai',       lat: 19.07,  lng: 72.88,   color: '#fb7185', size: 3 },
-  { name: 'Seoul',        lat: 37.57,  lng: 126.98,  color: '#38bdf8', size: 3 },
-  { name: 'São Paulo',    lat: -23.55, lng: -46.63,  color: '#4ade80', size: 3 },
-  { name: 'Mexico City',  lat: 19.43,  lng: -99.13,  color: '#fcd34d', size: 3 },
-  { name: 'Johannesburg', lat: -26.20, lng: 28.04,   color: '#e879f9', size: 3 },
-  { name: 'Lagos',        lat: 6.52,   lng: 3.38,    color: '#a3e635', size: 2.5 },
+  { name: 'Istanbul',     lat: 41.01,  lng: 28.98,   tone: 'warm', size: 5.5, labelDir: 'above' },
+  { name: 'New York',     lat: 40.71,  lng: -74.01,  tone: 'primary', size: 4 },
+  { name: 'Tokyo',        lat: 35.68,  lng: 139.69,  tone: 'primary', size: 4 },
+  { name: 'London',       lat: 51.51,  lng: -0.13,   tone: 'primary', size: 3.5 },
+  { name: 'Sydney',       lat: -33.87, lng: 151.21,  tone: 'primary', size: 3.5 },
+  { name: 'Singapore',    lat: 1.35,   lng: 103.82,  tone: 'primary', size: 3 },
+  { name: 'Dubai',        lat: 25.20,  lng: 55.27,   tone: 'primary', size: 3.5 },
+  { name: 'Mumbai',       lat: 19.07,  lng: 72.88,   tone: 'primary', size: 3 },
+  { name: 'Seoul',        lat: 37.57,  lng: 126.98,  tone: 'primary', size: 3 },
+  { name: 'São Paulo',    lat: -23.55, lng: -46.63,  tone: 'primary', size: 3 },
+  { name: 'Mexico City',  lat: 19.43,  lng: -99.13,  tone: 'primary', size: 3 },
+  { name: 'Johannesburg', lat: -26.20, lng: 28.04,   tone: 'primary', size: 3 },
+  { name: 'Lagos',        lat: 6.52,   lng: 3.38,    tone: 'primary', size: 2.5 },
 ]
 
 const ARCS: Arc[] = [
@@ -79,12 +82,15 @@ const ARCS: Arc[] = [
 
 const STAR_COUNT = 80
 
+/** Küre yarıçapı / tuval kenarı. Halkalar kalkınca küre boşalan payı aldı. */
+const RADIUS_RATIO = 0.42
+
 /**
  * Yay geometrisi bir kere hesaplanıyor.
  *
  * Her karede 13 yay × 41 nokta = 533 slerp çağrısı yapılıyordu; her biri
  * acos dahil ~15 trigonometrik işlem, yani kare başına ~8000 işlem. Oysa
- * iki şehir arasındaki büyük daire yolu hiç değişmiyor — değişen tek şey
+ * iki şehir arasındaki büyük daire yolu hiç değişmiyor: değişen tek şey
  * kürenin dönüş açısı.
  *
  * Burada noktanın küre üstündeki sabit yeri saklanıyor. Dönüş, açı toplama
@@ -100,7 +106,7 @@ type ArcPointGeometry = {
   cosPhi: number
   cosT0: number
   sinT0: number
-  /** Yarıçap çarpanı — yayın ortası küreden hafifçe yükseliyor. */
+  /** Yarıçap çarpanı: yayın ortası küreden hafifçe yükseliyor. */
   rFactor: number
 }
 
@@ -128,6 +134,58 @@ const ARC_GEOMETRY: ArcPointGeometry[][] = ARCS.map((arc) => {
 const ARC_SCREEN: { x: number; y: number; z: number }[][] = ARC_GEOMETRY.map((points) =>
   points.map(() => ({ x: 0, y: 0, z: 0 })),
 )
+
+// ─── Renk: token'dan ─────────────────────────────────────────────────────────
+/**
+ * Küre renkleri SABİT DEĞİL, temadan okunuyor (app/globals.css). Eskiden
+ * mor-cyan sabit bir palet ve koyu bir çekirdek vardı: açık temada beyaz
+ * sayfanın ortasında gece mavisi bir top duruyordu.
+ *
+ * Canvas CSS değişkeni okuyamaz; değer bir yoklama öğesine `color` olarak
+ * verilip hesaplanmış `rgb()` hâli alınıyor (değişken başka bir değişkene
+ * başvursa da çözülmüş gelir). Tema değişimi `<html data-theme>` üzerinden
+ * MutationObserver ile izleniyor.
+ */
+type Rgb = readonly [number, number, number]
+type GlobePalette = Record<Tone | 'ground' | 'muted' | 'label', Rgb>
+
+const TOKEN: Record<keyof GlobePalette, string> = {
+  primary: '--primary',
+  soft: '--primary-soft',
+  warm: '--accent-warm',
+  ink: '--text-strong',
+  ground: '--page-bg',
+  muted: '--text-muted',
+  label: '--page-bg',
+}
+
+const FALLBACK: Rgb = [53, 184, 255]
+
+function readPalette(): GlobePalette {
+  const probe = document.createElement('span')
+  probe.style.display = 'none'
+  document.body.appendChild(probe)
+  const out = {} as Record<keyof GlobePalette, Rgb>
+  for (const key of Object.keys(TOKEN) as (keyof GlobePalette)[]) {
+    probe.style.color = `var(${TOKEN[key]})`
+    const nums = getComputedStyle(probe).color.match(/[\d.]+/g)
+    out[key] = nums && nums.length >= 3 ? [Number(nums[0]), Number(nums[1]), Number(nums[2])] : FALLBACK
+  }
+  probe.remove()
+  return out
+}
+
+function rgba(c: Rgb, a: number) {
+  return `rgba(${c[0]},${c[1]},${c[2]},${Math.max(0, Math.min(1, a)).toFixed(3)})`
+}
+
+/** `base` üstüne `amount` oranında `tint`: OPAK sonuç. Degrade durağı için. */
+function mix(base: Rgb, tint: Rgb, amount: number) {
+  const m = (i: 0 | 1 | 2) => Math.round(base[i] + (tint[i] - base[i]) * amount)
+  return `rgb(${m(0)},${m(1)},${m(2)})`
+}
+
+const BURST_TONES: Tone[] = ['primary', 'soft', 'ink', 'primary', 'soft', 'warm']
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 function toRad(deg: number) {
@@ -202,6 +260,10 @@ export default function InteractiveGlobe() {
      dusuyordu, yani her yuklemede gorunur bir sicrama vardi.
      Artik olculene kadar 0; kap kare oranini kendisi tutuyor. */
   const [size, setSize] = useState(0)
+  /* Tema değişince artan sayaç: hareket kapalıyken tek kareyi yeniden çizdirir. */
+  const [paletteVersion, setPaletteVersion] = useState(0)
+  const paletteRef = useRef<GlobePalette | null>(null)
+  const fontRef = useRef('sans-serif')
   const [visible, setVisible] = useState(false)
   const [reducedMotion, setReducedMotion] = useState(false)
 
@@ -231,11 +293,12 @@ export default function InteractiveGlobe() {
     ripples: [] as Ripple[],
     time: 0,
     stars: [] as { lat: number; lng: number; brightness: number }[],
-    packetPhases: ARCS.map(() => Math.random()),
+    // Rastgele fazlar çizimden önce, efektte atanıyor (render saf kalsın).
+    packetPhases: ARCS.map(() => 0),
     lastFrameTime: 0,
   })
 
-  /* Ekranda degilken cizmenin anlami yok — kure sayfanin ustunde ama
+  /* Ekranda degilken cizmenin anlami yok: kure sayfanin ustunde ama
      kullanici asagi kaydirinca hala 30 FPS harciyordu. */
   useEffect(() => {
     const el = containerRef.current
@@ -257,6 +320,7 @@ export default function InteractiveGlobe() {
 
   useEffect(() => {
     const s = stateRef.current
+    s.packetPhases = ARCS.map(() => Math.random())
     s.stars = Array.from({ length: STAR_COUNT }, () => ({
       lat: Math.random() * 180 - 90,
       lng: Math.random() * 360 - 180,
@@ -264,55 +328,51 @@ export default function InteractiveGlobe() {
     }))
   }, [])
 
+  /* Renkler temadan; tema değişince yeniden okunur. */
+  useEffect(() => {
+    const apply = () => {
+      paletteRef.current = readPalette()
+      fontRef.current = getComputedStyle(document.body).fontFamily || 'sans-serif'
+      setPaletteVersion((v) => v + 1)
+    }
+    apply()
+    const observer = new MutationObserver(apply)
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
+    return () => observer.disconnect()
+  }, [])
+
   // ─── Drawing ─────────────────────────────────────────────────────────────
   const draw = useCallback((ctx: CanvasRenderingContext2D, sz: number) => {
     const s = stateRef.current
+    const pal = paletteRef.current
+    if (!pal) return
+    const tone = (t: Tone) => pal[t]
     const t = s.time
     const CENTER = sz / 2
-    const RADIUS = sz * 0.375 // ~180px at 480
+    const RADIUS = sz * RADIUS_RATIO
 
     const cosRx = Math.cos(s.rotX)
     const sinRx = Math.sin(s.rotX)
-    /* Dönüş açısının sinüs/kosinüsü kare başına bir kez — yay noktaları
+    /* Dönüş açısının sinüs/kosinüsü kare başına bir kez: yay noktaları
        bunları açı toplama formülüyle kullanıyor. */
     const cosRotY = Math.cos(s.rotY)
     const sinRotY = Math.sin(s.rotY)
 
     ctx.clearRect(0, 0, sz, sz)
 
-    // ── Outer orbit rings ──
-    for (let i = 0; i < 3; i++) {
-      const pulse = Math.sin(t * 1.2 + i * 2.1) * 0.5 + 0.5
-      const ringR = RADIUS + sz * 0.05 + i * sz * 0.03 + pulse * sz * 0.012
-      const colors = ['rgba(139,92,246,', 'rgba(34,211,238,', 'rgba(168,85,247,']
-      ctx.beginPath()
-      ctx.arc(CENTER, CENTER, ringR, 0, Math.PI * 2)
-      ctx.strokeStyle = `${colors[i]}${0.1 + pulse * 0.07})`
-      ctx.lineWidth = i === 1 ? 1.5 : 1
-      ctx.stroke()
-    }
-
-    // Decorative arc segments on outer ring
-    const outerR = RADIUS + sz * 0.11
-    for (let seg = 0; seg < 8; seg++) {
-      const startA = (seg / 8) * Math.PI * 2 + t * 0.15
-      const len = 0.18 + Math.sin(t * 0.8 + seg) * 0.05
-      const alpha = 0.25 + Math.sin(t * 1.2 + seg * 0.7) * 0.1
-      ctx.beginPath()
-      ctx.arc(CENTER, CENTER, outerR, startA, startA + len)
-      ctx.strokeStyle = `rgba(34,211,238,${alpha})`
-      ctx.lineWidth = 2
-      ctx.stroke()
-    }
+    /* Yörünge halkaları ve dönen yay parçaları KALDIRILDI. Koyu temada
+       kürenin çevresinde üç eş merkezli çizgi + sekiz parça "halka" gibi
+       okunuyordu: küre bir nişan tahtasına dönüyordu ve göz önce halkaya,
+       sonra küreye gidiyordu. Derinliği artık yalnız ince atmosfer veriyor. */
 
     // ── Atmosphere glow ──
-    const atmosGrad = ctx.createRadialGradient(CENTER, CENTER, RADIUS - 4, CENTER, CENTER, RADIUS + sz * 0.08)
-    atmosGrad.addColorStop(0, 'rgba(139,92,246,0.0)')
-    atmosGrad.addColorStop(0.35, 'rgba(139,92,246,0.12)')
-    atmosGrad.addColorStop(0.65, 'rgba(34,211,238,0.07)')
-    atmosGrad.addColorStop(1, 'rgba(139,92,246,0.0)')
+    const atmosGrad = ctx.createRadialGradient(CENTER, CENTER, RADIUS - 4, CENTER, CENTER, RADIUS + sz * 0.05)
+    atmosGrad.addColorStop(0, rgba(pal.primary, 0))
+    atmosGrad.addColorStop(0.3, rgba(pal.primary, 0.07))
+    atmosGrad.addColorStop(0.7, rgba(pal.soft, 0.025))
+    atmosGrad.addColorStop(1, rgba(pal.primary, 0))
     ctx.beginPath()
-    ctx.arc(CENTER, CENTER, RADIUS + sz * 0.08, 0, Math.PI * 2)
+    ctx.arc(CENTER, CENTER, RADIUS + sz * 0.05, 0, Math.PI * 2)
     ctx.fillStyle = atmosGrad
     ctx.fill()
 
@@ -321,9 +381,14 @@ export default function InteractiveGlobe() {
       CENTER - RADIUS * 0.3, CENTER - RADIUS * 0.3, 0,
       CENTER, CENTER, RADIUS,
     )
-    coreGrad.addColorStop(0, '#1a1040')
-    coreGrad.addColorStop(0.55, '#0d0825')
-    coreGrad.addColorStop(1, '#060412')
+    /* Çekirdek sayfa zemininden, vurgu tonuna doğru hafifçe. Duraklar OPAK
+       ve önceden karıştırılmış: önceki hâli yarı saydam maviden opak zemine
+       gidiyordu; canvas rengi ve saydamlığı ayrı ayrı ara değerlediği için
+       aradaki bantta mavi yüksek opaklıkla birleşip koyu temada parlak bir
+       simit, açıkta beyaz bir leke çiziyordu (3 Ekim 2026, ekranda görüldü). */
+    coreGrad.addColorStop(0, mix(pal.ground, pal.primary, 0.1))
+    coreGrad.addColorStop(0.55, mix(pal.ground, pal.primary, 0.05))
+    coreGrad.addColorStop(1, mix(pal.ground, pal.primary, 0))
     ctx.beginPath()
     ctx.arc(CENTER, CENTER, RADIUS, 0, Math.PI * 2)
     ctx.fillStyle = coreGrad
@@ -334,8 +399,8 @@ export default function InteractiveGlobe() {
       CENTER - RADIUS * 0.38, CENTER - RADIUS * 0.38, 0,
       CENTER - RADIUS * 0.2, CENTER - RADIUS * 0.2, RADIUS * 0.65,
     )
-    specGrad.addColorStop(0, 'rgba(255,255,255,0.04)')
-    specGrad.addColorStop(1, 'rgba(255,255,255,0)')
+    specGrad.addColorStop(0, rgba(pal.ink, 0.04))
+    specGrad.addColorStop(1, rgba(pal.ink, 0))
     ctx.beginPath()
     ctx.arc(CENTER, CENTER, RADIUS, 0, Math.PI * 2)
     ctx.fillStyle = specGrad
@@ -344,8 +409,8 @@ export default function InteractiveGlobe() {
     // ── Sphere border ──
     ctx.beginPath()
     ctx.arc(CENTER, CENTER, RADIUS, 0, Math.PI * 2)
-    ctx.strokeStyle = 'rgba(139,92,246,0.5)'
-    ctx.lineWidth = 1.5
+    ctx.strokeStyle = rgba(pal.primary, 0.24)
+    ctx.lineWidth = 1
     ctx.stroke()
 
     // ── Clip to sphere ──
@@ -366,7 +431,7 @@ export default function InteractiveGlobe() {
           else ctx.lineTo(p.x, p.y)
         } else { started = false }
       }
-      ctx.strokeStyle = isEquator ? 'rgba(139,92,246,0.28)' : 'rgba(139,92,246,0.09)'
+      ctx.strokeStyle = rgba(pal.primary, isEquator ? 0.28 : 0.1)
       ctx.lineWidth = isEquator ? 1 : 0.5
       ctx.stroke()
     }
@@ -386,7 +451,7 @@ export default function InteractiveGlobe() {
           else ctx.lineTo(p.x, p.y)
         } else { started = false }
       }
-      ctx.strokeStyle = `rgba(139,92,246,${0.04 + facing * 0.12})`
+      ctx.strokeStyle = rgba(pal.primary, 0.05 + facing * 0.13)
       ctx.lineWidth = 0.5
       ctx.stroke()
     }
@@ -400,7 +465,7 @@ export default function InteractiveGlobe() {
         const alpha = (p.z / RADIUS) * star.brightness * (0.6 + Math.sin(t * 2.2 + star.lat) * 0.4)
         ctx.beginPath()
         ctx.arc(p.x, p.y, 0.7, 0, Math.PI * 2)
-        ctx.fillStyle = `rgba(255,255,255,${alpha * 0.45})`
+        ctx.fillStyle = rgba(pal.ink, alpha * 0.45)
         ctx.fill()
       }
     }
@@ -441,7 +506,7 @@ export default function InteractiveGlobe() {
           else ctx.lineTo(px, py)
         } else { arcStarted = false }
       }
-      ctx.strokeStyle = `${cityA.color}2a`
+      ctx.strokeStyle = rgba(tone(cityA.tone), 0.17)
       ctx.lineWidth = 1
       ctx.stroke()
 
@@ -460,9 +525,7 @@ export default function InteractiveGlobe() {
         const sz2 = ti === 0 ? 2.2 : 1.4 - ti * 0.1
         ctx.beginPath()
         ctx.arc(pt.x, pt.y, Math.max(0.4, sz2), 0, Math.PI * 2)
-        ctx.fillStyle = ti === 0
-          ? cityA.color
-          : `${cityA.color}${Math.round(alpha * 220).toString(16).padStart(2, '0')}`
+        ctx.fillStyle = rgba(tone(cityA.tone), ti === 0 ? 1 : alpha * 0.86)
         ctx.fill()
       }
     }
@@ -480,8 +543,8 @@ export default function InteractiveGlobe() {
       // Outer halo
       const haloR = dotR * 5
       const haloGrad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, haloR)
-      haloGrad.addColorStop(0, `${city.color}50`)
-      haloGrad.addColorStop(1, `${city.color}00`)
+      haloGrad.addColorStop(0, rgba(tone(city.tone), 0.31))
+      haloGrad.addColorStop(1, rgba(tone(city.tone), 0))
       ctx.beginPath()
       ctx.arc(p.x, p.y, haloR, 0, Math.PI * 2)
       ctx.fillStyle = haloGrad
@@ -494,7 +557,7 @@ export default function InteractiveGlobe() {
         const ringR = dotR + pulse * dotR * 2.5 + ri * dotR * 1.2
         ctx.beginPath()
         ctx.arc(p.x, p.y, ringR, 0, Math.PI * 2)
-        ctx.strokeStyle = `${city.color}${Math.round((0.35 - pulse * 0.2) * alpha * 255).toString(16).padStart(2, '0')}`
+        ctx.strokeStyle = rgba(tone(city.tone), (0.35 - pulse * 0.2) * alpha)
         ctx.lineWidth = 0.8
         ctx.stroke()
       }
@@ -502,13 +565,13 @@ export default function InteractiveGlobe() {
       // Center dot
       ctx.beginPath()
       ctx.arc(p.x, p.y, dotR, 0, Math.PI * 2)
-      ctx.fillStyle = city.color
+      ctx.fillStyle = rgba(tone(city.tone), 1)
       ctx.fill()
 
       // White inner
       ctx.beginPath()
       ctx.arc(p.x, p.y, dotR * 0.38, 0, Math.PI * 2)
-      ctx.fillStyle = '#ffffff'
+      ctx.fillStyle = rgba(pal.ground, 1)
       ctx.fill()
 
       // Label
@@ -517,7 +580,7 @@ export default function InteractiveGlobe() {
         ctx.globalAlpha = labelAlpha * alpha
 
         const text = city.name
-        ctx.font = `600 ${labelSize}px -apple-system, sans-serif`
+        ctx.font = `600 ${labelSize}px ${fontRef.current}`
         const tw = ctx.measureText(text).width
         const pw = tw + 10
         const ph = labelSize * 1.9
@@ -541,13 +604,13 @@ export default function InteractiveGlobe() {
         ctx.lineTo(lx + pillR, ly + ph)
         ctx.arc(lx + pillR, ly + pillR, pillR, Math.PI / 2, -Math.PI / 2)
         ctx.closePath()
-        ctx.fillStyle = 'rgba(5,3,14,0.88)'
+        ctx.fillStyle = rgba(pal.label, 0.9)
         ctx.fill()
-        ctx.strokeStyle = `${city.color}55`
+        ctx.strokeStyle = rgba(tone(city.tone), 0.33)
         ctx.lineWidth = 0.7
         ctx.stroke()
 
-        ctx.fillStyle = '#ffffff'
+        ctx.fillStyle = rgba(pal.ink, 1)
         ctx.textAlign = 'center'
         ctx.textBaseline = 'middle'
         ctx.fillText(text, p.x, ly + ph / 2)
@@ -569,7 +632,7 @@ export default function InteractiveGlobe() {
       const pAlpha = p.life / p.maxLife
       ctx.beginPath()
       ctx.arc(p.x, p.y, p.size * pAlpha, 0, Math.PI * 2)
-      ctx.fillStyle = `${p.color}${Math.round(pAlpha * 210).toString(16).padStart(2, '0')}`
+      ctx.fillStyle = rgba(tone(p.tone), pAlpha * 0.82)
       ctx.fill()
     }
 
@@ -583,7 +646,7 @@ export default function InteractiveGlobe() {
       const rAlpha = r.life / 55
       ctx.beginPath()
       ctx.arc(r.x, r.y, r.radius, 0, Math.PI * 2)
-      ctx.strokeStyle = `${r.color}${Math.round(rAlpha * 190).toString(16).padStart(2, '0')}`
+      ctx.strokeStyle = rgba(tone(r.tone), rAlpha * 0.75)
       ctx.lineWidth = 1.8
       ctx.stroke()
     }
@@ -646,10 +709,10 @@ export default function InteractiveGlobe() {
 
     raf = requestAnimationFrame(loop)
     return () => cancelAnimationFrame(raf)
-  }, [draw, size, visible, reducedMotion])
+  }, [draw, size, visible, reducedMotion, paletteVersion])
 
   // ─── Pointer handlers ────────────────────────────────────────────────────
-  const handlePointerDown = useCallback((e: React.PointerEvent) => {
+  const handlePointerDown = useCallback((e: PointerEvent) => {
     const s = stateRef.current
     s.isDragging = true
     s.autoRotate = false
@@ -660,15 +723,16 @@ export default function InteractiveGlobe() {
     ;(e.target as HTMLElement).setPointerCapture(e.pointerId)
   }, [])
 
-  const handlePointerMove = useCallback((e: React.PointerEvent) => {
+  const handlePointerMove = useCallback((e: PointerEvent) => {
     const s = stateRef.current
     if (!s.isDragging) return
+    /* Yalnızca YATAY sürükleme: dikey hareket sayfanın kaydırmasına ait
+       (`touch-action: pan-y`). Eskiden `touch-action: none` vardı ve
+       telefonda kürenin üstünden sayfa kaydırılamıyordu. */
     const dx = e.clientX - s.lastMouse.x
-    const dy = e.clientY - s.lastMouse.y
     s.velY = dx * DRAG_SENSITIVITY
-    s.velX = -dy * DRAG_SENSITIVITY
+    s.velX = 0
     s.rotY += s.velY
-    s.rotX += s.velX
     s.lastMouse = { x: e.clientX, y: e.clientY }
   }, [])
 
@@ -679,7 +743,7 @@ export default function InteractiveGlobe() {
   }, [])
 
   // ─── Click burst effect ──────────────────────────────────────────────────
-  const handleClick = useCallback((e: React.MouseEvent) => {
+  const handleClick = useCallback((e: MouseEvent) => {
     const canvas = canvasRef.current
     if (!canvas) return
     const rect = canvas.getBoundingClientRect()
@@ -687,12 +751,11 @@ export default function InteractiveGlobe() {
     const y = e.clientY - rect.top
     const s = stateRef.current
     const CENTER = size / 2
-    const RADIUS = size * 0.375
+    const RADIUS = size * RADIUS_RATIO
 
     const dist = Math.sqrt((x - CENTER) ** 2 + (y - CENTER) ** 2)
     if (dist > RADIUS + 40) return
 
-    const colors = ['#22d3ee','#a78bfa','#f0abfc','#34d399','#fb923c','#60a5fa','#fcd34d','#86efac','#f472b6','#38bdf8']
     for (let i = 0; i < 100; i++) {
       const angle = (Math.PI * 2 * i) / 100 + Math.random() * 0.25
       const speed = 1.2 + Math.random() * 4.5
@@ -702,19 +765,18 @@ export default function InteractiveGlobe() {
         vy: Math.sin(angle) * speed,
         life: 45 + Math.random() * 35,
         maxLife: 80,
-        color: colors[Math.floor(Math.random() * colors.length)],
+        tone: BURST_TONES[Math.floor(Math.random() * BURST_TONES.length)],
         size: 1.5 + Math.random() * 2.8,
       })
     }
 
-    const rippleColors = ['#22d3ee', '#a78bfa', '#93c5fd', '#f0abfc']
     for (let i = 0; i < 4; i++) {
       s.ripples.push({
         x, y,
         radius: 0,
         maxRadius: 70 + i * 28,
         life: 55 + i * 8,
-        color: rippleColors[i],
+        tone: i % 2 === 0 ? 'primary' : 'soft',
       })
     }
   }, [size])
@@ -722,22 +784,18 @@ export default function InteractiveGlobe() {
   return (
     <div ref={containerRef} className="relative flex w-full flex-col items-center">
       <div className="relative aspect-square w-full max-w-[620px]">
-        <div
-          className="absolute inset-0 -m-8 rounded-full pointer-events-none"
-          style={{
-            background: 'radial-gradient(circle, rgba(139,92,246,0.14) 0%, rgba(34,211,238,0.06) 40%, transparent 70%)',
-          }}
-        />
+        {/* Süs: etkileşimi (sürükle, tıkla) bilgi taşımıyor, klavye ve ekran
+            okuyucu için karşılığı gerekmiyor. Eskiden `role="img"` taşıyordu
+            ama işaretçi olaylarına açıktı; ikisi birden çelişkiliydi. */}
         <canvas
           ref={canvasRef}
-          aria-label="Dünya haritası üzerinde şehirler ve bağlantılar — dekoratif"
-          role="img"
+          aria-hidden="true"
           className="relative z-10 mx-auto"
           style={{
             width: size,
             height: size,
             cursor: 'grab',
-            touchAction: 'none',
+            touchAction: 'pan-y',
           }}
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
@@ -748,8 +806,8 @@ export default function InteractiveGlobe() {
           onLostPointerCapture={() => { if (canvasRef.current) canvasRef.current.style.cursor = 'grab' }}
         />
       </div>
-      <p className="mt-3 text-[10px] font-mono uppercase tracking-[0.22em] text-slate-500/60 select-none">
-        Döndürmek için sürükle · Efekt için tıkla
+      <p className="mt-3 select-none font-mono text-micro text-muted" aria-hidden="true">
+        Döndürmek için yana sürükle · Efekt için tıkla
       </p>
     </div>
   )

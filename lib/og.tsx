@@ -1,158 +1,123 @@
+import { readFile } from 'node:fs/promises'
+import { join } from 'node:path'
+import { ImageResponse } from 'next/og'
 import type { ReactElement } from 'react'
+import { JOB_TITLE } from '@/lib/nav'
 
 /**
- * Paylaşım kartlarının ortak iskeleti.
+ * Paylaşım kartlarının ortak iskeleti (1200×630).
  *
- * WhatsApp, X, LinkedIn, Slack ve Telegram hepsi og:image okuyor; kartın
- * 1200×630 dışında bir şeye ihtiyacı yok ama okunaklı olması şart —
- * WhatsApp önizlemeyi ~400px genişlikte gösteriyor, yani 88px'lik başlık
- * orada ~30px'e iniyor. Bu yüzden başlık büyük, meta satırı kalın.
+ * WhatsApp önizlemeyi ~400px genişlikte gösteriyor, yani 82px'lik başlık
+ * orada ~28px'e iniyor: başlık büyük, künye kalın.
  *
  * Satori kuralları (buradaki her şey ona göre yazıldı):
  *  · Birden fazla çocuğu olan her düğümde `display: flex` AÇIKÇA yazılmalı
  *  · `gap` yalnızca flex kaplarında
- *  · `backgroundImage` içinde çoklu radial-gradient destekleniyor,
- *    ama `background` kısayolu + gradient karışımı "Invalid background
- *    image" hatası veriyor — bu yüzden hep ayrı ayrı yazılıyor
+ *  · CSS DEĞİŞKENİ ÇÖZÜLMEZ: renkler app/globals.css'teki `signature`
+ *    paletinin koyu temasından BİREBİR sabit olarak burada. Orada
+ *    değişirse burada da değişir.
  */
-
 export const OG_SIZE = { width: 1200, height: 630 } as const
 export const OG_CONTENT_TYPE = 'image/png'
 
-const INK = '#f1f5f9'
-const MUTED = '#94a3b8'
-const GROUND = '#04070d'
+/** `signature` koyu: --page-bg, --text-strong, --text-body, --primary, --line. */
+const C = {
+  ground: '#070d16',
+  ink: '#eaf1f8',
+  body: '#94a7ba',
+  muted: '#8497a9',
+  primary: '#35b8ff',
+  line: 'rgba(255,255,255,0.11)',
+  surface: 'rgba(255,255,255,0.05)',
+  /* Marka degradesi duraklar: --brand-from / --brand-mid / --brand-to. */
+  brandFrom: '#5cc4ff',
+  brandMid: '#1f86e0',
+  brandTo: '#0b3f86',
+  onBrand: '#ffffff',
+} as const
 
 /**
- * Satori'ye gömülecek Manrope.
+ * Marka fontu DEPODA (`assets/fonts`, OFL lisansı yanında), Google'dan
+ * çekilmiyor.
  *
- * İKİ TUZAK VAR, ikisi de Türkçe yüzünden:
- *
- * 1. fontsource'un `latin-ext` dosyası YALNIZCA latin-ext'e özel glifleri
- *    taşır (ı, ğ, ş, İ, ç, ü). Temel harfler `latin` dosyasındadır. Sadece
- *    latin-ext yüklendiğinde "Açılış" kelimesinin yarısı Manrope, yarısı
- *    Satori'nin varsayılan fontuyla çiziliyordu.
- *
- * 2. Dördünü birden yükleyince de düzelmedi: Satori istenen ağırlıkta glif
- *    bulamazsa ağırlığı YOK SAYIP dizideki ilk uygun fonta düşüyor. Yani
- *    800'lük başlıktaki "ğ" harfi latin-ext-500'den geliyordu — kalın
- *    başlığın ortasında ince harfler.
- *
- * Çözüm: Google Fonts'un `text=` parametresi. İstenen karakterleri
- * içeren, ağırlık başına TEK dosya döndürüyor. Hem sorun bitiyor hem
- * dosya küçülüyor (tam TTF ~70 KB, metne özel alt küme ~6 KB).
+ * Eskiden Manrope glifleri her soğuk render'da Google Fonts'tan metne özel
+ * alt küme olarak indiriliyordu: her kart bir ağ turu bekliyor, istek
+ * düştüğünde kart sessizce Satori'nin varsayılan fontuna dönüyordu.
+ * Satori değişken font okuyamadığı için iki statik kesim: 400 ve 700.
+ * Açılış Zili'yle aynı dosyalar.
  */
-type OgFont = { name: string; data: ArrayBuffer; weight: 500 | 800; style: 'normal' }
+type OgFont = { name: string; data: ArrayBuffer; weight: 400 | 700; style: 'normal' }
 
-const fontCache = new Map<string, OgFont[]>()
+let fontCache: Promise<OgFont[]> | null = null
 
-/** Kartta geçen benzersiz karakterler — alt kümeyi bu belirliyor. */
-function uniqueChars(...parts: (string | undefined)[]): string {
-  const joined = parts.filter(Boolean).join('')
-  /* Rozetlerde büyük harfe çevirdiğimiz için her iki hâl de istenmeli;
-     Türkçe'de i → İ olduğu için basit toUpperCase yetmez. */
-  const all = joined + joined.toLocaleUpperCase('tr-TR') + joined.toLocaleLowerCase('tr-TR')
-
-  const seen: Record<string, true> = {}
-  let out = ''
-  for (const ch of all.split('')) {
-    if (seen[ch]) continue
-    seen[ch] = true
-    out += ch
-  }
-  return out
+function loadFonts(): Promise<OgFont[]> {
+  fontCache ??= (async () => {
+    const dir = join(process.cwd(), 'assets', 'fonts')
+    const [regular, bold] = await Promise.all([
+      readFile(join(dir, 'SchibstedGrotesk-Regular.ttf')),
+      readFile(join(dir, 'SchibstedGrotesk-Bold.ttf')),
+    ])
+    const toArrayBuffer = (buf: Buffer) => buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength) as ArrayBuffer
+    return [
+      { name: 'Schibsted', data: toArrayBuffer(regular), weight: 400, style: 'normal' },
+      { name: 'Schibsted', data: toArrayBuffer(bold), weight: 700, style: 'normal' },
+    ]
+  })()
+  return fontCache
 }
 
-/**
- * Fontlar indirilemezse kart yine üretilsin — Satori kendi varsayılanına
- * düşer. Paylaşım kartının hiç çıkmaması, fontu jenerik olmasından kötü.
- */
-export async function loadOgFonts(...text: (string | undefined)[]): Promise<OgFont[]> {
-  const chars = uniqueChars(...text, 'ahmetakyapi.com FULLSTACK DEVELOPER Ahmet Akyapı 0123456789')
-  const cached = fontCache.get(chars)
-  if (cached) return cached
-
-  try {
-    const cssUrl = `https://fonts.googleapis.com/css2?family=Manrope:wght@500;800&text=${encodeURIComponent(chars)}`
-    // User-Agent göndermeyince Google TTF döndürüyor; woff2 gönderseydi
-    // Satori'nin bazı sürümleri açamıyor.
-    const css = await fetch(cssUrl).then((r) => (r.ok ? r.text() : Promise.reject(new Error('css'))))
-
-    const faces = css.match(/@font-face\s*{[^}]*}/g) ?? []
-    const parsed = faces
-      .map((face) => {
-        const weight = Number(/font-weight:\s*(\d+)/.exec(face)?.[1])
-        const url = /src:\s*url\(([^)]+)\)/.exec(face)?.[1]
-        return url && (weight === 500 || weight === 800) ? { url, weight: weight as 500 | 800 } : null
-      })
-      .filter((v): v is { url: string; weight: 500 | 800 } => v !== null)
-
-    if (parsed.length === 0) throw new Error('font-face bulunamadı')
-
-    const fonts = await Promise.all(
-      parsed.map(async ({ url, weight }) => {
-        const res = await fetch(url)
-        if (!res.ok) throw new Error(`font ${res.status}`)
-        return { name: 'Manrope', data: await res.arrayBuffer(), weight, style: 'normal' as const }
-      }),
-    )
-
-    fontCache.set(chars, fonts)
-    return fonts
-  } catch {
-    return []
-  }
-}
-
-/** Marka işareti — üçgen, header'daki logonun aynısı. */
-function BrandMark({ accent }: { accent: string }) {
+/** Marka işareti: components/site/Logo.tsx ile aynı üçgen ve degrade. */
+function BrandMark({ size = 64, radius = size * 0.29 }: { size?: number; radius?: number }) {
   return (
     <div
       style={{
-        width: 62,
-        height: 62,
-        borderRadius: 18,
+        width: size,
+        height: size,
+        borderRadius: radius,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: accent,
-        backgroundImage: `linear-gradient(135deg, ${accent} 0%, #4f7ef5 100%)`,
-        boxShadow: `0 8px 32px ${accent}66`,
+        backgroundColor: C.brandMid,
+        backgroundImage: `linear-gradient(150deg, ${C.brandFrom} 0%, ${C.brandMid} 48%, ${C.brandTo} 100%)`,
       }}
     >
-      <svg width="36" height="36" viewBox="0 0 42 42" fill="none">
-        <path d="M21 12L30 29H12L21 12Z" stroke="white" strokeWidth="2.8" strokeLinejoin="round" strokeLinecap="round" />
+      <svg width={size * 0.58} height={size * 0.58} viewBox="0 0 42 42" fill="none">
+        <path d="M21 12L30 29H12L21 12Z" stroke={C.onBrand} strokeWidth="2.8" strokeLinejoin="round" strokeLinecap="round" />
       </svg>
     </div>
   )
 }
 
-/**
- * Rotaların çağırdığı tek fonksiyon: çerçeveyi kurar, kartta geçen metne
- * göre font alt kümesini indirir ve görseli döndürür.
- */
-export async function renderOgCard(props: OgFrameProps) {
-  const { ImageResponse } = await import('next/og')
-  return new ImageResponse(OgFrame(props), {
-    ...OG_SIZE,
-    fonts: await loadOgFonts(props.title, props.subtitle, props.eyebrow, ...(props.badges ?? [])),
-  })
-}
-
 export type OgFrameProps = {
-  /** Üst satırdaki küçük etiket — "Blog Yazısı", "Projeler"… */
+  /** Üst satırdaki künye: "Blog", "Projeler", yazının etiketi… (Title Case). */
   eyebrow: string
   title: string
   /** Başlığın altındaki bir-iki cümle. */
   subtitle?: string
-  /** Kartın imza rengi. Her yazı kendi etiket rengini alıyor. */
-  accent: string
-  /** Alt satırın sağındaki rozetler — teknoloji, tarih, okuma süresi. */
+  /** Alt satırdaki künye öğeleri: tarih, okuma süresi, yığın. */
   badges?: string[]
 }
 
-export function OgFrame({ eyebrow, title, subtitle, accent, badges = [] }: OgFrameProps): ReactElement {
-  /* Uzun başlıkta puntoyu düşür — 1200px'e sığmayan başlık taşıyor. */
+/** Rotaların çağırdığı tek fonksiyon. */
+export async function renderOgCard(props: OgFrameProps) {
+  return new ImageResponse(OgFrame(props), { ...OG_SIZE, fonts: await loadFonts() })
+}
+
+/** Kare marka ikonu (apple-icon): aynı işaret, aynı degrade. Köşe yok:
+    iOS ana ekran ikonunu kendi maskesiyle yuvarlıyor. */
+export function renderBrandIcon(size: number) {
+  return new ImageResponse(
+    (
+      <div style={{ width: '100%', height: '100%', display: 'flex' }}>
+        <BrandMark size={size} radius={0} />
+      </div>
+    ),
+    { width: size, height: size },
+  )
+}
+
+export function OgFrame({ eyebrow, title, subtitle, badges = [] }: OgFrameProps): ReactElement {
+  /* Uzun başlıkta puntoyu düşür: 1200px'e sığmayan başlık taşıyor. */
   const titleSize = title.length > 74 ? 56 : title.length > 46 ? 68 : 82
 
   return (
@@ -162,153 +127,75 @@ export function OgFrame({ eyebrow, title, subtitle, accent, badges = [] }: OgFra
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        position: 'relative',
-        backgroundColor: GROUND,
-        backgroundImage: `radial-gradient(circle at 12% 8%, ${accent}55, transparent 42%), radial-gradient(circle at 88% 4%, rgba(34,211,238,0.18), transparent 38%), radial-gradient(circle at 60% 108%, ${accent}2e, transparent 45%)`,
-        color: INK,
-        fontFamily: 'Manrope, sans-serif',
+        justifyContent: 'space-between',
+        padding: '64px 76px 56px',
+        backgroundColor: C.ground,
+        color: C.ink,
+        fontFamily: 'Schibsted, sans-serif',
       }}
     >
-      {/* İnce ızgara dokusu — kartı düz bir renk olmaktan çıkarıyor. */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          display: 'flex',
-          /* Satori'nin gradient ayrıştırıcısı yön belirtilmeden başlayan
-             linear-gradient'i kabul etmiyor ("Missing comma before color
-             stops"). Tarayıcıda `linear-gradient(rgba(…) 1px, …)` geçerli,
-             burada `to bottom` yazmak şart. */
-          backgroundImage:
-            'linear-gradient(to bottom, rgba(148,163,184,0.055) 1px, transparent 1px), linear-gradient(to right, rgba(148,163,184,0.055) 1px, transparent 1px)',
-          backgroundSize: '48px 48px',
-        }}
-      />
-
-      {/* Sol kenardaki imza şeridi. */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          bottom: 0,
-          width: 10,
-          display: 'flex',
-          backgroundImage: `linear-gradient(180deg, ${accent} 0%, ${accent}33 100%)`,
-        }}
-      />
-
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between',
-          width: '100%',
-          height: '100%',
-          padding: '68px 76px 60px 86px',
-        }}
-      >
-        {/* Üst: marka + etiket */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <BrandMark accent={accent} />
-            <div style={{ display: 'flex', flexDirection: 'column', marginLeft: 18 }}>
-              <div style={{ fontSize: 24, fontWeight: 800, color: INK }}>Ahmet Akyapı</div>
-              <div style={{ fontSize: 14, color: MUTED, letterSpacing: 2, marginTop: 3 }}>FULLSTACK DEVELOPER</div>
-            </div>
-          </div>
-
-          <div
-            style={{
-              display: 'flex',
-              fontSize: 17,
-              fontWeight: 800,
-              letterSpacing: 2.4,
-              padding: '11px 22px',
-              borderRadius: 999,
-              color: accent,
-              border: `1px solid ${accent}66`,
-              backgroundColor: `${accent}1f`,
-            }}
-          >
-            {eyebrow.toLocaleUpperCase('tr-TR')}
+      {/* Üst: marka + künye */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <BrandMark />
+          <div style={{ display: 'flex', flexDirection: 'column', marginLeft: 20 }}>
+            <div style={{ fontSize: 26, fontWeight: 700, color: C.ink }}>Ahmet Akyapı</div>
+            <div style={{ fontSize: 18, color: C.muted, marginTop: 4 }}>{JOB_TITLE}</div>
           </div>
         </div>
-
-        {/* Orta: başlık */}
-        <div style={{ display: 'flex', flexDirection: 'column', maxWidth: 1000 }}>
-          <div
-            style={{
-              display: 'flex',
-              fontSize: titleSize,
-              fontWeight: 800,
-              lineHeight: 1.08,
-              letterSpacing: '-0.035em',
-              color: '#ffffff',
-            }}
-          >
-            {title}
-          </div>
-
-          {subtitle && (
-            <div
-              style={{
-                display: 'flex',
-                fontSize: 25,
-                lineHeight: 1.45,
-                color: '#b8c4d4',
-                marginTop: 24,
-                maxWidth: 900,
-              }}
-            >
-              {subtitle}
-            </div>
-          )}
-        </div>
-
-        {/* Alt: adres + rozetler */}
         <div
           style={{
             display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            width: '100%',
-            paddingTop: 26,
-            borderTop: '1px solid rgba(148,163,184,0.16)',
+            fontSize: 20,
+            fontWeight: 700,
+            padding: '10px 22px',
+            borderRadius: 999,
+            color: C.primary,
+            border: `1px solid ${C.line}`,
+            backgroundColor: C.surface,
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <div style={{ display: 'flex', width: 9, height: 9, borderRadius: 999, backgroundColor: accent }} />
-            <div style={{ display: 'flex', fontSize: 23, fontWeight: 800, color: '#cbd5e1', marginLeft: 12 }}>
-              ahmetakyapi.com
-            </div>
-          </div>
-
-          {badges.length > 0 && (
-            <div style={{ display: 'flex' }}>
-              {badges.slice(0, 4).map((badge) => (
-                <div
-                  key={badge}
-                  style={{
-                    display: 'flex',
-                    fontSize: 18,
-                    padding: '9px 18px',
-                    borderRadius: 999,
-                    marginLeft: 12,
-                    border: '1px solid rgba(148,163,184,0.22)',
-                    backgroundColor: 'rgba(148,163,184,0.08)',
-                    color: '#cbd5e1',
-                  }}
-                >
-                  {badge}
-                </div>
-              ))}
-            </div>
-          )}
+          {eyebrow}
         </div>
+      </div>
+
+      {/* Orta: başlık */}
+      <div style={{ display: 'flex', flexDirection: 'column', maxWidth: 1010 }}>
+        <div
+          style={{
+            display: 'flex',
+            fontSize: titleSize,
+            fontWeight: 700,
+            lineHeight: 1.06,
+            letterSpacing: '-0.03em',
+            color: C.ink,
+          }}
+        >
+          {title}
+        </div>
+        {subtitle ? (
+          <div style={{ display: 'flex', fontSize: 26, lineHeight: 1.45, color: C.body, marginTop: 24, maxWidth: 920 }}>
+            {subtitle}
+          </div>
+        ) : null}
+      </div>
+
+      {/* Alt: adres + künye */}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          width: '100%',
+          paddingTop: 24,
+          borderTop: `1px solid ${C.line}`,
+          fontSize: 22,
+        }}
+      >
+        <div style={{ display: 'flex', fontWeight: 700, color: C.ink }}>ahmetakyapi.com</div>
+        {badges.length > 0 ? (
+          <div style={{ display: 'flex', color: C.body }}>{badges.slice(0, 4).join('  ·  ')}</div>
+        ) : null}
       </div>
     </div>
   )

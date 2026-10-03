@@ -1,0 +1,203 @@
+/* ==========================================================================
+   Projeler: dizin ızgarası, süzgeç, proje morfu ve galeri penceresi.
+
+   Bu dosya yalnız /projeler ve /projeler/[slug] sayfalarında yükleniyor
+   (iki sayfa da import ediyor; morfun iki ucu da kuralı görsün diye).
+   Renk değeri YOK: her şey app/globals.css token'larından.
+
+   Katmansız yazıldı ve bu bilerek: Tailwind yardımcıları `@layer
+   utilities` içinde, katmansız kural onları özgüllükten bağımsız ezer.
+   Bu yüzden burada yazılan özelliği (grid-column, kartın iç düzeni)
+   işaretlemede sınıfla bir daha yazma; iki yerden yönetilen özellik
+   hangisinin kazandığını tahmin ettirir.
+   ========================================================================== */
+
+/* --- Izgara ---------------------------------------------------------------
+   Telefon tek sütun, 640+ iki sütun, 1024+ on iki sütun. Boylar
+   ProjectCard'daki `data-size`: wide 12, feature 6, major 7, minor 5. */
+.pgrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  column-gap: 1.5rem;
+  row-gap: 3rem;
+  align-items: start;
+}
+
+@media (min-width: 640px) {
+  .pgrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 3.5rem;
+  }
+  .pgrid > .pcard[data-size="wide"] {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 1024px) {
+  .pgrid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 2rem;
+    row-gap: 4.5rem;
+  }
+  .pgrid > .pcard[data-size="wide"] {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: minmax(0, 8fr) minmax(0, 4fr);
+    align-items: center;
+    column-gap: 3rem;
+  }
+  .pgrid > .pcard[data-size="wide"] > .pcard-body {
+    margin-top: 0;
+  }
+  .pgrid > .pcard[data-size="feature"] {
+    grid-column: span 6;
+  }
+  .pgrid > .pcard[data-size="major"] {
+    grid-column: span 7;
+  }
+  .pgrid > .pcard[data-size="minor"] {
+    grid-column: span 5;
+  }
+}
+
+/* --- Süzgeç ---------------------------------------------------------------
+   ProjectFilter ızgaraya `data-filter` yazar. Süzgeç açıkken satır ritmi
+   (7/5, 5/7) anlamını yitirir: kalan dört-beş kart eşit iki sütuna iner,
+   ilk öne çıkanın yatay düzeni de dikeye döner. */
+.pgrid[data-filter="platform"] > .pcard:not([data-group="platform"]),
+.pgrid[data-filter="oyun"] > .pcard:not([data-group="oyun"]),
+.pgrid[data-filter="arac"] > .pcard:not([data-group="arac"]) {
+  display: none;
+}
+
+/* `display` burada DEĞİŞMEZ: gizleme kuralı da `display` yazıyor ve bu
+   seçici daha özgül; süzgeçteki geniş karta `display: block` verilince
+   gizlenmesi gereken kartlar geri geliyordu (ölçüldü). Geniş kart ızgara
+   kalır, sütunu teke iner. */
+@media (min-width: 640px) {
+  .pgrid[data-filter]:not([data-filter="all"]) > .pcard[data-size] {
+    grid-column: auto;
+  }
+}
+
+@media (min-width: 1024px) {
+  .pgrid[data-filter]:not([data-filter="all"]) > .pcard[data-size] {
+    grid-column: span 6;
+  }
+  .pgrid[data-filter]:not([data-filter="all"]) > .pcard[data-size="wide"] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .pgrid[data-filter]:not([data-filter="all"]) > .pcard[data-size="wide"] > .pcard-body {
+    margin-top: 1.25rem;
+  }
+}
+
+/* Süzgeç değişince yeniden görünen kart yerine solarak oturur. Sayfa ilk
+   yüklenirken tetiklenmez: @starting-style yalnız `display: none`dan
+   çıkan öğede çalışır, ilk çizimdeki kartlar zaten görünür. */
+@media (prefers-reduced-motion: no-preference) {
+  .pgrid > .pcard {
+    transition:
+      opacity 360ms var(--ease-brand),
+      translate 420ms var(--ease-brand);
+  }
+  @starting-style {
+    .pgrid[data-filter] > .pcard {
+      opacity: 0;
+      translate: 0 14px;
+    }
+  }
+}
+
+/* --- Kart üzerinde durma --------------------------------------------------
+   Görsel kutusunun içinde hafif yakınlaşma; kutu yerinde kalır. Yalnız
+   gerçek imleçte: dokunmatikte "hover" ilk dokunuşa yapışıyor. */
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .pcard .pcover-img {
+    transition: scale 700ms var(--ease-brand);
+  }
+  .pcard:hover .pcover-img {
+    scale: 1.025;
+  }
+}
+
+/* Paylaşılan öğe morfunun süresi, eğrisi ve kırpması ortak:
+   app/globals.css → "Paylaşılan Öğe Morfu". */
+
+/* --- Galeri penceresi (ShotViewer) ---------------------------------------- */
+.shot-dialog {
+  margin: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  max-width: none;
+  max-height: none;
+  overflow: visible;
+  color: var(--text-strong);
+}
+
+.shot-dialog::backdrop {
+  background: color-mix(in srgb, var(--page-bg) 88%, transparent);
+}
+
+@supports (backdrop-filter: blur(1px)) {
+  .shot-dialog::backdrop {
+    backdrop-filter: blur(6px);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .shot-dialog[open] {
+    transition:
+      opacity 260ms var(--ease-brand),
+      scale 320ms var(--ease-brand);
+  }
+  .shot-dialog[open]::backdrop {
+    transition: opacity 260ms var(--ease-brand);
+  }
+  @starting-style {
+    .shot-dialog[open] {
+      opacity: 0;
+      scale: 0.97;
+    }
+    .shot-dialog[open]::backdrop {
+      opacity: 0;
+    }
+  }
+}
+
+/* Büyütülebilen görsel: imleç ipucu ve odakta halka kutunun içinde. */
+.shot-zoom {
+  display: block;
+  width: 100%;
+  cursor: zoom-in;
+  border-radius: var(--radius-card);
+}
+
+/* Ekranlar: telefonda alt alta, 640+ masaüstü ve telefon görüntüsü yan
+   yana ve AYNI YÜKSEKLİKTE (sütun oranı sayfada hesaplanıp
+   `--gallery-cols` ile gelir). */
+.pgallery {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 640px) {
+  .pgallery {
+    grid-template-columns: var(--gallery-cols, minmax(0, 1fr));
+  }
+}
+
+/* --- Morfun hedefi geçiş anında görünür olsun ------------------------------
+   React paylaşılan öğe çiftini COMMIT ANINDA kurar ve yeni öğenin görünüm
+   alanında olmasını şart koşar. O anda sayfa hâlâ ESKİ kaydırma konumunda
+   (Next başa kaydırmayı commit'ten sonra yapıyor): dizinde ikinci satırdaki
+   bir karta tıklayan okur 900 piksel aşağıdaydı, yeni sayfanın en üstteki
+   kahramanı ekranın dışında kalıyor ve morf hiç oynamıyordu (ölçüldü:
+   scrollY 140'ta çift kuruluyor, 936'da kurulmuyor). Geçiş sürerken
+   kahraman yapışkan: o an ekranın tepesinde durur, sayfa başa kayınca
+   doğal yerine oturur ve son fotoğraf doğru yerde çekilir. Akış
+   değişmediği için yerleşim zıplamaz; geçiş yokken kural hiç eşleşmez. */
+:root:active-view-transition .phero-scope > .phero {
+  position: sticky;
+  top: 0;
+}

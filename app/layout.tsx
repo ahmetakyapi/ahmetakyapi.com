@@ -1,87 +1,106 @@
-import type { Metadata } from 'next'
-import { Manrope, IBM_Plex_Mono } from 'next/font/google'
-import { ThemeProvider } from 'next-themes'
-import dynamic from 'next/dynamic'
+import { Analytics } from '@vercel/analytics/next'
+import type { Metadata, Viewport } from 'next'
+import { IBM_Plex_Mono, Schibsted_Grotesk } from 'next/font/google'
+import type { ReactNode } from 'react'
+import { JOB_TITLE, SITE_DESCRIPTION, SITE_NAME, SITE_URL, TWITTER } from '@/lib/seo'
+import { DEFAULT_THEME, PALETTE, THEME_COLOR, THEME_SCRIPT } from '@/lib/theme'
 import './globals.css'
 
-const CustomCursor = dynamic(() => import('@/components/CustomCursor'), { ssr: false })
-
-/* Beş ağırlık × iki subset = 16 woff2 dosyası preload ediliyordu. Kullanılan
-   ağırlıklar 500/600/800; 400 ve 700 hiçbir yerde geçmiyordu. */
-const manrope = Manrope({
+/*
+ * Fontlar: Schibsted Grotesk (değişken, tek aile: display + gövde) ve
+ * IBM Plex Mono (künye, tarih, kod, sayı).
+ *
+ * TUZAK: next/font `variable` adı @theme'deki adla aynı olursa
+ * (`--font-sans: var(--font-sans)`) değişken kendine başvurur ve font
+ * sessizce sistem yazı tipine düşer. Bu yüzden `-face` soneki.
+ * Schibsted değişken bir aile: `weight` verilmez, 400-900 tek dosyada.
+ */
+const sans = Schibsted_Grotesk({
   subsets: ['latin', 'latin-ext'],
-  weight: ['500', '600', '800'],
-  variable: '--font-inter',
+  variable: '--font-sans-face',
   display: 'swap',
 })
 
-const ibmPlexMono = IBM_Plex_Mono({
+const mono = IBM_Plex_Mono({
   subsets: ['latin', 'latin-ext'],
-  weight: ['400', '600'],
-  variable: '--font-mono',
+  weight: ['400', '500', '600'],
+  variable: '--font-mono-face',
   display: 'swap',
 })
+
+const DEFAULT_TITLE = `${SITE_NAME} · ${JOB_TITLE}`
 
 export const metadata: Metadata = {
-  title: {
-    default: 'Ahmet Akyapı | Fullstack Developer',
-    template: '%s — Ahmet Akyapı',
-  },
-  description:
-    'React, TypeScript ve Next.js odaklı çalışan Fullstack Developer. Performanslı, rafine ve kullanıcı odaklı ürün deneyimleri geliştiriyorum.',
-  keywords: ['Fullstack Developer', 'React', 'TypeScript', 'Next.js', 'Ahmet Akyapı'],
-  authors: [{ name: 'Ahmet Akyapı', url: 'https://github.com/ahmetakyapi' }],
-  creator: 'Ahmet Akyapı',
-  metadataBase: new URL('https://ahmetakyapi.com'),
-  /* canonical burada TANIMLI DEĞİL — kökte '/' yazılıydı ve Next metadata'yı
+  metadataBase: new URL(SITE_URL),
+  title: { default: DEFAULT_TITLE, template: `%s · ${SITE_NAME}` },
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  keywords: ['Full-Stack Developer', 'AI Developer', 'Yapay Zekâ', 'Frontend', 'React', 'Next.js', 'TypeScript', 'Claude API', 'Ahmet Akyapı'],
+  authors: [{ name: SITE_NAME, url: SITE_URL }],
+  creator: SITE_NAME,
+  /* canonical burada TANIMLI DEĞİL: kökte '/' yazılıydı ve Next metadata'yı
      alan bazında sığ birleştirdiği için her blog yazısı da ana sayfayı
      canonical gösteriyordu. Her rota kendi canonical'ını veriyor. */
   alternates: {
-    types: {
-      'application/rss+xml': '/rss.xml',
-    },
+    types: { 'application/rss+xml': '/rss.xml' },
   },
   openGraph: {
-    title: 'Ahmet Akyapı | Fullstack Developer',
-    description: 'React, TypeScript ve Next.js odaklı Fullstack Developer.',
-    url: 'https://ahmetakyapi.com',
-    siteName: 'Ahmet Akyapı',
+    title: DEFAULT_TITLE,
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
+    siteName: SITE_NAME,
     type: 'website',
     locale: 'tr_TR',
   },
   twitter: {
     card: 'summary_large_image',
-    site: '@ahmetakyapi',
-    creator: '@ahmetakyapi',
-    title: 'Ahmet Akyapı | Fullstack Developer',
-    description: 'React, TypeScript ve Next.js odaklı Fullstack Developer.',
+    site: TWITTER,
+    creator: TWITTER,
   },
   robots: {
     index: true,
     follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
+    googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 },
   },
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+/* Tarayıcı çubuğunun rengi işletim sisteminden değil SİTENİN temasından:
+   varsayılan burada, seçilen tema THEME_SCRIPT ile ilk boyamadan önce. */
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+  themeColor: THEME_COLOR[DEFAULT_THEME],
+}
+
+export default function RootLayout({ children }: { children: ReactNode }) {
+  // Sayfalar statik; tema THEME_SCRIPT ile ilk boyamadan önce çerezden
+  // (gerekçe lib/theme.ts).
   return (
-    <html lang="tr" className={`${manrope.variable} ${ibmPlexMono.variable}`} suppressHydrationWarning>
-      <body>
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-          <a
-            href="#main-content"
-            className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[9999] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-indigo-600 focus:text-white focus:text-sm focus:font-medium"
-          >
-            İçeriğe geç
-          </a>
-          <CustomCursor />
-          {children}
-        </ThemeProvider>
+    <html
+      lang="tr"
+      data-theme={DEFAULT_THEME}
+      data-palette={PALETTE}
+      // THEME_SCRIPT özniteliği hidrasyondan önce değiştirir; bu bilinçli
+      // farkı React raporlamasın.
+      suppressHydrationWarning
+      className={`${sans.variable} ${mono.variable}`}
+    >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+      </head>
+      <body className="min-h-dvh bg-page font-sans text-body antialiased">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-button focus:bg-primary focus:px-4 focus:py-3 focus:text-sm focus:font-semibold focus:text-on-primary"
+        >
+          İçeriğe Geç
+        </a>
+        {children}
+        {/* Yalnız Vercel'de: başka yerde (yerel `next start`) betik adresi
+            404 dönüp konsola hata basıyor. `VERCEL` derleme ve çalışma
+            anında platformun kendisi tanımlıyor. */}
+        {process.env.VERCEL ? <Analytics /> : null}
       </body>
     </html>
   )

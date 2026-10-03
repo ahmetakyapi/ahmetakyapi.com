@@ -1,0 +1,455 @@
+/* ==========================================================================
+   Ana sayfa. Yalnız app/(site)/page.tsx içe aktarır; sınıflar `home-`
+   önekli. Renk değeri YOK: her renk app/globals.css token'ından.
+
+   Hareket kuralı: her animasyon CSS ve her biri iki kapıdan geçer.
+     1. `@supports`: tarayıcı desteklemiyorsa blok hiç uygulanmaz ve içerik
+        olduğu gibi, durağan görünür.
+     2. `prefers-reduced-motion: no-preference`: hareketi kapatan okuyucu
+        bütün içeriği ilk karede, son hâliyle görür.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Hero: isim imzası, satır satır maskeli açılış.
+   Neden: sayfanın tek "sayfa ölçeğinde" hareketi; ilk okunacak şeyi (kim)
+   kimliğin kendisi yapar. Satır %60'tan başlar, tümden dışarıdan değil:
+   ilk karede harflerin üstü boyalı, LCP animasyonu beklemez.
+   -------------------------------------------------------------------------- */
+.home-sign-line {
+  display: block;
+  overflow: clip;
+  /* Maske y, p, ı gibi alta inen harfleri kesmesin. */
+  padding-bottom: 0.1em;
+  margin-bottom: -0.1em;
+}
+
+.home-sign-inner {
+  display: block;
+}
+
+@keyframes home-sign-rise {
+  from {
+    transform: translateY(60%);
+  }
+}
+
+@keyframes home-fade-in {
+  from {
+    opacity: 0.01;
+    transform: translateY(8px);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .home-sign-inner {
+    animation: home-sign-rise 0.8s var(--ease-brand) both;
+  }
+  .home-sign-delay {
+    animation-delay: 90ms;
+  }
+  /* Cümle ve düğmeler imzadan hemen sonra; opaklık 0'dan değil 0,01'den
+     (tarayıcı "boyanmamış" saymasın). */
+  .home-fade {
+    animation: home-fade-in 0.6s var(--ease-brand) 0.25s both;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Proje şeridi: yatay kaydırma, kenar hizası kapla aynı.
+   -------------------------------------------------------------------------- */
+.home-strip {
+  --gutter: max(1rem, env(safe-area-inset-left));
+  /* İlk kart sayfa kabının sol kenarından başlar, şerit ekranın sağına
+     taşar: geniş ekranda da "devamı var" okunur. */
+  --inset: max(var(--gutter), calc((100% - 88rem) / 2 + var(--gutter)));
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--inset);
+  scrollbar-width: none;
+  /* Sağ kenarda solma: kesilen kart "devamı var" der, sınır çizgisi gibi
+     durmaz. Maske yalnız alfa okur; renk değeri anlamsız. */
+  mask-image: linear-gradient(to right, black calc(100% - 4rem), transparent);
+  border-radius: 4px;
+}
+
+.home-strip::-webkit-scrollbar {
+  display: none;
+}
+
+/* Odak halkası: şerit hem kaydırma kabı (taşmayı keser) hem maskeli
+   (maske kabın kendi halkasını da siler). Halka içeri çizilir ve odak
+   şeridin içindeyken maske kalkar; aksi hâlde sağ kenardaki kartın
+   halkası solmanın içinde kayboluyordu. */
+.home-strip:focus-visible,
+.home-strip a:focus-visible {
+  outline-offset: -2px;
+}
+
+.home-strip:focus-within {
+  mask-image: none;
+}
+
+@media (min-width: 640px) {
+  .home-strip {
+    --gutter: 1.5rem;
+  }
+}
+@media (min-width: 1024px) {
+  .home-strip {
+    --gutter: 2rem;
+  }
+}
+
+.home-strip-track {
+  display: flex;
+  gap: 1rem;
+  width: max-content;
+  padding-inline: var(--inset) 4rem;
+  padding-block: 0.25rem 0.5rem;
+}
+
+.home-strip-item {
+  width: min(78vw, 22rem);
+  scroll-snap-align: start;
+}
+
+@media (min-width: 1024px) {
+  .home-strip-track {
+    gap: 1.25rem;
+  }
+  .home-strip-item {
+    width: 25rem;
+  }
+}
+
+.home-strip-more {
+  width: min(60vw, 14rem);
+}
+.home-strip-more > a {
+  aspect-ratio: auto;
+  min-height: 100%;
+}
+
+.home-strip-frame {
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  transition: border-color 180ms var(--ease-brand);
+}
+
+a:hover .home-strip-frame {
+  border-color: var(--line-strong);
+}
+
+.home-strip-shot {
+  height: 100%;
+}
+.home-strip-shot img {
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+}
+
+/* Hafif paralaks: görsel kartından biraz geride akar.
+   Neden: şeridin yatay olduğunu ilk dokunuşta anlatır ve düz bir küçük
+   resim dizisine derinlik verir. Zamanlayıcı kartın şerit içindeki
+   kendi görünümü (`view(inline)`); JS yok. */
+@keyframes home-strip-drift {
+  from {
+    transform: scale(1.08) translateX(3%);
+  }
+  to {
+    transform: scale(1.08) translateX(-3%);
+  }
+}
+
+@supports (animation-timeline: view(inline)) {
+  @media (prefers-reduced-motion: no-preference) {
+    .home-strip-shot {
+      animation: home-strip-drift linear both;
+      animation-timeline: view(inline);
+    }
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Seçili İşler: sticky-stack.
+   Düz hâl (varsayılan): alt alta üç panel. Kart zemini opak; panel üst
+   üste bindiğinde alttaki görünmesin diye tonu zemin üstüne bindiriyoruz.
+   -------------------------------------------------------------------------- */
+.home-stack {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.home-stack-card {
+  position: relative;
+  background: linear-gradient(var(--surface), var(--surface)), var(--page-bg);
+  transform-origin: 50% 0;
+  /* Metin sütununun z-index'i kartın içinde kalsın: sonraki panelin
+     üstüne çıkmasın. */
+  isolation: isolate;
+}
+
+/* Geri çekilen paneli KARTIN opaklığıyla karartmak alttaki paneli
+   içinden gösteriyordu (ölçüldü: üç panel üst üste binince "Mimio" ile
+   "Açılış Zili" başlıkları aynı yerde okunuyordu). Kart opak kalır;
+   karartma zemin renginde bir örtüden. */
+.home-stack-card::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: var(--page-bg);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Örtü yalnız görseli karartır, metin sütunu örtünün ÜSTÜNDE kalır.
+   Ölçüldü: sessiz künye (`--text-muted`) kart zemininde açık temada 5,01,
+   koyuda 5,86; zemin renginde %10'luk örtü bile açıkta 4,08'e indiriyordu
+   ve sonraki panel gelirken künye hâlâ görünür durumda (1280×800'de
+   örtünün bittiği anda üst 144 piksel açıkta). Görsel kararıyor, metin
+   AA'da kalıyor. */
+.home-stack-card > :not(.home-stack-media) {
+  position: relative;
+  z-index: 1;
+}
+
+.home-stack-media {
+  position: relative;
+  align-self: start;
+  /* Telefon görseli masaüstünün altından taşar; payı burada. */
+  padding-bottom: 7%;
+}
+
+.home-stack-phone {
+  position: absolute;
+  right: 4%;
+  bottom: 0;
+  width: 22%;
+  border-radius: var(--radius-button);
+  box-shadow: var(--shadow-md);
+}
+
+/* Yapışma ve küçülme yalnız: destek var, hareket açık, ekran bir paneli
+   tam gösterecek kadar geniş VE yüksek. 1280×800'de panel ~560 piksel;
+   700 pikselden kısa ekranda yapışan panelin altı kesilirdi.
+   Neden: üç proje aynı ağırlıkta değil, sırayla öne çıkıyor; önceki panel
+   geri çekilerek "bitti, sıradaki" diyor. */
+@keyframes home-stack-recede {
+  to {
+    transform: scale(0.94);
+  }
+}
+
+@keyframes home-stack-dim {
+  to {
+    opacity: 0.6;
+  }
+}
+
+@supports (animation-timeline: view()) and (timeline-scope: --a) {
+  @media (prefers-reduced-motion: no-preference) and (min-width: 1024px) and (min-height: 700px) {
+    .home-stack {
+      gap: 12vh;
+      timeline-scope: --home-stack-2, --home-stack-3;
+    }
+
+    .home-stack-item {
+      position: sticky;
+      top: 6rem;
+    }
+    .home-stack-item:nth-child(2) {
+      top: 6.75rem;
+      view-timeline-name: --home-stack-2;
+    }
+    .home-stack-item:nth-child(3) {
+      top: 7.5rem;
+      view-timeline-name: --home-stack-3;
+    }
+
+    /* Önceki panelin zamanlayıcısı SONRAKİ panelin girişi: sonraki alttan
+       girmeye başlayınca küçülme başlar, tamamen girince biter. Kararma
+       girişin son %40'ında: sonraki panel ekranın alt yarısındayken önceki
+       hâlâ okunuyor ve kararmıyor (eskiden ilk pikselde başlıyordu). */
+    .home-stack-item:nth-child(1) .home-stack-card,
+    .home-stack-item:nth-child(2) .home-stack-card {
+      animation: home-stack-recede linear both;
+      animation-range: entry 0% entry 100%;
+    }
+    .home-stack-item:nth-child(1) .home-stack-card::after,
+    .home-stack-item:nth-child(2) .home-stack-card::after {
+      animation: home-stack-dim linear both;
+      animation-range: entry 60% entry 100%;
+    }
+    .home-stack-item:nth-child(1) .home-stack-card,
+    .home-stack-item:nth-child(1) .home-stack-card::after {
+      animation-timeline: --home-stack-2;
+    }
+    .home-stack-item:nth-child(2) .home-stack-card,
+    .home-stack-item:nth-child(2) .home-stack-card::after {
+      animation-timeline: --home-stack-3;
+    }
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Kinetik paragraf: kelime kelime aydınlanma.
+   Her kelimenin dilimi bileşende (`--ws`, `--we`); zamanlayıcı paragrafın
+   görünümü. Desteksiz ya da hareketsiz okuyucuda paragraf baştan parlak.
+   -------------------------------------------------------------------------- */
+@keyframes home-word-light {
+  from {
+    opacity: 0.2;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@supports (animation-timeline: view()) and (timeline-scope: --a) {
+  @media (prefers-reduced-motion: no-preference) {
+    .home-kinetic {
+      view-timeline-name: --home-kinetic;
+      timeline-scope: --home-kinetic;
+    }
+    .home-word {
+      animation: home-word-light linear both;
+      animation-timeline: --home-kinetic;
+      animation-range: cover var(--ws) cover var(--we);
+    }
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Yığın marquee. Sayfadaki tek kayan şerit.
+   -------------------------------------------------------------------------- */
+.home-marquee {
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  border-radius: 4px;
+}
+
+.home-marquee-track {
+  display: flex;
+  width: max-content;
+}
+
+/* Kap odaklanabilir (durdurmak için) ama kendi maskesi iki kenarı siliyor
+   ve taşmayı gizliyor: halka içeri, maske odakta kalkar. */
+.home-marquee:focus-visible {
+  outline-offset: -2px;
+  mask-image: none;
+}
+
+.home-marquee :focus-visible {
+  outline-offset: -2px;
+}
+
+.home-marquee-list {
+  display: flex;
+  align-items: center;
+  gap: clamp(2.5rem, 6vw, 4.5rem);
+  /* Listenin sonundaki boşluk aradakiyle aynı: -%50 kayınca dikiş görünmez. */
+  padding-right: clamp(2.5rem, 6vw, 4.5rem);
+  color: var(--text-body);
+}
+
+.home-marquee-list svg {
+  display: block;
+  width: clamp(1.75rem, 3vw, 2.25rem);
+  height: auto;
+}
+
+@keyframes home-marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .home-marquee-track {
+    animation: home-marquee 42s linear infinite;
+  }
+  .home-marquee:hover .home-marquee-track,
+  .home-marquee:focus-visible .home-marquee-track {
+    animation-play-state: paused;
+  }
+}
+
+/* Hareketsiz: tek liste, sarılı, ortalı. */
+@media (prefers-reduced-motion: reduce) {
+  .home-marquee {
+    mask-image: none;
+  }
+  .home-marquee-track {
+    width: auto;
+    justify-content: center;
+  }
+  .home-marquee-list {
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 1.5rem;
+    padding-right: 0;
+  }
+  .home-marquee-list[aria-hidden="true"] {
+    display: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Son Yazılar: imleci izleyen önizleme (components/home/PostPreview.tsx).
+   Yalnız fare + hareket açık; geri kalanında hiç basılmaz.
+   -------------------------------------------------------------------------- */
+.home-follow {
+  display: none;
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .home-follow {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 17rem;
+    aspect-ratio: 16 / 10;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0;
+    scale: 0.9;
+    transition:
+      opacity 160ms var(--ease-brand),
+      scale 240ms var(--ease-brand);
+  }
+
+  .home-posts[data-previewing] .home-follow {
+    opacity: 1;
+    scale: 1;
+  }
+
+  .home-follow-item {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-button);
+    background: var(--page-bg);
+    box-shadow: var(--shadow-md);
+    opacity: 0;
+    transition: opacity 160ms var(--ease-brand);
+  }
+
+  .home-follow-item[data-on] {
+    opacity: 1;
+  }
+
+  .home-follow-item img {
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+  }
+}

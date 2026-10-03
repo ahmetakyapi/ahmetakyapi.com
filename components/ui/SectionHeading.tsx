@@ -1,0 +1,58 @@
+import type { ReactNode } from 'react'
+import { cx } from '@/lib/utils'
+
+/**
+ * Bölüm başlığı: mono künye + başlık + tek cümle + sağda tek eylem.
+ *
+ *   <SectionHeading
+ *     id="son-yazilar"            // başlığın id'si; bölüm aria-labelledby ile bağlar
+ *     kunye="03 · Yazılar"        // isteğe bağlı mono üst satır (Title Case)
+ *     title="Son Yazılar"
+ *     description="Yaptıklarımdan çıkan notlar."
+ *     action={<ButtonLink href="/blog" variant="ghost">Tümü</ButtonLink>}
+ *     as="h2"                     // sayfa başlığıysa "h1"
+ *     size="section"              // "page" daha büyük
+ *   />
+ *
+ * Eyebrow tavanı: künye yalnızca bilgi taşıyorsa verilir, süs için değil.
+ */
+type SectionHeadingProps = {
+  title: ReactNode
+  id?: string
+  kunye?: ReactNode
+  description?: ReactNode
+  action?: ReactNode
+  as?: 'h1' | 'h2' | 'h3'
+  size?: 'section' | 'page'
+  className?: string
+}
+
+export function SectionHeading({
+  title,
+  id,
+  kunye,
+  description,
+  action,
+  as: Heading = 'h2',
+  size = 'section',
+  className,
+}: SectionHeadingProps) {
+  return (
+    <header className={cx('flex flex-wrap items-end justify-between gap-x-8 gap-y-4', className)}>
+      <div className="min-w-0 max-w-3xl">
+        {kunye ? <p className="mb-3 font-mono text-small font-medium text-muted">{kunye}</p> : null}
+        <Heading
+          id={id}
+          className={cx(
+            'font-semibold tracking-[-0.03em] text-strong',
+            size === 'page' ? 'text-display' : 'text-heading sm:text-[2.25rem] sm:leading-[1.1]',
+          )}
+        >
+          {title}
+        </Heading>
+        {description ? <p className="mt-4 max-w-2xl text-read text-body">{description}</p> : null}
+      </div>
+      {action ? <div className="shrink-0">{action}</div> : null}
+    </header>
+  )
+}
