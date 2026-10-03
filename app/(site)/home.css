@@ -20,7 +20,7 @@
   isolation: isolate;
   overflow: clip;
   display: flex;
-  min-height: calc(100svh - 4rem - env(safe-area-inset-top));
+  /* Tam ekran yükseklik YOK: içerik kadar (gerekçe HomeHero.tsx). */
 }
 
 .home-hero-inner {
@@ -28,10 +28,10 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 2.5rem;
+  justify-content: flex-start;
+  gap: clamp(1.5rem, 4vw, 2.75rem);
   min-width: 0;
-  padding: clamp(1.25rem, 3.5svh, 2.5rem) max(1rem, env(safe-area-inset-right)) clamp(1.75rem, 5svh, 3.5rem)
+  padding: clamp(1.5rem, 5vw, 3.5rem) max(1rem, env(safe-area-inset-right)) clamp(2.5rem, 6vw, 4.5rem)
     max(1rem, env(safe-area-inset-left));
 }
 
@@ -69,15 +69,11 @@
 }
 
 @media (min-width: 1024px) {
-  .home-hero-inner {
-    justify-content: flex-end;
-  }
   .home-name {
     --nw: calc(var(--w1) + var(--gap) + var(--w2));
     --nh: calc(var(--lh) + 0.2em);
     flex-direction: row;
     column-gap: var(--gap);
-    order: 2;
     font-size: min(calc(100cqi / (var(--w1n) + 0.24 + var(--w2n))), 40svh);
     /* Kuyruklu harflerin (y, p) payı: -0.04em'de "Akyapı"nın y ve p'si
        kahramanın `overflow: clip` sınırında kesiliyordu (1440×900,
@@ -160,54 +156,11 @@
 
 @media (min-width: 1024px) {
   .home-hero-foot {
-    order: 1;
-    flex: 1;
     flex-direction: row;
-    align-items: flex-start;
+    align-items: flex-end;
     justify-content: space-between;
     gap: 2rem;
-    padding-bottom: 2rem;
   }
-}
-
-/* Küre: işaretçiye kapalı (kaydırmayı ve isim dalgasını asla tutmaz),
-   ismin arkasında. Alt kenarı söner: cümle ve düğmeler çizgilerin
-   üstünde okunmalı. */
-.home-hero-globe {
-  position: absolute;
-  z-index: -1;
-  pointer-events: none;
-  aspect-ratio: 1;
-  width: min(165vw, 56rem);
-  left: 50%;
-  top: 14vw;
-  translate: -50% 0;
-  mask-image: linear-gradient(to bottom, black 45%, transparent 82%);
-}
-
-/* Geniş ekran: sahnenin tabanından yükselen büyük bir küre; alt yarısı
-   ismin arkasında kalır, üst kubbesi blokla isim arasındaki boşluğu tutar. */
-@media (min-width: 1024px) {
-  .home-hero-globe {
-    width: min(78vw, 130svh);
-    left: 60%;
-    top: 14%;
-    mask-image: linear-gradient(to bottom, black 40%, transparent 72%);
-  }
-}
-
-.home-globe-box {
-  width: 100%;
-  height: 100%;
-}
-
-.home-globe-canvas {
-  display: block;
-  opacity: 0;
-  transition: opacity 1.6s var(--ease-brand);
-}
-.home-globe-canvas[data-ready] {
-  opacity: 1;
 }
 
 @keyframes home-glyph-rise {
@@ -254,19 +207,12 @@
   }
 }
 
-/* Kaydırınca sahne değişiyor: isim yukarı kayıp solar, küre aşağı iner ve
-   küçülür. Zamanlayıcı hero'nun kendi çıkışı; desteksiz ya da hareketsiz
+/* Kaydırınca sahne değişiyor: isim yukarı kayıp solar. Zamanlayıcı hero'nun kendi çıkışı; desteksiz ya da hareketsiz
    okuyucuda hiçbiri olmaz. */
 @keyframes home-name-leave {
   to {
     transform: translateY(-18%);
     opacity: 0.12;
-  }
-}
-@keyframes home-globe-leave {
-  to {
-    transform: translateY(16%) scale(0.88);
-    opacity: 0.25;
   }
 }
 
@@ -279,11 +225,6 @@
       animation: home-name-leave linear both;
       animation-timeline: --home-hero;
       animation-range: exit 0% exit 75%;
-    }
-    .home-globe-box {
-      animation: home-globe-leave linear both;
-      animation-timeline: --home-hero;
-      animation-range: exit 0% exit 100%;
     }
   }
 }

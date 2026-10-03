@@ -1,24 +1,22 @@
 import { ArrowRight } from 'lucide-react'
 import type { CSSProperties } from 'react'
-import { GlobeIsland } from '@/components/home/GlobeIsland'
 import { layoutWord } from '@/components/home/name-metrics'
 import { NameWave } from '@/components/home/NameWave'
 import { ButtonLink } from '@/components/ui/Button'
 import type { HomeContent } from '@/lib/site-content'
 
 /**
- * Hero: isim sahnenin kendisi, tek bir kompozisyon.
+ * Hero: isim sahnenin kendisi, içeriği kadar yer kaplayan sıkı bir blok.
  *
- * Bir dönem üstte dört kutulu mono künye ızgarası, altında solda isim ve
- * sağda etiketli bir küre vardı: telefonda ilk ekranı künye kaplıyordu,
- * masaüstünde de sayfa "solda metin, sağda araç" diye ikiye bölünüyordu.
- * Şimdi isim ekranın genişliğini sahipleniyor: telefonda iki satır ve
- * kabın ~%93'ü, masaüstünde tek satır ve kenardan kenara. Küre etiketsiz,
- * ince çizgili bir arka plan; ismin arkasından yükselir.
+ * Bir dönem üstte dört kutulu mono künye ızgarası, sonra ismin arkasında
+ * ince çizgili bir küre ve tam ekran yükseklik vardı. Telefonda isimle
+ * düğmeler arasında yarım ekranlık boşluk kalıyor, küre de anlamsız bir
+ * "dünya haritası" gibi okunuyordu (3 Ekim 2026, Ahmet: "boşluk çok
+ * gereksiz, dünya sistemi gibi saçma duruyor"). Küre ve tam ekran
+ * yükseklik kalktı; hero bitince Hakkımda hemen başlar.
  *
- * Düzen: telefonda isim üstte, blok (unvan, tek cümle, iki düğme) altta;
- * masaüstünde blok üstte, isim sahnenin tabanında. DOM sırası her yerde
- * aynı (önce `h1`); masaüstündeki yer değişimi yalnız görsel (`order`).
+ * Düzen her genişlikte aynı sıra: isim (telefonda iki satır, masaüstünde
+ * tek satır kenardan kenara), altında unvan, tek cümle ve iki düğme.
  *
  * Harfler: her biri ayrı kutu, genişliği sunucuda sabit (name-metrics.ts).
  * Harf harf maskeli yükselir (home.css → `.home-glyph`); maskenin dışından
@@ -43,10 +41,6 @@ export function HomeHero({ home }: { home: HomeContent }) {
 
   return (
     <section aria-labelledby="hero-baslik" className="home-hero">
-      <div className="home-hero-globe" aria-hidden="true">
-        <GlobeIsland />
-      </div>
-
       <div className="home-hero-inner">
         <h1 id="hero-baslik" aria-label={`${home.firstName} ${home.lastName}`} className="home-name" style={nameStyle}>
           {[first, last].map((word, line) => (
