@@ -1246,6 +1246,11 @@ html.theme-switching::view-transition-new(root) {
    çocuğa transform verilirse çocuk boyama alanından çıkar ve görünmez
    olur. Hareket eden öğe degradeyi KENDİSİ taşır (`.home-mask-in`).
    ========================================================================== */
+/* KATMANDA (`components`): sayfa dosyalarındaki katmansız kurallar ve
+   Tailwind yardımcıları (mt-3, mt-4) bunun ÜSTÜNE yazabilsin. Katmansızken
+   buradaki eksi kenar boşluğu başlıkların kendi üst boşluğunu eziyordu ve
+   "Diğer Projeler" üstündeki karta yapışıyordu (4 Ekim 2026). */
+@layer components {
 @supports (background-clip: text) or (-webkit-background-clip: text) {
   :is(
       .ink,
@@ -1326,6 +1331,7 @@ html.theme-switching::view-transition-new(root) {
       --g3: var(--acc-2);
     }
   }
+}
 }
 
 @media (forced-colors: active) {
@@ -1512,7 +1518,10 @@ html.theme-switching::view-transition-new(root) {
    panel içinden görünmemeli.
    ========================================================================== */
 .tint-card {
-  --tint: var(--primary);
+  /* Ton ATADAN da gelebilir (`--card-tint`, /projeler satırı): burada
+     doğrudan `--tint: var(--primary)` yazmak atadan geleni eziyordu ve
+     /projeler'deki bütün kartlar mavi kalıyordu (4 Ekim 2026). */
+  --tint: var(--card-tint, var(--primary));
   /* Metin olarak tonun koyu hâli: açık zeminde AA (altın bile). */
   --tint-ink: color-mix(in oklab, var(--tint) 60%, var(--text-strong) 40%);
   /* Başlık degradesinin açık ucu: büyük metinde AA (altın ton dahil). */
@@ -1520,15 +1529,25 @@ html.theme-switching::view-transition-new(root) {
   position: relative;
   isolation: isolate;
   overflow: hidden;
+  /* Açık tema (4 Ekim 2026: "zayıf, daha güzel renk ve geçiş"): tek
+     yönlü soluk bir yıkama yerine üç katman: sol üstte tonun yoğun ışığı,
+     sağ altta zeminden AÇIK bir parıltı ve aradan geçen yumuşak bir
+     degrade. Kenarda tonun halkası, üstte ışık çizgisi, altta tonun
+     gölgesi: kart zeminin üstünde duruyor, zemine gömülmüyor. */
   background:
+    radial-gradient(90% 120% at 0% 0%, color-mix(in oklab, var(--tint) 34%, transparent) 0%, transparent 62%),
+    radial-gradient(70% 90% at 100% 100%, color-mix(in oklab, var(--surface) 90%, transparent) 0%, transparent 70%),
     linear-gradient(
-      140deg,
-      color-mix(in oklab, var(--tint) 26%, var(--page-bg)) 0%,
-      color-mix(in oklab, var(--tint) 9%, var(--page-bg)) 55%,
-      color-mix(in oklab, var(--tint) 4%, var(--page-bg)) 100%
+      150deg,
+      color-mix(in oklab, var(--tint) 18%, var(--surface)) 0%,
+      color-mix(in oklab, var(--tint) 7%, var(--surface)) 60%,
+      var(--surface) 100%
     ),
     var(--page-bg);
-  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--tint) 22%, transparent);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in oklab, var(--tint) 26%, transparent),
+    inset 0 1px 0 color-mix(in oklab, var(--surface) 80%, transparent),
+    0 34px 70px -46px color-mix(in oklab, var(--tint) 70%, transparent);
 }
 :root[data-theme="dark"] .tint-card {
   --tint-ink: color-mix(in oklab, var(--tint) 55%, var(--text-strong) 45%);
@@ -1592,7 +1611,9 @@ html.theme-switching::view-transition-new(root) {
   background: var(--tint);
 }
 
-/* Ad: koyu mürekkepten tonun kendisine giden degrade. */
+/* Ad: tonun koyu hâlinden kendisine degrade. Katmanda: kartlardaki mt-*
+   yardımcıları başlığın boşluğunu ezebilsin (bkz. "Başlık mürekkebi"). */
+@layer components {
 .tint-card-title {
   font-size: clamp(2.5rem, 1.6rem + 3.4vw, 4.5rem);
   font-weight: 700;
@@ -1613,6 +1634,7 @@ html.theme-switching::view-transition-new(root) {
     padding-block: 0.22em 0.1em;
     margin-block: -0.22em -0.1em;
   }
+}
 }
 
 .tint-card-stats {

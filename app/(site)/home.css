@@ -164,7 +164,8 @@
 
 .home-hero-lead {
   margin-top: 1.75rem;
-  max-width: 30ch;
+  /* İki cümlelik metin (4 Ekim 2026): 30ch'de yedi satıra iniyordu. */
+  max-width: 40ch;
   font-size: clamp(1.1875rem, 1rem + 0.6vw, 1.4375rem);
   line-height: 1.5;
   letter-spacing: -0.01em;
@@ -1251,5 +1252,65 @@
   }
   .home-xp-card:hover {
     translate: 0 -3px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Kendi Ürünlerim kartı: alan dağılımı çubuğu ve köşede yörünge halkaları
+   (4 Ekim 2026: "sağdaki kart eksik hissettiriyor"). Çubuğun her parçası
+   tonun bir kademesi; görünüme girince soldan dolar. Halkalar küreye bir
+   gönderme, çok soluk ve kartın dışına taşmaz.
+   -------------------------------------------------------------------------- */
+.home-xp-own {
+  position: relative;
+}
+
+.home-xp-rings {
+  position: absolute;
+  top: -3.5rem;
+  right: -3.5rem;
+  z-index: -1;
+  width: 15rem;
+  height: 15rem;
+  pointer-events: none;
+}
+.home-xp-rings circle {
+  fill: none;
+  stroke: color-mix(in oklab, var(--tint) 30%, transparent);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.home-xp-rings circle:nth-child(2) {
+  stroke-dasharray: 3 6;
+}
+
+.home-xp-bar {
+  display: flex;
+  gap: 4px;
+  height: 0.6rem;
+  margin-top: -0.5rem;
+}
+.home-xp-bar > span {
+  flex-basis: 0;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--tint) calc(100% - var(--i) * 15%), var(--surface));
+  transform-origin: left;
+}
+
+@keyframes home-xp-bar-in {
+  from {
+    scale: 0 1;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .home-xp-rings {
+    animation: cover-rings-spin 90s linear infinite;
+  }
+  @supports (animation-timeline: view()) {
+    .home-xp-bar > span {
+      animation: home-xp-bar-in linear both;
+      animation-timeline: view();
+      animation-range: entry 40% cover 40%;
+    }
   }
 }

@@ -28,7 +28,7 @@ const STACK_PREVIEW = 2
 export function FeaturedRow({ project, priority = false }: { project: Project; priority?: boolean }) {
   const { lead } = splitLead(project.description)
   return (
-    <li className="pfeat" data-group={project.group} style={{ '--tint': project.tint ?? project.accent } as CSSProperties}>
+    <li className="pfeat" data-group={project.group} style={{ '--card-tint': project.tint ?? project.accent } as CSSProperties}>
       <ArmedMorph
         name={`project-${project.slug}`}
         className="pfeat-in tint-card reveal group relative"
