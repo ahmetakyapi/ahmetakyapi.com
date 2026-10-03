@@ -1,19 +1,23 @@
 import type { BlogPost } from '../types'
 
 export const post: BlogPost = {
-  slug: 'acilis-zili-yuzde-hangi-gune-ait',
+  slug: 'acilis-zili-eski-veriye-dusmemek',
   tag: 'Ürün',
   tagColor: '#0d74c4',
-  title: 'Açılış Zili: Ekrandaki Yüzde Bugünün mü, Yoksa Dünün mü?',
+  title: 'Açılış Zili: ABD Borsasını Takip Ederken Eski Veriye Düşmemek',
   excerpt:
-    'Seans açıkken ana sayfa dünün en çok yükselenlerini "seans içi" diye gösterdi, hata da çıkmadı. Bir yüzdenin hangi güne ait olduğunu kanıtlamak 17 gün sürdü.',
+    'Açılış Zili\'nde ABD borsalarını, haberleri, teknik analizleri ve bilançoları takip ediyorsun. Ekrandaki her fiyatın bugüne ait olduğundan nasıl emin oluyorum?',
   date: '2026-10-03',
   coverGradient: 'linear-gradient(135deg, #0d74c4 0%, #0a5a9a 45%, #101c2b 100%)',
   project: 'acilis-zili',
   content: [
     {
       type: 'lead',
-      text: '17 Eylül, New York saatiyle 11:51, Türkiye saatiyle 18:51. Seans açık. Açılış Zili\'nin ana sayfasındaki "Günün Hareketleri" paneli en çok yükselenleri sıralıyor: GNRC +%20,66, SMCI +%10,35, INTC +%9,73. Panelin altında "514 endeks üyesi tarandı · seans içi" yazıyor. Üç sayı da bir gün önceki kapanışa aitti.',
+      text: 'Açılış Zili, ABD borsalarını Türkiye\'den takip etmek için yazdığım bir uygulama. Açılış ve kapanış zilini sayıyor, endeksleri ve hisse fiyatlarını gösteriyor, günün haberlerini topluyor, hisseler için teknik analiz ve bilanço özetleri veriyor. Böyle bir uygulamada en çok korktuğum hata, dünkü bir fiyatı bugünün fiyatıymış gibi göstermek. Okur o sayıya bakıp karar veriyor.',
+    },
+    {
+      type: 'p',
+      text: '17 Eylül\'de tam olarak bu oldu. New York saatiyle 11:51, Türkiye saatiyle 18:51. Seans açık. Açılış Zili\'nin ana sayfasındaki "Günün Hareketleri" paneli en çok yükselenleri sıralıyor: GNRC +%20,66, SMCI +%10,35, INTC +%9,73. Panelin altında "514 endeks üyesi tarandı · seans içi" yazıyor. Üç sayı da bir gün önceki kapanışa aitti.',
     },
     {
       type: 'p',
