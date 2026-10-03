@@ -6,201 +6,161 @@ export const post: BlogPost = {
   tagColor: '#f59e0b',
   title: "İlk Sohbet Uygulamam: Gerçek Zamanlıda Otorite Kimde?",
   excerpt:
-    'İlk gerçek zamanlı uygulamamı Firebase ile yazdım, yıllar sonra aynı problemi kendi sunucumla çözdüm. İkisi arasındaki farkı en net gösteren şey, kimin karar verdiği sorusu.',
+    '2021\'de yazdığım ilk sohbet uygulamasının sunucusu on beş satırdı ve hiçbir şeye karar vermiyordu. Beş yıl sonra aynı soruyu bir oyunda bambaşka cevapladım.',
   date: '2026-01-05',
   coverGradient: 'linear-gradient(135deg, #f59e0b 0%, #ea580c 50%, #dc2626 100%)',
   content: [
     {
       type: 'lead',
-      text: 'İlk sohbet uygulamamı yazdığımda backend diye bir şey yazmamıştım. Firebase\'e bir referans açtım, `onValue` dinledim, mesaj `push` ettim ve iki tarayıcıda aynı anda mesajlaşmayı gördüm. O an gerçekten büyülü geldi. Yıllar sonra Karalama\'yı yazarken aynı problemi kendi sunucumla çözdüm ve o günkü büyünün neyi sakladığını anladım.',
+      text: 'Haziran 2021\'de ilk sohbet uygulamamı yazdım: React istemcisi, Express ve Socket.io sunucusu. Sunucu on beş satırdı ve tek bir iş yapıyordu: gelen her mesajı herkese geri yollamak. İki tarayıcı penceresinde mesajların karşılıklı aktığını görmek o gün büyülü gelmişti. Bu büyünün neyi sakladığını beş yıl sonra, Karalama\'yı yazarken anladım.',
     },
 
-    { type: 'h2', text: 'Firebase Neyi Doğru Yapıyor' },
+    { type: 'h2', text: 'Sunucu Yalnızca Yankı Yapıyordu' },
     {
       type: 'p',
-      text: 'Realtime Database\'in modeli tek cümleyle şu: veritabanı bir JSON ağacı, sen bir düğümü dinliyorsun, o düğüm değiştiğinde sana haber geliyor.',
+      text: 'Kodun tamamı bu:',
     },
     {
       type: 'code',
-      lang: 'ts',
-      text: `import { getDatabase, ref, push, onChildAdded, serverTimestamp } from 'firebase/database'
-
-const db = getDatabase(app)
-const messagesRef = ref(db, \`rooms/\${roomId}/messages\`)
-
-// Gönderme
-await push(messagesRef, {
-  text,
-  uid: auth.currentUser!.uid,
-  // İstemcinin saatine güvenmiyoruz — sunucu damgası
-  createdAt: serverTimestamp(),
-})
-
-// Dinleme: onValue değil onChildAdded.
-// onValue her değişimde TÜM listeyi yeniden gönderir; 500 mesajlık bir
-// odada her yeni mesaj 500 kayıt indirmek demektir.
-onChildAdded(messagesRef, (snap) => {
-  setMessages((prev) => [...prev, { id: snap.key!, ...snap.val() }])
+      lang: 'js',
+      file: 'server.js',
+      text: `io.on("connection", socket => {
+    socket.emit("your id", socket.id);
+    socket.on("send message", body => {
+        io.emit("message", body)
+    })
 })`,
     },
     {
       type: 'p',
-      text: 'O `onValue` / `onChildAdded` ayrımı ilk sürümde yaptığım hataydı. Uygulama çalışıyordu ama sohbet uzadıkça telefonda ısınma başlıyordu. Ağ sekmesine bakınca sebep açıktı: her mesajda bütün geçmiş yeniden iniyordu.',
-    },
-    {
-      type: 'callout',
-      variant: 'tip',
-      text: 'Sorguya sınır koymak da şart: `query(messagesRef, limitToLast(50))`. Odaya ilk giren biri, kurulduğu günden beri yazılmış her mesajı indirmemeli. Bunu eklemeden önce bir odanın ilk yüklemesi 2 MB\'a çıkmıştı.',
-    },
-
-    { type: 'h2', text: 'Asıl Mesele: Güvenlik Kuralları' },
-    {
-      type: 'p',
-      text: 'Firebase\'in "backend yazmıyorsun" vaadinin bedeli burada ödeniyor. Backend yazmıyorsun ama yetkilendirmeyi yazmak zorundasın — ve bunu tanıdık bir dilde değil, kendi kural dilinde yazıyorsun.',
+      text: 'Bağlanan her istemciye kendi kimliğini söylüyor, sonra gelen her mesajı olduğu gibi herkese yayıyor. İstemci tarafında mesaj şöyle kuruluyordu:',
     },
     {
       type: 'code',
-      lang: 'json',
-      file: 'database.rules.json',
-      text: `{
-  "rules": {
-    "rooms": {
-      "$roomId": {
-        "messages": {
-          ".read": "auth != null",
-          "$msgId": {
-            // Yalnızca kendi adına yazabilirsin
-            ".write": "auth != null && !data.exists() && newData.child('uid').val() === auth.uid",
-            ".validate": "newData.hasChildren(['text','uid','createdAt']) && newData.child('text').isString() && newData.child('text').val().length <= 500"
-          }
-        }
-      }
-    }
-  }
+      lang: 'js',
+      file: 'client/src/App.js',
+      text: `function sendMessage(e) {
+  e.preventDefault();
+  const messageObject = {
+    body: message,
+    id: yourID,
+  };
+  setMessage("");
+  socketRef.current.emit("send message", messageObject);
 }`,
     },
     {
       type: 'p',
-      text: '`!data.exists()` kısmı önemli: mesajın sonradan düzenlenmesini engelliyor. `.validate` ise şema doğrulaması — bunu yazmadan uygulamamı yayına aldığımda biri konsoldan 3 MB\'lık bir string gönderebilirdi.',
+      text: 'Mesajın kimden geldiğini istemci söylüyor: `id: yourID`. Sunucu gerçek kimliği zaten biliyordu, `socket.id` elinin altındaydı, ama kullanmıyordu. Gelen `id` alanını kontrol etmeden herkese iletiyordu. Ekranda mesajı sağa mı sola mı koyacağına da `message.id === yourID` karşılaştırması karar veriyordu. Yani biri başkasının kimliğiyle mesaj gönderseydi, o mesaj karşı tarafın ekranında onun kendi mesajı gibi, sağ tarafta görünürdü.',
+    },
+    {
+      type: 'p',
+      text: 'O gün bunu hiç düşünmedim. Uygulama çalışıyordu, çünkü sohbette herkes dürüst olduğu sürece otoriteye ihtiyaç yok. İstemci kodunda hâlâ bir `console.log("here")` duruyor; o dönemki hata ayıklama yöntemimin de özeti.',
+    },
+
+    { type: 'h2', text: 'Bir Ay Önce: Firebase' },
+    {
+      type: 'p',
+      text: 'Ondan bir ay önce, Mayıs 2021\'de React, Tailwind ve Firebase ile bir Twitter klonu yazmıştım. Orada sunucu kodu hiç yoktu. İstemci doğrudan Firestore\'a yazıyor, akışı da doğrudan oradan dinliyordu:',
+    },
+    {
+      type: 'code',
+      lang: 'js',
+      file: 'src/components/TweetBox.js',
+      text: `db.collection('feed').add({
+    displayName: "Ahmet Akyapı",
+    username: "@Ahmetakyapi",
+    content,
+    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    image: "",
+    avatar: "...",
+})`,
+    },
+    {
+      type: 'code',
+      lang: 'js',
+      file: 'src/Layout/Content.js',
+      text: `db.collection('feed')
+  .orderBy('timestamp', 'desc')
+  .onSnapshot(snapshot => setTweets(snapshot.docs.map(doc => doc.data())))`,
+    },
+    {
+      type: 'p',
+      text: 'Burada da kim olduğunu istemci söylüyor; adım ve kullanıcı adım koda gömülü. Kimin yazabileceğine karar verecek tek yer Firestore\'un güvenlik kurallarıydı ve depoda bir kural dosyası yok. Sunucunun gerçekten karar verdiği tek şey zamandı: `serverTimestamp()` sıralamayı istemcinin saatine bırakmıyor.',
     },
     {
       type: 'quote',
-      text: 'Firebase\'de "sunucu kodu yok" demek "sunucu mantığı yok" demek değil. Mantık var, sadece JSON içine yazılmış bir kural dilinde yaşıyor ve testi zor.',
-    },
-    {
-      type: 'p',
-      text: 'Kural dosyasının en can sıkıcı yanı hata ayıklaması. Bir yazma reddedildiğinde istemci sadece "permission denied" görüyor; hangi kuralın hangi satırda reddettiğini konsoldan anlamıyorsunuz. Firebase\'in kural simülatörü var ama gerçek veriyle çalışmıyor.',
+      text: '2021\'deki iki projemde sunucunun karar verdiği tek şey saatti. Birinde o bile değil.',
     },
 
-    { type: 'h2', text: 'Nerede Duvara Çarptım' },
+    { type: 'h2', text: 'Beş Yıl Sonra: Karalama' },
     {
       type: 'p',
-      text: 'Sohbet için Firebase gayet iyiydi. Duvara, sohbetin üstüne oyun mantığı koymaya çalıştığımda çarptım.',
+      text: 'Karalama bir çizim-tahmin oyunu ve orada aynı soruyu sormadan tek satır yazamazdım. Bir tahmin doğru mu? Cevabı kim biliyor? Puanı kim veriyor?',
     },
     {
       type: 'p',
-      text: 'Basit bir soru: bir tahmin doğru mu? Cevabı bilen taraf kim? Firebase modelinde veritabanı bir depo, karar verici değil. Doğru cevap veritabanında yazıyorsa istemci onu okuyabilir; okuyamasın diye gizlerseniz karşılaştırmayı kim yapacak?',
+      text: 'Cevapların hepsi sunucu. Tahmin sohbet kanalından düz metin olarak geliyor ve oyuncunun kimliği mesajın içinden değil, bağlantının kendisinden okunuyor:',
     },
     {
-      type: 'table',
-      head: ['Soru', 'Firebase RTDB', 'Kendi sunucun'],
-      rows: [
-        ['Kim karar verir', 'Kural dili + istemci', 'Sunucu kodu'],
-        ['Gizli durum tutulabilir mi', 'Zor — okuma izni ya var ya yok', 'Doğal, istemci hiç görmez'],
-        ['Zamanlayıcı (tur süresi)', 'Cloud Functions gerekir', 'setTimeout, aynı süreçte'],
-        ['Ölçekleme', 'Kendiliğinden', 'Sen ilgilenirsin'],
-        ['İlk çalışan sürüm', 'Bir akşam', 'Birkaç gün'],
-      ],
-    },
-    {
-      type: 'p',
-      text: 'Firebase\'in cevabı Cloud Functions. Yani sonuçta backend yazıyorsunuz — ama parçalanmış hâlde, farklı bir çalışma ortamında ve soğuk başlama gecikmesiyle. Bir tur zamanlayıcısını Cloud Functions ile kurmayı denedim; iş çalışıyordu ama tur bitişi bazen üç saniye gecikiyordu.',
-    },
-
-    { type: 'h2', text: 'Aynı Problem, İkinci Deneme' },
-    {
-      type: 'p',
-      text: 'Karalama\'da aynı soruya farklı cevap verdim: odalar sunucunun belleğinde bir `Map` içinde, kararları sunucu veriyor.',
+      type: 'code',
+      lang: 'ts',
+      file: 'apps/server/src/socket/handlers.ts',
+      text: `if (room.phase === 'DRAWING') {
+  const msg = room.handleGuess(socket.id, trimmed);
+  // ...
+}`,
     },
     {
       type: 'code',
       lang: 'ts',
       file: 'apps/server/src/game/Room.ts',
       text: `handleGuess(playerId: string, text: string) {
-  // Çizen kişi tahmin edemez, zaten bilenler tekrar puan alamaz
-  if (playerId === this.drawerId) return null
-  if (this.guessedPlayerIds.has(playerId)) return null
-
-  const normalized = normalizeGuess(text)
-  const answer = normalizeGuess(this.currentWord)   // ← istemciye hiç gitmedi
+  if (this.phase !== 'DRAWING') return null;
+  if (!this.currentWord) return null;
+  if (playerId === this.currentDrawerId) return null;
+  // ...
+  const normalized = normalizeGuess(text);
+  const answer = normalizeGuess(this.currentWord);
 
   if (normalized === answer) {
-    this.guessedPlayerIds.add(playerId)
-    const score = calculateGuesserScore({ /* ... */ })
+    const score = calculateGuesserScore({ /* ... */ });
     // ...
   }
 }`,
     },
     {
       type: 'p',
-      text: 'Buradaki `this.currentWord` istemciye hiçbir zaman gönderilmiyor. Firebase\'de bunu yapmanın yolu kelimeyi okuma izni olmayan bir düğümde tutup karşılaştırmayı bir Cloud Function\'a yaptırmak olurdu — yani her tahminde bir fonksiyon çağrısı.',
+      text: '`this.currentWord` tahmin edenlere tur boyunca hiç gönderilmiyor. Onlara giden tek şey ipucu ve harf sayısı; kelimenin kendisi yalnızca çizen kişide ve tur bittiğinde herkese açıklanıyor. Puanı da sunucu hesaplıyor. 2021\'deki sunucunun ilettiği `id` alanının yerini burada `socket.id` almış durumda: kimin konuştuğunu artık istemci değil, bağlantı söylüyor.',
+    },
+
+    { type: 'h2', text: 'Firebase\'de Aynısı Nasıl Olurdu' },
+    {
+      type: 'p',
+      text: 'Firebase\'in modelinde veritabanı bir depo, karar verici değil. Güvenlik kuralları "bu kullanıcı kendi adına mı yazıyor" sorusunu cevaplayabiliyor; Twitter klonunda eksik olan da buydu. Ama "bu tahmin doğru mu" sorusu başka. Doğru cevap okunabilir bir yerde duruyorsa istemci onu okur. Okunamaz bir yere koyarsan, karşılaştırmayı yapacak bir sunucu fonksiyonuna ihtiyacın var. Yani sonunda yine sunucu kodu yazıyorsun, yalnızca başka bir yerde.',
     },
 
     { type: 'h2', text: 'Bugün Hangisini Seçerdim' },
     {
       type: 'p',
-      text: 'Cevap tek soruya bakıyor: sunucunun istemcinin bilmediği bir şeyi bilmesi gerekiyor mu?',
+      text: 'Cevap tek bir soruya bakıyor: sunucunun, istemcinin bilmediği bir şeyi bilmesi gerekiyor mu?',
     },
     {
       type: 'steps',
       items: [
         {
-          title: 'Gerekmiyorsa Firebase (ya da Supabase Realtime)',
-          text: 'Sohbet, bildirim, canlı beğeni sayacı, işbirlikli liste. Herkes her şeyi görebilir, kurallar sadece kimin yazabileceğini sınırlar. Bu senaryoda kendi sunucunu yazmak boşa emek.',
+          title: 'Gerekmiyorsa Barındırılan Bir Gerçek Zamanlı Veritabanı',
+          text: 'Sohbet, bildirim, canlı sayaç, ortak liste. Herkes her şeyi görebilir; kurallar yalnızca kimin neyi yazabileceğini sınırlar. Bu senaryoda kendi sunucunu yazmak boşa emek.',
         },
         {
-          title: 'Gerekiyorsa kendi sunucun',
-          text: 'Oyun mantığı, gizli durum, sunucu tarafı zamanlayıcı, hile karşıtı kontrol. Karar veren tarafın kodu senin elinde olmalı.',
-        },
-        {
-          title: 'Arada kalmışsan',
-          text: 'Postgres + SSE ya da WebSocket ile başla. Firebase\'in kural dilini öğrenmek, basit bir sunucu yazmaktan daha uzun sürüyor — ve öğrendiğin şey taşınabilir değil.',
+          title: 'Gerekiyorsa Kendi Sunucun',
+          text: 'Oyun mantığı, gizli durum, sunucuda işleyen zamanlayıcı, hileye karşı kontrol. Karar veren tarafın kodu senin elinde olmalı.',
         },
       ],
     },
     {
       type: 'p',
-      text: 'Son maddeyi biraz açayım. Firebase kural dili öğrendiğim ve bir daha hiç kullanmadığım bir bilgi oldu. Socket.io ile öğrendiğim şeyler — olay tabanlı mimari, oda kavramı, sunucu otoritesi, yeniden bağlanma — her gerçek zamanlı sistemde geçerli.',
-    },
-
-    { type: 'h2', text: 'Firebase\'i Hâlâ Sevdiğim Yer' },
-    {
-      type: 'p',
-      text: 'Bu yazı Firebase eleştirisi gibi okunuyorsa dengeleyeyim: bugün bir hafta sonu projesi yazacak olsam ve gerçek zamanlı bir sohbete ihtiyacım olsa, yine Firebase ile başlardım.',
-    },
-    {
-      type: 'ul',
-      items: [
-        'Bağlantı yönetimini tamamen unutuyorsunuz. Ağ koptu, geri geldi, uygulama arka plandaydı — hepsi hallediliyor.',
-        'Çevrimdışı desteği bedava geliyor. Kullanıcı tünelde mesaj yazıyor, sinyal gelince gönderiliyor.',
-        '`serverTimestamp()` küçük ama önemli: istemci saatleri güvenilmez ve sıralamayı ona bağlarsanız mesajlar karışıyor.',
-        'Kimlik doğrulama aynı ekosistemde. Anonim oturum tek satır ve `auth.uid` doğrudan kurallarda kullanılabiliyor.',
-      ],
-    },
-    {
-      type: 'callout',
-      variant: 'warning',
-      text: 'Anonim oturum açmayı unutmayın. Kurallarda `auth != null` yazıp uygulamada `signInAnonymously()` çağırmazsanız her yazma reddedilir ve hata mesajı bunu söylemez. İlk sürümde tam bir akşamımı bu aldı.',
-    },
-
-    { type: 'h2', text: 'Geriye Dönüp Bakınca' },
-    {
-      type: 'p',
-      text: 'Bu iki projeden çıkardığım şey teknoloji tercihi değil, bir soru: "bu sistemde kim otorite?" Cevabı baştan verirseniz, geri kalan kararlar kendiliğinden geliyor.',
-    },
-    {
-      type: 'p',
-      text: 'O ilk sohbet uygulamasında bu soruyu hiç sormamıştım. Çalıştı, çünkü sohbette otoriteye ihtiyaç yok. Oyuna geçince aynı yaklaşım kırıldı ve neden kırıldığını anlamak bana bir sürü şey öğretti.',
+      text: '2021\'deki iki projede bu soruyu hiç sormamıştım ve ikisi de çalıştı, çünkü ikisinde de saklanacak bir şey yoktu. Karalama\'da ilk saklanması gereken şey bir kelimeydi ve bütün mimari o kelimenin etrafında şekillendi. Merak ettiğim, bir sonraki projede ilk saklanması gereken şeyin ne olacağı ve onu bu kez baştan görüp göremeyeceğim.',
     },
   ],
 }

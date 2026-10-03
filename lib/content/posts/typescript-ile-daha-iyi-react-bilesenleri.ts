@@ -6,28 +6,24 @@ export const post: BlogPost = {
   tagColor: '#3178c6',
   title: "ahmetakyapi.com: İçeriği Tek Bir Union Tipi Ayakta Tutuyor",
   excerpt:
-    'Şu an okuduğunuz yazı bir dizi. Her blok bir union üyesi ve renderer eksik bir durumu unutursa TypeScript derlemeyi durduruyor. Bu yapının nasıl kurulduğu ve nerede yanlış yaptığım.',
+    'Bu blogun markdown\'ı yok; her yazı bir blok dizisi. Renderer bir blok tipini unutursa derleme duruyor. Bu düzeni nasıl kurduğumu ve nerede yetmediğini yazdım.',
   date: '2026-02-20',
   coverGradient: 'linear-gradient(135deg, #3178c6 0%, #235a97 100%)',
   content: [
     {
       type: 'lead',
-      text: 'Bu blogun markdown\'ı yok. Yazılar TypeScript dosyası ve içerik bir `Block[]` dizisi. Kulağa fazladan iş gibi geliyor; pratikte tam tersi oldu — yeni bir blok tipi eklediğimde onu render etmeyi unutmam mümkün değil, çünkü derleme kırılıyor.',
-    },
-    {
-      type: 'p',
-      text: 'Bu yazıda TypeScript\'in React tarafında gerçekten fark yaratan üç aracını, bu sitenin kendi kodundan örneklerle anlatacağım: discriminated union, `as const` ve tam kapsama kontrolü.',
+      text: 'Bu blogun markdown\'ı yok. Her yazı bir TypeScript dosyası ve içerik bir `Block[]` dizisi. Kulağa fazladan iş gibi geliyor. Pratikte tersi oldu: bir gün blok tiplerinin sayısını tek seferde altıdan on üçe çıkardım ve hiçbirini çizmeyi unutmam mümkün değildi, çünkü unutsam derleme kırılırdı.',
     },
 
     { type: 'h2', text: 'Discriminated Union: Ortak Alan Ayrıştırıcıdır' },
     {
       type: 'p',
-      text: 'Bir yazının içeriğini nasıl temsil edersiniz? İlk düşünülen şey tek bir esnek nesne:',
+      text: 'Bir yazının içeriğini temsil etmenin ilk akla gelen yolu tek bir esnek nesne:',
     },
     {
       type: 'code',
       lang: 'ts',
-      text: `// KÖTÜ: her alan opsiyonel, hiçbiri garanti değil
+      text: `// Her alan isteğe bağlı, hiçbiri garanti değil
 interface Block {
   type: string
   text?: string
@@ -39,7 +35,7 @@ interface Block {
     },
     {
       type: 'p',
-      text: 'Bu tip hiçbir şey söylemiyor. `type: "table"` olan bir bloğun `rows` alanı olduğunu bilmiyorsunuz, renderer içinde her yerde `block.rows ?? []` yazmanız gerekiyor ve `type: "p"` olan bir bloğa yanlışlıkla `rows` verdiğinizde kimse itiraz etmiyor.',
+      text: 'Bu tip hiçbir şey söylemiyor. `type: "table"` olan bir bloğun `rows` alanı olduğunu bilmiyorsun, renderer\'ın her yerinde `block.rows ?? []` yazmak gerekiyor ve `type: "p"` olan bir bloğa yanlışlıkla `rows` verdiğinde kimse itiraz etmiyor.',
     },
     {
       type: 'p',
@@ -53,10 +49,12 @@ interface Block {
   | { type: 'lead';    text: string }
   | { type: 'p';       text: string }
   | { type: 'h2';      text: string }
+  | { type: 'h3';      text: string }
   | { type: 'code';    lang: string; text: string; file?: string }
   | { type: 'ul';      items: string[] }
-  | { type: 'quote';   text: string }
+  | { type: 'ol';      items: string[] }
   | { type: 'callout'; variant: 'tip' | 'info' | 'warning'; text: string }
+  | { type: 'quote';   text: string }
   | { type: 'table';   head: string[]; rows: string[][] }
   | { type: 'stats';   label?: string; items: { value: string; note: string }[] }
   | {
@@ -70,102 +68,72 @@ interface Block {
     },
     {
       type: 'p',
-      text: 'Şimdi `switch (block.type)` içinde TypeScript her dalda tipi daraltıyor. `case "table"` bloğunda `block.rows` doğrudan `string[][]`; opsiyonel değil, kontrol gerekmiyor.',
+      text: '`switch (block.type)` içinde TypeScript her dalda tipi daraltıyor. `case "table"` dalında `block.rows` doğrudan `string[][]`: isteğe bağlı değil, kontrol gerekmiyor.',
+    },
+
+    { type: 'h3', text: 'Kapsama Kontrolü: Unuttuğunu Derleyici Söylesin' },
+    {
+      type: 'p',
+      text: 'Union\'ın asıl faydası burada çıkıyor. Bu sitede blok tipi uzun süre altı taneydi: `p`, `h2`, `h3`, `code`, `ul`, `callout`. Renderer\'daki `switch` de `default: return null` ile bitiyordu. Sonra tek bir değişiklikte yedi tip ekledim: `lead`, `ol`, `quote`, `table`, `stats`, `compare`, `steps`. O `default` dalı kalsaydı, yedisinden birini çizmeyi unuttuğum an blok sayfadan sessizce kaybolurdu. Ne derleyici konuşurdu ne tarayıcı.',
+    },
+    {
+      type: 'p',
+      text: 'Aynı değişiklikte `default` dalını `never` ile bir kapsama kontrolüne çevirdim:',
     },
     {
       type: 'code',
       lang: 'tsx',
-      file: 'app/blog/[slug]/BlogPostClient.tsx',
-      text: `function BlockRenderer({ block }: { block: Block }) {
-  switch (block.type) {
-    case 'table':
-      // block.head ve block.rows burada garantili
-      return (
-        <table>
-          <thead>
-            <tr>{block.head.map((c) => <th key={c}>{c}</th>)}</tr>
-          </thead>
-          <tbody>
-            {block.rows.map((row, i) => (
-              <tr key={i}>{row.map((c, j) => <td key={j}>{c}</td>)}</tr>
-            ))}
-          </tbody>
-        </table>
-      )
-
-    case 'compare':
-      // block.before / block.after garantili, block.note opsiyonel
-      return <CompareCard {...block} />
-  }
-}`,
-    },
-
-    { type: 'h3', text: 'Kapsama Kontrolü: Unuttuğunuzu Derleyici Söylesin' },
-    {
-      type: 'p',
-      text: 'Union\'ın asıl faydası burada ortaya çıkıyor. Yeni bir blok tipi eklediğimde renderer\'ı güncellemeyi unutursam, blok sessizce hiç çizilmiyor. Bunu bir kere yaşadım: `steps` tipini ekledim, yazıya koydum, sayfada hiçbir şey görünmedi ve on dakika neden diye baktım.',
-    },
-    {
-      type: 'p',
-      text: 'Çözüm `never` ile bir kapsama kontrolü:',
-    },
-    {
-      type: 'code',
-      lang: 'tsx',
+      file: 'BlogPostClient.tsx',
       text: `function assertNever(value: never): never {
   throw new Error(\`Bilinmeyen blok: \${JSON.stringify(value)}\`)
 }
 
 switch (block.type) {
-  case 'p':      return <P {...block} />
-  case 'table':  return <Table {...block} />
-  // ... diğer durumlar
+  case 'p':      /* ... */
+  case 'table':  /* ... */
+  // ... diğer on bir durum
   default:
-    // Bütün durumlar ele alındıysa block burada 'never' tipindedir.
-    // Bir tip eklenip case yazılmazsa bu satır DERLEME HATASI verir.
+    /* Yeni bir Block tipi eklenip burada ele alınmazsa TypeScript bu
+       satırda hata verir; blok sessizce çizilmeden kaybolmasın. */
     return assertNever(block)
 }`,
     },
     {
       type: 'callout',
       variant: 'tip',
-      text: 'Bu desenin değeri, hatayı zamanda öne çekmesi. `default: return null` yazarsanız eksik durum çalışma zamanında sessizce kaybolur; `assertNever` ile aynı eksiklik derleme anında, dosyayı kaydettiğiniz saniye ortaya çıkar.',
+      text: 'Bu desenin değeri hatayı zamanda öne çekmesi. `default: return null` ile eksik durum çalışma zamanında sessizce kaybolur; `assertNever` ile aynı eksiklik derleme anında, dosyayı kaydettiğin saniye ortaya çıkar.',
     },
 
     { type: 'h2', text: 'as const: Veriyi Tipe Çevirmek' },
     {
       type: 'p',
-      text: '`as const` küçük bir ek ama iki iş birden yapıyor: değerleri okunur kılıyor ve literal tipleri koruyor.',
+      text: '`as const` küçük bir ek ama iki iş birden yapıyor: değerleri salt okunur kılıyor ve literal tipleri koruyor.',
     },
     {
       type: 'code',
       lang: 'ts',
       file: 'lib/nav.ts',
       text: `export const NAV_ITEMS = [
-  { href: '/',         label: 'Ana Sayfa', icon: '⌂', shortcut: 'G H' },
-  { href: '/projeler', label: 'Projeler',  icon: '◈', shortcut: 'G P' },
-  { href: '/blog',     label: 'Blog',      icon: '✦', shortcut: 'G B' },
+  { href: '/', label: 'Ana Sayfa', icon: '⌂', shortcut: 'G H' },
+  { href: '/projeler', label: 'Projeler', icon: '◈', shortcut: 'G P' },
+  { href: '/blog', label: 'Blog', icon: '✦', shortcut: 'G B' },
 ] as const
 
 export type NavItem = (typeof NAV_ITEMS)[number]`,
     },
     {
       type: 'p',
-      text: '`as const` olmadan `href` alanının tipi `string` olurdu. Onunla birlikte `"/" | "/projeler" | "/blog"`. Yani bir yere `/projelerr` yazdığımda TypeScript itiraz ediyor.',
-    },
-    {
-      type: 'p',
-      text: 'İkinci satır da önemli: tipi elle yazmıyorum, veriden türetiyorum. Listeye yeni bir öğe eklediğimde tip kendiliğinden genişliyor. Bu "tek doğruluk kaynağı" fikrinin tip seviyesindeki karşılığı.',
+      text: '`as const` olmadan `href` alanının tipi `string` olurdu. Onunla birlikte `"/" | "/projeler" | "/blog"`. İkinci satır da önemli: tipi elle yazmıyorum, veriden türetiyorum. Başlık, komut paleti, 404 önerileri ve site haritası aynı listeyi okuyor; listeye bir öğe eklediğimde tip de dört yer de kendiliğinden genişliyor.',
     },
 
-    { type: 'h3', text: 'Aynı Fikrin Bir Adım Ötesi' },
+    { type: 'h2', text: 'Union\'ın Yakalayamadığı Şey' },
     {
       type: 'p',
-      text: 'Proje kartlarındaki mini önizlemeler bir zamanlar sıraya bağlıydı: `i === 0` ise not listesi, `i === 1` ise grafik. Proje sırasını değiştirince yanlış maket yanlış kartta çizildi.',
+      text: 'Proje kartlarındaki küçük önizleme çizimleri bir dönem sıraya bağlıydı: `i === 0` ise not listesi, `i === 1` ise çubuk grafik. Proje sırasını değiştirdiğim gün DigyNotes\'un maketi Mimio\'nun kartında çizildi.',
     },
     {
       type: 'p',
-      text: 'Düzeltme, görseli veriye bağlamak oldu:',
+      text: 'Düzeltme görseli veriye bağlamaktı. Her proje kendi önizlemesini bir union üyesiyle söylüyordu ve önizleme bileşeni o alana göre `switch` yapıyordu:',
     },
     {
       type: 'code',
@@ -177,101 +145,37 @@ export type NavItem = (typeof NAV_ITEMS)[number]`,
 export interface Project {
   title: string
   preview?: ProjectPreview
-  /** Bu projeyi anlatan yazının slug'ı — kart ile blog birbirine bağlanıyor. */
+  /** Bu projeyi anlatan blog yazısının slug'ı. */
   postSlug?: string
-  stats?: { value: string; label: string }[]
 }`,
     },
     {
       type: 'p',
-      text: 'Artık `ProjectPreview` union\'ına yeni bir değer eklediğimde, önizleme bileşenindeki `switch` onu ele almazsa yine derleme kırılıyor. Aynı desen, farklı yer.',
-    },
-
-    { type: 'h2', text: 'Bir Hook\'ta Yaptığım Gerçek Hata' },
-    {
-      type: 'p',
-      text: 'Şimdi tipin kurtaramadığı bir hataya geleyim, çünkü TypeScript her şeyi çözmüyor.',
-    },
-    {
-      type: 'p',
-      text: 'Üç projede kullandığım bir `useLocalStorage` hook\'um vardı. Üçüne de aynı bug\'ı taşıdım:',
-    },
-    {
-      type: 'code',
-      lang: 'ts',
-      text: `// HATALI SÜRÜM
-const set = (v: T | ((prev: T) => T)) => {
-  setValue(v)
-  localStorage.setItem(
-    key,
-    // 'value' closure'dan geliyor — bu render'daki eski değer.
-    JSON.stringify(typeof v === 'function' ? (v as (p: T) => T)(value) : v),
-  )
-}`,
-    },
-    {
-      type: 'p',
-      text: 'Belirti şuydu: sepet sayacında `set(n => n + 1)` iki kere üst üste çağrılınca ekranda 2 görünüyor, sayfayı yenileyince 1 görünüyordu. React state\'i doğru güncelliyor çünkü fonksiyonel güncellemeyi kuyruğa alıyor; ama `localStorage`\'a yazarken `value` hâlâ o render\'daki eski değer.',
-    },
-    {
-      type: 'p',
-      text: 'Tip sistemi bunu yakalayamaz — tipler doğru, mantık yanlış. Doğrusu, yazmayı state güncelleyicinin içine taşımak:',
-    },
-    {
-      type: 'code',
-      lang: 'ts',
-      text: `const set = useCallback((v: T | ((prev: T) => T)) => {
-  setValue((prev) => {
-    const next = typeof v === 'function' ? (v as (p: T) => T)(prev) : v
-    // 'prev' React'in kuyruğundaki güncel değer; closure'dan gelmiyor.
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(key, JSON.stringify(next))
-    }
-    return next
-  })
-}, [key])`,
-    },
-    {
-      type: 'p',
-      text: '`typeof window !== "undefined"` kontrolü de eksikti — sadece okuma tarafında vardı. Sunucuda çağrıldığında patlıyordu.',
+      text: 'Aynı gün maketleri tümden kaldırıp yerlerine projelerin gerçek ekran görüntülerini koydum. Soyut çubuklar ve boş kutular projeyi anlatmıyordu. Ama `preview` alanı tipte kaldı, her proje onu doldurmaya devam etti ve hiçbir bileşen okumadı. Derleyici bunu hiç söylemedi.',
     },
     {
       type: 'quote',
-      text: 'TypeScript şekli doğrular, davranışı değil. Bir hook\'un tipleri kusursuzken içindeki closure\'ın yanlış anı yakalaması gayet mümkün.',
+      text: 'Kapsama kontrolü yalnızca bir switch\'in olduğu yerde çalışır. Kimsenin okumadığı bir alan, tip sistemine göre kusursuz bir alandır.',
+    },
+    {
+      type: 'p',
+      text: 'Benzer bir şeyi `readTime` alanında da yaşadım. Okuma süresi elle yazılıyordu ve tutmuyordu: 287 kelimelik bir yazıda "11 dk" yazıyordu. Tip `string` istiyordu ve "11 dk" geçerli bir `string`. Alanı içerikten hesaplanan bir değere çevirdim. Tip bir alanın şeklini doğrular, doğru olup olmadığını değil.',
     },
 
-    { type: 'h2', text: 'type mı interface mi' },
+    { type: 'h2', text: 'type mı, interface mi' },
     {
       type: 'p',
-      text: 'Bu tartışmada kesin bir kural yok ama benim kullandığım ayrım şu:',
-    },
-    {
-      type: 'table',
-      head: ['Durum', 'Seçim', 'Neden'],
-      rows: [
-        ['Union / kesişim', 'type', 'interface union yazamaz'],
-        ['Bir değerden türetme', 'type', '`typeof X[number]` sadece type ile'],
-        ['Genişletilecek nesne', 'interface', 'declaration merging gerekiyorsa'],
-        ['Bileşen props', 'ikisi de olur', 'Tutarlı olun, karıştırmayın'],
-      ],
-    },
-    {
-      type: 'p',
-      text: 'Bu sitede `Block` ve `ProjectPreview` union oldukları için `type`, `Project` ve `BlogPost` düz nesne oldukları için `interface`. Kural değil, alışkanlık — ama proje içinde tutarlı.',
+      text: 'Bu sitede kural basit: union olan her şey `type` (`Block` gibi), düz nesne olanlar `interface` (`Project`, `BlogPost`). Union\'ı `interface` ile yazamıyorsun; bir değerden tip türetmek de (`typeof NAV_ITEMS[number]`) ancak `type` ile oluyor. Geri kalanı alışkanlık, ama proje içinde tutarlı.',
     },
 
-    { type: 'h2', text: 'Ne Zaman Aşırıya Kaçtım' },
+    { type: 'h2', text: 'Nerede Duruyorum' },
     {
       type: 'p',
-      text: 'Bir dönem her şeyi generic yazmaya çalıştım. Bir liste bileşenini üç tip parametresiyle yazdım ve altı ay sonra kendi yazdığım hata mesajını okuyamadım.',
+      text: '`Block` union\'ı uzun bir tip ama tek dosyada duruyor ve okunduğunda ne olduğu anlaşılıyor. Değerini buradan alıyor: yeni bir blok tipi eklemek, derleyicinin bana gösterdiği yerleri doldurmaktan ibaret.',
     },
     {
       type: 'p',
-      text: 'Öğrendiğim eşik şu: generic, aynı yapıyı **üç farklı tiple** kullanacaksan değer. İki kullanım varsa iki ayrı bileşen yazmak daha okunur oluyor.',
-    },
-    {
-      type: 'p',
-      text: 'İkinci eşik: bir tipi anlamak için üç dosya açmak gerekiyorsa, o tip fazla soyutlanmış demektir. `Block` union\'ı uzun bir tip ama tek dosyada ve okunduğunda ne olduğu anlaşılıyor. Değeri buradan geliyor.',
+      text: 'Yetmediği yer de belli. Union bir şeyi unuttuğumu söylüyor, kullanmayı bıraktığım bir şeyi söylemiyor. Ölü alanları yakalamanın tip sistemi içinde temiz bir yolunu henüz bulmadım; şimdilik `grep` ve dikkat.',
     },
   ],
 }
