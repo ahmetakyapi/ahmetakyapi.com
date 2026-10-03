@@ -13,7 +13,7 @@ import {
 } from 'simple-icons'
 
 /**
- * Ana sayfadaki Yığın şeridi: yalnız logo, etiket yok (ad ekran okuyucuya
+ * Ana sayfadaki tech stack şeridi: yalnız logo, etiket yok (ad ekran okuyucuya
  * `title` ile gider). Liste projelerin `tags` alanlarında geçen araçlardan,
  * artı hepsinin altında duran Node.js ve yayın yeri Vercel. Angular ve
  * Flutter eski listedeydi ama hiçbir güncel projede yok; çıkarıldı.

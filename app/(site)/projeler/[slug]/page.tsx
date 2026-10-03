@@ -193,7 +193,7 @@ export default async function ProjectPage({ params }: PageProps<'/projeler/[slug
             items={[
               { label: 'Kategori', value: project.category },
               { label: 'Durum', value: <Status project={project} /> },
-              { label: 'Yığın', value: project.tags.join(', ') },
+              { label: 'Tech Stack', value: project.tags.join(', ') },
               { label: 'Bağlantılar', value: <ProjectLinks project={project} /> },
             ]}
           />

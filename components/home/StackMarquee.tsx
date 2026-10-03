@@ -1,10 +1,10 @@
 import { techStack } from '@/lib/content/tech-stack'
 
 /**
- * Yığın: sayfadaki TEK marquee. Yalnız logo; ad `<title>` ile ekran
+ * Tech stack: sayfadaki TEK marquee. Yalnız logo; ad `<title>` ile ekran
  * okuyucuya gider.
  *
- * Neden kayan şerit: on bir logoyu tek tek okutmaya değmez, yığının
+ * Neden kayan şerit: on bir logoyu tek tek okutmaya değmez, tech stack'in
  * genişliği bir bakışta anlaşılsın yeter. Üzerine gelince ya da klavyeyle
  * odaklanınca durur (WCAG 2.2.2: kendiliğinden hareket eden içerik
  * durdurulabilmeli); hareket azaltılmışsa sarılı, durağan bir ızgara.
@@ -35,9 +35,9 @@ function Logos({ hidden = false }: { hidden?: boolean }) {
 
 export function StackMarquee() {
   return (
-    <section aria-labelledby="yigin" className="border-y border-line py-10 sm:py-12">
-      <h2 id="yigin" className="sr-only">
-        Kullandığım Araçlar
+    <section aria-labelledby="tech-stack" className="border-y border-line py-10 sm:py-12">
+      <h2 id="tech-stack" className="sr-only">
+        Tech Stack
       </h2>
       <div className="home-marquee" tabIndex={0} aria-label="Kullandığım araçların logoları; odaklanınca durur">
         <div className="home-marquee-track">

@@ -94,7 +94,7 @@ export type OgFrameProps = {
   title: string
   /** Başlığın altındaki bir-iki cümle. */
   subtitle?: string
-  /** Alt satırdaki künye öğeleri: tarih, okuma süresi, yığın. */
+  /** Alt satırdaki künye öğeleri: tarih, okuma süresi, tech stack. */
   badges?: string[]
 }
 
