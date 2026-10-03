@@ -1,5 +1,6 @@
 import { ArrowRight, BookOpen, Gamepad2, HeartPulse, Shapes, Sparkles, TrendingUp, Wrench, Zap, type LucideIcon } from 'lucide-react'
 import Link from 'next/link'
+import type { CSSProperties } from 'react'
 import { MaskTitle } from '@/components/home/MaskTitle'
 import { Container } from '@/components/ui/Container'
 import type { Project } from '@/lib/content/types'
@@ -99,10 +100,22 @@ export function Experience({ experience, projects }: { experience: HomeContent['
               <p className="home-xp-tag">Kendi Fikirlerimden</p>
             </div>
           </header>
+          <svg className="home-xp-rings" viewBox="0 0 200 200" aria-hidden="true" focusable="false">
+            <circle cx="100" cy="100" r="96" />
+            <circle cx="100" cy="100" r="70" />
+            <circle cx="100" cy="100" r="44" />
+          </svg>
           <p className="home-xp-big">
             <span className="home-xp-big-num">{projects.length}</span>
             <span className="home-xp-big-label">Proje</span>
           </p>
+          {/* Alanların payı tek çubukta: hangi alanda ne kadar iş var,
+              okumadan görülsün. Hap listesi sayıları ayrıca veriyor. */}
+          <div className="home-xp-bar" aria-hidden="true">
+            {domains.map(([domain, count], i) => (
+              <span key={domain} style={{ flexGrow: count, '--i': i } as CSSProperties} />
+            ))}
+          </div>
           <ul className="home-xp-domains" aria-label="Alanlar">
             {domains.map(([domain, count]) => {
               const Icon = DOMAIN_ICONS[domain]

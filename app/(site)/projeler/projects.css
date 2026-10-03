@@ -449,3 +449,25 @@
   position: sticky;
   top: 0;
 }
+
+/* --- Öne çıkan kartın görseli (4 Ekim 2026) --------------------------------
+   Görsel kartın kenarına düz yapışıyordu. Artık hafif bir perspektifle
+   metne doğru dönük duruyor, tonun gölgesinde havada; üzerine gelince
+   düzleşip öne çıkıyor. Metin tarafı görünüme girerken yükseliyor. */
+@media (min-width: 1024px) {
+  .pfeat-cover {
+    /* Kartın içinde kalsın: merkezden eğilir ve biraz küçülür (sol kenardan
+       eğilince sağ kenar kartın dışına taşıyordu). */
+    transform: perspective(1800px) rotateY(-6deg) rotateX(1.5deg) scale(0.95);
+    transform-origin: center;
+    box-shadow:
+      0 0 0 1px color-mix(in oklab, var(--tint) 22%, transparent),
+      0 40px 80px -36px color-mix(in oklab, var(--tint) 65%, var(--scrim) 35%);
+    transition: transform 700ms var(--ease-brand);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .pfeat-in:hover .pfeat-cover {
+      transform: perspective(1800px) rotateY(0deg) rotateX(0deg) scale(0.97) translateY(-4px);
+    }
+  }
+}

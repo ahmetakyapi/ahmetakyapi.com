@@ -48,11 +48,13 @@ export const defaultHomeContent: HomeContent = {
      kalktı, alanları da (`now`, `stack`): bağlantılar kapanışta ve alt
      bilgide, tech stack kendi marquee'sinde. Hero yalnız isim, unvan, bu
      cümle ve iki düğme. */
-  /* Hero cümlesi (3 Ekim 2026, ikinci sürüm). Önceki "fikirden yayına
+  /* Hero cümlesi (4 Ekim 2026, üçüncü sürüm): sahibinin kendi metni, iki
+     cümleye sıkıştırılmış hâli. İkinci sürümün gerekçesi aşağıda.
+     Hero cümlesi (3 Ekim 2026, ikinci sürüm). Önceki "fikirden yayına
      kendim götürüyorum" cümlesi sahibine göre sönüktü. Bu cümle Hakkımda'daki
      ilkeden geliyor ("iyi bir ürün sessizdir: hızlı açılır, rahat okunur,
      doğru bilgi verir") ve işin kapsamını tek nefeste söylüyor. */
-  intro: 'Hızlı açılan, rahat okunan ve doğru bilgi veren web ürünleri yapıyorum. Tasarımı, kodu ve içindeki yapay zekâyı tek elden.',
+  intro: 'Web ürünlerini uçtan uca geliştiriyorum: arayüzünü ve sistemini tasarlıyor, yayına kadar götürüyorum. Kurumsal enerji sistemlerinden kendi ürünlerime kadar hepsinde aynı şeyin peşindeyim: hızlı açılan, kolay anlaşılan ve doğru çalışan işler.',
   /* Unvan her yerde birebir bu yazımla (lib/nav.ts → JOB_TITLE): tireli
      "Full-Stack", iki parçası da büyük; tiresiz "Fullstack" yok. Yapay zekâ
      kısmı gerçek işe dayanıyor: Açılış Zili'nde Claude API ile haber
