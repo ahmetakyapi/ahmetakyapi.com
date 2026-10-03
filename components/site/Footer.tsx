@@ -17,7 +17,7 @@ export function Footer() {
   const year = new Date().getFullYear()
 
   return (
-    <footer className="mt-24 border-t border-line pb-[env(safe-area-inset-bottom)]">
+    <footer className="mt-16 border-t sm:mt-20 border-line pb-[env(safe-area-inset-bottom)]">
       <div className="mx-auto flex w-full max-w-[88rem] flex-col gap-8 px-[max(1rem,env(safe-area-inset-left))] py-10 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
         <div className="flex items-center gap-3">
           <Logo size={28} />

@@ -35,7 +35,7 @@ export function BlogIndex({ posts }: { posts: readonly BlogPost[] }) {
   const tagIndex = (post: BlogPost) => tags.findIndex((t) => t.name === post.tag) + 1
 
   return (
-    <Container as="section" aria-labelledby="blog-baslik" className="bl-scope page-top pb-20 pt-12 sm:pb-28 sm:pt-20">
+    <Container as="section" aria-labelledby="blog-baslik" className="bl-scope page-top pb-4 pt-10 sm:pb-8 sm:pt-16">
       <style>{filterCss(tags, featured ? tagIndex(featured) : 0, rest.map(tagIndex))}</style>
       <header className="max-w-3xl">
         <h1 id="blog-baslik" className="page-title">
