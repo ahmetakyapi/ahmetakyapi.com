@@ -81,7 +81,7 @@ export default function ProjectsPage() {
           </h1>
           <p className="page-lead">
             Borsa takibinden klinik panellere, çok oyunculu oyunlardan küçük araçlara kadar kendi geliştirdiğim
-            ürünler. Çoğu yayında, hepsinin kodu açık.
+            ürünler. Hepsinin kodu açık.
           </p>
         </header>
 

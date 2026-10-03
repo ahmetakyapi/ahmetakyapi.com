@@ -878,7 +878,7 @@ html.theme-switching::view-transition-new(root) {
   pointer-events: none;
   background: var(--intro-bg);
   color: var(--intro-ink);
-  animation: intro-lift 420ms var(--ease-wipe) 760ms both;
+  animation: intro-lift 460ms var(--ease-wipe) 1500ms both;
 }
 
 /* Kalkan perdenin alt kenarı: rota geçişindeki silmeyle aynı mavi çizgi,
@@ -896,7 +896,7 @@ html.theme-switching::view-transition-new(root) {
   display: flex;
   align-items: center;
   gap: 1rem;
-  animation: intro-stage-out 300ms var(--ease-brand) 740ms both;
+  animation: intro-stage-out 320ms var(--ease-brand) 1440ms both;
 }
 
 .intro-tile {
@@ -937,7 +937,10 @@ html.theme-switching::view-transition-new(root) {
   --sig-from: var(--intro-ink);
   --sig-to: var(--intro-edge);
   height: 1.6em;
-  animation: signature-write 640ms cubic-bezier(0.45, 0, 0.25, 1) 300ms both;
+  /* İmza tamamen yazılır ve bir an durur; perde ancak ondan sonra kalkar
+     (4 Ekim 2026: "Ahmet Akyapı yazısı dolmadan site yükleniyor"). Yazım
+     300 → 1200 ms, duruş 1200 → 1440 ms, perde 1500'de kalkar. */
+  animation: signature-write 900ms cubic-bezier(0.45, 0, 0.25, 1) 300ms both;
 }
 
 .intro-name {
