@@ -2,13 +2,10 @@ import { ArrowRight, ArrowUpRight } from 'lucide-react'
 import Link from 'next/link'
 import { Inline } from '@/components/blog/Inline'
 import { MaskTitle } from '@/components/home/MaskTitle'
-import { PostPreview } from '@/components/home/PostPreview'
 import { ButtonLink } from '@/components/ui/Button'
 import { Container } from '@/components/ui/Container'
 import { SectionHeading } from '@/components/ui/SectionHeading'
-import { ThemedImage } from '@/components/ui/ThemedImage'
-import { shotSources } from '@/lib/content/project-shots'
-import type { BlogPost, Project } from '@/lib/content/types'
+import type { BlogPost } from '@/lib/content/types'
 import { formatPostDate, readingTime } from '@/lib/reading-time'
 
 /**
@@ -18,20 +15,15 @@ import { formatPostDate, readingTime } from '@/lib/reading-time'
  * başlıklar uzunluk olarak birbirini tutmuyordu (biri bir satır, öteki
  * iki); başlıklar kısaltıldı, özet satırı eklendi.
  *
- * Fare ile gezen okuyucuya imleci izleyen küçük bir önizleme (yazının
- * anlattığı projenin ekran görüntüsü; bkz. PostPreview). Projesi ya da
- * görseli olmayan yazıda önizleme yok, satır yine aynı.
+ * İmleci izleyen proje önizlemesi vardı; 4 Ekim 2026'da kaldırıldı
+ * (sahibi: "son yazılarda hover ile projeyi göstermeye gerek yok").
  *
  * Yazı kapağının `post-<slug>` adını burası TAŞIMAZ (o /blog kartında).
  */
 const COUNT = 3
 
-export function RecentPosts({ posts, projects }: { posts: BlogPost[]; projects: Project[] }) {
-  const recent = posts.slice(0, COUNT).map((post) => {
-    const project = projects.find((p) => p.postSlug === post.slug)
-    const shot = project ? shotSources(project.slug, 'desktop') : null
-    return { post, project, shot }
-  })
+export function RecentPosts({ posts }: { posts: BlogPost[] }) {
+  const recent = posts.slice(0, COUNT)
 
   return (
     <Container as="section" size="wide" aria-labelledby="son-yazilar" className="pt-24 sm:pt-32">
@@ -48,21 +40,11 @@ export function RecentPosts({ posts, projects }: { posts: BlogPost[]; projects: 
         className="mb-8 sm:mb-12"
       />
 
-      <PostPreview
-        previews={recent.map(({ post, project, shot }) =>
-          project && shot ? (
-            <div key={post.slug} data-slug={post.slug} className="home-follow-item">
-              <ThemedImage {...shot} alt="" />
-            </div>
-          ) : null,
-        )}
-      >
-        <ol className="border-t border-line">
-          {recent.map(({ post, shot }) => (
+      <ol className="border-t border-line">
+          {recent.map((post) => (
             <li key={post.slug} className="reveal border-b border-line">
               <Link
                 href={`/blog/${post.slug}`}
-                data-preview={shot ? post.slug : undefined}
                 className="home-post group"
               >
                 <span className="home-post-meta">
@@ -86,7 +68,6 @@ export function RecentPosts({ posts, projects }: { posts: BlogPost[]; projects: 
             </li>
           ))}
         </ol>
-      </PostPreview>
     </Container>
   )
 }

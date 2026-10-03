@@ -235,6 +235,8 @@ export default function HeroGlobe() {
       /** Dokunmatikte yön kilidi: karar yok, yatay (küre), dikey (sayfa). */
       lock: 'none' as 'none' | 'x' | 'y',
       touch: false,
+      /** Basılı bir işaretçi var mı: yalnız basılıyken döner. */
+      pressed: false,
       startX: 0,
       startY: 0,
       lastX: 0,
@@ -595,6 +597,7 @@ export default function HeroGlobe() {
     // home.css) ve küre hiç kıpırdamaz. İlk sürümde dikey kaydırmaya
     // niyetlenen parmak küreyi de eğiyordu.
     const onDown = (event: PointerEvent) => {
+      s.pressed = true
       s.touch = event.pointerType !== 'mouse'
       s.lock = s.touch ? 'none' : 'x'
       s.startX = s.lastX = event.clientX
@@ -608,6 +611,10 @@ export default function HeroGlobe() {
       canvas.dataset.dragging = ''
     }
     const onMove = (event: PointerEvent) => {
+      // Basılı değilken hareket yok sayılır. Önceden fareyle yalnız üzerine
+      // gelmek de küreyi döndürüyordu: başlangıç noktası 0'da kaldığı için
+      // ilk harekette yön kararı verilip sürükleme başlıyordu (4 Ekim 2026).
+      if (!s.pressed) return
       const totalX = event.clientX - s.startX
       const totalY = event.clientY - s.startY
       if (Math.hypot(totalX, totalY) > TAP_SLOP) s.moved = true
@@ -627,6 +634,7 @@ export default function HeroGlobe() {
       if (still) draw()
     }
     const onUp = () => {
+      s.pressed = false
       s.lock = 'none'
       if (!s.dragging) return
       s.dragging = false
@@ -661,6 +669,8 @@ export default function HeroGlobe() {
     canvas.addEventListener('pointerdown', onDown)
     canvas.addEventListener('pointermove', onMove)
     canvas.addEventListener('pointerup', onUp)
+    // Kürenin dışında bırakılan parmak/fare da basılı durumu bitirir.
+    window.addEventListener('pointerup', onUp)
     canvas.addEventListener('pointercancel', onUp)
     canvas.addEventListener('lostpointercapture', onUp)
     canvas.addEventListener('click', onClick)
@@ -673,6 +683,7 @@ export default function HeroGlobe() {
       canvas.removeEventListener('pointerdown', onDown)
       canvas.removeEventListener('pointermove', onMove)
       canvas.removeEventListener('pointerup', onUp)
+      window.removeEventListener('pointerup', onUp)
       canvas.removeEventListener('pointercancel', onUp)
       canvas.removeEventListener('lostpointercapture', onUp)
       canvas.removeEventListener('click', onClick)
