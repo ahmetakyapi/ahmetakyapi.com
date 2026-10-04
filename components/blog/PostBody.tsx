@@ -124,9 +124,13 @@ function BlockView({ block, section }: { block: Block; section?: PostSection }) 
 
     case 'table':
       return (
-        /* Dar ekranda tablo GİZLENMEZ, kayar: ilk sütun yerinde durur,
-           sağ kenardaki gölge "devamı var" der. Kaydırılan bölge klavyeyle
-           de kaydırılabilsin diye odaklanabilir. */
+        /* Telefonda (640 px altı) her satır bir kart olur: satır başlığı
+           üstte, her değer kendi sütun etiketiyle (`data-label`) altında.
+           Yatay kaydırma yok (4 Ekim 2026: "dikeyde tablolar kaymadan
+           okunsun"; üç sütunlu tablo 480 piksele zorlanıyordu). Kart
+           düzeninde `display` değiştiği için tablo rolleri açıkça yazılı;
+           Safari aksi hâlde tablo anlamını düşürür. Geniş ekranda tablo
+           kayabilir: ilk sütun yerinde durur, sağ gölge "devamı var" der. */
         <div
           data-block="table"
           role="region"
@@ -134,26 +138,26 @@ function BlockView({ block, section }: { block: Block; section?: PostSection }) 
           tabIndex={0}
           style={{ '--cols': block.head.length } as CSSProperties}
         >
-          <table>
-            <thead>
-              <tr>
+          <table role="table">
+            <thead role="rowgroup">
+              <tr role="row">
                 {block.head.map((cell) => (
-                  <th key={cell} scope="col">
+                  <th key={cell} scope="col" role="columnheader">
                     {cell}
                   </th>
                 ))}
               </tr>
             </thead>
-            <tbody>
+            <tbody role="rowgroup">
               {block.rows.map((row, ri) => (
-                <tr key={ri}>
+                <tr key={ri} role="row">
                   {row.map((cell, ci) =>
                     ci === 0 ? (
-                      <th key={ci} scope="row">
+                      <th key={ci} scope="row" role="rowheader">
                         <Inline text={cell} />
                       </th>
                     ) : (
-                      <td key={ci}>
+                      <td key={ci} role="cell" data-label={block.head[ci]}>
                         <Inline text={cell} />
                       </td>
                     ),

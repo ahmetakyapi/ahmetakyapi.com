@@ -241,15 +241,17 @@ export const projects: Project[] = [
     slug: 'ahmetakyapi-com',
     group: 'platform',
     description:
-      'Bu site. Portfolyo ve teknik blog tek çatı altında. Bütün sayfalar derleme anında üretiliyor; proje ve yazı geçişleri tarayıcının View Transitions API\'siyle, görünüme girme ve kaydırma animasyonları CSS ile.',
-    tags: ['Next.js', 'TypeScript', 'Tailwind CSS v4', 'View Transitions', 'Satori OG'],
+      'Şu an gezdiğin site. Projelerim, her birinin nasıl yapıldığını anlatan yazılar ve kim olduğum tek bir adreste. Projeleri ekran görüntüleriyle gezebiliyor, yazılara yorum bırakabiliyor, ⌘K ile her yere klavyeden ulaşabiliyorsun.',
+    detail:
+      'Bütün sayfalar derleme anında hazırlanıyor ve CDN\'den statik olarak geliyor; tema bile sayfayı dinamik yapmadan, ilk boyamadan önce çalışan küçük bir betikle seçiliyor. Sayfa geçişleri ve proje kapağının detay sayfasına dönüşmesi View Transitions ile, kaydırma animasyonları JavaScript\'siz CSS ile. Ana sayfadaki küre kütüphanesiz bir canvas, başlıktaki imza yazı tipi değil SVG.',
+    tags: ['Next.js 16', 'React 19', 'TypeScript', 'Tailwind CSS v4', 'View Transitions', 'Satori OG'],
     link: 'https://ahmetakyapi.com',
     github: 'https://github.com/ahmetakyapi/ahmetakyapi.com',
     accent: '#8b5cf6',
     gradient: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%)',
     badge: 'Canlı',
     featured: false,
-    postSlug: 'olculen-hiz-hissedilen-hiz',
+    postSlug: 'ahmetakyapi-com-nasil-yapildi',
   },
 ]
 

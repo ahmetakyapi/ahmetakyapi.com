@@ -7,7 +7,7 @@ import spoilerWiki from './spoiler-vermeyen-wiki'
 import socketIo from './socket-io-ile-oda-tabanli-multiplayer'
 import mimio from './bilmedigim-meslege-arac-yazmak'
 import bsp from './bsp-ile-prosedurel-zindan-uretmek'
-import olculenHiz from './olculen-hiz-hissedilen-hiz'
+import siteYazisi from './ahmetakyapi-com-nasil-yapildi'
 import typescript from './typescript-ile-daha-iyi-react-bilesenleri'
 import tailwind from './tailwindcss-dark-tema-tasarimi'
 import firebase from './firebase-realtime-chat-uygulamasi'
@@ -29,7 +29,7 @@ export const blogPosts: BlogPost[] = [
   socketIo,
   mimio,
   bsp,
-  olculenHiz,
+  siteYazisi,
   typescript,
   tailwind,
   firebase,

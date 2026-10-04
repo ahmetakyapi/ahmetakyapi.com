@@ -1077,7 +1077,11 @@
     .home-about-recede {
       animation: home-about-recede linear both;
       animation-timeline: view();
-      animation-range: exit 25% exit 100%;
+      /* 4 Ekim 2026: `exit 25%` idi; bloğun dibi ekranın %75'ine gelince
+         başlıyordu ve son paragraf ("İş hayatı dışında…") okunurken
+         buğulanıyordu. 55%: dip ekranın üst yarısına (%45) çıkınca başlar,
+         yani metin okunup bittikten sonra. */
+      animation-range: exit 55% exit 100%;
     }
     .home-work-head {
       transform-origin: left bottom;
