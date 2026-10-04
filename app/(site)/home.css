@@ -134,12 +134,20 @@
   display: block;
   width: fit-content;
   overflow: clip;
-  padding: 0.24em 0.06em 0.16em;
-  margin: -0.24em -0.06em -0.16em;
+  padding: 0.24em 0.06em 0.24em;
+  margin: -0.24em -0.06em -0.24em;
 }
 
+/* Degrade (`background-clip: text`) yalnız kutunun içini boyar. Kutu satır
+   yüksekliği kadar (0,9em) ve "Akyapı"nın y ile p kuyrukları onun altına
+   taşıyor: taşan kısım boyasız, yani görünmez kalıyor ve harfler alttan
+   kesik duruyordu (iPhone, 4 Ekim 2026). Alt dolgu boyanan alanı kuyruğa
+   kadar uzatır, eksi kenar boşluğu satır adımını korur. Maske de aynı pay
+   kadar aşağı açık; yoksa bu kez maske keserdi. */
 .home-name-in {
   display: block;
+  padding-bottom: 0.24em;
+  margin-bottom: -0.24em;
 }
 
 /* Degrade iki satırı tek yüzey gibi kaplar: üst satır açık uçta başlar,
