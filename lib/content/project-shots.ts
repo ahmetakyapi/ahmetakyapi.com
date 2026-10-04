@@ -9,7 +9,11 @@ import { projectShot, type ShotView } from '@/lib/project-shot'
  *   çekimler. karalama ve dungeon-mates yalnız KOYU temalı: iki dosya da
  *   koyu, o yüzden `themed: false` (tek görsel, ikisini indirmeye gerek yok).
  * - Yalnız desktop, 1280×800: eski görselin kopyası; iki dosya aynı.
+ * - derinay ve elevenforge: eski desktop + yeni mobile (780×1688), tek temalı.
  * - dev-starter: ekran görüntüsü yok, README afişi (1280×360, iki temalı SVG).
+ *   Afişteki başlık gradyanla DOLDURULMAZ: WebKit `<img>` içindeki SVG'de
+ *   gradyanlı metni düşük çözünürlükte basıp büyütüyor ve iPhone'da yalnız
+ *   başlık bulanık görünüyordu (4 Ekim 2026). İki düz renkli `tspan`.
  * - ahmetakyapi-com: henüz yok (yeni site bitince çekilecek); tipografik kapak.
  *
  * Eski düz dosyalar (`public/projects/<slug>.webp`) faz 2 bitince silinecek;
@@ -37,6 +41,11 @@ const FULL = { desktop: { width: 2160, height: 1350 }, 'desktop-2': { width: 216
 const LEGACY = { desktop: { width: 1280, height: 800 } } as const
 const ALL_VIEWS = ['desktop', 'desktop-2', 'mobile'] as const
 const DESKTOP_ONLY = ['desktop'] as const
+/* Eski masaüstü çekimi + yeni telefon çekimi (4 Ekim 2026): ana sayfanın
+   Öne Çıkan Projeler panelinde telefon ekranı olmayan iki proje kalıyordu.
+   Canlı siteden 390×844, 2x; ölçü tam setin telefonuyla aynı. */
+const LEGACY_WITH_MOBILE = { desktop: LEGACY.desktop, mobile: FULL.mobile } as const
+const DESKTOP_AND_MOBILE = ['desktop', 'mobile'] as const
 
 export const PROJECT_SHOTS = {
   'acilis-zili': { views: ALL_VIEWS, themed: true, size: FULL },
@@ -47,8 +56,8 @@ export const PROJECT_SHOTS = {
   karalama: { views: ALL_VIEWS, themed: false, size: FULL, darkInk: true },
   'dungeon-mates': { views: ALL_VIEWS, themed: false, size: FULL, darkInk: true },
   harfiyen: { views: DESKTOP_ONLY, themed: false, size: LEGACY, darkInk: true },
-  elevenforge: { views: DESKTOP_ONLY, themed: false, size: LEGACY, darkInk: true },
-  derinay: { views: DESKTOP_ONLY, themed: false, size: LEGACY },
+  elevenforge: { views: DESKTOP_AND_MOBILE, themed: false, size: LEGACY_WITH_MOBILE, darkInk: true },
+  derinay: { views: DESKTOP_AND_MOBILE, themed: false, size: LEGACY_WITH_MOBILE },
   keskealsaydim: { views: DESKTOP_ONLY, themed: false, size: LEGACY, darkInk: true },
   'ramazan-vakitleri': { views: DESKTOP_ONLY, themed: false, size: LEGACY, darkInk: true },
   digynotes: { views: DESKTOP_ONLY, themed: false, size: LEGACY, darkInk: true },

@@ -18,7 +18,14 @@ import { useEffect, useRef } from 'react'
  *   - Şehir adları Türkçe, etiket fontu sitenin fontu.
  *   - Dokunmatikte dikey kaydırma küreye takılmaz (`touch-action: pan-y`);
  *     ilk sürümde `none` idi ve küreye denk gelen parmak sayfayı
- *     kaydıramıyordu.
+ *     kaydıramıyordu. Küre yine iki eksende döner: ayrıntı sürükleme
+ *     işleyicilerinin üstündeki yorumda.
+ *   - Açılışta İstanbul'a dönük (`FOCUS`): ev şehri ön yüzde, ortanın
+ *     biraz üstünde.
+ *   - Küre artık ayna görüntüsü değil (4 Ekim 2026): `project()` x'i ters
+ *     işaretle basıyordu, doğu solda kalıyordu (Londra İstanbul'un sağında,
+ *     Dubai solunda). İstanbul'a odaklanınca göze batıyordu. Aynı düzeltme
+ *     sürüklemeyi de doğal yöne çevirdi: yüzey parmağın gittiği yere gider.
  *   - React durumu yok: boyut, görünürlük ve hareket tercihi tek efektte,
  *     her kare doğrudan tuvale.
  *
@@ -51,12 +58,23 @@ type Ripple = { x: number; y: number; radius: number; maxRadius: number; life: n
  */
 /** Sürüklemede piksel başına dönüş (radyan). */
 const DRAG_SENSITIVITY = 0.0062
-/** Eğimin başlangıç açısı. */
-const REST_TILT = 0.15
+/**
+ * Açılış açısı: küre İstanbul'a dönük başlar (4 Ekim 2026, sahibinin
+ * isteği; önceden rotY 0.5 ile Atlantik ortadaydı). Boylam tam ortaya
+ * gelir; eğim enlemin tamamı değil: tam eğimde ekvator alt kenara iner ve
+ * küre "kuzey kutbundan bakış" gibi okunur, 0.55 ile İstanbul ortanın biraz
+ * üstünde ve güney yarım küre de görünür.
+ */
+const FOCUS = { lat: 41.01, lng: 28.98 }
+const FOCUS_TILT = 0.55
 /** Bu kadar pikselden kısa hareket "dokunma" sayılır: kıvılcım çıkar. */
 const TAP_SLOP = 6
 /** Dokunmatikte yön kararı için gereken hareket (piksel). */
 const LOCK_SLOP = 8
+/** Dokunmatikte küre üstünde bu kadar basılı tutunca iki eksen serbest (ms). */
+const HOLD_MS = 220
+/** Şehir noktası ve etiketi bu ölçüye göre ölçeklenir (4 Ekim 2026: 480'den, %14 büyük). */
+const CITY_SCALE_BASE = 420
 /** Sahne saati, saniyede bu kadar ilerler (nabız ve titreşim hızları buna göre). */
 const TIME_RATE = 0.48
 /** Kıvılcım ve dalga adımları ilk sürümde 30 kare/sn'lik karelerdi. */
@@ -77,14 +95,14 @@ const RIPPLE_COUNT = 4
 const BURST_REACH = 40
 
 const CITIES: City[] = [
-  { name: 'İstanbul', lat: 41.01, lng: 28.98, tone: 0, size: 5.5, labelDir: 'above' },
+  { name: 'İstanbul', lat: FOCUS.lat, lng: FOCUS.lng, tone: 0, size: 6, labelDir: 'above' },
   { name: 'New York', lat: 40.71, lng: -74.01, tone: 1, size: 4 },
   { name: 'Tokyo', lat: 35.68, lng: 139.69, tone: 2, size: 4 },
   { name: 'Londra', lat: 51.51, lng: -0.13, tone: 3, size: 3.5 },
   { name: 'Sidney', lat: -33.87, lng: 151.21, tone: 4, size: 3.5 },
   { name: 'Singapur', lat: 1.35, lng: 103.82, tone: 3, size: 3 },
   { name: 'Dubai', lat: 25.2, lng: 55.27, tone: 1, size: 3.5 },
-  { name: 'Mumbai', lat: 19.07, lng: 72.88, tone: 2, size: 3 },
+  { name: 'Mumbai', lat: 19.07, lng: 72.88, tone: 2, size: 3, labelDir: 'below' },
   { name: 'Seul', lat: 37.57, lng: 126.98, tone: 4, size: 3 },
   { name: 'São Paulo', lat: -23.55, lng: -46.63, tone: 2, size: 3 },
   { name: 'Meksiko', lat: 19.43, lng: -99.13, tone: 4, size: 3 },
@@ -168,7 +186,7 @@ const PACKET_TAIL = 7
 function project(lat: number, lng: number, rotY: number, cosRx: number, sinRx: number, radius: number, center: number) {
   const phi = toRad(90 - lat)
   const theta = toRad(lng) + rotY
-  const x = radius * Math.sin(phi) * Math.cos(theta)
+  const x = -radius * Math.sin(phi) * Math.cos(theta)
   const y = radius * Math.cos(phi)
   const z0 = radius * Math.sin(phi) * Math.sin(theta)
   return { x: center + x, y: center - (y * cosRx - z0 * sinRx), z: y * sinRx + z0 * cosRx }
@@ -229,11 +247,16 @@ export default function HeroGlobe() {
     let lastFrame = 0
     
     const s = {
-      rotY: 0.5,
-      rotX: REST_TILT,
+      // project(): ön yüz theta = π/2; boylam + rotY = π/2.
+      rotY: Math.PI / 2 - toRad(FOCUS.lng),
+      rotX: FOCUS_TILT,
       dragging: false,
-      /** Dokunmatikte yön kilidi: karar yok, yatay (küre), dikey (sayfa). */
-      lock: 'none' as 'none' | 'x' | 'y',
+      /**
+       * Dokunmatikte yön kilidi: karar yok, küre (yatay başladı ya da basılı
+       * tutuldu; iki eksen döner), sayfa (dikey başladı, tarayıcı kaydırır).
+       */
+      lock: 'none' as 'none' | 'globe' | 'page',
+      holdTimer: 0,
       touch: false,
       /** Basılı bir işaretçi var mı: yalnız basılıyken döner. */
       pressed: false,
@@ -403,7 +426,7 @@ export default function HeroGlobe() {
           const cosT = g.cosT0 * cosRotY - g.sinT0 * sinRotY
           const sinT = g.sinT0 * cosRotY + g.cosT0 * sinRotY
           const r = RADIUS * g.rFactor
-          const x = r * g.sinPhi * cosT
+          const x = -r * g.sinPhi * cosT
           const yBase = r * g.cosPhi
           const zBase = r * g.sinPhi * sinT
           const slot = points[i]
@@ -437,7 +460,7 @@ export default function HeroGlobe() {
       }
 
       // Şehirler: hale, nabız halkaları, nokta ve etiket.
-      const labelSize = Math.max(9, sz * 0.022)
+      const labelSize = Math.max(10, sz * 0.025)
       ctx.font = `600 ${labelSize}px ${palette.font}`
       ctx.textAlign = 'center'
       ctx.textBaseline = 'middle'
@@ -447,7 +470,7 @@ export default function HeroGlobe() {
         if (visibility <= 0) continue
         const color = tone(city.tone)
         const alpha = Math.min(1, visibility * 1.6)
-        const dotR = (city.size ?? 3) * (sz / 480)
+        const dotR = (city.size ?? 3) * (sz / CITY_SCALE_BASE)
 
         ctx.globalAlpha = alpha
         const haloR = dotR * 5
@@ -591,24 +614,55 @@ export default function HeroGlobe() {
     })
     themeWatch.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
 
-    // Sürükle-döndür. Fareyle iki eksen; dokunmatikte önce yön kararı:
-    // yatay başlayan hareket küreyi döndürür (yalnız yatay eksen), dikey
-    // başlayan hareket sayfanın, tarayıcı kaydırır (`touch-action: pan-y`,
-    // home.css) ve küre hiç kıpırdamaz. İlk sürümde dikey kaydırmaya
-    // niyetlenen parmak küreyi de eğiyordu.
+    // Sürükle-döndür. Fareyle iki eksen. Dokunmatikte önce yön kararı:
+    //  · yatay başlayan hareket küreyi tutar;
+    //  · küre diskinin üstünde HOLD_MS basılı tutan parmak da küreyi tutar
+    //    (ipucu metni zaten "basılı tutup sürükle" diyor);
+    //  · hızlı dikey kaydırma sayfanındır, küre kıpırdamaz (`touch-action:
+    //    pan-y`, home.css).
+    // Küre tutulduktan sonra İKİ eksen döner. 4 Ekim 2026'ya kadar
+    // dokunmatikte dikey eksen kapalıydı ve küre telefonda yalnız yana
+    // dönüyordu ("üst tarafa da kaydırabilelim"). Tutulmuş bir sürüklemede
+    // tarayıcının kaydırmaya geçmesini touchmove'daki preventDefault
+    // engelliyor; `pan-y` tek başına yatay başlayıp yukarı kıvrılan
+    // parmağı sayfaya bırakıyordu.
     const onDown = (event: PointerEvent) => {
       s.pressed = true
       s.touch = event.pointerType !== 'mouse'
-      s.lock = s.touch ? 'none' : 'x'
+      s.lock = s.touch ? 'none' : 'globe'
       s.startX = s.lastX = event.clientX
       s.startY = s.lastY = event.clientY
       s.moved = false
-      if (!s.touch) startDrag(event)
+      if (!s.touch) {
+        startDrag(event.pointerId)
+        return
+      }
+      const rect = canvas.getBoundingClientRect()
+      const onDisc = Math.hypot(event.clientX - rect.left - size / 2, event.clientY - rect.top - size / 2) <= size * RADIUS_RATIO
+      if (!onDisc) return
+      const id = event.pointerId
+      s.holdTimer = window.setTimeout(() => {
+        s.holdTimer = 0
+        if (!s.pressed || s.lock !== 'none') return
+        s.lock = 'globe'
+        startDrag(id)
+      }, HOLD_MS)
     }
-    const startDrag = (event: PointerEvent) => {
+    const clearHold = () => {
+      if (s.holdTimer) window.clearTimeout(s.holdTimer)
+      s.holdTimer = 0
+    }
+    const startDrag = (pointerId: number) => {
       s.dragging = true
-      canvas.setPointerCapture(event.pointerId)
+      try {
+        canvas.setPointerCapture(pointerId)
+      } catch {
+        // İşaretçi bu arada bırakıldıysa yakalanacak bir şey yok.
+      }
       canvas.dataset.dragging = ''
+    }
+    const onTouchMove = (event: TouchEvent) => {
+      if (s.dragging && event.cancelable) event.preventDefault()
     }
     const onMove = (event: PointerEvent) => {
       // Basılı değilken hareket yok sayılır. Önceden fareyle yalnız üzerine
@@ -620,20 +674,22 @@ export default function HeroGlobe() {
       if (Math.hypot(totalX, totalY) > TAP_SLOP) s.moved = true
       if (s.lock === 'none') {
         if (Math.hypot(totalX, totalY) < LOCK_SLOP) return
-        s.lock = Math.abs(totalX) > Math.abs(totalY) ? 'x' : 'y'
-        if (s.lock === 'y') return
-        startDrag(event)
+        clearHold()
+        s.lock = Math.abs(totalX) > Math.abs(totalY) ? 'globe' : 'page'
+        if (s.lock === 'page') return
+        startDrag(event.pointerId)
       }
       if (!s.dragging) return
       const dx = event.clientX - s.lastX
-      const dy = s.touch ? 0 : event.clientY - s.lastY
+      const dy = event.clientY - s.lastY
       s.rotY += dx * DRAG_SENSITIVITY
-      s.rotX -= dy * DRAG_SENSITIVITY
+      s.rotX += dy * DRAG_SENSITIVITY
       s.lastX = event.clientX
       s.lastY = event.clientY
       if (still) draw()
     }
     const onUp = () => {
+      clearHold()
       s.pressed = false
       s.lock = 'none'
       if (!s.dragging) return
@@ -674,6 +730,7 @@ export default function HeroGlobe() {
     canvas.addEventListener('pointercancel', onUp)
     canvas.addEventListener('lostpointercapture', onUp)
     canvas.addEventListener('click', onClick)
+    canvas.addEventListener('touchmove', onTouchMove, { passive: false })
 
     return () => {
       pause()
@@ -687,6 +744,8 @@ export default function HeroGlobe() {
       canvas.removeEventListener('pointercancel', onUp)
       canvas.removeEventListener('lostpointercapture', onUp)
       canvas.removeEventListener('click', onClick)
+      canvas.removeEventListener('touchmove', onTouchMove)
+      clearHold()
     }
   }, [])
 

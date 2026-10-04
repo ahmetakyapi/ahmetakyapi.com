@@ -224,8 +224,13 @@
 .home-globe-canvas {
   display: block;
   cursor: grab;
-  /* Yatay sürükleme küreyi döndürür, dikey hareket sayfayı kaydırır. */
+  /* Hızlı dikey hareket sayfayı kaydırır; yatay başlayan ya da küre
+     üstünde basılı tutulan parmak küreyi iki eksende döndürür (HeroGlobe). */
   touch-action: pan-y;
+  /* Basılı tutma iOS'ta görsel menüsünü ve seçimi açmasın. */
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
   opacity: 0;
   transition: opacity 600ms var(--ease-brand);
 }
