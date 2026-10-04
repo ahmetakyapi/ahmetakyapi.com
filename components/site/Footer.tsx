@@ -1,15 +1,17 @@
-import { ArrowUp, Mail, Rss } from 'lucide-react'
+import { Mail, Rss } from 'lucide-react'
 import Link from 'next/link'
+import { BackToTop } from '@/components/site/BackToTop'
 import { BrandIcon } from '@/components/site/BrandIcon'
 import { Logo } from '@/components/site/Logo'
 import { Signature } from '@/components/site/Signature'
 import { EMAIL, JOB_TITLE, NAV_ITEMS, SOCIAL_LINKS } from '@/lib/nav'
 
 /**
- * Alt bilgi: sade, sunucu bileşeni (istemciye JavaScript göndermez).
+ * Alt bilgi: sade, sunucu bileşeni; istemciye giden tek parça Başa Dön.
  *
  * İki satır. Üstte marka (karo + imza), ortada gezinme, sağda bağlantılar;
- * altta ince bir çizginin altında künye ve "Başa Dön".
+ * altta ince bir çizginin altında künye ve "Başa Dön" (BackToTop, tek
+ * istemci parçası).
  *
  * E-posta artık ikon (4 Ekim 2026): adresin tamamı yazılıydı ve satırın
  * en uzun öğesi oydu; adres kapanış bölümünde zaten büyük ve kopyalanabilir
@@ -68,10 +70,7 @@ export function Footer() {
           <p className="font-mono text-small text-muted">
             © {year} Ahmet Akyapı · {JOB_TITLE}
           </p>
-          <a href="#main-content" className="tap-y group inline-flex items-center gap-1.5 text-sm font-medium text-body transition-colors hover:text-strong">
-            Başa Dön
-            <ArrowUp className="size-4 transition-transform group-hover:-translate-y-0.5" aria-hidden="true" />
-          </a>
+          <BackToTop />
         </div>
       </div>
     </footer>
