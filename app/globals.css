@@ -936,8 +936,14 @@ html.theme-switching::view-transition-new(root) {
   animation: intro-draw 360ms var(--ease-brand) 520ms both;
 }
 
-/* Perdedeki imza: perdenin kendi mürekkep rengiyle, soldan sağa yazılır. */
-.intro-signature {
+/* Perdedeki imza: perdenin kendi mürekkep rengiyle, soldan sağa yazılır.
+   Seçici bilerek iki sınıflı: başlık imzasının kuralı (`.signature`,
+   1300 ms + 250 ms gecikme) dosyada DAHA SONRA geliyor ve aynı ağırlıktaki
+   tek sınıflı seçiciyi eziyordu. İmza 1550 ms'de bitiyor, perde 1440'ta
+   sönüyordu: iPhone'da "Akyap" diye yarım kalıyor, grup da sağı eksik
+   olduğu için ortadan kaymış görünüyordu (4 Ekim 2026, ölçüldü: 1300 ms'de
+   imzanın %80'i açıktı). */
+.signature.intro-signature {
   --sig-from: var(--intro-ink);
   --sig-to: var(--intro-edge);
   height: 1.6em;

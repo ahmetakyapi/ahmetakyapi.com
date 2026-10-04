@@ -30,10 +30,16 @@ export function Footer() {
     <footer className="mt-16 border-t border-line pb-[env(safe-area-inset-bottom)] sm:mt-20">
       <div className="mx-auto w-full max-w-[88rem] px-[max(1rem,env(safe-area-inset-left))] sm:px-6 lg:px-8">
         <div className="flex flex-col gap-8 py-10 md:flex-row md:items-center md:justify-between">
-          <Link href="/" aria-label="Ahmet Akyapı, ana sayfa" className="flex w-fit items-center gap-3">
-            <Logo size={36} />
-            <Signature className="h-8" />
-          </Link>
+          {/* Telefonda Başa Dön imzanın hizasında, en sağda: alttaki künye
+              satırına sığmayıp sola, tek başına bir satıra düşüyordu
+              (4 Ekim 2026). Geniş ekranda künye satırının sağında. */}
+          <div className="flex items-center justify-between gap-4">
+            <Link href="/" aria-label="Ahmet Akyapı, ana sayfa" className="flex w-fit items-center gap-3">
+              <Logo size={36} />
+              <Signature className="h-8" />
+            </Link>
+            <BackToTop className="md:hidden" />
+          </div>
 
           <nav aria-label="Alt gezinme" className="flex flex-wrap items-center gap-x-7 gap-y-2">
             {NAV_ITEMS.map((item) => (
@@ -70,7 +76,7 @@ export function Footer() {
           <p className="font-mono text-small text-muted">
             © {year} Ahmet Akyapı · {JOB_TITLE}
           </p>
-          <BackToTop />
+          <BackToTop className="max-md:hidden" />
         </div>
       </div>
     </footer>

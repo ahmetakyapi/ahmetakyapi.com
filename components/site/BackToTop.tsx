@@ -2,6 +2,7 @@
 
 import { ArrowUp } from 'lucide-react'
 import type { MouseEvent } from 'react'
+import { cx } from '@/lib/utils'
 
 /**
  * Alt bilginin "Başa Dön" düğmesi.
@@ -18,7 +19,7 @@ import type { MouseEvent } from 'react'
  * Görünüm: metin bağlantısı düğme olduğunu belli etmiyordu; çerçeveli bir
  * hap, oku dolu bir dairenin içinde.
  */
-export function BackToTop() {
+export function BackToTop({ className }: { className?: string }) {
   const onClick = (event: MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault()
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -30,7 +31,10 @@ export function BackToTop() {
     <a
       href="#main-content"
       onClick={onClick}
-      className="group inline-flex min-h-11 items-center gap-2.5 rounded-full border border-line bg-surface py-1.5 pl-4 pr-1.5 text-sm font-semibold text-strong shadow-[var(--shadow-sm)] transition-[border-color,box-shadow,translate] duration-300 hover:-translate-y-0.5 hover:border-primary-soft hover:shadow-[var(--shadow-md)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-line-focus active:translate-y-0"
+      className={cx(
+        'group inline-flex min-h-11 items-center gap-2.5 rounded-full border border-line bg-surface py-1.5 pl-4 pr-1.5 text-sm font-semibold text-strong shadow-[var(--shadow-sm)] transition-[border-color,box-shadow,translate] duration-300 hover:-translate-y-0.5 hover:border-primary-soft hover:shadow-[var(--shadow-md)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-line-focus active:translate-y-0',
+        className,
+      )}
     >
       Başa Dön
       <span
