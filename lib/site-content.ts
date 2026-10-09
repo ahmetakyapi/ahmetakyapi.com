@@ -75,14 +75,14 @@ export const defaultHomeContent: HomeContent = {
         'ABD piyasasını Türkçe takip etmek için kurduğum site: bilanço takvimi, analizler, makro göstergeler ve günlük bülten aynı yerde.',
     },
     {
+      slug: 'digynotes',
+      summary:
+        'İzlediğin filmleri, okuduğun kitapları, oynadığın oyunları ve gezdiğin yerleri not ettiğin kişisel bir defter: puan, etiket, koleksiyon ve takip ettiklerinin notları.',
+    },
+    {
       slug: 'derinay',
       summary:
         'Tek kişilik bir klinik pratiğin yönetim paneli: gelir-gider, danışan, seans, fatura, ödeme ve vergi takibi tek sakin arayüzde.',
-    },
-    {
-      slug: 'elevenforge',
-      summary:
-        '16 arkadaşın aynı ligde yarıştığı Türkçe futbol menajerlik oyunu. Davet koduyla katılıyorsun, boş yerleri bot dolduruyor, maçlar ligi kuranın seçtiği saatte oynanıyor.',
     },
   ],
   /* Sahibinin kendi metni, kelimesine dokunulmaz (Ekim 2026). Yalnız ürün
