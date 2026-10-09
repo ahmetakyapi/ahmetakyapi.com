@@ -6,7 +6,8 @@ import { projectShot, type ShotView } from '@/lib/project-shot'
  * da silinirse burası da değişir.
  *
  * - Tam set (desktop + desktop-2 + mobile, 2160×1350 / 780×1688): yeni
- *   çekimler. karalama ve dungeon-mates yalnız KOYU temalı: iki dosya da
+ *   çekimler (digynotes 9 Ekim 2026'da yeniden tasarımla eklendi).
+ *   karalama ve dungeon-mates yalnız KOYU temalı: iki dosya da
  *   koyu, o yüzden `themed: false` (tek görsel, ikisini indirmeye gerek yok).
  * - Yalnız desktop, 1280×800: eski görselin kopyası; iki dosya aynı.
  * - derinay ve elevenforge: eski desktop + yeni mobile (780×1688), tek temalı.
@@ -60,7 +61,9 @@ export const PROJECT_SHOTS = {
   derinay: { views: DESKTOP_AND_MOBILE, themed: false, size: LEGACY_WITH_MOBILE },
   keskealsaydim: { views: DESKTOP_ONLY, themed: false, size: LEGACY, darkInk: true },
   'ramazan-vakitleri': { views: DESKTOP_ONLY, themed: false, size: LEGACY, darkInk: true },
-  digynotes: { views: DESKTOP_ONLY, themed: false, size: LEGACY, darkInk: true },
+  /* Yeniden tasarım sonrası tam set (9 Ekim 2026): landing hero, notlar
+     sayfası ve telefon hero'su; iki temalı. */
+  digynotes: { views: ALL_VIEWS, themed: true, size: FULL },
 } as const satisfies Record<string, ShotSet>
 
 export type ShotSlug = keyof typeof PROJECT_SHOTS
