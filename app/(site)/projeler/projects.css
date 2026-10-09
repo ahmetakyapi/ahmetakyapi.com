@@ -134,8 +134,8 @@
      Ad                         Kategori   (→)
      Tek cümle                  Teknoloji
 
-   Bölüm başlığı (`.prest-head`) satırların dilinden bilerek uzak: mono,
-   küçük ve sessiz; yanında sayı. 9 Ekim 2026: satır adlarıyla aynı
+   Bölüm başlığı (`.prest-head`) satırların dilinden bilerek uzak: mono ve
+   sessiz, yanında sayı; açıklama satırı yok. 9 Ekim 2026: satır adlarıyla aynı
    degrade ve puntodaydı, listenin ilk satırı gibi okunuyordu. */
 .prest-head {
   display: grid;
@@ -149,10 +149,10 @@
   align-items: center;
   gap: 0.75rem;
   font-family: var(--font-mono);
-  font-size: 0.8125rem;
+  font-size: 1.125rem;
   font-weight: 500;
-  letter-spacing: 0.04em;
-  line-height: 1.25rem;
+  letter-spacing: 0.02em;
+  line-height: 1.75rem;
   color: var(--primary-ink);
 }
 
@@ -168,21 +168,18 @@
   padding: 0.1rem 0.5rem;
   border-radius: 999px;
   background: var(--primary-wash);
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   color: var(--primary-ink);
-}
-
-.prest-lead {
-  max-width: 52ch;
-  font-size: 1rem;
-  line-height: 1.55;
-  color: var(--text-body);
-  text-wrap: pretty;
 }
 
 @media (min-width: 1024px) {
   .prest-head {
     margin-top: 5rem;
+  }
+
+  .prest-title {
+    font-size: 1.375rem;
+    line-height: 2rem;
   }
 }
 

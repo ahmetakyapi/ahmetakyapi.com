@@ -107,15 +107,13 @@ export default function ProjectsPage() {
             {/* Bölüm başlığı satırlardan AYRI bir sesle: küçük, mono, sessiz.
                 9 Ekim 2026: önceden satır adlarıyla aynı mavi degrade ve aynı
                 puntodaydı; listenin ilk satırı gibi okunuyor, "Diğer Projeler"
-                adlı bir proje varmış gibi duruyordu. */}
+                adlı bir proje varmış gibi duruyordu. Aynı gün: altındaki açıklama
+                kalktı, başlık tek başına ve daha büyük puntoda duruyor. */}
             <header className="prest-head">
               <h2 id="diger-projeler" className="prest-title">
                 Diğer Projeler
                 <span className="prest-count">{rest.length}</span>
               </h2>
-              <p className="prest-lead">
-                Daha küçük ürünler, oyunlar ve araçlar. Ada ya da satıra tıklayınca projenin sayfası açılır.
-              </p>
             </header>
             <ol className="prow-list">
               {rest.map((project) => (
