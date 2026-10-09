@@ -540,38 +540,8 @@
   white-space: nowrap;
 }
 
-/* İnce imleçte ad yalnız üzerine gelince, karonun üstünde küçük bir hap
-   olarak belirir (3 Ekim 2026, sahibinin isteği). Dokunmatikte üzerine
-   gelme yok; orada ad karonun altında hep görünür. Opaklıkla gizli,
-   ekran okuyucu adı yine okur. */
-@media (hover: hover) and (pointer: fine) {
-  .home-stack-name {
-    position: absolute;
-    bottom: calc(100% + 0.15rem);
-    left: 50%;
-    z-index: 2;
-    padding: 0.3rem 0.65rem;
-    border-radius: 999px;
-    background: var(--text-strong);
-    color: var(--page-bg);
-    font-weight: 500;
-    opacity: 0;
-    translate: -50% 0.4rem;
-    pointer-events: none;
-    transition:
-      opacity 180ms var(--ease-brand),
-      translate 280ms var(--ease-brand);
-  }
-  /* Üstte ad hapına yer: hap karonun üstünde açılıyor ve şerit taşmayı
-     kesiyor. */
-  .home-marquee-list {
-    padding-top: 2.75rem;
-  }
-  .home-stack-tile:hover .home-stack-name {
-    opacity: 1;
-    translate: -50% -0.35rem;
-  }
-}
+/* Ad her cihazda karonun altında hep görünür (9 Ekim 2026, sahibinin
+   isteği): masaüstünde de üzerine gelmeye gerek kalmadı, mobildeki gibi. */
 
 @media (hover: hover) and (pointer: fine) {
   .home-stack-tile:hover .home-stack-logo {

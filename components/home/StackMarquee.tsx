@@ -3,7 +3,8 @@ import { techStack } from '@/lib/content/tech-stack'
 /**
  * Tech stack: sayfadaki TEK marquee. 3 Ekim 2026: logolar küçük ve
  * süssüz duruyordu; artık her logo kendi karosunda, büyük ve altında adı
- * yazılı. Üzerine gelinen karo yükselir, logo markanın mavisine döner.
+ * yazılı; ad masaüstünde de hep görünür (9 Ekim 2026). Üzerine gelinen
+ * karo yükselir, logo markanın mavisine döner.
  *
  * Neden kayan şerit: on bir logoyu tek tek okutmaya değmez, tech stack'in
  * genişliği bir bakışta anlaşılsın yeter. Üzerine gelince ya da klavyeyle

@@ -116,11 +116,11 @@ export const projects: Project[] = [
     tags: ['Next.js 14', 'TypeScript', 'Prisma', 'Neon', 'NextAuth', 'Tailwind CSS'],
     link: 'https://digy-notes.vercel.app',
     github: 'https://github.com/ahmetakyapi/DigyNotes',
-    accent: '#d4f53c',
-    /* Arayüz mürekkep siyahı + asit lime (9 Ekim 2026 yeniden tasarımı);
-       zemin tonu açık temadaki zeytin vurgu. */
-    tint: '#4f7300',
-    gradient: 'linear-gradient(135deg, #d4f53c 0%, #4f7300 100%)',
+    accent: '#b9a8ff',
+    /* Arayüz mürekkep siyahı + lavanta (9 Ekim 2026 yeniden tasarımı);
+       zemin tonu açık temadaki mor vurgu. */
+    tint: '#5b42d6',
+    gradient: 'linear-gradient(135deg, #b9a8ff 0%, #5b42d6 100%)',
     badge: 'Canlı',
     featured: false,
   },
