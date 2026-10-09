@@ -10,7 +10,8 @@ import { projectShot, type ShotView } from '@/lib/project-shot'
  *   karalama ve dungeon-mates yalnız KOYU temalı: iki dosya da
  *   koyu, o yüzden `themed: false` (tek görsel, ikisini indirmeye gerek yok).
  * - Yalnız desktop, 1280×800: eski görselin kopyası; iki dosya aynı.
- * - derinay ve elevenforge: eski desktop + yeni mobile (780×1688), tek temalı.
+ * - elevenforge: eski desktop + yeni mobile (780×1688), tek temalı.
+ *   derinay 9 Ekim 2026'da "Atölye Sahnesi" revizyonuyla tam sete geçti.
  * - dev-starter: ekran görüntüsü yok, README afişi (1280×360, iki temalı SVG).
  *   Afişteki başlık gradyanla DOLDURULMAZ: WebKit `<img>` içindeki SVG'de
  *   gradyanlı metni düşük çözünürlükte basıp büyütüyor ve iPhone'da yalnız
@@ -58,7 +59,11 @@ export const PROJECT_SHOTS = {
   'dungeon-mates': { views: ALL_VIEWS, themed: false, size: FULL, darkInk: true },
   harfiyen: { views: DESKTOP_ONLY, themed: false, size: LEGACY, darkInk: true },
   elevenforge: { views: DESKTOP_AND_MOBILE, themed: false, size: LEGACY_WITH_MOBILE, darkInk: true },
-  derinay: { views: DESKTOP_AND_MOBILE, themed: false, size: LEGACY_WITH_MOBILE },
+  /* "Atölye Sahnesi" görsel revizyonu sonrası tam set (9 Ekim 2026): landing
+     kahramanı, vitrindeki panel kesiti ve telefon kahramanı; iki temalı.
+     desktop-2 iki temada da koyu: vitrin landing'in "gece adası", tema
+     değişse de koyu kalır. */
+  derinay: { views: ALL_VIEWS, themed: true, size: FULL },
   keskealsaydim: { views: DESKTOP_ONLY, themed: false, size: LEGACY, darkInk: true },
   'ramazan-vakitleri': { views: DESKTOP_ONLY, themed: false, size: LEGACY, darkInk: true },
   /* Yeniden tasarım sonrası tam set (9 Ekim 2026): landing hero, notlar
