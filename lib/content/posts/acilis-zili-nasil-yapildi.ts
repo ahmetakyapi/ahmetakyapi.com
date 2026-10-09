@@ -230,7 +230,7 @@ type FailReason = "missing-key" | "rate-limited" | "not-found" | "upstream-error
     },
     {
       type: 'p',
-      text: "Bu yüzden Açılış Zili'nde en çok zaman harcadığım şey yeni özellik değil, \"bu sayı gerçekten bugünün sayısı mı\" sorusu oldu. O sorunun hikâyesi ayrı bir yazı; çünkü cevabı sandığımdan uzun çıktı.",
+      text: "Bu yüzden Açılış Zili'nde en çok zaman harcadığım şey yeni özellik değil, takibin doğru olması oldu: doğru saat, doğru gün, doğru sıra ve eksiksiz bağlam. Bunun ne demek olduğunu ayrı bir yazıda anlattım.",
     },
   ],
 }
