@@ -6,12 +6,11 @@ import { projectShot, type ShotView } from '@/lib/project-shot'
  * da silinirse burası da değişir.
  *
  * - Tam set (desktop + desktop-2 + mobile, 2160×1350 / 780×1688): yeni
- *   çekimler (digynotes 9 Ekim 2026'da yeniden tasarımla eklendi).
+ *   çekimler. digynotes, derinay ("Atölye Sahnesi") ve elevenforge
+ *   ("Floodlight") 9 Ekim 2026'da yeniden tasarımla tam sete geçti.
  *   karalama ve dungeon-mates yalnız KOYU temalı: iki dosya da
  *   koyu, o yüzden `themed: false` (tek görsel, ikisini indirmeye gerek yok).
  * - Yalnız desktop, 1280×800: eski görselin kopyası; iki dosya aynı.
- * - elevenforge: eski desktop + yeni mobile (780×1688), tek temalı.
- *   derinay 9 Ekim 2026'da "Atölye Sahnesi" revizyonuyla tam sete geçti.
  * - dev-starter: ekran görüntüsü yok, README afişi (1280×360, iki temalı SVG).
  *   Afişteki başlık gradyanla DOLDURULMAZ: WebKit `<img>` içindeki SVG'de
  *   gradyanlı metni düşük çözünürlükte basıp büyütüyor ve iPhone'da yalnız
@@ -43,11 +42,6 @@ const FULL = { desktop: { width: 2160, height: 1350 }, 'desktop-2': { width: 216
 const LEGACY = { desktop: { width: 1280, height: 800 } } as const
 const ALL_VIEWS = ['desktop', 'desktop-2', 'mobile'] as const
 const DESKTOP_ONLY = ['desktop'] as const
-/* Eski masaüstü çekimi + yeni telefon çekimi (4 Ekim 2026): ana sayfanın
-   Öne Çıkan Projeler panelinde telefon ekranı olmayan iki proje kalıyordu.
-   Canlı siteden 390×844, 2x; ölçü tam setin telefonuyla aynı. */
-const LEGACY_WITH_MOBILE = { desktop: LEGACY.desktop, mobile: FULL.mobile } as const
-const DESKTOP_AND_MOBILE = ['desktop', 'mobile'] as const
 
 export const PROJECT_SHOTS = {
   'acilis-zili': { views: ALL_VIEWS, themed: true, size: FULL },
@@ -58,7 +52,6 @@ export const PROJECT_SHOTS = {
   karalama: { views: ALL_VIEWS, themed: false, size: FULL, darkInk: true },
   'dungeon-mates': { views: ALL_VIEWS, themed: false, size: FULL, darkInk: true },
   harfiyen: { views: DESKTOP_ONLY, themed: false, size: LEGACY, darkInk: true },
-  elevenforge: { views: DESKTOP_AND_MOBILE, themed: false, size: LEGACY_WITH_MOBILE, darkInk: true },
   /* "Atölye Sahnesi" görsel revizyonu sonrası tam set (9 Ekim 2026): landing
      kahramanı, vitrindeki panel kesiti ve telefon kahramanı; iki temalı.
      desktop-2 iki temada da koyu: vitrin landing'in "gece adası", tema
@@ -69,6 +62,9 @@ export const PROJECT_SHOTS = {
   /* Yeniden tasarım sonrası tam set (9 Ekim 2026): landing hero, notlar
      sayfası ve telefon hero'su; iki temalı. */
   digynotes: { views: ALL_VIEWS, themed: true, size: FULL },
+  /* "Floodlight" görsel revizyonu sonrası tam set (9 Ekim 2026): landing
+     hero, uygulama ana ekranı ve telefon hero'su; iki temalı. */
+  elevenforge: { views: ALL_VIEWS, themed: true, size: FULL },
 } as const satisfies Record<string, ShotSet>
 
 export type ShotSlug = keyof typeof PROJECT_SHOTS

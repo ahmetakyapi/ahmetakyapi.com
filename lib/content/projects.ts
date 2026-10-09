@@ -93,13 +93,15 @@ export const projects: Project[] = [
     description:
       '16 arkadaşın aynı ligde yarıştığı Türkçe futbol menajerlik oyunu. Davet koduyla katılıyorsun, boş kalan yerleri bot dolduruyor, kadronu ve taktiğini kuruyorsun; maçlar ligi kuran kişinin seçtiği saatte simüle ediliyor ve canlı anlatımla izleniyor.',
     detail:
-      'Maç motoru deterministik: fikstür kimliğinden üretilen tohum, aynı maçı tekrar oynattığında aynı skoru veriyor. Transfer pazarında iyimser kilitleme var: on alıcıdan yalnızca biri kazanıyor.',
-    tags: ['Next.js 16', 'React 19', 'Drizzle', 'TypeScript', 'Cron'],
+      'Maç motoru deterministik: fikstür kimliğinden üretilen tohum, aynı maçı tekrar oynattığında aynı skoru veriyor. Transfer pazarında iyimser kilitleme var: on alıcıdan yalnızca biri kazanıyor. Arayüz stadyum ışıkları altında bir gece maçı gibi: açılışta saha çizgileri kendini çiziyor, sayfa kaydırdıkça hikâye anlatıyor, ekranlar arasında View Transitions ile geçiliyor.',
+    tags: ['Next.js 16', 'React 19', 'Drizzle', 'TypeScript', 'Framer Motion', 'Cron'],
     link: 'https://elevenforge.vercel.app',
     github: 'https://github.com/ahmetakyapi/elevenforge',
-    accent: '#22c55e',
-    tint: '#16a34a',
-    gradient: 'linear-gradient(135deg, #22c55e 0%, #15803d 100%)',
+    /* "Floodlight" revizyonu (9 Ekim 2026): indigo → zümrüt marka gradyanı;
+       zemin tonu açık temadaki indigo vurgu. */
+    accent: '#818cf8',
+    tint: '#4f46e5',
+    gradient: 'linear-gradient(135deg, #6366f1 0%, #10b981 100%)',
     badge: 'Canlı',
     featured: true,
   },
