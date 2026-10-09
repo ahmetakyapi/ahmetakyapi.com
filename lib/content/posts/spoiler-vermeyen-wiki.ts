@@ -4,59 +4,84 @@ export const post: BlogPost = {
   slug: 'spoiler-vermeyen-wiki',
   tag: 'Ürün',
   tagColor: '#ef4444',
-  title: "One Piece Hub: Spoiler Vermeyen Wiki",
+  title: 'One Piece Hub: Spoiler Vermeyen Türkçe Wiki',
   excerpt:
-    'Bin bölümlük seriyi 300. bölümden izleyen biri siteyi açınca ne görmeli? İçeriği toplamak kolaydı; onu okuyucunun kaldığı yere göre saklamak daha uzun sürdü.',
+    "One Piece Hub, bin bölümlük seriyi Türkçe ve düzenli gezmek için yaptığım bir fan sitesi. Kaldığın arkı söylüyorsun, sonrasına ait her şey perdeleniyor. Sitede ne var ve o perdeyi nasıl kurdum.",
   date: '2026-09-01',
   coverGradient: 'linear-gradient(135deg, #ef4444 0%, #f59e0b 50%, #eab308 100%)',
   content: [
     {
       type: 'lead',
-      text: 'One Piece Hub\'da en çok uğraştığım soru şuydu: siteyi 300. bölümde olan biri açınca ne görmeli? Bir wiki her şeyi bilir. Okuyucunun henüz izlemediği bir olayı ona göstermek, yıllardır takip ettiği bir hikâyeyi elinden almak demek.',
+      text: "One Piece Hub, One Piece evrenini Türkçe gezmek için yaptığım bir fan sitesi. Binden fazla bölümü arklara göre düzenliyor, filler bölümleri ayıklıyor, karakterleri, şeytan meyvelerini ve büyük savaşları tek bir yerde topluyor ve en önemlisi, kaldığın yerden sonrasını sana göstermiyor. Çünkü bir wiki her şeyi bilir ve seriyi 300. bölümde izleyen birine 900. bölümdeki olayı göstermek, yıllardır takip ettiği hikâyeyi elinden almak demek.",
     },
     {
       type: 'p',
-      text: 'Wikilerde bunun tipik örneği karakter sayfası: sayfayı açıyorsun, sağ üstteki kutuda "Durum: Ölü" yazıyor.',
+      text: 'Seriyi Türkçe takip eden biri için mevcut kaynaklar ya İngilizce, ya filler dolu, ya da dağınık. Ben hem düzenli bir rehber istedim hem de bir anime wikisinin koyu temalı, hareketli bir arayüzle nasıl hissettirebileceğini görmek istedim. Sonuç bir rehber kadar bir deneme alanı da oldu.',
     },
 
-    { type: 'h2', text: 'Sitede Ne Var' },
-    {
-      type: 'p',
-      text: 'Saklanacak şeyin ne kadar olduğu içerikten belli:',
-    },
+    { type: 'h2', text: 'Sitede Neler Var' },
     {
       type: 'stats',
       label: 'One Piece Hub · İçerik',
       items: [
-        { value: '66', note: 'Karakter' },
         { value: '36', note: 'Ark, 10 Saga Altında' },
+        { value: '460+', note: 'Bölüm, Fillersız Düzende' },
+        { value: '66', note: 'Karakter' },
         { value: '43', note: 'Şeytan Meyvesi' },
-        { value: '38', note: 'Ödül Kaydı' },
-        { value: '22', note: 'Dövüş' },
+        { value: '22', note: 'Büyük Savaş' },
         { value: '160', note: 'Quiz Sorusu' },
       ],
     },
     {
+      type: 'steps',
+      items: [
+        {
+          title: 'Arklar ve Bölümler',
+          text: 'Seri on saga ve otuz altı ark olarak düzenli. Her arkın bölümleri filler ayıklanmış sırayla listeleniyor; hangi bölümü izlediğini işaretleyip kaldığın yeri hatırlayabiliyorsun. Hesap açarsan ilerleme veritabanına, açmazsan tarayıcına yazılıyor.',
+        },
+        {
+          title: 'Karakterler ve Tayfalar',
+          text: 'Her karakterin sayfası, ödül geçmişi, tayfası ve ilk göründüğü ark. Karakter ilişkileri ekranında kimin kiminle nakama, aile, rakip ya da düşman olduğunu tek bakışta görüyorsun.',
+        },
+        {
+          title: 'Dünya',
+          text: 'Şeytan meyveleri, haki rehberi, lokasyonlar, güç sıralaması ve serinin büyük dövüşleri. Her biri kendi sayfasında, kendi görseliyle.',
+        },
+        {
+          title: 'Quiz ve Başarımlar',
+          text: 'Her ark için beş ile on soruluk bir quiz, seri takibi ve küçük ses efektleri. Skorlar hesabına yazılıyor, yüksek skor eskisinin üstüne geçiyor.',
+        },
+        {
+          title: 'Komut Paleti',
+          text: "⌘K ile açılan bir arama: karakter, ark, meyve ya da sayfa adı yazıp doğrudan gidiyorsun. Telefonda alt menü ve tam ekran arama var.",
+        },
+      ],
+    },
+
+    { type: 'h2', text: 'Nasıl Kurdum' },
+    {
       type: 'p',
-      text: 'Bunların yanında ark ve bölüm takibi, tayfa sayfaları, güç sıralaması, haki rehberi ve başarımlar var. Sayfaların neredeyse hepsi spoiler taşıyabiliyor.',
+      text: "Site Next.js 14 ve TypeScript ile yazıldı; stil Tailwind, hareket Framer Motion. İçeriğin tamamı, yani arklar, karakterler, meyveler ve quiz soruları veritabanında değil, tipli TypeScript dosyalarında duruyor. Bu sayede içerik sayfaları derleme anında üretiliyor ve git'te sürümleniyor; bir karakterin adını yanlış yazarsam derleme hata veriyor.",
+    },
+    {
+      type: 'p',
+      text: 'Veritabanı yalnızca kullanıcıya ait şeyleri tutuyor: izleme ilerlemesi ve quiz skorları. Neon üzerinde Postgres, Drizzle ile. Giriş kendi yazdığım küçük bir JWT akışı; çerezde duruyor, otuz gün geçerli. Sayfalar arası geçişlerde karakter kartı kendi sayfasının kapağına dönüşüyor; bunu tarayıcının View Transitions özelliği yapıyor.',
+    },
+    {
+      type: 'p',
+      text: "Sitenin asıl zor kısmı bunların hiçbiri değildi. Zor kısım, bütün bu içeriği okuyan kişinin kaldığı yere göre saklamaktı.",
     },
 
     { type: 'h2', text: 'Spoiler Nedir, Kod Açısından' },
     {
       type: 'p',
-      text: 'Kod yazmak için somut bir tanım lazım. "Önemli olay" gibi bir tanım işe yaramazdı: neyin önemli olduğu bir yargı ve her içerik parçası için ayrı ayrı verilmesi gerekir.',
-    },
-    {
-      type: 'p',
-      text: 'Kodda çok daha basit bir tanım var. One Piece sırayla ilerliyor; her içerik bir arka ait ve arklar sıralı. Okuyucu da bir arkta. Gerisi iki sayıyı karşılaştırmak.',
+      text: "Kod yazmak için somut bir tanım gerekiyordu. \"Önemli olay\" gibi bir tanım işe yaramazdı; neyin önemli olduğu bir yargı ve her içerik parçası için ayrı ayrı verilmesi gerekir. Oysa One Piece sırayla ilerliyor: her içerik bir arka ait, arklar sıralı, okuyan kişi de bir arkta. Gerisi iki sayıyı karşılaştırmak.",
     },
     {
       type: 'code',
       lang: 'ts',
       file: 'hooks/useSpoilerGate.tsx',
-      text: `const active = mounted && state.enabled && currentArcIndex !== -1
-
-const isSpoiler = useCallback((arcSlug: string | undefined) => {
+      text: `const isSpoiler = useCallback((arcSlug: string | undefined) => {
   if (!active || !arcSlug) return false
   const targetIndex = ARCS.findIndex(a => a.slug === arcSlug)
   if (targetIndex === -1) return false
@@ -65,59 +90,39 @@ const isSpoiler = useCallback((arcSlug: string | undefined) => {
     },
     {
       type: 'p',
-      text: '`targetIndex === -1` kontrolü bilinçli. Bir içeriğin arkı etiketlenmemişse gizlemiyorum. Öteki seçenek "bilmiyorsan sakla" olurdu ve o kural, etiketi eksik tek bir kayıt yüzünden sayfaları sebepsiz yere karartırdı. Emin değilken göstermek daha az zarar veriyor.',
-    },
-    {
-      type: 'p',
-      text: '`active` içindeki `mounted` da bir iş görüyor. Tercih `localStorage`\'da duruyor, yani sunucu onu bilmiyor. Bu kontrol olmasa sayfa önce her şeyi gösterip sonra karartabilirdi; spoiler koruması için bundan kötüsü yok.',
+      text: 'Bilinmeyen ark için "gizleme" kararı bilinçli. Bir içeriğin arkı etiketlenmemişse onu saklamıyorum. Öteki seçenek "emin değilsen sakla" olurdu ve o kural, etiketi eksik tek bir kayıt yüzünden sayfaları sebepsiz yere karartırdı. Emin değilken göstermek daha az zarar veriyor.',
     },
     {
       type: 'callout',
       variant: 'warning',
-      text: 'Gizleme mantığı tarayıcıda çalışıyor. İsteyen HTML kaynağından her şeyi okuyabilir. Bunu kabul ettim, çünkü burada korunan kişi kendi gözünü korumaya çalışan bir okuyucu. Bu bir kilit olarak tasarlanmadı, bir perde olarak tasarlandı.',
+      text: 'Gizleme tarayıcıda çalışıyor; isteyen sayfa kaynağından her şeyi okuyabilir. Bunu baştan kabul ettim. Burada korunan kişi kendi gözünü korumaya çalışan bir okuyucu. Bu bir kilit değil, bir perde.',
     },
 
     { type: 'h2', text: 'Okuyucuya "Neredesin" Diye Sormak' },
     {
       type: 'p',
-      text: 'Okuyucuya kaçıncı bölümde olduğu sorulmuyor; sitede bölüm numarası girilen bir kutu yok, deponun geçmişinde de hiç olmamış. Okuyucu bir ark seçiyor. Bölüm numarası akılda kalmayabilir, ama Alabasta\'yı bitirip bitirmediğini herkes bilir.',
+      text: "Okuyucuya kaçıncı bölümde olduğunu sormuyorum; bölüm numarası kimsenin aklında kalmaz. Ama Alabasta'yı bitirip bitirmediğini herkes bilir. O yüzden bir ark seçiyorsun. Seçici otuz altı arkı on saga başlığı altında gruplayarak gösteriyor; düz bir liste uzun bir kaydırma olurdu.",
     },
     {
       type: 'p',
-      text: 'Seçici 36 arkı 10 saga başlığı altında gruplayarak gösteriyor. Düz bir liste uzun bir kaydırma demek; saga başlıkları okuyucunun kendi yerini bulmasını kolaylaştırıyor.',
-    },
-    {
-      type: 'p',
-      text: 'Ekranın köşesindeki düğme durumu sürekli gösteriyor. Koruma açıkken kaçıncı arkta olduğunu yazıyor; açık ama ark seçilmemişse korumanın çalıştığını iddia etmiyor, ark seçmeni istiyor. Telefonda bu düğme yalnızca bir göz ikonu, yazı sm kırılımından itibaren görünüyor.',
-    },
-    {
-      type: 'code',
-      lang: 'tsx',
-      file: 'components/spoiler/SpoilerGateWidget.tsx',
-      text: `{active
-  ? \`Spoiler: \${currentArcIndex + 1}/\${totalArcs}\`   // "Spoiler: 14/36"
-  : enabled ? 'Arc Seç' : 'Spoiler Ayarı'}`,
+      text: 'Ekranın köşesindeki küçük düğme durumu sürekli söylüyor: koruma açıksa kaçıncı arkta olduğunu, açık ama ark seçilmemişse ark seçmen gerektiğini. Çalıştığını iddia etmeden önce gerçekten çalışıyor olması gerekiyor; bunu zor yoldan öğrendim.',
     },
 
-    { type: 'h2', text: 'Kapı Aylarca Hiçbir Şeyi Kapatmamış' },
+    { type: 'h2', text: 'Perde Aylarca Hiçbir Şeyi Örtmemiş' },
     {
       type: 'p',
-      text: 'Yukarıdaki düğme dört aydan uzun bir süre yanlış bilgi verdi. Kapı 18 Nisan\'da eklendi, 31 Ağustos\'ta düzeldi.',
-    },
-    {
-      type: 'p',
-      text: '`useSpoilerGate` başta düz bir hook\'tu ve onu çağıran her bileşen kendi `useState`\'ini kuruyordu. Köşedeki düğmenin bir kopyası vardı, listedeki her ark kartının da ayrı bir kopyası. 36 ark, 36 ayrı state. Düğmeden ark seçince yalnızca düğmenin kopyası değişiyordu: düğme "Spoiler: 14/36" yazıyor, kartlar ise sayfa yenilenene kadar hiçbir şeyi gizlemiyordu.',
+      text: "Spoiler korumasını siteye eklediğim günden dört ay sonrasına kadar o köşedeki düğme yanlış bilgi verdi. Koruma düz bir React hook'uydu ve onu çağıran her bileşen kendi state'ini kuruyordu. Düğmenin bir kopyası vardı, listedeki her ark kartının da ayrı bir kopyası. Düğmeden ark seçince yalnızca düğmenin kopyası değişiyordu. Düğme \"Spoiler: 14/36\" yazıyor, kartlar ise sayfa yenilenene kadar hiçbir şeyi gizlemiyordu.",
     },
     {
       type: 'compare',
       label: 'Koruma Aç, Ark Seç, Sayfayı Yenileme',
       before: { label: 'Düz Hook', value: '0 Kart Gizli' },
-      after: { label: 'Context Sağlayıcı', value: '35 Kart Gizli' },
-      note: 'Mantık baştan doğruydu: tercihi localStorage\'a elle yazıp sayfayı yenileyince aynı 35 kart gizleniyordu. Eksik olan, state\'in bileşenler arasında paylaşılmasıydı.',
+      after: { label: 'Ortak Sağlayıcı', value: '35 Kart Gizli' },
+      note: "Mantık baştan doğruydu: tercihi elle yazıp sayfayı yenileyince aynı 35 kart gizleniyordu. Eksik olan, durumun bileşenler arasında paylaşılmasıydı.",
     },
     {
       type: 'p',
-      text: 'Düzeltme, hook\'u tema ve oturum sağlayıcılarıyla aynı yapıda bir Context sağlayıcıya çevirmek oldu. Yanına iki küçük karar ekledim. Ark seçmek korumayı kendiliğinden açıyor, çünkü niyeti belli eden adım o; eskiden iki ayrı adım gerekiyordu ve birini atlayınca hiçbir şey olmuyor, sebebi de söylenmiyordu. Ayrıca durum artık her zaman yazıyla bildiriliyor: kaç arkın gizlendiği, ark seçmen gerektiği ya da korumanın duraklatıldığı.',
+      text: 'Düzeltme, hook\'u tema ve oturum sağlayıcılarıyla aynı yapıda tek bir Context sağlayıcıya çevirmek oldu. Yanına iki küçük karar ekledim. Ark seçmek korumayı kendiliğinden açıyor, çünkü niyeti belli eden adım o. Ve durum artık her zaman yazıyla bildiriliyor: kaç ark gizlendi, ark seçmen gerekiyor mu, koruma duraklatıldı mı.',
     },
     {
       type: 'quote',
@@ -127,62 +132,39 @@ const isSpoiler = useCallback((arcSlug: string | undefined) => {
     { type: 'h2', text: 'Gizlenen Şey Nasıl Görünmeli' },
     {
       type: 'p',
-      text: 'İki seçenek vardı: içeriği tamamen kaldırmak ya da üstünü örtmek. Kaldırmak ark listesini ortasından keserdi ve okuyucu sitenin bozuk olduğunu sanırdı. Üstelik bir arkın var olduğunu bilmek spoiler sayılmaz; içinde ne olduğunu bilmek sayılır.',
+      text: 'İki seçenek vardı: içeriği tamamen kaldırmak ya da üstünü örtmek. Kaldırmak ark listesini ortasından keserdi ve okuyan kişi sitenin bozuk olduğunu sanırdı. Üstelik bir arkın var olduğunu bilmek spoiler sayılmaz; içinde ne olduğunu bilmek sayılır.',
     },
     {
       type: 'p',
-      text: 'Kodda gizli bir kart şöyle duruyor: görsel bulanık, ark adı ve özet metni de bulanık ve seçilemiyor, saga rozeti ile bölüm sayısı hiç çizilmiyor, üstünde "Spoiler" ve "Göstermek için tıkla" yazıyor. Tıklayınca yalnızca o kart açılıyor; koruma kapanmıyor. Gizlenmeyen şeyler de var. Kartın alt satırındaki ilk iki tema etiketi bulanıklaşmıyor; Egghead arkında bu etiketlerden biri "Void Century". Kartın listedeki yeri de görünüyor, yani kaç ark kaldığı belli.',
-    },
-    {
-      type: 'quote',
-      text: 'İyi bir spoiler koruması, korumayı kaldırma kararını da okuyucuya bırakır. "Bunu görmek istiyor musun" sorusu, sorunun kendisi bir şey ele vermediği sürece adil.',
+      text: 'Gizli bir kart şöyle duruyor: görsel bulanık, ark adı ve özet bulanık ve seçilemiyor, bölüm sayısı hiç çizilmiyor, üstünde "Spoiler" ve "göstermek için tıkla" yazıyor. Tıklayınca yalnızca o kart açılıyor, koruma kapanmıyor. Kararı okuyan kişiye bırakıyorum; "bunu görmek istiyor musun" sorusu, sorunun kendisi bir şey ele vermediği sürece adil.',
     },
     {
       type: 'p',
-      text: 'Erişilebilirlik tarafında bir tutarsızlık var. Bulanıklık CSS\'te, ekran okuyucu ise CSS görmez. Gizli kartın `aria-label`\'ı ark adını okumuyor; "Spoiler: … gizli arc. Göstermek için tıkla." diyor ve görselin `alt` metni "Spoiler gizli" oluyor. Üç noktanın yerine saganın adı giriyor. Yani gören okuyucudan saklanan saga rozeti, ekran okuyucu kullanan okuyucuya yüksek sesle söyleniyor. İki taraf aynı kuralı izlemiyor.',
+      text: "Burada dürüst olmam gereken bir eksik var. Bulanıklık CSS'te ve ekran okuyucu CSS görmez. Gizli kartın erişilebilir adı ark adını okumuyor ama saga adını söylüyor; yani gören okuyucudan saklanan bir bilgi, ekran okuyucu kullanan okuyucuya yüksek sesle söyleniyor. İki taraf aynı kuralı izlemiyor ve bunu henüz düzeltmedim.",
     },
 
     { type: 'h2', text: 'Karakter İlişkileri: Neden Çember' },
     {
       type: 'p',
-      text: 'Sitenin uğraştıran ikinci parçası karakter ilişkileri ekranıydı. Elimde 25 karakter ve aralarında elle yazılmış 29 bağ var: nakama, aile, rakiplik, düşmanlık, hoca-öğrenci, ittifak.',
+      text: 'Sitenin uğraştıran ikinci parçası karakter ilişkileri ekranıydı. Elimde yirmi beş karakter ve aralarında elle yazdığım yirmi dokuz bağ var: nakama, aile, rakiplik, düşmanlık, hoca-öğrenci, ittifak. Böyle ekranlar genelde fizik tabanlı çizilir; düğümler birbirini iter, bağlı olanlar birbirini çeker, sistem kendi dengesini bulur.',
     },
     {
       type: 'p',
-      text: 'Veri dosyasının başındaki yorum hâlâ "force-directed graph için kullanılır" diyor: düğümler birbirini iter, bağlı olanlar birbirini çeker, sistem kendi dengesini bulur. Depoya giren ekranda ise ilk günden beri düğümler bir çemberin üzerinde eşit aralıklarla duruyor. Sekiz satır; fizik yok, rastgelelik yok.',
-    },
-    {
-      type: 'code',
-      lang: 'ts',
-      file: 'components/characters/RelationshipGraph.tsx',
-      text: `function getCircularLayout(count: number, centerX: number, centerY: number, radius: number) {
-  return Array.from({ length: count }).map((_, i) => {
-    // -PI/2 kayması ilk karakteri tam tepeye alıyor
-    const angle = (2 * Math.PI * i) / count - Math.PI / 2
-    return {
-      x: centerX + radius * Math.cos(angle),
-      y: centerY + radius * Math.sin(angle),
-    }
-  })
-}`,
-    },
-    {
-      type: 'p',
-      text: 'Çemberin kazancı yerinden oynamaması. Luffy her ziyarette aynı yerde duruyor ve ilişki türüne göre filtre bir anlam kazanıyor: "sadece düşmanlıklar" dediğinde çember aynı kalıyor, yalnızca çizgiler değişiyor. İki görünümü bu sayede karşılaştırabiliyorsun. Fizik tabanlı yerleşimde her filtre yeni bir düzen demek olurdu.',
+      text: 'Ben düğümleri bir çemberin üzerine eşit aralıklarla dizdim. Sekiz satır, fizik yok, rastgelelik yok. Kazancı yerinden oynamaması: Luffy her ziyarette aynı yerde duruyor ve ilişki türüne göre filtre bir anlam kazanıyor. "Sadece düşmanlıklar" dediğinde çember aynı kalıyor, yalnızca çizgiler değişiyor; iki görünümü bu sayede karşılaştırabiliyorsun. Fizik tabanlı yerleşimde her filtre yeni bir düzen demek olurdu.',
     },
     {
       type: 'quote',
-      text: 'Force-directed yerleşim, yapısını bilmediğin bir grafta küme aramak için iyidir. Ben yapıyı zaten biliyordum: 25 karakter ve elle yazdığım 29 bağ.',
+      text: 'Fizik tabanlı yerleşim, yapısını bilmediğin bir grafta küme aramak için iyidir. Ben yapıyı zaten biliyordum.',
     },
 
     { type: 'h2', text: 'Ne Öğrendim' },
     {
       type: 'p',
-      text: 'İki parçada da işe yarayan çözüm daha sade olanıydı. Spoiler kapısı sıralı bir dizide iki indeksi karşılaştırıyor. Graf, fizik hesaplamak yerine düğümleri çembere diziyor.',
+      text: 'İki parçada da işe yarayan çözüm daha sade olanıydı. Spoiler perdesi sıralı bir dizide iki indeksi karşılaştırıyor; graf, fizik hesaplamak yerine düğümleri çembere diziyor.',
     },
     {
       type: 'p',
-      text: 'Kapının kapsamı da hâlâ dar. `isSpoiler` bugün yalnızca ark listesindeki kartlarda çağrılıyor. Karakterlerin ilk göründüğü ark (`firstArc`) veride var, ama karakter sayfaları kapıya bağlı değil. Girişteki "Durum: Ölü" örneğine karşı site henüz bir şey yapmıyor.',
+      text: 'Perdenin kapsamı da hâlâ dar. Bugün yalnızca ark listesindeki kartlarda çalışıyor. Karakterlerin ilk göründüğü ark veride var ama karakter sayfaları perdeye bağlı değil. Yani bir karakter sayfasını açıp sağ üstte "Durum: Ölü" görmek hâlâ mümkün. Sıradaki iş o.',
     },
   ],
 }

@@ -46,7 +46,7 @@ export function BlogIndex({ posts }: { posts: readonly BlogPost[] }) {
           </span>
         </h1>
         <p className="page-lead">
-          Yaptığım projelerden çıkan notlar. Çoğu bir şeyin neden çalışmadığıyla başlıyor.
+          Her yazı bir projeyi anlatıyor: ne yaptım, kimin için, nasıl kurdum ve hangi kararı neden verdim.
         </p>
         <p className="mt-3 flex flex-wrap items-center gap-x-4 text-sm text-muted">
           <span>{posts.length} Yazı</span>

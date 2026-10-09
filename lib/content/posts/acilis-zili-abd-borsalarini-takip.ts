@@ -4,40 +4,40 @@ export const post: BlogPost = {
   slug: 'acilis-zili-abd-borsalarini-takip',
   tag: 'Ürün',
   tagColor: '#0d74c4',
-  title: 'Açılış Zili: ABD Borsası Takibi',
+  title: 'Açılış Zili: Canlı Fiyatı Doğru Göstermek',
   excerpt:
-    'Açılış Zili\'nde tek bir hata mesajı çıkmadan önceki günün sayıları bugünün sayıları gibi göründü. Fiyatın, grafiğin ve yazıların aynı seansı göstermesi için yaptıklarım.',
+    "Açılış Zili'nde bir sabah önceki günün rakamları bugünün rakamları gibi göründü ve hiçbir yerde hata çıkmadı. Fiyatın, grafiğin ve yazıların hep aynı günü anlatması için kurduğum kontrolleri anlatıyorum.",
   date: '2026-10-03',
   coverGradient: 'linear-gradient(135deg, #0d74c4 0%, #0a5a9a 45%, #101c2b 100%)',
   project: 'acilis-zili',
   content: [
     {
       type: 'lead',
-      text: 'Açılış Zili\'nde ABD borsalarını dört şeyden izliyorsun: hisse ve endeks fiyatları, teknik analiz, bilanço özetleri ve günün haberleri. Açılış ve kapanış zili Türkiye saatine göre sayılıyor. Verinin bir kısmı ücretsiz kaynaktan geldiği için 15 dakika gecikmeli; ekran bunu açıkça yazıyor, okur da biliyor. Benim derdim gecikme değildi. Derdim, ekrandaki her sayının hangi güne ait olduğunu doğru söylemesiydi. Fiyat bugünü, grafik dünü gösterirse okur yan yana birbirini tutmayan iki sayı görür.',
+      text: "Açılış Zili'nde ABD borsasını dört şeyden izliyorsun: hisse ve endeks fiyatları, grafikler, bilanço özetleri ve günün haberleri. Verinin bir kısmı ücretsiz kaynaklardan geldiği için 15 dakika gecikmeli ve ekran bunu açıkça yazıyor. Benim derdim hiçbir zaman gecikme olmadı. Derdim, ekrandaki her sayının hangi güne ait olduğunu doğru söylemesiydi. Fiyat bugünü, grafik dünü gösterirse okuyan kişi yan yana birbirini tutmayan iki sayı görür ve siteye güvenmeyi bırakır.",
     },
     {
       type: 'p',
-      text: '17 Eylül\'de tam da bu oldu. New York\'ta saat 11:51, Türkiye\'de 18:51, seans açık. Ana sayfadaki "Günün Hareketleri" paneli en çok yükselenleri sıralıyor: GNRC +%20,66, SMCI +%10,35, INTC +%9,73. Altında da "514 endeks üyesi tarandı · seans içi" yazıyor. Üç sayı da bir önceki günün kapanışına aitti.',
-    },
-    {
-      type: 'p',
-      text: 'Hiçbir yerde hata çıkmadı. Sağlayıcı katmanı `ok: true` döndü, panel listeyi çizdi, saat de doğruydu. Yanlış olan, alttaki "seans içi" ifadesiydi: bu sayılar bugünün hareketi değildi. İlk yazıda Brent kartını neden kaldırdığımı anlatmıştım. Bu seferki hatayı fark etmek daha zordu, çünkü sayılar doğruydu, yalnızca ait oldukları gün yanlıştı.',
+      text: "Bu yazı, o güveni korumak için bir ayda kurduğum kontrollerin hikâyesi. Hiçbiri büyük bir özellik değil; hepsi \"bu sayı gerçekten bugünün mü\" sorusunun bir başka hâli.",
     },
 
-    { type: 'h2', text: 'Değişim Yüzdesi Hangi Güne Ait?' },
+    { type: 'h2', text: 'Bir Sabah Fark Ettiğim Şey' },
     {
       type: 'p',
-      text: 'Bir hissenin günlük değişim yüzdesi (`changePct`) hangi güne ait olduğunu kendi başına söylemiyor. Hangi kapanışa göre hesaplanacağına sağlayıcı karar veriyor. Panelin kodunda bunu denetleyen bir kontrol vardı ama yalnızca ön seansta ve akşam seansında çalışıyordu. Normal seansı dışarıda bırakmanın gerekçesi de koda yazılmıştı: "changePct zaten o günün kapanışına göre."',
+      text: 'Eylül ortasında bir gün seans açıkken siteyi açtım. Ana sayfadaki "Günün Hareketleri" paneli en çok yükselenleri sıralıyordu ve altında "seans içi" yazıyordu. Sayılar makul görünüyordu. Sorun şuydu: üçü de bir önceki günün kapanışına aitti.',
     },
     {
       type: 'p',
-      text: 'Sağlayıcı o anki veriyi verdiği sürece bu cümle doğru. Fiyatlar Alpaca\'dan geliyor. Alpaca cevap vermeyince kod yedek sağlayıcıyı hiç denemiyordu, çünkü yedek olan Finnhub en fazla sekiz sembolde devreye giriyor; panelde ise 514 sembol var. Kod doğrudan Neon\'daki fiyat önbelleğine düşüyordu ve o tabloda bir önceki seansın yüzdeleri duruyordu. Ekranda gördüğüm sıralama oradan geliyordu.',
+      text: 'Hiçbir yerde hata çıkmamıştı. Sağlayıcı katmanı başarılı döndü, panel listeyi çizdi, saat de doğruydu. Yanlış olan, sayıların altındaki "seans içi" ifadesiydi. Fiyatları veren ana sağlayıcı o an cevap vermiyordu; yedek sağlayıcı yalnızca birkaç sembol için devreye girebiliyordu ve panelde beş yüzü aşkın sembol vardı. Kod da sessizce veritabanındaki fiyat önbelleğine düşmüştü. O tabloda bir önceki seansın yüzdeleri duruyordu.',
+    },
+    {
+      type: 'p',
+      text: 'Bu hatayı fark etmek, yanlış bir sayıyı fark etmekten daha zordu. Çünkü sayılar doğruydu; sadece ait oldukları gün yanlıştı.',
     },
 
-    { type: 'h2', text: 'Takvim Günü ile Seans Günü' },
+    { type: 'h2', text: 'Takvim Günü ile Seans Günü Aynı Şey Değil' },
     {
       type: 'p',
-      text: 'Düzeltme tek bir alana indi: `MarketStatus.sessionDate`. Bu alan, ekranın o an hangi işlem gününü anlattığını tutuyor. Bu gün, takvimdeki günle her zaman aynı değil.',
+      text: 'Düzeltme tek bir kavrama indi: ekranın o an hangi işlem gününü anlattığı. Bu gün, takvimdeki günle her zaman aynı değil.',
     },
     {
       type: 'table',
@@ -51,7 +51,7 @@ export const post: BlogPost = {
     },
     {
       type: 'p',
-      text: 'Yeni güne geçiş anı olarak açılış zilini değil, New York saatiyle 04:00\'te başlayan ön seansı seçtim. O saatten sonra ekrandaki yüzdeler o sabahın hareketini gösteriyor. Kontrol de tek satır: bir fiyatın son işlemi bu alandaki güne aitse o fiyat bu seansı anlatıyor, değilse anlatmıyor.',
+      text: "Yeni güne geçiş anı olarak açılış zilini değil, New York saatiyle sabah dörtte başlayan ön seansı seçtim. O saatten sonra ekrandaki yüzdeler o sabahın hareketini gösteriyor. Kontrol de tek satır: bir fiyatın son işlemi ekranın anlattığı güne aitse o fiyat bu seansı anlatıyor, değilse anlatmıyor.",
     },
     {
       type: 'code',
@@ -67,91 +67,62 @@ export const post: BlogPost = {
     },
     {
       type: 'p',
-      text: 'Aynı commit\'te takvimin uç durumları için ayrı bir test dosyası da yazdım: gece yarısı, hafta sonu, tam gün tatil, yarım gün ve ön seansın ilk çeyreği. Bu kontrol bozulacaksa bu anlardan birinde bozulur.',
+      text: 'Aynı gün takvimin uç durumları için bir test dosyası da yazdım: gece yarısı, hafta sonu, tam gün tatil, yarım gün, ön seansın ilk dakikaları. Bu kontrol bir gün bozulacaksa bu anlardan birinde bozulur.',
     },
 
-    { type: 'h2', text: 'Fiyatın Alındığı Saat de Önemli' },
+    { type: 'h2', text: 'Fiyatın Ne Zaman Alındığı da Önemli' },
     {
       type: 'p',
-      text: 'Ertesi gün bu kontrolün yetmediği ortaya çıktı. SNDK sayfasının başında 1.689,93 $ yazıyordu, yanında da "17:02 Güncellendi". Aynı sayfadaki 1G grafiğinde, yani o günün seansını gösteren grafikte, barlar 18:15\'e kadar uzanıyordu ve son bar 1.711,24 $ ile kapanmıştı.',
+      text: 'Ertesi gün bu kontrolün yetmediğini gördüm. Bir hisse sayfasının başında fiyat ve yanında "17:02 güncellendi" yazıyordu. Aynı sayfadaki günlük grafikte ise barlar 18:15\'e kadar uzanıyordu ve son barın kapanışı başlıktaki fiyattan farklıydı.',
     },
     {
       type: 'compare',
-      label: 'SNDK · Aynı Ekran, İki Fiyat',
+      label: 'Aynı Ekran, İki Fiyat',
       before: { label: 'Başlıktaki Fiyat (17:02)', value: '1.689,93 $' },
       after: { label: 'Grafiğin Son Barı (18:15)', value: '1.711,24 $' },
-      note: 'Aradaki fark %1,3. İki sayı da kendi içinde doğruydu ama yan yana durunca okura hata gibi görünüyordu.',
+      note: 'Aradaki fark yüzde 1,3. İki sayı da kendi içinde doğruydu; yan yana durunca hata gibi görünüyordu.',
     },
     {
       type: 'p',
-      text: 'Başlıktaki fiyat bugünün seansına aitti, yani yeni kontrolden geçiyordu. Ama sağlayıcıdan yetmiş üç dakika önce alınmıştı. Sebep Next.js\'in veri önbelleği: süresi dolan kaydı hemen silmiyor, gelen isteğe önce süresi dolmuş cevabı verip yenisini arka planda çekiyor (stale-while-revalidate). Günde birkaç kez açılan bir sayfada okurun gördüğü fiyat, ondan önceki ziyaretçi için çekilmiş fiyat oluyor.',
+      text: "Başlıktaki fiyat bugünün seansına aitti, yani yeni kontrolden geçiyordu. Ama sağlayıcıdan yetmiş dakika önce alınmıştı. Sebep Next.js'in veri önbelleği: süresi dolan kaydı hemen silmiyor, gelen isteğe önce eski cevabı veriyor, yenisini arka planda çekiyor. Günde birkaç kez açılan bir sayfada senin gördüğün fiyat, senden önceki ziyaretçi için çekilmiş fiyat oluyor.",
     },
     {
       type: 'p',
-      text: 'Bu yüzden kontrole ikinci bir soru ekledim: fiyat sağlayıcıdan ne zaman alındı? Bunu hissenin son işlem saatine bakarak ölçmüyorum. Az işlem gören bir hisse canlı seansta bir saat boyunca hiç el değiştirmeyebilir ve fiyatı yine de günceldir. Onun yerine sağlayıcının cevabındaki `Date` başlığına bakıyorum; bu başlık, cevap önbellekten gelse bile sağlayıcıdan ilk alındığı saati gösteriyor. Sınır, önbellek süresinin 60 saniye fazlası. Seans içinde önbellek süresi 15 saniye, yani fiyat en fazla 75 saniye önce alınmış olabilir.',
-    },
-    {
-      type: 'code',
-      lang: 'ts',
-      file: 'lib/providers/index.ts',
-      text: `if (!expectsSessionData(status, now)) return closedResponseCurrent(pack.fetchedAt, status, now);
-if (!isSessionTrade(newestTrade(pack.data), status)) return false;
-const age = now.getTime() - pack.fetchedAt.getTime();
-return age <= (ttl + RESPONSE_AGE_SLACK_SECONDS) * 1000;`,
+      text: "Bu yüzden kontrole ikinci bir soru ekledim: fiyat sağlayıcıdan ne zaman alındı? Bunu hissenin son işlem saatine bakarak ölçmüyorum, çünkü az işlem gören bir hisse canlı seansta bir saat boyunca hiç el değiştirmeyebilir ve fiyatı yine de günceldir. Onun yerine sağlayıcının cevabındaki tarih başlığına bakıyorum; o başlık cevap önbellekten gelse bile ilk alındığı saati taşıyor. Sınır, önbellek süresinin bir dakika fazlası. Seans içinde bu, fiyatın en fazla 75 saniye önce alınmış olması demek.",
     },
     {
       type: 'p',
-      text: 'Fiyatlar bu kontrolden geçemezse kod aynı isteği bir kez, önbelleği atlayarak tekrarlıyor. Gelen cevap yine güncel değilse sonuca `stale: true` ekliyor ve bu fiyatları Neon\'daki önbelleğe yazmıyor. Yazsaydı tablodaki güncellenme saati yenilenir, önceden alınmış fiyat az önce alınmış gibi görünürdü.',
+      text: 'Fiyat bu kontrolden geçemezse kod aynı isteği bir kez, önbelleği atlayarak tekrarlıyor. Gelen cevap yine güncel değilse sonuca "güncel değil" işareti koyuyor ve bu fiyatı veritabanına yazmıyor. Yazsaydı tablodaki güncellenme saati yenilenir ve eski fiyat az önce alınmış gibi görünürdü.',
     },
 
     { type: 'h2', text: 'Piyasa Kapalıyken de Kontrol Gerekiyor' },
     {
       type: 'p',
-      text: 'Bu yazıyı yazdığım gün, 3 Ekim cumartesi, bir boşluğu daha kapattım. Sorun şuydu: cumartesi açılan MU sayfası, cuma kapanışı olan 1.069,18 $ yerine 1.107,50 $ gösteriyordu. Bu, cuma sabahı New York saatiyle 06:45\'teki ön seans fiyatıydı. Arada %3,6 fark var.',
+      text: 'Bu yazıyı yazdığım gün, bir cumartesi, bir boşluğu daha kapattım. Bir hisse sayfası cuma kapanışı yerine cuma sabahının ön seans fiyatını gösteriyordu; arada yüzde 3,6 fark vardı. Kod piyasa kapalıyken fiyatın ne zaman alındığına hiç bakmıyordu. Gerekçe mantıklı görünüyordu: piyasa kapalıyken fiyat değişmez. Doğru, fiyat değişmiyor; ama önbellekte duran kayıt son fiyat olmayabiliyor.',
     },
     {
       type: 'p',
-      text: 'Nedeni, kodun piyasa kapalıyken fiyatın ne zaman alındığına hiç bakmamasıydı. Gerekçe, piyasa kapalıyken fiyatın değişmemesiydi. Fiyat değişmiyor, doğru; ama önbellekte duran kayıt son fiyat olmayabiliyor. Next.js\'in önbelleği cuma sabahı alınmış kaydı bir kez daha verdi, kod da ne zaman alındığını sormadan onu kabul etti.',
-    },
-    {
-      type: 'p',
-      text: 'Çözüm: piyasa kapalıyken de fiyatın, ekranın anlattığı seans bittikten sonra alınmış olması gerekiyor. Değilse kod isteği bir kez önbelleği atlayarak tekrarlıyor. Seansın bitişi sabit bir saat değil, `MarketStatus` içinde hesaplanıyor: o günün kapanışına akşam seansı, onun üstüne de sağlayıcının 15 dakikalık gecikmesi ekleniyor. Normal bir günde bu, New York saatiyle 20:15 ediyor.',
-    },
-    {
-      type: 'p',
-      text: 'İlk sürümde 20:15\'i sabit yazmıştım. Yarım günlerde borsa 13:00\'te kapandığı için seans da erken bitiyor. Kod bunu bilmediğinden, ertesi gün o akşamın doğru fiyatını bile güncel saymıyor ve her istekte önbelleği atlıyordu.',
+      text: 'Çözüm şu: piyasa kapalıyken de fiyatın, ekranın anlattığı seans bittikten sonra alınmış olması gerekiyor. Seansın bitişi de sabit bir saat değil; o günün kapanışına akşam seansı ve sağlayıcının gecikmesi ekleniyor. İlk sürümde bunu sabit yazmıştım ve yarım günlerde borsa erken kapandığı için kod ertesi gün doğru fiyatı bile güncel saymıyor, her istekte önbelleği atlıyordu.',
     },
 
     { type: 'h2', text: 'Grafik de Önceki Günü Gösteriyordu' },
     {
       type: 'p',
-      text: 'Aynı sorunun grafikteki karşılığını 17 Eylül\'deki ilk düzeltmenin hemen ardından buldum. Önbellekten gelen grafik verisi için tek bir sınır vardı: en fazla beş gün önceye ait olabilirdi. Uzun aralıklı grafiklerde bu yeterli. Ama 1G grafiği tek bir seansı çiziyor ve önceki günün seansı bu beş günlük sınırdan rahatça geçiyordu. Ana sayfanın endeks kartlarında bugünün yüzdesinin altında önceki günün seans çizgisi duruyordu.',
-    },
-    {
-      type: 'code',
-      lang: 'ts',
-      file: 'lib/providers/index.ts',
-      text: `if (!INTRADAY_RANGES.has(range)) return true;
-const last = bars[bars.length - 1];
-return etParts(new Date(last.time * 1000)).dateStr === status.sessionDate;`,
+      text: 'Aynı sorunun grafikteki karşılığını da buldum. Önbellekten gelen grafik verisi için tek bir sınır vardı: en fazla beş gün eski olabilirdi. Haftalık ve aylık grafiklerde bu yeterli. Ama günlük grafik tek bir seansı çiziyor ve önceki günün seansı o beş günlük sınırdan rahatça geçiyordu. Endeks kartlarında bugünün yüzdesinin altında dünün çizgisi duruyordu.',
     },
     {
       type: 'p',
-      text: 'Gün içi verisiyle çizilen aralıklarda (1G ve 1H) önbellekteki serinin son barı artık `sessionDate` gününe ait olmak zorunda. Aynı commit\'te bir sorun daha çıktı. Sağlayıcının "günlük bar" alanı, yani günün açılış, en yüksek, en düşük ve hacim değerleri, açılıştan önce bugünü değil önceki seansı gösteriyor. Sabah 05:41\'de şirketler tablosunda bu sabahın fiyatının yanında önceki günün işlem hacmi "Hacim" başlığıyla duruyordu.',
-    },
-    {
-      type: 'p',
-      text: 'O saatlerde bu alanlar artık boş geliyor. Sıfır yazmadım, çünkü "bu sabah hiç işlem olmadı" ile "bu sabahın verisi henüz yok" ayrı şeyler.',
+      text: 'Gün içi grafiklerde artık serinin son barı ekranın anlattığı güne ait olmak zorunda. Bir şey daha çıktı: sağlayıcının "günlük bar" dediği açılış, en yüksek, en düşük ve hacim değerleri, açılıştan önce bugünü değil önceki seansı anlatıyor. Sabah erken saatte şirketler tablosunda bu sabahın fiyatının yanında dünün hacmi duruyordu. O saatlerde bu alanlar artık boş geliyor. Sıfır yazmadım, çünkü "bu sabah hiç işlem olmadı" ile "bu sabahın verisi henüz yok" aynı şey değil.',
     },
 
     { type: 'h2', text: 'Güncel Olmayan Fiyat Yazıya Girmez' },
     {
       type: 'p',
-      text: 'Ekranda güncel olmayan bir fiyatı göstermenin dürüst bir yolu var: yanına bunu yazmak. Sağlayıcı cevap vermediğinde ekran önbellekteki fiyatı gösteriyor, altındaki satırda da "Önbellek · 19:56 Güncellendi · Güncel Olmayabilir" yazıyor. Okur sayıyı görüyor, ne kadar güveneceğine kendisi karar veriyor.',
+      text: 'Ekranda eski bir fiyatı göstermenin dürüst bir yolu var: yanına bunu yazmak. Sağlayıcı cevap vermediğinde ekran önbellekteki fiyatı gösteriyor ve altına "önbellek, güncel olmayabilir" diye not düşüyor. Okuyan kişi sayıyı görüyor, ne kadar güveneceğine kendisi karar veriyor.',
     },
     {
       type: 'p',
-      text: 'Yazılarda bu yol yok. Günlük bülteni ve olay yazılarını zamanlanmış görevler yazıyor, veriyi de sitenin bir API ucundan alıyor. Oradan çıkan sayı metne giriyor ve orada kalıyor. "S&P 500 bugün %1,2 yükseldi" cümlesini yayımlandıktan sonra kimse dönüp düzeltmiyor. Bu yüzden o uçlar güncel olmayan fiyatı hiç vermiyor: değer boş geliyor, yanında da bunun nedenini belirten bir alan geliyor.',
+      text: 'Yazılarda bu yol yok. Günlük bülteni ve olay yazılarını zamanlanmış görevler yazıyor, veriyi sitenin bir API ucundan alıyor. Oradan çıkan sayı metne giriyor ve orada kalıyor; "S&P 500 bugün yüzde 1,2 yükseldi" cümlesini yayınlandıktan sonra kimse dönüp düzeltmiyor. Bu yüzden o uçlar eski fiyatı hiç vermiyor. Değer boş geliyor, yanında da bunun nedenini söyleyen bir alan geliyor. Görev o cümleyi hiç yazmıyor.',
     },
     {
       type: 'code',
@@ -163,21 +134,17 @@ indicesStale = quotes.ok ? Boolean(quotes.stale) : true;`,
     },
     {
       type: 'p',
-      text: 'Bu alan, `indices_stale`, yalnızca fiyatlar güncel değilken değil, her cevapta var. Sadece sorun olduğunda eklenseydi, alanın olmadığı bir cevapta görev "her şey yolunda" ile "bu kontrol hiç yapılmadı" arasındaki farkı anlayamazdı. Değer boş gelirse görev o cümleyi hiç yazmıyor.',
+      text: 'Bu alan her cevapta var, yalnızca sorun olduğunda değil. Sadece sorun olduğunda eklenseydi, alanın olmadığı bir cevapta görev "her şey yolunda" ile "bu kontrol hiç yapılmadı" arasındaki farkı anlayamazdı.',
     },
 
     { type: 'h2', text: 'Her Kontrolün Bir Bedeli Var' },
     {
       type: 'p',
-      text: 'Önbelleği atlayan her tekrar, sağlayıcıya giden bir istek daha demek. 3 Ekim\'deki ilk sürümde 1G grafiği için bir kontrol daha vardı: grafiğin son barı, şu andan en fazla 15 dakika artı bir bar süresi kadar geride olabilirdi. Ama az işlem gören SHAZ\'da beş dakikalık 79 aralığın yalnızca 73\'ünde işlem vardı. Yani son dakikalarda bar olmaması normaldi, kontrol ise bunu hata sayıp her istekte önbelleği atlatıyordu.',
+      text: "Önbelleği atlayan her tekrar, sağlayıcıya giden bir istek daha demek. Bir ara günlük grafik için fazladan bir kontrol daha vardı: son bar şu andan en fazla on beş dakika artı bir bar süresi geride olabilirdi. Ama az işlem gören bir hissede beş dakikalık aralıkların bir kısmında hiç işlem olmuyor. Son dakikalarda bar olmaması normaldi; kontrol bunu hata sayıp her istekte önbelleği atlatıyordu. O kontrolü kaldırdım.",
     },
     {
       type: 'p',
-      text: 'Aynı gün o kontrolü kaldırdım. Seans içinde artık yalnızca fiyatın ve grafiğin sağlayıcıdan ne zaman alındığına bakılıyor. Cumartesi canlı sunucuda MU, SNDK ve SHAZ\'ın 1G grafiğinde son bar cuma 19:55\'teydi ve kapanışı başlıktaki fiyatla birebir aynıydı.',
-    },
-    {
-      type: 'p',
-      text: '16 Eylül\'den 3 Ekim\'e kadar bu kontrol commit commit şekillendi ve her düzeltme bir sonraki boşluğu ortaya çıkardı. Gün kontrolü fiyatın ne zaman alındığına bakmıyordu. Bunu ekleyince piyasanın kapalı olduğu saatler açıkta kaldı, onu düzeltince de yarım günler. Bu durumları artık testler yakalıyor. Henüz test edilmemiş durum hangisi, bilmiyorum. Tahminim şu: onu da bir okurun ekranında, hiçbir hata mesajı görmeden bulacağım.',
+      text: 'Bir ay boyunca bu kontrol parça parça şekillendi ve her düzeltme bir sonraki boşluğu ortaya çıkardı. Gün kontrolü fiyatın ne zaman alındığına bakmıyordu. Onu ekleyince piyasanın kapalı olduğu saatler açıkta kaldı, onu düzeltince de yarım günler. Bu durumları artık testler yakalıyor. Henüz test edilmemiş durum hangisi, bilmiyorum. Tahminim şu: onu da bir okurun ekranında, hiçbir hata mesajı görmeden bulacağım.',
     },
   ],
 }

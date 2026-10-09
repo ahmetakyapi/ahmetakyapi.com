@@ -1268,7 +1268,6 @@ html.theme-switching::view-transition-new(root) {
   :is(
       .ink,
       .home-title .home-mask-in,
-      .prest-title,
       .bl-archive-title,
       .bl-featured-title,
       .prow-title,
@@ -1308,7 +1307,6 @@ html.theme-switching::view-transition-new(root) {
   :is(
       .ink-blue,
       .home-post-title,
-      .prest-title,
       .bl-archive-title,
       .bl-featured-title,
       .prow-title,
@@ -1348,7 +1346,7 @@ html.theme-switching::view-transition-new(root) {
 }
 
 @media (forced-colors: active) {
-  :is(.ink, .home-title .home-mask-in, .home-title-accent, .prest-title, .bl-archive-title, .bl-featured-title, .post-title, .post-prose > h2, .post-prose > h3) {
+  :is(.ink, .home-title .home-mask-in, .home-title-accent, .bl-archive-title, .bl-featured-title, .post-title, .post-prose > h2, .post-prose > h3) {
     background: none;
     -webkit-text-fill-color: currentColor;
     color: CanvasText;

@@ -8,7 +8,7 @@ export const projects: Project[] = [
     slug: 'acilis-zili',
     group: 'platform',
     description:
-      'ABD piyasasını kendi takibim için tek ekrana indiren site. Bilanço takvimi ve her bilanço için yazılan analizler, 500\'ü aşkın şirketlik dizin, makro göstergeler, haberler ve takip listesi bir arada. Üstüne her gün yazılan bülten ve olay bazlı uzun yazılar.',
+      'ABD borsasını Türkiye saatiyle, Türkçe ve tek ekrandan takip etmek için kurduğum site. Endeksler, binden fazla şirketin sayfası, bilanço takvimi ve her bilanço için yazılan analizler, makro göstergeler, haber akışı ve takip listeleri bir arada. Üstüne her gün yazılan bir bülten, olayların arkasındaki mekanizmayı anlatan uzun yazılar ve günde üç kez yenilenen teknik analizler. İki dil, açık ve koyu tema; ücretsiz ve reklamsız.',
     detail:
       'Analizlerde oran değil oranın böleni saklanıyor: F/K\'nin payı fiyat olduğu için kaydedilen oran ertesi gün yanlış olmaya başlıyor. Her kartın altında kaynak ve saat damgası var; veri yoksa kart boş kalıyor.',
     tags: ['Next.js 16', 'React 19', 'Tailwind v4', 'Drizzle', 'Neon', 'next-auth v5'],
@@ -33,9 +33,9 @@ export const projects: Project[] = [
     slug: 'mimio',
     group: 'platform',
     description:
-      'Ergoterapistlerin danışan takibini, seans planlamasını ve terapi sürecini tek panelde yönetmesi için kurulan klinik platform. Danışan profilleri, haftalık akış, terapi oyunları ve ilerleme grafikleri aynı sistemin içinde.',
+      'Ergoterapistlerin danışanlarını, seanslarını ve terapi oyunlarını tek panelde yönettiği klinik uygulama. Danışan profilleri, haftalık terapi programı, seansta tarayıcıdan açılan yedi terapi oyunu, seans notları ve ilerleme raporu aynı yerde. Oyunlar ergoterapi literatüründeki ölçeklere dayanıyor ve her oyunun skoru doğrudan danışanın dosyasına düşüyor; zamanla o dosyadan bir ilerleme çizgisi çıkıyor.',
     detail:
-      'Seans notları SOAP standardında tutuluyor; kendi alanlarımı uydurmak yerine mesleğin zaten kullandığı formatı aldım. Yedi terapi oyununun skorları danışan dosyasına düşüyor.',
+      'Seans notları serbest metin ya da mesleğin kendi biçimi olan SOAP notu olarak tutuluyor; kendi alanlarımı uydurmak yerine mesleğin zaten kullandığı formatı aldım. Panelde klinik veri durduğu için hiçbir yere analitik, hata izleme ya da üçüncü taraf script koymadım.',
     tags: ['Next.js 15', 'TypeScript', 'Tailwind v4', 'Neon', 'Framer Motion'],
     link: 'https://mimios.vercel.app',
     github: 'https://github.com/ahmetakyapi/Mimio',
@@ -53,9 +53,9 @@ export const projects: Project[] = [
     slug: 'onepiece-hub',
     group: 'platform',
     description:
-      'One Piece evrenini Türkçe içerikle düzenli ve keşfedilebilir hale getiren fan platformu. Ark takibi, karakter ilişkileri, quiz modu ve hızlı arama aynı sitede.',
+      'One Piece evrenini Türkçe ve spoiler yemeden gezmek için yaptığım fan sitesi. Otuz altı ark on saga altında ve filler bölümler ayıklanmış sırada; altmış altı karakter, şeytan meyveleri, büyük savaşlar, karakter ilişkileri haritası, her ark için quiz ve ⌘K ile açılan arama. İzlediğin bölümleri işaretleyip kaldığın yeri hatırlayabiliyorsun.',
     detail:
-      'Spoiler kapısı var: hangi arkta olduğunu söylüyorsun, sonrasına ait her şey bulanıklaşıyor. Ekran okuyucuya da içerik sızmıyor.',
+      'Spoiler perdesi var: hangi arkta olduğunu söylüyorsun, sonrasına ait kartlar bulanıklaşıyor ve istersen tek tek açıyorsun. İçeriğin tamamı tipli TypeScript dosyalarında duruyor; veritabanı yalnızca izleme ilerlemesini ve quiz skorlarını tutuyor.',
     tags: ['Next.js 14', 'TypeScript', 'Drizzle', 'Neon', 'JWT'],
     link: 'https://onepiece-hub.vercel.app',
     github: 'https://github.com/ahmetakyapi/onepiece-hub',
@@ -73,7 +73,7 @@ export const projects: Project[] = [
     slug: 'harfiyen',
     group: 'oyun',
     description:
-      'Her gün saat 09:00\'da üç yeni Türkçe kare bulmaca: 6×6 kolay, 8×8 orta, 10×10 zor. Süre bazlı liderlik tablosu, seri takibi ve geçmiş günlere dönebildiğin bir arşiv var.',
+      'Her gün saat 09:00\'da üç yeni Türkçe kare bulmaca yayınlayan günlük oyun. 6×6 kolay, 8×8 orta ve 10×10 zor; süre bazlı liderlik tablosu, seri takibi ve geçmiş günlere dönebildiğin bir arşiv var.',
     detail:
       'Cevaplar istemciye hiç gitmiyor, süre sunucu saatiyle ölçülüyor. Bulmaca havuzu kelime bankasından toplu üretiliyor.',
     tags: ['Next.js', 'TypeScript', 'Drizzle', 'Neon', 'Vitest'],
@@ -91,7 +91,7 @@ export const projects: Project[] = [
     slug: 'elevenforge',
     group: 'oyun',
     description:
-      '16 arkadaşın aynı ligde yarıştığı Türkçe futbol menajerlik oyunu. Davet koduyla katılıyorsun, boş kalan yerleri bot dolduruyor ve maçlar ligi kuran kişinin seçtiği saatte simüle ediliyor.',
+      '16 arkadaşın aynı ligde yarıştığı Türkçe futbol menajerlik oyunu. Davet koduyla katılıyorsun, boş kalan yerleri bot dolduruyor, kadronu ve taktiğini kuruyorsun; maçlar ligi kuran kişinin seçtiği saatte simüle ediliyor ve canlı anlatımla izleniyor.',
     detail:
       'Maç motoru deterministik: fikstür kimliğinden üretilen tohum, aynı maçı tekrar oynattığında aynı skoru veriyor. Transfer pazarında iyimser kilitleme var: on alıcıdan yalnızca biri kazanıyor.',
     tags: ['Next.js 16', 'React 19', 'Drizzle', 'TypeScript', 'Cron'],
@@ -168,7 +168,7 @@ export const projects: Project[] = [
     slug: 'derinay',
     group: 'platform',
     description:
-      'Tek kişilik bir klinik pratiğin yönetim paneli: gelir-gider, danışan, seans, fatura, ödeme ve vergi takibi tek sakin arayüzde toplanıyor.',
+      'Tek kişilik bir klinik pratiğin bütün yönetimini tek sakin arayüzde toplayan panel. Gelir-gider, danışan ve seans takibi, fatura, ödeme ve vergi; serbest meslek makbuzu, KDV ve stopaj hesapları panelin içinde, danışanla ilgilenmek dışında her şey tek yerde.',
     detail:
       'Grafikler ana pakete girmiyor; Recharts ayrı bir lazy katmandan yükleniyor. Varsayılan tema açık.',
     tags: ['Next.js 14', 'Drizzle', 'Neon', 'Recharts', 'next-auth v5'],

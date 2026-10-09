@@ -4,139 +4,62 @@ export const post: BlogPost = {
   slug: 'socket-io-ile-oda-tabanli-multiplayer',
   tag: 'Gerçek Zamanlı',
   tagColor: '#22d3ee',
-  title: "Karalama: Çiz ve Tahmin Et",
+  title: 'Karalama: Arkadaşlarla Oynanan Çizim Oyunu',
   excerpt:
-    'Bir çizim oyunu yazdım. Kodun en çok dikkat isteyen yeri, "İSTANBUL" yazanın doğru bildiğine karar veren fonksiyon oldu, çünkü toLowerCase() Türkçe bilmiyor.',
+    "Karalama, kayıt olmadan bir bağlantıyla oynanan Türkçe çizim ve tahmin oyunu. Oyunun nasıl işlediğini, sunucunun neden her kararı kendisinin verdiğini ve Türkçe harflerin başıma açtığı işi anlatıyorum.",
   date: '2026-05-15',
   coverGradient: 'linear-gradient(135deg, #22d3ee 0%, #0ea5e9 50%, #6366f1 100%)',
   content: [
     {
       type: 'lead',
-      text: 'Karalama\'nın test dosyasında iki satır var ve oyunun temel kuralını onlar tutuyor: "İSTANBUL" yazan "istanbul"u, "KIŞ" yazan "kış"ı bilmiş sayılmalı. JavaScript\'in `toLowerCase()` fonksiyonu ikisini de yanlış yapıyor. WebSocket tarafı hazır bir kütüphaneyle çözüldü; Türkçe harfler için kendi kodumu yazmam gerekti.',
+      text: "Karalama, arkadaşlarınla oynadığın bir çizim ve tahmin oyunu. Biri oda açıyor, bağlantıyı gruba atıyor, kayıt filan yok. Sırası gelen üç kelimeden birini seçip çiziyor, ötekiler sohbete tahmin yazıyor; süre azaldıkça kelimenin harfleri ipucu olarak açılıyor ve erken bilen daha çok puan alıyor. Kelimelerin hepsi Türkçe, on sekiz kategoride binin üstünde kelime var.",
     },
     {
       type: 'p',
-      text: 'Karalama, kayıt olmadan arkadaşlarla oynanan bir çizim-tahmin oyunu. Biri çiziyor, ötekiler tahmin ediyor, süre dolunca sıra değişiyor. Arkasında bir monorepo ve üç paket var.',
+      text: 'Benzerlerini herkes bilir; benim istediğim Türkçe kelimelerle, Türkçe harflerle ve telefonda rahat oynanan bir sürümdü. Bir de oyunun kurallarını sunucunun tuttuğu bir yapı kurmak istiyordum; önceki gerçek zamanlı denemelerimde bunu hiç yapmamıştım.',
     },
 
-    { type: 'h2', text: 'Önce Mimari: Neden Monorepo' },
+    { type: 'h2', text: 'Oyun Nasıl İşliyor' },
+    {
+      type: 'table',
+      head: ['Ayar', 'Değer'],
+      rows: [
+        ['Oyuncu Sayısı', '2 ile 12 arası'],
+        ['Bot', 'En fazla 5; kişi azsa lobiden çağırılıyor'],
+        ['Çizim Süresi', '30 ile 120 saniye arası, oda kurucusu seçiyor'],
+        ['Kelime Seçme', '15 saniye; seçilmezse rastgele atanıyor'],
+        ['İlk Harf İpucu', 'Sürenin üçte ikisi kalınca'],
+        ['İkinci Harf', 'Sürenin üçte biri kalınca'],
+        ['Kelime Havuzu', '1.071 kelime: 390 kolay, 527 orta, 154 zor'],
+      ],
+    },
     {
       type: 'p',
-      text: 'Oyun iki ayrı yerde çalışıyor: Next.js istemcisi Vercel\'de, Socket.io sunucusu Railway\'de. İkisi de aynı tipleri kullanıyor: oda durumu, oyuncu, çizim verisi, olay adları. Bunları iki yere kopyalarsan, bir tarafta alan adı değişip ötekinde değişmediği gün oyun hata vermeden bozulur. Bu yüzden tipler en baştan ortak bir pakette.',
+      text: 'Çizecek kişiye her turda üç kelime sunuluyor, mümkünse her zorluktan bir tane. "Merdiven" birkaç çizgiyle anlatılabiliyor; "özgürlük" zor seviyede ve karşılığında puanı bir buçuk kat. Oda kurucusu isterse havuza kendi kelimelerini de ekleyebiliyor. İki kişi oynamak isterse boş yerleri botlar dolduruyor; adları Fırça, Kalem, Palet, Tuval ve Piksel.',
+    },
+
+    { type: 'h2', text: 'Nasıl Kurdum' },
+    {
+      type: 'p',
+      text: "Oyun iki ayrı yerde çalışıyor: Next.js ile yazılmış arayüz Vercel'de, Socket.io sunucusu Railway'de. İkisi de aynı tipleri kullanıyor; oda durumu, oyuncu, çizim verisi, olay adları. Bunları iki yere kopyalarsan bir tarafta alan adı değişip ötekinde değişmediği gün oyun hata vermeden bozulur. O yüzden tipler en baştan ortak bir pakette ve proje bir monorepo.",
     },
     {
       type: 'steps',
       items: [
-        { title: 'apps/web', text: 'Next.js istemcisi: çizim tuvali, sohbet, oda ekranları. Vercel.' },
-        { title: 'apps/server', text: 'Socket.io sunucusu: oda yönetimi, tur akışı, puanlama. Railway.' },
-        { title: 'packages/shared', text: 'Tipler, sabitler, puanlama fonksiyonları. İki tarafın da import ettiği tek kaynak.' },
+        { title: 'apps/web', text: 'Next.js arayüzü: çizim tuvali, sohbet, lobi ve skor ekranları. Durum yönetimi Zustand ile.' },
+        { title: 'apps/server', text: 'Socket.io sunucusu: oda yönetimi, tur akışı, puanlama, botlar.' },
+        { title: 'packages/shared', text: 'Tipler, sabitler ve puan formülü. İki tarafın da içe aktardığı tek kaynak.' },
       ],
     },
-
-    { type: 'h2', text: 'Türkçe Küçük Harf Tuzağı' },
     {
       type: 'p',
-      text: 'Tahmini cevapla karşılaştırmak normalde tek satır: `a.toLowerCase() === b.toLowerCase()`. Türkçede bu yetmiyor.',
-    },
-    {
-      type: 'p',
-      text: '`toLowerCase()` dile bakmadan genel Unicode kurallarını uyguluyor. Büyük "İ"yi "i" yapıyor ama arkasına birleştirici bir nokta (U+0307) ekliyor. Büyük "I"yı da "i" yapıyor, oysa Türkçede "ı" olmalı.',
-    },
-    {
-      type: 'compare',
-      label: 'Kullanıcı "İSTANBUL" Yazdı, Cevap "istanbul"',
-      before: { label: 'toLowerCase()', value: 'Eşleşmiyor' },
-      after: { label: 'Önce Harf Değişimi', value: 'Eşleşiyor' },
-      note: '"İ".toLowerCase() sonucu tek harf değil, iki karakter: "i" ve U+0307. Ekranda aynı görünüyor, karşılaştırmada eşit değil.',
-    },
-    {
-      type: 'code',
-      lang: 'ts',
-      file: 'packages/shared/src/scoring.ts',
-      text: `export function normalizeGuess(text: string): string {
-  // Türkçe harfleri toLowerCase'den ÖNCE değiştirmek zorunlu:
-  // "İ".toLowerCase() → "i" + U+0307, "I".toLowerCase() → "i" (ı değil)
-  return text
-    .replace(/İ/g, 'i')
-    .replace(/I/g, 'ı')
-    .toLowerCase()
-    .replace(/[^a-zçğıöşüâîû\\s]/g, '')
-    .trim()
-}`,
-    },
-    {
-      type: 'p',
-      text: 'Sondaki `replace` noktalamayı ve rakamları siliyor; testte `"  ,Kedi!"` girdisi `"kedi"` oluyor. Şapkalı harfler listede, çünkü kelime havuzunda "rüzgâr", "hâkim" ve "yapay zekâ" var.',
-    },
-    {
-      type: 'callout',
-      variant: 'tip',
-      text: 'Bugün yazsam harfleri elle değiştirmezdim: `"İSTANBUL".toLocaleLowerCase("tr-TR")` doğrudan "istanbul", `"KIŞ".toLocaleLowerCase("tr-TR")` doğrudan "kış" veriyor. O iki `replace` satırı, dile göre çalışan tek bir çağrının elle yazılmış hâli.',
+      text: 'Veritabanı yok. Oda kodu altı karakter, oda nesnesi sunucunun belleğinde bir Map içinde duruyor. Beş dakikada bir temizlik çalışıyor ve otuz dakika hareketsiz kalan oda siliniyor. Sunucu yeniden başlarsa bütün odalar gidiyor; bunu baştan kabul ettim. On dakika süren bir oyun için kalıcı kayıt tutmaya değmedi.',
     },
 
-    { type: 'h3', text: 'Yakın Tahmin' },
+    { type: 'h2', text: 'Kararları Sunucu Veriyor' },
     {
       type: 'p',
-      text: 'Hızlı yazan biri harf atlıyor: "bisiklet" yerine "bisklet". Bu doğru sayılmamalı, ama oyuncuya "çok yaklaştın" demek işe yarıyor. Sunucu tahmini cevapla Levenshtein uzaklığına göre karşılaştırıyor; fark en fazla iki harfse yalnızca yazan kişiye haber veriyor.',
-    },
-    {
-      type: 'code',
-      lang: 'ts',
-      file: 'apps/server/src/game/Room.ts',
-      text: `// Close guess — only notify the guesser, don't broadcast text to others
-if (answer.length > 3 && levenshtein(normalized, answer) <= 2) {
-  const socket = this.io.sockets.sockets.get(playerId);
-  if (socket) {
-    socket.emit('game:closeGuess');
-  }
-  return null;
-}`,
-    },
-    {
-      type: 'p',
-      text: 'Burada iki karar var. Birincisi `answer.length > 3`: kısa kelimelerde iki harflik eşik bir şey ifade etmiyor. Cevap "at" iken "el" yazan biri de iki harf uzakta; o kontrol olmasa oyun ona "çok yakınsın" derdi. İkincisi `return null`: yakın tahmin sohbete düşmüyor. Düşseydi "bisklet" mesajı herkese cevabı ele verirdi.',
-    },
-
-    { type: 'h2', text: 'Çizimi Nasıl Gönderiyorum' },
-    {
-      type: 'p',
-      text: 'Fare her kıpırdadığında paket göndermek, ekranın yenileme hızı kadar mesaj demek. Bu yüzden çizim olayları 33 milisaniyede bire, yani saniyede yaklaşık 30\'a sınırlı. Sohbetin de kendi sınırı var.',
-    },
-    {
-      type: 'code',
-      lang: 'ts',
-      file: 'packages/shared/src/constants/game.ts',
-      text: `export const MAX_CHAT_LENGTH = 100;
-export const CHAT_RATE_LIMIT_MS = 500;
-export const DRAW_RATE_LIMIT_MS = 33; // ~30fps`,
-    },
-    {
-      type: 'p',
-      text: 'Koordinatlar piksel yerine 0 ile 1 arasında bir oran olarak gidiyor. Telefonda çizilen bir ev masaüstündeki geniş tuvalde de aynı yere düşüyor; telefonu yan çevirince çizim orantılı büyüyor.',
-    },
-    {
-      type: 'code',
-      lang: 'ts',
-      file: 'packages/shared/src/types/drawing.ts',
-      text: `export interface DrawPoint {
-  x: number; // normalized 0-1
-  y: number;
-  pressure?: number;
-}`,
-    },
-    {
-      type: 'p',
-      text: 'Aynı biçim botların işine de yaradı. Sırası gelen bot, 0-1 aralığında tanımlı hazır şekillerden birini çiziyor: daire, kare, ev, ağaç, yıldız, kalp, güneş, balık. Şekli rastgele seçiyor. `startBotDrawing` fonksiyonu kelimeyi parametre olarak alıyor ama gövdesinde hiç kullanmıyor; yani cevap "merdiven" iken ekrana bir balık gelebiliyor. Kodun başındaki yorum "basit, tanınabilir şekiller" diyor ve bu davranışı ekleyen commit\'in mesajı neden böyle olduğunu söylemiyor. Şu hâliyle bot çizdiğinde çizim cevaba ancak tesadüfen benziyor.',
-    },
-
-    { type: 'h2', text: 'Puanı Kim Hesaplıyor' },
-    {
-      type: 'p',
-      text: 'Karalama\'da puanı sunucu hesaplıyor. Tahmin sohbetten düz metin olarak geliyor; kimin yazdığını istemci söylemiyor, sunucu bunu bağlantının kendi kimliğinden (`socket.id`) biliyor. Kelime de tur bitene kadar yalnızca çizen kişide. Tahmin edenlere yalnızca ipucu ve harf sayısı gidiyor.',
-    },
-    {
-      type: 'p',
-      text: 'Puan formülü `packages/shared` içinde ama onu yalnızca sunucu çağırıyor. İstemci de aynı fonksiyonu import edebilir; sonucu önceden göstermek için kullanabilir, karar vermek için kullanamaz.',
+      text: 'Oyunun özünde üç karar var: tahmin doğru mu, cevabı kim biliyor, puanı kim veriyor. Üçünün de cevabı sunucu. Tahmin sohbetten düz metin olarak geliyor; kimin yazdığını mesajın içinden değil, bağlantının kendi kimliğinden okuyorum. Kelime de tur bitene kadar yalnızca çizen kişide. Tahmin edenlerin tarayıcısına kelimenin kendisi hiç gitmiyor, sadece harf sayısı ve açılan ipuçları gidiyor. İsteyen ağ sekmesini açsın; orada bulacağı bir şey yok.',
     },
     {
       type: 'code',
@@ -153,59 +76,67 @@ export const DRAW_RATE_LIMIT_MS = 33; // ~30fps`,
     },
     {
       type: 'p',
-      text: '`speedBonus` kaçıncı bildiğine bakıyor: ilk bilen 50, ikinci 35, üçüncü 20, dördüncü 5, sonrası sıfır. Zorluk çarpanı kolayda 1, ortada 1,2, zorda 1,5. Çizen kişinin puanı ayrı hesaplanıyor: kaç kişinin bildiğiyle orantılı, en fazla 200. Kimse bilemezse sıfır alıyor; yani herkesi elemek için kasten kötü çizmek işe yaramıyor.',
+      text: 'Puan formülü ortak pakette ama onu yalnızca sunucu çağırıyor. İlk bilen 50, ikinci 35, üçüncü 20 puan bonus alıyor; sonrası sıfır. Çizen kişinin puanı da ayrı: kaç kişinin bildiğiyle orantılı, kimse bilemezse sıfır. Yani herkesi elemek için kasten kötü çizmek işe yaramıyor.',
     },
 
-    { type: 'h2', text: 'Odalar Bellekte' },
+    { type: 'h2', text: 'Türkçe Harf Tuzağı' },
     {
       type: 'p',
-      text: 'Veritabanı yok. Oda kodu altı karakter, oda nesnesi sunucunun belleğinde bir `Map` içinde duruyor. Beş dakikada bir temizlik çalışıyor ve 30 dakika hareketsiz kalan oda siliniyor.',
+      text: 'Tahmini cevapla karşılaştırmak normalde tek satır: ikisini küçük harfe çevir, eşit mi bak. Türkçede bu yetmiyor. JavaScript\'in `toLowerCase()` fonksiyonu dile bakmadan genel kuralları uyguluyor. Büyük "İ"yi "i" yapıyor ama arkasına görünmez bir birleştirici nokta ekliyor; büyük "I"yı da "i" yapıyor, oysa Türkçede "ı" olmalı. Yani "İSTANBUL" yazan biri "istanbul"u bilememiş sayılıyor.',
     },
     {
-      type: 'table',
-      head: ['Ayar', 'Değer'],
-      rows: [
-        ['Oyuncu Sayısı', '2-12'],
-        ['Bot', 'En fazla 5'],
-        ['Çizim Süresi', '30-120 sn'],
-        ['Kelime Seçme', '15 sn, seçilmezse rastgele atanıyor'],
-        ['İlk Harf İpucu', 'Sürenin %66\'sı kalınca'],
-        ['İkinci Harf', 'Sürenin %33\'ü kalınca'],
-        ['Oda Ömrü', '30 dk hareketsizlik'],
-      ],
+      type: 'compare',
+      label: 'Oyuncu "İSTANBUL" Yazdı, Cevap "istanbul"',
+      before: { label: 'toLowerCase()', value: 'Eşleşmiyor' },
+      after: { label: 'Önce Harf Değişimi', value: 'Eşleşiyor' },
+      note: 'Küçültülmüş "İ" tek harf değil, iki karakter. Ekranda aynı görünüyor, karşılaştırmada eşit değil.',
+    },
+    {
+      type: 'code',
+      lang: 'ts',
+      file: 'packages/shared/src/scoring.ts',
+      text: `export function normalizeGuess(text: string): string {
+  return text
+    .replace(/İ/g, 'i')
+    .replace(/I/g, 'ı')
+    .toLowerCase()
+    .replace(/[^a-zçğıöşüâîû\\s]/g, '')
+    .trim()
+}`,
     },
     {
       type: 'p',
-      text: 'Bu kararın bir bedeli var. Sunucu yeniden başlarsa bütün odalar gidiyor; bunu baştan kabul ettim. Bağlantı kopmaları ise iki hata çıkardı. Oyun ortasında bağlantısı kopup geri gelen oyuncu "oyun devam ediyor" hatasına takılıp dışarıda kalıyordu. Çizen kişi tur bitmeden çıkınca da tur, kelime açıklanmadan ve skor gösterilmeden geçiliyordu. İkisini de 15 Mayıs\'taki bir commit\'le düzelttim: geri gelen oyuncu oyuna dönebiliyor, çizen çıkarsa tur kelimeyi ve skorları gösterip kapanıyor.',
-    },
-    {
-      type: 'callout',
-      variant: 'info',
-      text: 'İki kişi oynamak isterse boş yerleri bot doldurabiliyor. İsimleri Türkçe: Fırça, Kalem, Palet, Tuval, Piksel. Tahmin ederken her bot önce bir ile üç arası yanlış kelime yazıyor, sonra sürenin %30 ile %80\'i arasında bir anda doğruyu buluyor. Koddaki yorum iki ile dört yanlış tahmin yazıyor, ama hesap `1 + Math.floor(Math.random() * 3)` ve bu 1, 2 ya da 3 veriyor. Botlar her seferinde ilk bilen olsaydı insanlar puan alamazdı.',
+      text: 'Sondaki temizlik noktalamayı ve rakamları siliyor; şapkalı harfler listede, çünkü havuzda "rüzgâr" ve "yapay zekâ" gibi kelimeler var. Bugün yazsam harfleri elle değiştirmezdim: `toLocaleLowerCase("tr-TR")` aynı işi tek çağrıda yapıyor. O iki satır, dile göre çalışan bir fonksiyonun elle yazılmış hâli.',
     },
 
-    { type: 'h2', text: 'Kelime Havuzu' },
+    { type: 'h3', text: 'Yakın Tahmin' },
     {
       type: 'p',
-      text: 'Havuzda 1071 kelime var ve üç zorluğa ayrılmış: 390 kolay, 527 orta, 154 zor. Zorluk hem puan çarpanını hem seçenekleri belirliyor; çizecek kişiye her turda üç kelime sunuluyor, mümkünse her zorluktan bir tane.',
+      text: 'Hızlı yazan biri harf atlıyor: "bisiklet" yerine "bisklet". Bu doğru sayılmamalı ama oyuncuya "çok yaklaştın" demek oyunu güzelleştiriyor. Sunucu tahmini cevapla harf uzaklığına göre karşılaştırıyor; fark en fazla iki harfse yalnızca yazan kişiye haber veriyor ve mesajı sohbete düşürmüyor. Düşürseydi "bisklet" mesajı herkese cevabı ele verirdi. Kısa kelimelerde bu kontrol kapalı, çünkü cevap "at" iken "el" yazan biri de iki harf uzakta.',
+    },
+
+    { type: 'h2', text: 'Çizimi Nasıl Gönderiyorum' },
+    {
+      type: 'p',
+      text: 'Fare her kıpırdadığında paket göndermek, ekranın yenileme hızı kadar mesaj demek. Çizim olayları saniyede yaklaşık otuzla sınırlı, sohbetin de kendi sınırı var. Koordinatlar piksel yerine 0 ile 1 arasında bir oran olarak gidiyor; telefonda çizilen bir ev masaüstündeki geniş tuvalde de aynı yere düşüyor, telefonu yan çevirince çizim orantılı büyüyor.',
     },
     {
       type: 'p',
-      text: '"Merdiven" gibi bir kelime birkaç çizgiyle anlatılabiliyor. "Özgürlük" ise havuzda zor seviyede duruyor; çizmesi de bilmesi de zor, karşılığında puanı 1,5 kat.',
+      text: 'Aynı biçim botların da işine yaradı. Sırası gelen bot hazır şekillerden birini çiziyor: daire, ev, ağaç, yıldız, kalp, balık. Şekli rastgele seçtiği için cevap "merdiven" iken ekrana bir balık gelebiliyor. Bunu bilerek bıraktım; botun çizimi oyunu doldurmak için var, kazanmak için değil. Tahmin ederken de bot önce bir iki yanlış kelime yazıyor, sonra sürenin bir yerinde doğruyu buluyor. Her seferinde ilk bilen olsaydı insanlar puan alamazdı.',
     },
 
     { type: 'h2', text: 'Bugün Olsa Neyi Değiştirirdim' },
     {
       type: 'p',
-      text: 'Düz WebSocket\'i ciddi olarak denerdim. Yeniden bağlanmayı ve odaları Socket.io hazır veriyor, ama karşılığında istemciye ayrı bir paket iniyor (belgelerine göre küçültülmüş ve sıkıştırılmış hâli 14,7 KB) ve özelliklerinin yalnızca bir kısmını kullanıyorum.',
+      text: 'Düz WebSocket\'i ciddi olarak denerdim. Yeniden bağlanmayı ve odaları Socket.io hazır veriyor ama karşılığında tarayıcıya ayrı bir paket iniyor ve özelliklerinin yalnızca bir kısmını kullanıyorum.',
     },
     {
       type: 'p',
-      text: 'Tur akışını da en baştan bir durum makinesi (state machine) olarak yazardım. Şu an `Room.ts` içinde 17 ayrı `this.phase` kontrolü var. Çalışıyor, ama yeni bir aşama eklemek o 17 yeri tek tek gezmek demek.',
+      text: 'Tur akışını da en baştan bir durum makinesi olarak yazardım. Şu an oda sınıfının içinde on yedi ayrı "hangi aşamadayız" kontrolü var. Çalışıyor, ama yeni bir aşama eklemek o on yedi yeri tek tek gezmek demek. Bağlantısı kopup geri gelen oyuncunun oyuna dönebilmesi ve çizen kişi çıkınca turun kelimeyi gösterip kapanması gibi düzeltmeler de bu dağınıklık yüzünden geç geldi.',
     },
     {
       type: 'p',
-      text: 'Emin olamadığım karar odaların bellekte durması. Bir gün biri "on dakika önce oynadığımız oda nerede" diye sorarsa verecek cevabım yok. O gün gelene kadar veritabanı eklemeyeceğim.',
+      text: 'Emin olamadığım tek karar odaların bellekte durması. Bir gün biri "on dakika önce oynadığımız oda nerede" diye sorarsa verecek cevabım yok. O gün gelene kadar veritabanı eklemeyeceğim.',
     },
   ],
 }

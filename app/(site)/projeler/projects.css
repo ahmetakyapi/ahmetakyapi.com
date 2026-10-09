@@ -125,24 +125,63 @@
   margin-top: 1.75rem;
 }
 
-/* --- Diğer projeler: tek satırlık liste -------------------------------------
+/* --- Diğer projeler: liste ---------------------------------------------------
    Telefonda (ve dokunmatik tablette) satırın başında küçük görsel:
-     [görsel] Ad              →
+     [görsel] Ad                          (→)
+              Tek cümle
               Kategori
    Ince imleçli geniş ekranda görsel satırdan çıkar ve önizlemeye döner:
-     Ad ....................... Kategori      → */
-.prest-title {
+     Ad                         Kategori   (→)
+     Tek cümle                  Teknoloji
+
+   Bölüm başlığı (`.prest-head`) satırların dilinden bilerek uzak: mono,
+   küçük ve sessiz; yanında sayı. 9 Ekim 2026: satır adlarıyla aynı
+   degrade ve puntodaydı, listenin ilk satırı gibi okunuyordu. */
+.prest-head {
+  display: grid;
+  gap: 0.5rem;
   margin-top: 3.5rem;
-  padding-bottom: 1rem;
-  font-size: clamp(1.75rem, 1.2rem + 2vw, 2.75rem);
-  line-height: 1.05;
-  font-weight: 700;
-  letter-spacing: -0.04em;
-  color: var(--text-strong);
+  padding-bottom: 1.25rem;
+}
+
+.prest-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 1.25rem;
+  color: var(--primary-ink);
+}
+
+/* Başlığın önünde kısa bir çizgi: ana sayfanın künye satırıyla aynı dil. */
+.prest-title::before {
+  content: "";
+  width: 1.75rem;
+  height: 1px;
+  background: currentColor;
+}
+
+.prest-count {
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  background: var(--primary-wash);
+  font-size: 0.75rem;
+  color: var(--primary-ink);
+}
+
+.prest-lead {
+  max-width: 52ch;
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--text-body);
+  text-wrap: pretty;
 }
 
 @media (min-width: 1024px) {
-  .prest-title {
+  .prest-head {
     margin-top: 5rem;
   }
 }
@@ -152,10 +191,11 @@
   grid-template-columns: 6.5rem minmax(0, 1fr) auto;
   grid-template-areas:
     "cover title arrow"
+    "cover lead arrow"
     "cover meta arrow";
   column-gap: 1rem;
   align-items: center;
-  padding-block: 0.9rem;
+  padding-block: 1rem;
 }
 
 .prow-title {
@@ -167,13 +207,29 @@
   letter-spacing: -0.03em;
   color: var(--text-strong);
   /* Degrade durakları da geçişte (globals.css → "Başlık mürekkebi"); bu
-     kural ortak kuralın `transition`ını eziyor, o yüzden burada da var. */
+     kural ortak kuralın `transition`ını eziyor, o yüzden burada da var.
+     `translate` YOK: ad bağlantının atası, dönüşüm alırsa bağlantının
+     satırı örten katmanı adın kutusuna büzülür (ok tıklanmaz). */
   transition:
     --g1 520ms var(--ease-brand),
     --g2 520ms var(--ease-brand) 40ms,
     --g3 520ms var(--ease-brand) 80ms,
-    opacity 420ms var(--ease-brand),
-    translate 480ms var(--ease-brand);
+    opacity 420ms var(--ease-brand);
+}
+
+/* Projenin tek cümlesi: kartla ve detayla aynı cümle (splitLead). */
+.prow-lead {
+  grid-area: lead;
+  margin-top: 0.3rem;
+  min-width: 0;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--text-body);
+  text-wrap: pretty;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
 }
 
 .prow-meta {
@@ -181,7 +237,7 @@
   align-self: start;
   display: grid;
   gap: 0.15rem;
-  margin-top: 0.3rem;
+  margin-top: 0.4rem;
   min-width: 0;
 }
 
@@ -216,14 +272,29 @@
   margin-inline: 0.5rem;
 }
 
+/* Ok: yuvarlak, çizgili bir düğme gibi; satırın üstünde durulunca birincil
+   renge dolar ve sağ yukarı kıpırdar (ana sayfanın Son Yazılar okuyla aynı).
+   Bağlantı DEĞİL, bağlantının katmanı onu da örtüyor; `aria-hidden`. */
 .prow-arrow {
   grid-area: arrow;
-  width: 1.125rem;
-  height: 1.125rem;
-  color: var(--text-muted);
+  display: inline-grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text-body);
   transition:
+    background-color 380ms var(--ease-brand),
+    border-color 380ms var(--ease-brand),
     color 380ms var(--ease-brand),
-    translate 480ms var(--ease-brand);
+    translate 320ms var(--ease-brand);
+}
+
+.prow-arrow svg {
+  width: 1rem;
+  height: 1rem;
 }
 
 .pprev {
@@ -240,16 +311,26 @@
 
 @media (min-width: 768px) {
   .prow-in {
-    grid-template-columns: 9rem minmax(0, 1fr) minmax(10rem, 16rem) 1.5rem;
-    grid-template-areas: "cover title meta arrow";
+    grid-template-columns: 9rem minmax(0, 1fr) minmax(10rem, 15rem) 2.5rem;
+    grid-template-areas:
+      "cover title meta arrow"
+      "cover lead meta arrow";
     column-gap: 2rem;
     padding-block: 1.25rem;
   }
   .prow-title {
-    align-self: center;
-    font-size: clamp(1.75rem, 0.9rem + 1.9vw, 2.75rem);
+    align-self: end;
+    font-size: clamp(1.625rem, 0.9rem + 1.5vw, 2.375rem);
     line-height: 1.05;
     letter-spacing: -0.04em;
+  }
+  .prow-lead {
+    align-self: start;
+    margin-top: 0.5rem;
+    max-width: 56ch;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    -webkit-line-clamp: 2;
   }
   .prow-meta {
     align-self: center;
@@ -266,8 +347,10 @@
    `display: none`: tembel yükleme onları istemez. */
 @media (hover: hover) and (pointer: fine) and (min-width: 768px) {
   .prow-in {
-    grid-template-columns: minmax(0, 1fr) minmax(10rem, 16rem) 1.5rem;
-    grid-template-areas: "title meta arrow";
+    grid-template-columns: minmax(0, 1fr) minmax(10rem, 15rem) 2.5rem;
+    grid-template-areas:
+      "title meta arrow"
+      "lead meta arrow";
     padding-block: 1.4rem;
   }
 
@@ -276,9 +359,9 @@
     --pp-gap: 2rem;
     position: absolute;
     top: 50%;
-    /* kategori sütunu (en çok 16rem) + ok (1,5rem) + iki aralık (2rem)
-       + nefes payı: önizleme kategori metnine değmesin (ölçüldü). */
-    right: calc(16rem + 1.5rem + 4rem + 2rem);
+    /* kategori sütunu (en çok 15rem) + ok (2,5rem) + iki aralık (2rem)
+       + nefes payı: önizleme kategori metnine değmesin. */
+    right: calc(15rem + 2.5rem + 4rem + 2rem);
     z-index: 30;
     width: var(--pp-width);
     pointer-events: none;
@@ -332,22 +415,21 @@
   }
 }
 
-/* Üstünde durma: ad hafifçe sağa, ok birincil renge. Yalnız gerçek
-   imleçte; dokunmatikte "hover" ilk dokunuşa yapışıyor. */
+/* Üstünde durma: ad markanın mavisine (globals.css → `.ink-hover`), ok
+   birincil renge dolar. Yalnız gerçek imleçte; dokunmatikte "hover" ilk
+   dokunuşa yapışıyor. Ada dönüşüm VERME (bkz. `.prow-title`). */
 @media (hover: hover) and (pointer: fine) {
-  .prow-in:hover .prow-title {
-    color: var(--primary-ink);
-  }
   .prow-in:hover .prow-arrow {
-    color: var(--primary-ink);
+    border-color: var(--primary);
+    background: var(--primary);
+    color: var(--on-primary);
   }
 }
 
 @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
-  .prow-in:hover .prow-title {
-    translate: 0.375rem 0;
+  .prow-in:hover .prow-arrow {
+    translate: 0.15rem -0.15rem;
   }
-  .prow-in:hover .prow-arrow,
   .pfeat-in:hover .pfeat-more svg {
     translate: 0.25rem 0;
   }
