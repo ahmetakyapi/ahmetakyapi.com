@@ -73,7 +73,7 @@ export function Footer() {
         </div>
 
         <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 border-t border-line py-6">
-          <p className="font-mono text-small text-muted">
+          <p className="text-small font-medium text-muted">
             © {year} Ahmet Akyapı · {JOB_TITLE}
           </p>
           <BackToTop className="max-md:hidden" />

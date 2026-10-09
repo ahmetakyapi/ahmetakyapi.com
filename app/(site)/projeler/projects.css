@@ -134,9 +134,10 @@
      Ad                         Kategori   (→)
      Tek cümle                  Teknoloji
 
-   Bölüm başlığı (`.prest-head`) satırların dilinden bilerek uzak: mono ve
-   sessiz, yanında sayı; açıklama satırı yok. 9 Ekim 2026: satır adlarıyla aynı
-   degrade ve puntodaydı, listenin ilk satırı gibi okunuyordu. */
+   Bölüm başlığı (`.prest-head`) satırların dilinden bilerek uzak: düz mavi,
+   önünde çizgi, yanında sayı; açıklama satırı yok. 9 Ekim 2026: satır
+   adlarıyla aynı degrade ve puntodaydı, listenin ilk satırı gibi okunuyordu.
+   Aynı gün mono yazı da kalktı (okunurluk). */
 .prest-head {
   display: grid;
   gap: 0.5rem;
@@ -144,14 +145,16 @@
   padding-bottom: 1.25rem;
 }
 
+/* 9 Ekim 2026: mono ve açık harf aralığından gövde yazısına geçti
+   (sitede mono yalnız rakam ve kod için). Satır adlarından ayrımı çizgi,
+   sayı rozeti ve düz mavi renk taşıyor; adlar degrade ve kalın. */
 .prest-title {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  font-family: var(--font-mono);
   font-size: 1.125rem;
-  font-weight: 500;
-  letter-spacing: 0.02em;
+  font-weight: 600;
+  letter-spacing: -0.01em;
   line-height: 1.75rem;
   color: var(--primary-ink);
 }
@@ -166,6 +169,7 @@
 
 .prest-count {
   padding: 0.1rem 0.5rem;
+  font-variant-numeric: tabular-nums;
   border-radius: 999px;
   background: var(--primary-wash);
   font-size: 0.875rem;
@@ -248,8 +252,8 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: var(--text-small);
+  font-weight: 500;
   line-height: 1.35;
   color: var(--text-muted);
 }
@@ -298,7 +302,7 @@
   grid-area: cover;
 }
 
-/* Telefonda teknoloji satırı yok: kategoriyle iki mono satır üst üste
+/* Telefonda teknoloji satırı yok: kategoriyle iki küçük satır üst üste
    dar sütunda kalabalık. */
 @media (max-width: 767.98px) {
   .prow-stack {

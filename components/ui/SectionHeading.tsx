@@ -2,11 +2,11 @@ import type { ReactNode } from 'react'
 import { cx } from '@/lib/utils'
 
 /**
- * Bölüm başlığı: mono künye + başlık + tek cümle + sağda tek eylem.
+ * Bölüm başlığı: üst satır (künye) + başlık + tek cümle + sağda tek eylem.
  *
  *   <SectionHeading
  *     id="son-yazilar"            // başlığın id'si; bölüm aria-labelledby ile bağlar
- *     kunye="03 · Yazılar"        // isteğe bağlı mono üst satır (Title Case)
+ *     kunye="03 · Yazılar"        // isteğe bağlı üst satır (Title Case)
  *     title="Son Yazılar"
  *     description="Yaptıklarımdan çıkan notlar."
  *     action={<ButtonLink href="/blog" variant="ghost">Tümü</ButtonLink>}
@@ -15,6 +15,8 @@ import { cx } from '@/lib/utils'
  *   />
  *
  * Eyebrow tavanı: künye yalnızca bilgi taşıyorsa verilir, süs için değil.
+ * 9 Ekim 2026: künye mono 13 pikselden gövde yazısına, 15 piksel yarı
+ * kalına ve gövde rengine geçti; küçük mono üst satır okunmuyordu.
  */
 type SectionHeadingProps = {
   title: ReactNode
@@ -41,7 +43,7 @@ export function SectionHeading({
   return (
     <header className={cx('flex flex-wrap items-end justify-between gap-x-8 gap-y-4', className)}>
       <div className="min-w-0 max-w-3xl">
-        {kunye ? <p className="mb-3 font-mono text-small font-medium text-muted">{kunye}</p> : null}
+        {kunye ? <p className="mb-3 text-[0.9375rem] leading-snug font-semibold text-body">{kunye}</p> : null}
         <Heading
           id={id}
           className={cx(

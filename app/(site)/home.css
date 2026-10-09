@@ -88,21 +88,23 @@
   min-width: 0;
 }
 
+/* Unvan satırı. 9 Ekim 2026: mono 13 piksel ve açık harf aralığı
+   okunmuyordu; artık gövde yazısı, 15 piksel yarı kalın, gövde renginde.
+   Vurgu yalnız öndeki çizgide (marka mavisi). */
 .home-hero-eyebrow {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  font-family: var(--font-mono);
-  font-size: var(--text-small);
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  color: var(--primary-ink);
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  font-weight: 600;
+  color: var(--text-body);
 }
 .home-hero-eyebrow::before {
   content: "";
   width: 1.75rem;
   height: 1px;
-  background: currentColor;
+  background: var(--primary);
 }
 
 /* İsim: iki satır, sıkı. Telefonda uzun kelime ("Akyapı") kabın ~%70'i. */
@@ -254,8 +256,8 @@
   align-items: flex-end;
   gap: 0.4rem;
   margin-top: 0.5rem;
-  font-family: var(--font-mono);
-  font-size: var(--text-micro);
+  font-size: var(--text-small);
+  font-weight: 500;
   color: var(--text-muted);
   user-select: none;
 }
@@ -533,9 +535,10 @@
   position: relative;
 }
 
+/* Gövde yazısı, 13 piksel (9 Ekim 2026; mono 12 piksel okunmuyordu). */
 .home-stack-name {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: var(--text-small);
+  font-weight: 500;
   color: var(--text-muted);
   white-space: nowrap;
 }
@@ -746,8 +749,9 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
-  font-family: var(--font-mono);
   font-size: var(--text-small);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
   color: var(--text-muted);
 }
 
@@ -991,9 +995,9 @@
   padding: 0.15rem 0.6rem;
   border-radius: 999px;
   background: color-mix(in oklab, var(--tint) 13%, transparent);
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: var(--text-small);
   font-weight: 500;
+  font-variant-numeric: tabular-nums;
   color: var(--tint-ink);
 }
 
@@ -1276,8 +1280,8 @@
 }
 .home-own-stats dt {
   margin-top: 0.4rem;
-  font-family: var(--font-mono);
-  font-size: var(--text-small);
+  font-size: 0.875rem;
+  font-weight: 500;
   color: var(--text-muted);
 }
 

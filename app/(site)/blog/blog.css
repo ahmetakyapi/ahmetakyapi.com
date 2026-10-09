@@ -218,8 +218,10 @@
    gövdeden yalnız bir punto büyük; uzun yazıda nerede yeni bir bölüme
    girildiği okunmuyordu. Şimdi her `h2` ince bir çizgiyle önceki bölümü
    kapatır, çizginin başında kısa bir marka rengi parçası ve başlığın
-   üstünde mono bölüm numarası ("01") durur. Numara CSS sayacından:
-   içerikte yazılı değil, ekran okuyucu okumaz. `h3` bölüm içinde kalır. */
+   üstünde bölüm numarası ("01") durur. Numara CSS sayacından:
+   içerikte yazılı değil, ekran okuyucu okumaz. `h3` bölüm içinde kalır.
+   9 Ekim 2026: numara mono 13 pikselden gövde yazısına, 15 piksel yarı
+   kalına geçti; harf aralığı kalktı (küçük mono numara okunmuyordu). */
 .post-prose {
   counter-reset: post-section;
 }
@@ -247,11 +249,10 @@
   content: counter(post-section, decimal-leading-zero);
   display: block;
   margin-bottom: 0.75rem;
-  font-family: var(--font-mono);
-  font-size: 0.8125rem;
-  font-weight: 500;
+  font-size: 0.9375rem;
+  font-weight: 600;
   line-height: 1;
-  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
   color: var(--primary-ink);
 }
 
@@ -544,9 +545,8 @@
     content: attr(data-label);
     display: block;
     margin-bottom: 0.15rem;
-    font-size: 0.75rem;
+    font-size: var(--text-small);
     font-weight: 600;
-    letter-spacing: 0.01em;
     color: var(--text-muted);
   }
 }

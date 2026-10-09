@@ -69,7 +69,7 @@ export function SelectedWork({ home, projects }: { home: HomeContent; projects: 
                   <dl className="tint-card-stats mt-5 grid max-w-sm grid-cols-3 gap-4 pt-4">
                     {project.stats.map((stat) => (
                       <div key={stat.label} className="flex min-w-0 flex-col-reverse">
-                        <dt className="mt-1.5 text-small text-muted">{trTitle(stat.label)}</dt>
+                        <dt className="mt-1.5 text-small font-medium text-muted">{trTitle(stat.label)}</dt>
                         <dd className="font-mono text-[1.375rem] font-semibold leading-none">{stat.value}</dd>
                       </div>
                     ))}

@@ -13,7 +13,7 @@ import { PostCover } from './PostCover'
  * Blog dizini, sunucu bileşeni ve sıfır JavaScript.
  *
  * Düzen: en yeni yazı büyük ve kapaklı, altında arşiv bir editoryal liste
- * (mono tarih, başlık, tek cümle, küçük kapak). Kart ızgarası değil: dokuz
+ * (tarih, başlık, tek cümle, küçük kapak). Kart ızgarası değil: dokuz
  * yazının dokuz eş kutusu birbirinden ayırt edilmiyordu.
  *
  * ETİKET SÜZGECİ JAVASCRIPT'SİZ: her etiket bir radyo düğmesi, satırlar
@@ -117,7 +117,7 @@ function Featured({ post, tag }: { post: BlogPost; tag: number }) {
 function Row({ post }: { post: BlogPost }) {
   return (
     <Link href={`/blog/${post.slug}`} transitionTypes={['nav-forward']} className="group bl-row-link">
-      <span className="bl-row-meta font-mono text-small text-muted">
+      <span className="bl-row-meta text-small font-medium tabular-nums text-muted">
         <time dateTime={post.date}>{formatPostDate(post.date)}</time>
         <span className="bl-row-dot" aria-hidden="true">
           ·

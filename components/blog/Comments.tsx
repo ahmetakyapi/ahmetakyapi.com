@@ -14,7 +14,7 @@ export function Comments() {
   if (CONFIGURED) return <GiscusComments />
   if (process.env.NODE_ENV === 'production') return null
   return (
-    <p className="mt-12 border-t border-line pt-6 font-mono text-small text-muted">
+    <p className="mt-12 border-t border-line pt-6 text-small font-medium text-muted">
       Geliştirme notu: Giscus ortam değişkenleri boş, yorum bölümü üretimde gösterilmeyecek (.env.example).
     </p>
   )

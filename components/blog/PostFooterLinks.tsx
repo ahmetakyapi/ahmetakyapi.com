@@ -10,7 +10,7 @@ import { Inline } from './Inline'
 /**
  * Yazının bitişi: anlattığı projenin kartı (varsa) ve diğer yazılar.
  * Kart değil liste: diğer yazılar dizindeki satırla aynı dili konuşur
- * (mono tarih, başlık). Proje kartı tek, gerçek ekran görüntüsüyle.
+ * (tarih, başlık). Proje kartı tek, gerçek ekran görüntüsüyle.
  * Kapak morfu (`post-*`) burada YOK: bir sayfada bir ad tek öğede.
  */
 export function RelatedProject({ project }: { project: Project }) {
@@ -31,7 +31,7 @@ export function RelatedProject({ project }: { project: Project }) {
           )}
         </div>
         <div className="post-project-text">
-          <p className="font-mono text-small text-muted">{project.category}</p>
+          <p className="text-small font-medium text-muted">{project.category}</p>
           <p className="mt-1.5 font-display text-title font-semibold tracking-[-0.02em] text-strong">{project.title}</p>
           <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-body">{splitLead(project.description).lead}</p>
           <span className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-primary-ink">
@@ -63,7 +63,7 @@ export function MorePosts({ posts }: { posts: BlogPost[] }) {
               <span className="block text-base font-semibold leading-snug tracking-[-0.01em] text-strong transition-colors group-hover:text-primary-ink sm:text-[1.0625rem]">
                 <Inline text={post.title} />
               </span>
-              <span className="mt-1 block font-mono text-small text-muted">
+              <span className="mt-1 block text-small font-medium tabular-nums text-muted">
                 {formatPostDate(post.date)} · {readingTime(post)}
               </span>
             </Link>

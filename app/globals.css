@@ -292,7 +292,10 @@
 
   /* Punto ROLLERİ (Tailwind'in `text-sm…` ölçeği geçiş için yerinde).
      `text-base` bilerek yok: Tailwind'in 1rem'i ile çakışırdı. */
-  --text-micro: 0.6875rem;
+  /* 9 Ekim 2026: sitede 12 pikselin altında yazı yok ("bu tür başlıklar
+     hiç okunmuyor"). `micro` 11'den 12'ye çıktı; yalnız tuş etiketi gibi
+     kısa işaretler için. Etiket, künye ve çip `small` (13) kullanır. */
+  --text-micro: 0.75rem;
   --text-micro--line-height: 1rem;
   --text-small: 0.8125rem;
   --text-small--line-height: 1.25rem;
@@ -1205,10 +1208,13 @@ html.theme-switching::view-transition-new(root) {
   color: var(--page-bg);
 }
 
+/* Sayı: 13 piksel, gövde yazısı, neredeyse tam renk (9 Ekim 2026; mono
+   12 piksel ve %70 opaklıkta seçili olmayan sekmede okunmuyordu). */
 .tab-count {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  opacity: 0.7;
+  font-size: var(--text-small);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.85;
 }
 
 /* Kaydırınca belirme: satırlar ve kartlar görünüme girerken hafifçe
@@ -1601,17 +1607,20 @@ html.theme-switching::view-transition-new(root) {
   }
 }
 
+/* Kartın üst etiketi (kategori). 9 Ekim 2026: mono 13 pikselden gövde
+   yazısına, 14 piksel yarı kalına geçti; küçük mono etiket bir bakışta
+   okunmuyordu. Ton noktası ve hap aynı. */
 .tint-card-kicker {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
   width: fit-content;
-  padding: 0.3rem 0.75rem 0.3rem 0.55rem;
+  padding: 0.3rem 0.75rem 0.3rem 0.6rem;
   border-radius: 999px;
   background: color-mix(in oklab, var(--tint) 14%, transparent);
-  font-family: var(--font-mono);
-  font-size: var(--text-small);
-  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
   color: var(--tint-ink);
 }
 .tint-card-kicker::before {
@@ -1762,10 +1771,12 @@ html.theme-switching::view-transition-new(root) {
   padding: 6cqi;
 }
 
+/* Üst satır bir alan adı ("ahmetakyapi.com"), mono kalır; tabanı
+   12 piksel, opaklık %90 (9 Ekim 2026). */
 .cover-art-kicker {
   font-family: var(--font-mono);
-  font-size: max(0.6875rem, 2.6cqi);
-  opacity: 0.85;
+  font-size: max(0.75rem, 2.6cqi);
+  opacity: 0.9;
 }
 
 .cover-art-word {
