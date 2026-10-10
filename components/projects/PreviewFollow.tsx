@@ -23,7 +23,9 @@ import { useEffect } from 'react'
  * (`data-armed`): o ana kadar `display: none` ve tembel yükleme onları hiç
  * istemez. Sayfayı yalnızca okuyan kişi on ekran görüntüsü indirmez.
  */
-const SMOOTHING = 0.2
+/** Konum yumuşatması: 0,2 imlece fazla yapışıyordu; 0,14 elle taşınan bir
+    kartın ağırlığını veriyor (9 Ekim 2026). */
+const SMOOTHING = 0.14
 /** İmleç hızından eğilme: piksel başına derece ve üst sınır. */
 const TILT_PER_PX = 0.12
 const MAX_TILT = 6

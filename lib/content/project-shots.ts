@@ -5,14 +5,14 @@ import { projectShot, type ShotView } from '@/lib/project-shot'
  * mı ve kaç piksel. `public/projects/<slug>/` ile BİREBİR; dosya eklenir ya
  * da silinirse burası da değişir.
  *
- * - Tam set (desktop + desktop-2 + mobile, 2160×1350 / 780×1688): yeni
- *   çekimler. digynotes ve derinay 9 Ekim 2026'da yeniden tasarımla tam
- *   sete geçti.
- *   karalama ve dungeon-mates yalnız KOYU temalı: iki dosya da
- *   koyu, o yüzden `themed: false` (tek görsel, ikisini indirmeye gerek yok).
- * - Yalnız desktop, 1280×800: eski görselin kopyası; iki dosya aynı.
- * - elevenforge: eski desktop + yeni mobile (780×1688), tek temalı.
- *   "Floodlight" revizyonu 9 Ekim 2026'da geri alındı; görseller de eskiye döndü.
+ * - Tam set (desktop + desktop-2 + mobile, 2160×1350 / 780×1688): 10 Ekim
+ *   2026'da HER proje canlı sitesinden yeniden çekildi (başlık üstü
+ *   künyeler kaldırıldıktan, açılışlar yenilendikten sonra). Masaüstü
+ *   1080×675 ve telefon 390×844, ikisi de 2x; WebP q80. OG kartının
+ *   kaynağı `assets/project-og/<slug>.jpg` masaüstü koyu görselden.
+ * - karalama, dungeon-mates ve ramazan-vakitleri yalnız KOYU temalı
+ *   uygulamalar: iki dosya da koyu, o yüzden `themed: false` (tek görsel,
+ *   ikisini indirmeye gerek yok).
  * - dev-starter: ekran görüntüsü yok, README afişi (1280×360, iki temalı SVG).
  *   Afişteki başlık gradyanla DOLDURULMAZ: WebKit `<img>` içindeki SVG'de
  *   gradyanlı metni düşük çözünürlükte basıp büyütüyor ve iPhone'da yalnız
@@ -33,7 +33,7 @@ export type ShotSet = {
    * Görsel her temada koyu (tek temalı koyu uygulama ya da eski koyu
    * çekim). Açık temada kapak çerçevesi bir ton güçlenir: koyu görselin
    * kenarı açık zeminde çerçevesiz bir delik gibi duruyordu. Ölçüldü:
-   * açık dosyaların ortalama parlaklığı bu yedisinde 24-36 / 255.
+   * açık dosyaların ortalama parlaklığı koyu temalı çekimlerde 24-36 / 255.
    */
   darkInk?: boolean
   /** İki temada da koyu görsel gösterilir (açık görsel okunmuyorsa). */
@@ -41,35 +41,22 @@ export type ShotSet = {
 }
 
 const FULL = { desktop: { width: 2160, height: 1350 }, 'desktop-2': { width: 2160, height: 1350 }, mobile: { width: 780, height: 1688 } } as const
-const LEGACY = { desktop: { width: 1280, height: 800 } } as const
 const ALL_VIEWS = ['desktop', 'desktop-2', 'mobile'] as const
-const DESKTOP_ONLY = ['desktop'] as const
-/* Eski masaüstü çekimi + yeni telefon çekimi (4 Ekim 2026): ana sayfanın
-   Öne Çıkan Projeler panelinde telefon ekranı olmayan iki proje kalıyordu.
-   Canlı siteden 390×844, 2x; ölçü tam setin telefonuyla aynı. */
-const LEGACY_WITH_MOBILE = { desktop: LEGACY.desktop, mobile: FULL.mobile } as const
-const DESKTOP_AND_MOBILE = ['desktop', 'mobile'] as const
 
 export const PROJECT_SHOTS = {
   'acilis-zili': { views: ALL_VIEWS, themed: true, size: FULL },
+  digynotes: { views: ALL_VIEWS, themed: true, size: FULL },
+  derinay: { views: ALL_VIEWS, themed: true, size: FULL },
   mimio: { views: ALL_VIEWS, themed: true, size: FULL },
   /* Açık temanın görselinde başlık altın rengi ve parlak bir resmin üstünde
      okunmuyordu (3 Ekim 2026); iki temada da koyu görsel. */
   'onepiece-hub': { views: ALL_VIEWS, themed: true, size: FULL, alwaysDark: true, darkInk: true },
+  elevenforge: { views: ALL_VIEWS, themed: true, size: FULL },
+  keskealsaydim: { views: ALL_VIEWS, themed: true, size: FULL },
+  harfiyen: { views: ALL_VIEWS, themed: true, size: FULL },
   karalama: { views: ALL_VIEWS, themed: false, size: FULL, darkInk: true },
   'dungeon-mates': { views: ALL_VIEWS, themed: false, size: FULL, darkInk: true },
-  harfiyen: { views: DESKTOP_ONLY, themed: false, size: LEGACY, darkInk: true },
-  elevenforge: { views: DESKTOP_AND_MOBILE, themed: false, size: LEGACY_WITH_MOBILE, darkInk: true },
-  /* "Atölye Sahnesi" görsel revizyonu sonrası tam set (9 Ekim 2026): landing
-     kahramanı, vitrindeki panel kesiti ve telefon kahramanı; iki temalı.
-     desktop-2 iki temada da koyu: vitrin landing'in "gece adası", tema
-     değişse de koyu kalır. */
-  derinay: { views: ALL_VIEWS, themed: true, size: FULL },
-  keskealsaydim: { views: DESKTOP_ONLY, themed: false, size: LEGACY, darkInk: true },
-  'ramazan-vakitleri': { views: DESKTOP_ONLY, themed: false, size: LEGACY, darkInk: true },
-  /* Yeniden tasarım sonrası tam set (9 Ekim 2026): landing hero, notlar
-     sayfası ve telefon hero'su; iki temalı. */
-  digynotes: { views: ALL_VIEWS, themed: true, size: FULL },
+  'ramazan-vakitleri': { views: ALL_VIEWS, themed: false, size: FULL, darkInk: true },
 } as const satisfies Record<string, ShotSet>
 
 export type ShotSlug = keyof typeof PROJECT_SHOTS

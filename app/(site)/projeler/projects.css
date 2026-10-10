@@ -356,6 +356,7 @@
   }
 
   .pprev {
+    --ease-pp: cubic-bezier(0.16, 1, 0.3, 1);
     --pp-width: 22rem;
     --pp-gap: 2rem;
     position: absolute;
@@ -406,6 +407,41 @@
   }
 
   .pscope[data-preview="follow"] .prow-in:hover .pprev {
+    scale: 1;
+  }
+
+  /* Diyafram açılışı (9 Ekim 2026): önizleme yalnız solup belirmiyordu,
+     düz bir kart gibi duruyordu. Şimdi imlecin yanında ortadan, yuvarlak bir
+     kırpmayla açılıyor; içindeki ekran görüntüsü hafif bir yakınlıktan
+     yerine oturuyor. Satırdan satıra geçerken eski önizleme kapanırken yenisi
+     aynı noktada açıldığı için tek bir görsel biçim değiştiriyor gibi okunur.
+     Kırpma çocukta (`> *`); gölge ebeveynde `drop-shadow`: kırpılmış şeklin
+     gölgesi, kutunun değil. Yalnız clip-path / scale / opacity canlanır. */
+  .pscope[data-preview="follow"] .pprev {
+    filter: drop-shadow(0 28px 40px rgb(11 40 80 / 0.32));
+    transition:
+      opacity 260ms var(--ease-brand) 60ms,
+      scale 620ms var(--ease-pp);
+  }
+  .pscope[data-preview="follow"] .prow .pprev > * {
+    box-shadow: 0 0 0 1px var(--line);
+    clip-path: inset(22% 26% 22% 26% round 1.5rem);
+    transition: clip-path 420ms var(--ease-pp);
+  }
+  .pscope[data-preview="follow"] .pprev .pcover-img {
+    scale: 1.14;
+    transition: scale 900ms var(--ease-pp);
+  }
+  .pscope[data-preview="follow"] .prow-in:hover .pprev {
+    transition:
+      opacity 220ms var(--ease-brand),
+      scale 760ms var(--ease-pp);
+  }
+  .pscope[data-preview="follow"] .prow-in:hover .pprev > * {
+    clip-path: inset(0 0 0 0 round var(--radius-card));
+    transition: clip-path 760ms var(--ease-pp);
+  }
+  .pscope[data-preview="follow"] .prow-in:hover .pprev .pcover-img {
     scale: 1;
   }
 
