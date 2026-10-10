@@ -129,7 +129,7 @@ export const defaultHomeContent: HomeContent = {
     note: 'Rollerin yanında Ar-Ge ve TÜBİTAK destekli projelerde de görev aldım.',
   },
   closing: {
-    title: 'Birlikte Çalışalım',
+    title: 'İletişim',
     text: 'Bir ürün fikri, yarım kalmış bir arayüz ya da yalnızca bir soru. En kısa yol e-posta.',
   },
 }
