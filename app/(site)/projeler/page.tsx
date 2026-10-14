@@ -104,9 +104,18 @@ export default function ProjectsPage() {
           </section>
 
           <section aria-labelledby="diger-projeler" className="prest-section">
-            <h2 id="diger-projeler" className="prest-title">
-              Diğer Projeler
-            </h2>
+            {/* Bölüm başlığı satırlardan AYRI bir sesle: düz mavi, çizgi ve sayıyla.
+                9 Ekim 2026: önceden satır adlarıyla aynı mavi degrade ve aynı
+                puntodaydı; listenin ilk satırı gibi okunuyor, "Diğer Projeler"
+                adlı bir proje varmış gibi duruyordu. Aynı gün: altındaki açıklama
+                kalktı, başlık tek başına ve daha büyük puntoda duruyor; mono yazı
+                da kalktı, gövde yazısıyla okunuyor. */}
+            <header className="prest-head">
+              <h2 id="diger-projeler" className="prest-title">
+                Diğer Projeler
+                <span className="prest-count">{rest.length}</span>
+              </h2>
+            </header>
             <ol className="prow-list">
               {rest.map((project) => (
                 <ProjectRow key={project.slug} project={project} />

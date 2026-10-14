@@ -8,7 +8,7 @@ export const projects: Project[] = [
     slug: 'acilis-zili',
     group: 'platform',
     description:
-      'ABD piyasasını kendi takibim için tek ekrana indiren site. Bilanço takvimi ve her bilanço için yazılan analizler, 500\'ü aşkın şirketlik dizin, makro göstergeler, haberler ve takip listesi bir arada. Üstüne her gün yazılan bülten ve olay bazlı uzun yazılar.',
+      'ABD borsasını Türkiye saatiyle, Türkçe ve tek ekrandan takip etmek için kurduğum site. Endeksler, binden fazla şirketin sayfası, bilanço takvimi ve her bilanço için yazılan analizler, makro göstergeler, haber akışı ve takip listeleri bir arada. Üstüne her gün yazılan bir bülten, olayların arkasındaki mekanizmayı anlatan uzun yazılar ve günde üç kez yenilenen teknik analizler. İki dil, açık ve koyu tema; ücretsiz ve reklamsız.',
     detail:
       'Analizlerde oran değil oranın böleni saklanıyor: F/K\'nin payı fiyat olduğu için kaydedilen oran ertesi gün yanlış olmaya başlıyor. Her kartın altında kaynak ve saat damgası var; veri yoksa kart boş kalıyor.',
     tags: ['Next.js 16', 'React 19', 'Tailwind v4', 'Drizzle', 'Neon', 'next-auth v5'],
@@ -33,9 +33,9 @@ export const projects: Project[] = [
     slug: 'mimio',
     group: 'platform',
     description:
-      'Ergoterapistlerin danışan takibini, seans planlamasını ve terapi sürecini tek panelde yönetmesi için kurulan klinik platform. Danışan profilleri, haftalık akış, terapi oyunları ve ilerleme grafikleri aynı sistemin içinde.',
+      'Ergoterapistlerin danışanlarını, seanslarını ve terapi oyunlarını tek panelde yönettiği klinik uygulama. Danışan profilleri, haftalık terapi programı, seansta tarayıcıdan açılan yedi terapi oyunu, seans notları ve ilerleme raporu aynı yerde. Oyunlar ergoterapi literatüründeki ölçeklere dayanıyor ve her oyunun skoru doğrudan danışanın dosyasına düşüyor; zamanla o dosyadan bir ilerleme çizgisi çıkıyor.',
     detail:
-      'Seans notları SOAP standardında tutuluyor; kendi alanlarımı uydurmak yerine mesleğin zaten kullandığı formatı aldım. Yedi terapi oyununun skorları danışan dosyasına düşüyor.',
+      'Seans notları serbest metin ya da mesleğin kendi biçimi olan SOAP notu olarak tutuluyor; kendi alanlarımı uydurmak yerine mesleğin zaten kullandığı formatı aldım. Panelde klinik veri durduğu için hiçbir yere analitik, hata izleme ya da üçüncü taraf script koymadım.',
     tags: ['Next.js 15', 'TypeScript', 'Tailwind v4', 'Neon', 'Framer Motion'],
     link: 'https://mimios.vercel.app',
     github: 'https://github.com/ahmetakyapi/Mimio',
@@ -53,9 +53,9 @@ export const projects: Project[] = [
     slug: 'onepiece-hub',
     group: 'platform',
     description:
-      'One Piece evrenini Türkçe içerikle düzenli ve keşfedilebilir hale getiren fan platformu. Ark takibi, karakter ilişkileri, quiz modu ve hızlı arama aynı sitede.',
+      'One Piece evrenini Türkçe ve spoiler yemeden gezmek için yaptığım fan sitesi. Otuz altı ark on saga altında ve filler bölümler ayıklanmış sırada; altmış altı karakter, şeytan meyveleri, büyük savaşlar, karakter ilişkileri haritası, her ark için quiz ve ⌘K ile açılan arama. İzlediğin bölümleri işaretleyip kaldığın yeri hatırlayabiliyorsun.',
     detail:
-      'Spoiler kapısı var: hangi arkta olduğunu söylüyorsun, sonrasına ait her şey bulanıklaşıyor. Ekran okuyucuya da içerik sızmıyor.',
+      'Spoiler perdesi var: hangi arkta olduğunu söylüyorsun, sonrasına ait kartlar bulanıklaşıyor ve istersen tek tek açıyorsun. İçeriğin tamamı tipli TypeScript dosyalarında duruyor; veritabanı yalnızca izleme ilerlemesini ve quiz skorlarını tutuyor.',
     tags: ['Next.js 14', 'TypeScript', 'Drizzle', 'Neon', 'JWT'],
     link: 'https://onepiece-hub.vercel.app',
     github: 'https://github.com/ahmetakyapi/onepiece-hub',
@@ -73,7 +73,7 @@ export const projects: Project[] = [
     slug: 'harfiyen',
     group: 'oyun',
     description:
-      'Her gün saat 09:00\'da üç yeni Türkçe kare bulmaca: 6×6 kolay, 8×8 orta, 10×10 zor. Süre bazlı liderlik tablosu, seri takibi ve geçmiş günlere dönebildiğin bir arşiv var.',
+      'Her gün saat 09:00\'da üç yeni Türkçe kare bulmaca yayınlayan günlük oyun. 6×6 kolay, 8×8 orta ve 10×10 zor; süre bazlı liderlik tablosu, seri takibi ve geçmiş günlere dönebildiğin bir arşiv var.',
     detail:
       'Cevaplar istemciye hiç gitmiyor, süre sunucu saatiyle ölçülüyor. Bulmaca havuzu kelime bankasından toplu üretiliyor.',
     tags: ['Next.js', 'TypeScript', 'Drizzle', 'Neon', 'Vitest'],
@@ -91,7 +91,7 @@ export const projects: Project[] = [
     slug: 'elevenforge',
     group: 'oyun',
     description:
-      '16 arkadaşın aynı ligde yarıştığı Türkçe futbol menajerlik oyunu. Davet koduyla katılıyorsun, boş kalan yerleri bot dolduruyor ve maçlar ligi kuran kişinin seçtiği saatte simüle ediliyor.',
+      '16 arkadaşın aynı ligde yarıştığı Türkçe futbol menajerlik oyunu. Davet koduyla katılıyorsun, boş kalan yerleri bot dolduruyor, kadronu ve taktiğini kuruyorsun; maçlar ligi kuran kişinin seçtiği saatte simüle ediliyor ve canlı anlatımla izleniyor.',
     detail:
       'Maç motoru deterministik: fikstür kimliğinden üretilen tohum, aynı maçı tekrar oynattığında aynı skoru veriyor. Transfer pazarında iyimser kilitleme var: on alıcıdan yalnızca biri kazanıyor.',
     tags: ['Next.js 16', 'React 19', 'Drizzle', 'TypeScript', 'Cron'],
@@ -101,7 +101,7 @@ export const projects: Project[] = [
     tint: '#16a34a',
     gradient: 'linear-gradient(135deg, #22c55e 0%, #15803d 100%)',
     badge: 'Canlı',
-    featured: true,
+    featured: false,
   },
   {
     id: 6,
@@ -116,10 +116,13 @@ export const projects: Project[] = [
     tags: ['Next.js 14', 'TypeScript', 'Prisma', 'Neon', 'NextAuth', 'Tailwind CSS'],
     link: 'https://digy-notes.vercel.app',
     github: 'https://github.com/ahmetakyapi/DigyNotes',
-    accent: '#10b981',
-    gradient: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+    accent: '#b9a8ff',
+    /* Arayüz mürekkep siyahı + lavanta (9 Ekim 2026 yeniden tasarımı);
+       zemin tonu açık temadaki mor vurgu. */
+    tint: '#5b42d6',
+    gradient: 'linear-gradient(135deg, #b9a8ff 0%, #5b42d6 100%)',
     badge: 'Canlı',
-    featured: false,
+    featured: true,
   },
   {
     id: 7,
@@ -168,7 +171,7 @@ export const projects: Project[] = [
     slug: 'derinay',
     group: 'platform',
     description:
-      'Tek kişilik bir klinik pratiğin yönetim paneli: gelir-gider, danışan, seans, fatura, ödeme ve vergi takibi tek sakin arayüzde toplanıyor.',
+      'Tek kişilik bir klinik pratiğin bütün yönetimini tek sakin arayüzde toplayan panel. Gelir-gider, danışan ve seans takibi, fatura, ödeme ve vergi; serbest meslek makbuzu, KDV ve stopaj hesapları panelin içinde, danışanla ilgilenmek dışında her şey tek yerde.',
     detail:
       'Grafikler ana pakete girmiyor; Recharts ayrı bir lazy katmandan yükleniyor. Varsayılan tema açık.',
     tags: ['Next.js 14', 'Drizzle', 'Neon', 'Recharts', 'next-auth v5'],
@@ -241,15 +244,17 @@ export const projects: Project[] = [
     slug: 'ahmetakyapi-com',
     group: 'platform',
     description:
-      'Bu site. Portfolyo ve teknik blog tek çatı altında. Bütün sayfalar derleme anında üretiliyor; proje ve yazı geçişleri tarayıcının View Transitions API\'siyle, görünüme girme ve kaydırma animasyonları CSS ile.',
-    tags: ['Next.js', 'TypeScript', 'Tailwind CSS v4', 'View Transitions', 'Satori OG'],
+      'Şu an gezdiğin site. Projelerim, her birinin nasıl yapıldığını anlatan yazılar ve kim olduğum tek bir adreste. Projeleri ekran görüntüleriyle gezebiliyor, yazılara yorum bırakabiliyor, ⌘K ile her yere klavyeden ulaşabiliyorsun.',
+    detail:
+      'Bütün sayfalar derleme anında hazırlanıyor ve CDN\'den statik olarak geliyor; tema bile sayfayı dinamik yapmadan, ilk boyamadan önce çalışan küçük bir betikle seçiliyor. Sayfa geçişleri ve proje kapağının detay sayfasına dönüşmesi View Transitions ile, kaydırma animasyonları JavaScript\'siz CSS ile. Ana sayfadaki küre kütüphanesiz bir canvas, başlıktaki imza yazı tipi değil SVG.',
+    tags: ['Next.js 16', 'React 19', 'TypeScript', 'Tailwind CSS v4', 'View Transitions', 'Satori OG'],
     link: 'https://ahmetakyapi.com',
     github: 'https://github.com/ahmetakyapi/ahmetakyapi.com',
     accent: '#8b5cf6',
     gradient: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%)',
     badge: 'Canlı',
     featured: false,
-    postSlug: 'olculen-hiz-hissedilen-hiz',
+    postSlug: 'ahmetakyapi-com-nasil-yapildi',
   },
 ]
 

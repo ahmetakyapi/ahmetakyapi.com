@@ -233,7 +233,7 @@ export default function CommandPalette({
             ) : (
               Object.entries(grouped).map(([category, cmds]) => (
                 <div key={category} role="group" aria-label={category}>
-                  <p className="px-4 pb-1.5 pt-3 font-mono text-micro font-medium text-muted">{category}</p>
+                  <p className="px-4 pb-1.5 pt-3 text-small font-semibold text-muted">{category}</p>
                   {cmds.map((cmd) => {
                     const idx = filtered.indexOf(cmd)
                     const active = selected === idx
@@ -279,7 +279,7 @@ export default function CommandPalette({
             )}
           </div>
 
-          <div className="flex items-center gap-4 border-t border-line px-4 py-2.5 font-mono text-micro text-muted">
+          <div className="flex items-center gap-4 border-t border-line px-4 py-2.5 text-micro font-medium text-muted">
             <span>↑↓ Seç</span>
             <span>↵ Aç</span>
             <span>Esc Kapat</span>

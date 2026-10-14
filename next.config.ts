@@ -53,7 +53,14 @@ const nextConfig: NextConfig = {
         /* Yazı framer-motion kullanmayı değil, kütüphaneyi KALDIRMAYI
            anlatır hâle geldi; eski slug yanıltıcı olduğu için taşındı. */
         source: '/blog/framer-motion-sayfa-gecis-animasyonlari',
-        destination: '/blog/olculen-hiz-hissedilen-hiz',
+        destination: '/blog/ahmetakyapi-com-nasil-yapildi',
+        permanent: true,
+      },
+      {
+        /* 4 Ekim 2026: yazı hata avından sitenin nasıl kurulduğuna döndü
+           ve baştan yazıldı. */
+        source: '/blog/olculen-hiz-hissedilen-hiz',
+        destination: '/blog/ahmetakyapi-com-nasil-yapildi',
         permanent: true,
       },
       {

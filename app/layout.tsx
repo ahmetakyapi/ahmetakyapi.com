@@ -13,7 +13,9 @@ import './globals.css'
  * Önceki çift (Schibsted başlık + Bricolage gövde) "editör sitesi gibi"
  * okunuyordu; sahibi üç yön taslağı arasından Geist'li olanı seçti.
  * - Başlık, gövde, düğme, menü: Geist (değişken, 100-900).
- * - Künye, tarih, kod: Geist Mono.
+ * - Kod, alan adı, e-posta ve yalnız rakamdan oluşan sayılar: Geist Mono.
+ *   9 Ekim 2026: künye, tarih, etiket ve çipler mono'dan çıktı; küçük
+ *   mono etiketler okunmuyordu ("bu tür başlıklar hiç okunmuyor").
  *
  * TUZAK: next/font `variable` adı @theme'deki adla aynı olursa
  * (`--font-sans: var(--font-sans)`) değişken kendine başvurur ve font

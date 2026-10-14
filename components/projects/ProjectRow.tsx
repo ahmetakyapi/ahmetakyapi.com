@@ -60,11 +60,19 @@ export function FeaturedRow({ project, priority = false }: { project: Project; p
 }
 
 /**
- * Listenin geri kalanı: tek satır ad + kategori. Masaüstünde (ince imleç)
- * görsel gizli ve satırın üstünde durulunca imleci izleyen önizleme olarak
- * belirir (PreviewFollow); dokunmatikte satırın başında küçük görsel.
+ * Listenin geri kalanı: ad, tek cümle ve kategori. Masaüstünde (ince
+ * imleç) görsel gizli ve satırın üstünde durulunca imleci izleyen önizleme
+ * olarak belirir (PreviewFollow); dokunmatikte satırın başında küçük görsel.
+ *
+ * Sağdaki ok bir DÜĞME GİBİ çizilir ama bağlantı değildir: satırın tamamı
+ * bağlantının `::after` katmanıyla tıklanır, ok da o katmanın altında.
+ * 9 Ekim 2026: üzerine gelince ada verilen `translate` adı taşıyan h3'ü
+ * katmanın kapsayıcısı yapıyor, katman adın kutusuna büzülüyor ve ok
+ * tıklanmıyordu. Satırda artık hiçbir ata dönüşüm taşımıyor; hareket
+ * yalnız okta (bağlantının atası değil, kardeşi).
  */
 export function ProjectRow({ project }: { project: Project }) {
+  const { lead } = splitLead(project.description)
   return (
     <li className="prow" data-group={project.group}>
       <ArmedMorph
@@ -79,6 +87,7 @@ export function ProjectRow({ project }: { project: Project }) {
                 {project.title}
               </Link>
             </h3>
+            <p className="prow-lead">{lead}</p>
             <p className="prow-meta">
               <span className="prow-cat">
                 {project.category}
@@ -86,7 +95,9 @@ export function ProjectRow({ project }: { project: Project }) {
               </span>
               <span className="prow-stack">{project.tags.slice(0, STACK_PREVIEW).join(', ')}</span>
             </p>
-            <ArrowRight className="prow-arrow" aria-hidden="true" />
+            <span className="prow-arrow" aria-hidden="true">
+              <ArrowRight />
+            </span>
           </>
         }
         cover={<ProjectCover project={project} alt="" />}

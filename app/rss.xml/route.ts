@@ -40,7 +40,7 @@ export function GET() {
     <title>${escapeXml(`Blog · ${SITE_NAME}`)}</title>
     <link>${SITE_URL}/blog</link>
     <atom:link href="${SITE_URL}/rss.xml" rel="self" type="application/rss+xml"/>
-    <description>Yazdığım projelerden çıkan teknik notlar: Next.js, TypeScript, Postgres ve arayüz kararları.</description>
+    <description>Projelerimi anlatan yazılar: ne yaptım, nasıl kurdum ve hangi kararı neden verdim.</description>
     <language>tr-TR</language>
     <lastBuildDate>${lastBuild.toUTCString()}</lastBuildDate>${items}
   </channel>

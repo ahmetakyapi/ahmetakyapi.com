@@ -130,7 +130,7 @@ export default async function BlogPostPage({ params }: PageProps<'/blog/[slug]'>
 
               <footer className="post-end">
                 <KunyeLine items={[AUTHOR, formatPostDate(post.date)]} />
-                <a href="/rss.xml" className="tap-y font-mono text-small text-muted transition-colors hover:text-strong">
+                <a href="/rss.xml" className="tap-y text-small font-medium text-muted transition-colors hover:text-strong">
                   RSS ile Takip Et
                 </a>
               </footer>

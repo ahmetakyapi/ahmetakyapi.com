@@ -3,8 +3,8 @@ import type { Project } from '@/lib/content/types'
 /**
  * Proje sırası: öne çıkanlar önce, geri kalanlar ORDER'daki sırayla.
  *
- * Sıra sahibinin kararı (4 Ekim 2026): öne çıkanlar Açılış Zili, Derinay,
- * ElevenForge; ardından dev-starter, sonra geri kalanlar. Listede olmayan
+ * Sıra sahibinin kararı (9 Ekim 2026): öne çıkanlar Açılış Zili, DigyNotes,
+ * Derinay; ardından dev-starter ve ElevenForge, sonra geri kalanlar. Listede olmayan
  * proje sona, veri dosyasındaki sırasıyla düşer (yeni proje kaybolmaz).
  *
  * Saf fonksiyon kendi dosyasında: `lib/site-content.ts` varsayılan içerik
@@ -14,16 +14,16 @@ import type { Project } from '@/lib/content/types'
  */
 const ORDER = [
   'acilis-zili',
+  'digynotes',
   'derinay',
-  'elevenforge',
   'dev-starter',
+  'elevenforge',
   'mimio',
   'onepiece-hub',
   'harfiyen',
   'karalama',
   'dungeon-mates',
   'keskealsaydim',
-  'digynotes',
   'ramazan-vakitleri',
   'ahmetakyapi-com',
 ] as const

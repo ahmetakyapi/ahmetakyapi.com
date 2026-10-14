@@ -10,7 +10,7 @@ import { formatPostDate, readingTime } from '@/lib/reading-time'
 
 /**
  * Son Yazılar: editoryal liste, kart değil. Satır başına degrade başlık,
- * altında tek satırlık özet, mono künye (tarih + okuma süresi), sağda hap
+ * altında tek satırlık özet, künye (tarih + okuma süresi), sağda hap
  * etiket ve yuvarlak ok. 3 Ekim 2026: önceden yalnız başlık vardı ve
  * başlıklar uzunluk olarak birbirini tutmuyordu (biri bir satır, öteki
  * iki); başlıklar kısaltıldı, özet satırı eklendi.

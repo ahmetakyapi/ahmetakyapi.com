@@ -8,11 +8,11 @@ import './blog.css'
 export const metadata: Metadata = {
   title: 'Blog',
   description:
-    'Yazdığım projelerden çıkan teknik notlar: saat dilimleri, gerçek zamanlı oyunlar, prosedürel üretim, veri katmanı ve arayüz kararları.',
+    'Projelerimi anlatan yazılar: ne yaptım, nasıl kurdum ve hangi kararı neden verdim. Borsa takibi, klinik paneller, çok oyunculu oyunlar ve bu sitenin kendisi.',
   alternates: { canonical: '/blog' },
   openGraph: {
     title: 'Blog · Ahmet Akyapı',
-    description: 'Yazdığım projelerden çıkan teknik notlar.',
+    description: 'Projelerimi anlatan yazılar: ne yaptım, nasıl kurdum, neyi neden seçtim.',
     url: '/blog',
     type: 'website',
   },

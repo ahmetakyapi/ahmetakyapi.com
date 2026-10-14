@@ -88,21 +88,23 @@
   min-width: 0;
 }
 
+/* Unvan satırı. 9 Ekim 2026: mono 13 piksel ve açık harf aralığı
+   okunmuyordu; artık gövde yazısı, 15 piksel yarı kalın, gövde renginde.
+   Vurgu yalnız öndeki çizgide (marka mavisi). */
 .home-hero-eyebrow {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  font-family: var(--font-mono);
-  font-size: var(--text-small);
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  color: var(--primary-ink);
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  font-weight: 600;
+  color: var(--text-body);
 }
 .home-hero-eyebrow::before {
   content: "";
   width: 1.75rem;
   height: 1px;
-  background: currentColor;
+  background: var(--primary);
 }
 
 /* İsim: iki satır, sıkı. Telefonda uzun kelime ("Akyapı") kabın ~%70'i. */
@@ -134,12 +136,20 @@
   display: block;
   width: fit-content;
   overflow: clip;
-  padding: 0.24em 0.06em 0.16em;
-  margin: -0.24em -0.06em -0.16em;
+  padding: 0.24em 0.06em 0.24em;
+  margin: -0.24em -0.06em -0.24em;
 }
 
+/* Degrade (`background-clip: text`) yalnız kutunun içini boyar. Kutu satır
+   yüksekliği kadar (0,9em) ve "Akyapı"nın y ile p kuyrukları onun altına
+   taşıyor: taşan kısım boyasız, yani görünmez kalıyor ve harfler alttan
+   kesik duruyordu (iPhone, 4 Ekim 2026). Alt dolgu boyanan alanı kuyruğa
+   kadar uzatır, eksi kenar boşluğu satır adımını korur. Maske de aynı pay
+   kadar aşağı açık; yoksa bu kez maske keserdi. */
 .home-name-in {
   display: block;
+  padding-bottom: 0.24em;
+  margin-bottom: -0.24em;
 }
 
 /* Degrade iki satırı tek yüzey gibi kaplar: üst satır açık uçta başlar,
@@ -224,8 +234,13 @@
 .home-globe-canvas {
   display: block;
   cursor: grab;
-  /* Yatay sürükleme küreyi döndürür, dikey hareket sayfayı kaydırır. */
+  /* Hızlı dikey hareket sayfayı kaydırır; yatay başlayan ya da küre
+     üstünde basılı tutulan parmak küreyi iki eksende döndürür (HeroGlobe). */
   touch-action: pan-y;
+  /* Basılı tutma iOS'ta görsel menüsünü ve seçimi açmasın. */
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
   opacity: 0;
   transition: opacity 600ms var(--ease-brand);
 }
@@ -241,8 +256,8 @@
   align-items: flex-end;
   gap: 0.4rem;
   margin-top: 0.5rem;
-  font-family: var(--font-mono);
-  font-size: var(--text-micro);
+  font-size: var(--text-small);
+  font-weight: 500;
   color: var(--text-muted);
   user-select: none;
 }
@@ -520,45 +535,16 @@
   position: relative;
 }
 
+/* Gövde yazısı, 13 piksel (9 Ekim 2026; mono 12 piksel okunmuyordu). */
 .home-stack-name {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: var(--text-small);
+  font-weight: 500;
   color: var(--text-muted);
   white-space: nowrap;
 }
 
-/* İnce imleçte ad yalnız üzerine gelince, karonun üstünde küçük bir hap
-   olarak belirir (3 Ekim 2026, sahibinin isteği). Dokunmatikte üzerine
-   gelme yok; orada ad karonun altında hep görünür. Opaklıkla gizli,
-   ekran okuyucu adı yine okur. */
-@media (hover: hover) and (pointer: fine) {
-  .home-stack-name {
-    position: absolute;
-    bottom: calc(100% + 0.15rem);
-    left: 50%;
-    z-index: 2;
-    padding: 0.3rem 0.65rem;
-    border-radius: 999px;
-    background: var(--text-strong);
-    color: var(--page-bg);
-    font-weight: 500;
-    opacity: 0;
-    translate: -50% 0.4rem;
-    pointer-events: none;
-    transition:
-      opacity 180ms var(--ease-brand),
-      translate 280ms var(--ease-brand);
-  }
-  /* Üstte ad hapına yer: hap karonun üstünde açılıyor ve şerit taşmayı
-     kesiyor. */
-  .home-marquee-list {
-    padding-top: 2.75rem;
-  }
-  .home-stack-tile:hover .home-stack-name {
-    opacity: 1;
-    translate: -50% -0.35rem;
-  }
-}
+/* Ad her cihazda karonun altında hep görünür (9 Ekim 2026, sahibinin
+   isteği): masaüstünde de üzerine gelmeye gerek kalmadı, mobildeki gibi. */
 
 @media (hover: hover) and (pointer: fine) {
   .home-stack-tile:hover .home-stack-logo {
@@ -763,8 +749,9 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
-  font-family: var(--font-mono);
   font-size: var(--text-small);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
   color: var(--text-muted);
 }
 
@@ -1008,9 +995,9 @@
   padding: 0.15rem 0.6rem;
   border-radius: 999px;
   background: color-mix(in oklab, var(--tint) 13%, transparent);
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: var(--text-small);
   font-weight: 500;
+  font-variant-numeric: tabular-nums;
   color: var(--tint-ink);
 }
 
@@ -1064,7 +1051,11 @@
     .home-about-recede {
       animation: home-about-recede linear both;
       animation-timeline: view();
-      animation-range: exit 25% exit 100%;
+      /* 4 Ekim 2026: `exit 25%` idi; bloğun dibi ekranın %75'ine gelince
+         başlıyordu ve son paragraf ("İş hayatı dışında…") okunurken
+         buğulanıyordu. 55%: dip ekranın üst yarısına (%45) çıkınca başlar,
+         yani metin okunup bittikten sonra. */
+      animation-range: exit 55% exit 100%;
     }
     .home-work-head {
       transform-origin: left bottom;
@@ -1289,8 +1280,8 @@
 }
 .home-own-stats dt {
   margin-top: 0.4rem;
-  font-family: var(--font-mono);
-  font-size: var(--text-small);
+  font-size: 0.875rem;
+  font-weight: 500;
   color: var(--text-muted);
 }
 

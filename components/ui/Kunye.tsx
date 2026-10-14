@@ -2,10 +2,12 @@ import { Fragment, type ReactNode } from 'react'
 import { cx } from '@/lib/utils'
 
 /**
- * Künye: mono, küçük puntolu bilgi satırı ya da ızgarası.
+ * Künye: küçük puntolu (13 px, orta kalınlık) bilgi satırı ya da ızgarası.
+ * 9 Ekim 2026: mono'dan gövde yazısına geçti; küçük mono künye okunmuyordu.
+ * Rakamlar `tabular-nums` ile hizalı.
  *
  *   <KunyeLine items={['3 Ekim 2026', '8 Dakika']} />
- *     → "3 Ekim 2026 · 8 Dakika" (mono, ayraç `·`, boş öğeler atlanır)
+ *     → "3 Ekim 2026 · 8 Dakika" (ayraç `·`, boş öğeler atlanır)
  *
  *   <KunyeGrid
  *     columns={4}                 // telefonda her zaman 2
@@ -14,7 +16,7 @@ import { cx } from '@/lib/utils'
  *       { label: 'Şu An', value: <Link href="/projeler/acilis-zili">Açılış Zili</Link> },
  *     ]}
  *   />
- *     → <dl>; etiket mono + soluk, değer gövde rengi. Hücreler hairline ile
+ *     → <dl>; etiket soluk ve orta kalın, değer gövde rengi. Hücreler hairline ile
  *       ayrılır, kutu açılmaz.
  *
  * Künye metni Title Case ("8 Dakika", "Kaynak Kod"); cümle değil.
@@ -27,7 +29,7 @@ const LINK_TARGETS = '[&_a:not(.min-h-11)]:tap-y'
 export function KunyeLine({ items, className }: { items: ReactNode[]; className?: string }) {
   const visible = items.filter((item) => item !== null && item !== undefined && item !== false && item !== '')
   return (
-    <p className={cx('flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-small text-muted', LINK_TARGETS, className)}>
+    <p className={cx('flex flex-wrap items-center gap-x-2 gap-y-1 text-small font-medium tabular-nums text-muted', LINK_TARGETS, className)}>
       {visible.map((item, i) => (
         <Fragment key={i}>
           {i > 0 ? (
@@ -63,7 +65,7 @@ export function KunyeGrid({
     <dl className={cx('grid grid-cols-2 gap-x-6 gap-y-5 border-t border-line pt-5', COLUMNS[columns], className)}>
       {items.map((item, i) => (
         <div key={i} className="min-w-0">
-          <dt className="font-mono text-small text-muted">{item.label}</dt>
+          <dt className="text-small font-medium text-muted">{item.label}</dt>
           <dd className={cx('mt-1.5 text-sm text-strong', LINK_TARGETS)}>{item.value}</dd>
         </div>
       ))}
