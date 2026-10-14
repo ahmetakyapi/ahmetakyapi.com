@@ -1,3 +1,4 @@
+import { PauseOffscreen } from '@/components/site/PauseOffscreen'
 import { techStack } from '@/lib/content/tech-stack'
 
 /**
@@ -11,6 +12,7 @@ import { techStack } from '@/lib/content/tech-stack'
  * odaklanınca durur (WCAG 2.2.2: kendiliğinden hareket eden içerik
  * durdurulabilmeli); hareket azaltılmışsa sarılı, durağan bir ızgara.
  * İkinci kopya yalnız döngünün dikişini kapatmak için: `aria-hidden`.
+ * Ekrandan çıkınca şerit durur (PauseOffscreen).
  */
 function Logos({ hidden = false }: { hidden?: boolean }) {
   return (
@@ -41,6 +43,7 @@ export function StackMarquee() {
           <Logos hidden />
         </div>
       </div>
+      <PauseOffscreen />
     </section>
   )
 }

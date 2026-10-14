@@ -1009,13 +1009,37 @@
     scale: 1 0;
   }
 }
+/* Nabız (14 Ekim 2026): eskiden noktanın `box-shadow`u canlanıyordu; bu
+   her karede ana iş parçacığında boyama demek ve sayfa açık kaldıkça hiç
+   durmuyordu. Şimdi noktanın arkasında ayrı bir halka, yalnız `scale` ve
+   `opacity` (bileşimci işi); kart ekrandan çıkınca da duruyor
+   (PauseOffscreen). Görünüm aynı: hale 9 pikselden 12'ye açılıp söner. */
+.home-xp-roles > li:first-child::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: calc(0.45rem - 4px);
+  left: calc(-1.5rem - 8px);
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--tint) 14%, transparent);
+  opacity: 0;
+  pointer-events: none;
+}
+@media (max-width: 639.98px) {
+  .home-xp-roles > li:first-child::after {
+    left: calc(-1.25rem - 8px);
+  }
+}
 @keyframes home-xp-pulse {
   50% {
-    box-shadow: 0 0 0 7px color-mix(in oklab, var(--tint) 10%, transparent);
+    opacity: 1;
+    transform: scale(1.35);
   }
 }
 @media (prefers-reduced-motion: no-preference) {
-  .home-xp-roles > li:first-child::before {
+  .home-xp-roles > li:first-child::after {
     animation: home-xp-pulse 2.4s ease-in-out infinite;
   }
   @supports (animation-timeline: view()) {
@@ -1421,4 +1445,16 @@
       inset 0 0 0 1px var(--line-strong),
       var(--shadow-md);
   }
+}
+
+/* --------------------------------------------------------------------------
+   Ekranda olmayan döngüler bekler (components/site/PauseOffscreen.tsx kabına
+   `data-offscreen` yazar): teknoloji şeridi, film şeridi ve deneyim
+   nabzı. Dosyanın SONUNDA: döngüleri tanımlayan `animation` kısaltmaları
+   oynatma durumunu da `running`e sıfırlıyor; aynı özgüllükte önce gelseydi
+   film şeridi hiç durmuyordu (ölçüldü, getAnimations()).
+   -------------------------------------------------------------------------- */
+[data-offscreen] :is(.home-marquee-track, .home-own-row),
+[data-offscreen] .home-xp-roles > li:first-child::after {
+  animation-play-state: paused;
 }

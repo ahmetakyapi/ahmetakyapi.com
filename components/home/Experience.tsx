@@ -2,6 +2,7 @@ import { ArrowRight, Building2, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 import { MaskTitle } from '@/components/home/MaskTitle'
 import { ProjectCover } from '@/components/projects/ProjectCover'
+import { PauseOffscreen } from '@/components/site/PauseOffscreen'
 import { Container } from '@/components/ui/Container'
 import type { Project } from '@/lib/content/types'
 import { getOrderedProjects } from '@/lib/project-order'
@@ -108,6 +109,8 @@ export function Experience({ experience, projects }: { experience: HomeContent['
               <p className="home-xp-desc">{experience.note}</p>
             </li>
           </ol>
+          {/* En yeni rolün nabzı ekrandan çıkınca durur. */}
+          <PauseOffscreen />
         </article>
 
         <article className="tint-card home-xp-card home-own reveal">
@@ -158,6 +161,8 @@ export function Experience({ experience, projects }: { experience: HomeContent['
               <ArrowRight aria-hidden="true" className="size-4" />
             </Link>
           </div>
+          {/* Film şeridi ekrandan çıkınca durur. */}
+          <PauseOffscreen />
         </article>
       </div>
     </Container>

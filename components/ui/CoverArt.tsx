@@ -1,3 +1,5 @@
+import { PauseOffscreen } from '@/components/site/PauseOffscreen'
+
 /**
  * Görseli olmayan kapak (yazı ve proje): hareketli, tipografik bir sahne.
  *
@@ -11,6 +13,7 @@
  *
  * Renk marka degradesinden (`bg-cta`), metin `--on-brand` (her noktada AA).
  * Süs öğeleri `aria-hidden`; erişilebilir ad kapağı kullanan yerden gelir.
+ * Işıklar ve halkalar ekrandan çıkınca durur (PauseOffscreen).
  */
 export function CoverArt({ word, kicker }: { word: string; kicker?: string }) {
   return (
@@ -32,6 +35,7 @@ export function CoverArt({ word, kicker }: { word: string; kicker?: string }) {
           </svg>
         </span>
       </div>
+      <PauseOffscreen />
     </div>
   )
 }

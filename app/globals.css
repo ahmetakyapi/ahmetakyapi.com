@@ -607,34 +607,15 @@
 }
 
 /* --------------------------------------------------------------------------
-   Görünüme girme animasyonu, JavaScript YOK.
+   Görünüme girme animasyonu, JavaScript YOK: `.reveal` (aşağıda, "Kaydırınca
+   belirme"). `animation-timeline: view()` işi tarayıcıya devrediyor:
+   gözlemci yok, dinleyici yok. Desteklemeyen tarayıcıda `@supports` bloğu
+   hiç uygulanmıyor ve içerik olduğu gibi görünüyor.
 
-   `animation-timeline: view()` işi tarayıcıya devrediyor: gözlemci yok,
-   dinleyici yok, ana iş parçacığında hiç iş yok. Desteklemeyen tarayıcıda
-   `@supports` bloğu hiç uygulanmıyor ve içerik olduğu gibi görünüyor.
-   En kötü senaryo "animasyon yok", "içerik yok" değil.
+   14 Ekim 2026: burada ikinci bir `@keyframes reveal-up` ve hiçbir yerde
+   kullanılmayan `[data-reveal]` kuralı vardı; aynı adlı ikinci tanım
+   (dosyada sonra gelen) birincisini zaten eziyordu. İkisi de kalktı.
    -------------------------------------------------------------------------- */
-@keyframes reveal-up {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    [data-reveal] {
-      animation: reveal-up 1s var(--ease-brand) both;
-      animation-timeline: view();
-      /* Eleman ekrana girerken oynasın, %30'unda tamamlansın. */
-      animation-range: entry 0% cover 30%;
-    }
-  }
-}
 
 /* ── Gezinme göstergesi: ölçülen konum + CSS geçişi ──────────────────── */
 .nav-pill {
@@ -1828,6 +1809,10 @@ html.theme-switching::view-transition-new(root) {
   }
   .cover-art-scribble path {
     animation: sketch-draw 1100ms var(--ease-brand) 400ms both;
+  }
+  /* Ekran dışındaki kapak beklesin (PauseOffscreen, CoverArt içinde). */
+  [data-offscreen] > :is(.cover-art-orb, .cover-art-rings) {
+    animation-play-state: paused;
   }
 }
 
