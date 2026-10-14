@@ -16,7 +16,7 @@ export const GROUP_LABELS = {
 export const FILTER_PARAM = 'kategori'
 
 /**
- * Süzgecin `data-filter`, önizlemenin `--px/--py` yazdığı listenin kabı.
+ * Süzgecin `data-filter`, önizlemenin `data-preview` yazdığı listenin kabı.
  * Burada, istemci modülünde değil: `"use client"` bir modülden dışa
  * aktarılan değer sunucu bileşenine gerçek değer olarak gelmez, istemci
  * referansına dönüşür.

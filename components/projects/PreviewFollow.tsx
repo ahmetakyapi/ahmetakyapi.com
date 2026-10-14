@@ -5,10 +5,14 @@ import { useEffect } from 'react'
 /**
  * /projeler listesinde satırın üstünde durulunca beliren önizlemeyi imlece
  * bağlar. Çizim yapmaz (null döner): önizlemeler sunucuda, her satırın
- * içinde basılı; bu ada yalnızca listenin kabına iki şey yazar:
+ * içinde basılı; bu ada yalnızca iki şey yazar:
  *
- *   data-preview="follow" | "still"   önizleme kipini CSS'e söyler
- *   --px / --py                       imlecin yumuşatılmış konumu
+ *   data-preview="follow" | "still"   liste kabına; önizleme kipini CSS'e söyler
+ *   --px / --py / --pr                önizlemelere; imlecin yumuşatılmış konumu
+ *
+ * Konum değişkenleri liste kabına değil doğrudan `.pprev` öğelerine yazılır:
+ * özel özellikler miras alındığı için kaba yazılan değer her karede listenin
+ * bütün alt ağacının stilini yeniden hesaplatıyordu (14 Ekim 2026).
  *
  * React durumuna HİÇ yazılmıyor: konum her karede CSS değişkenine gidiyor,
  * ağaç yeniden çizilmiyor. Döngü yalnızca imleç hareket ederken ve hedefe
@@ -47,14 +51,27 @@ export function PreviewFollow({ targetId }: { targetId: string }) {
     let ty = 0
     let raf = 0
     let primed = false
+    let previews: HTMLElement[] = []
+    /** Önizleme genişliği; her imleç hareketinde ölçmek yerleşimi zorluyordu. */
+    let previewWidth = 0
+
+    function collect() {
+      previews = Array.from(host.querySelectorAll<HTMLElement>('.pprev'))
+      previewWidth = 0
+    }
 
     /* Önizleme hareket yönüne hafifçe eğilir, durunca düzelir: elle
        taşınan bir kart gibi. */
     function write() {
       const tilt = Math.max(-MAX_TILT, Math.min(MAX_TILT, (tx - x) * TILT_PER_PX))
-      host.style.setProperty('--px', `${x.toFixed(1)}px`)
-      host.style.setProperty('--py', `${y.toFixed(1)}px`)
-      host.style.setProperty('--pr', `${tilt.toFixed(2)}deg`)
+      const px = `${x.toFixed(1)}px`
+      const py = `${y.toFixed(1)}px`
+      const pr = `${tilt.toFixed(2)}deg`
+      for (const preview of previews) {
+        preview.style.setProperty('--px', px)
+        preview.style.setProperty('--py', py)
+        preview.style.setProperty('--pr', pr)
+      }
     }
 
     function frame() {
@@ -72,9 +89,8 @@ export function PreviewFollow({ targetId }: { targetId: string }) {
     /* Önizleme imlecin sağında açılır; ekranın sağ kenarına yaklaşınca
        imlecin soluna geçmek yerine kenarda durur (sıçrama yok). */
     function clampX(clientX: number) {
-      const preview = host.querySelector<HTMLElement>('.pprev')
-      const width = preview?.offsetWidth ?? 0
-      return Math.min(clientX, window.innerWidth - width - EDGE_MARGIN * 3)
+      if (!previewWidth) previewWidth = previews[0]?.offsetWidth ?? 0
+      return Math.min(clientX, window.innerWidth - previewWidth - EDGE_MARGIN * 3)
     }
 
     function onMove(event: PointerEvent) {
@@ -94,6 +110,7 @@ export function PreviewFollow({ targetId }: { targetId: string }) {
 
     function onEnter() {
       host.dataset.armed = ''
+      collect()
     }
 
     function onLeave() {
@@ -110,7 +127,9 @@ export function PreviewFollow({ targetId }: { targetId: string }) {
       if (!still.matches) host.addEventListener('pointermove', onMove, { passive: true })
     }
 
+    collect()
     apply()
+    window.addEventListener('resize', collect)
     host.addEventListener('pointerenter', onEnter)
     host.addEventListener('focusin', onEnter)
     host.addEventListener('pointerleave', onLeave)
@@ -120,6 +139,7 @@ export function PreviewFollow({ targetId }: { targetId: string }) {
     return () => {
       if (raf) cancelAnimationFrame(raf)
       host.removeEventListener('pointermove', onMove)
+      window.removeEventListener('resize', collect)
       host.removeEventListener('pointerenter', onEnter)
       host.removeEventListener('focusin', onEnter)
       host.removeEventListener('pointerleave', onLeave)

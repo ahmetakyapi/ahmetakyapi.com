@@ -1039,11 +1039,15 @@
     filter: blur(3px);
   }
 }
+/* Başlangıç bulanıklığı 10px'ti (14 Ekim 2026, animasyon denetimi): blur
+   yarıçapı kaydırmanın her karesinde yeniden hesaplanıyor ve maliyeti
+   yarıçapla büyüyor. Bulanıklığın en güçlü olduğu anda opaklık ~0; 6px
+   gözle ayırt edilmiyor. */
 @keyframes home-work-arrive {
   from {
     opacity: 0.01;
     scale: 0.92;
-    filter: blur(10px);
+    filter: blur(6px);
   }
 }
 @supports (animation-timeline: view()) {

@@ -238,7 +238,8 @@ export default function HeroGlobe() {
     const ctx = canvas?.getContext('2d')
     if (!box || !canvas || !ctx) return
 
-    const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    let still = motionQuery.matches
     let palette = readPalette()
     let size = 0
     let dpr = 1
@@ -277,6 +278,72 @@ export default function HeroGlobe() {
       /** Son karenin süresi (ms); kare başına adımlar bununla ölçeklenir. */
       step: FRAME_INTERVAL,
     }
+
+    /*
+     * Atmosfer, çekirdek, parlama ve dış çizgi dönüşten bağımsız: boyut ya da
+     * tema değişince bir kez ekran dışı tuvale çizilir, her karede yalnız
+     * `drawImage` ile basılır. Önceden her karede üç radyal degrade yeniden
+     * kuruluyordu (14 Ekim 2026, animasyon denetimi).
+     */
+    const base = document.createElement('canvas')
+    const buildBase = () => {
+      const bctx = base.getContext('2d')
+      if (!size || !bctx) return
+      base.width = canvas.width
+      base.height = canvas.height
+      const sz = size
+      const CENTER = sz / 2
+      const RADIUS = sz * RADIUS_RATIO
+      const tone = (i: number) => palette.tones[i] ?? palette.tones[1]
+      bctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      bctx.clearRect(0, 0, sz, sz)
+      const atmos = bctx.createRadialGradient(CENTER, CENTER, RADIUS - 4, CENTER, CENTER, RADIUS + sz * 0.08)
+      atmos.addColorStop(0, rgba(palette.ring, 0))
+      atmos.addColorStop(0.35, rgba(palette.ring, 0.14))
+      atmos.addColorStop(0.65, rgba(tone(1), 0.07))
+      atmos.addColorStop(1, rgba(palette.ring, 0))
+      bctx.beginPath()
+      bctx.arc(CENTER, CENTER, RADIUS + sz * 0.08, 0, Math.PI * 2)
+      bctx.fillStyle = atmos
+      bctx.fill()
+
+      // Çekirdek: sol üstten ışık alan koyu lacivert küre.
+      const core = bctx.createRadialGradient(CENTER - RADIUS * 0.3, CENTER - RADIUS * 0.3, 0, CENTER, CENTER, RADIUS)
+      core.addColorStop(0, rgba(palette.core[0], 1))
+      core.addColorStop(0.55, rgba(palette.core[1], 1))
+      core.addColorStop(1, rgba(palette.core[2], 1))
+      bctx.beginPath()
+      bctx.arc(CENTER, CENTER, RADIUS, 0, Math.PI * 2)
+      bctx.fillStyle = core
+      bctx.fill()
+
+      const spec = bctx.createRadialGradient(
+        CENTER - RADIUS * 0.38,
+        CENTER - RADIUS * 0.38,
+        0,
+        CENTER - RADIUS * 0.2,
+        CENTER - RADIUS * 0.2,
+        RADIUS * 0.65,
+      )
+      spec.addColorStop(0, rgba(palette.star, 0.05))
+      spec.addColorStop(1, rgba(palette.star, 0))
+      bctx.fillStyle = spec
+      bctx.fill()
+
+      bctx.beginPath()
+      bctx.arc(CENTER, CENTER, RADIUS, 0, Math.PI * 2)
+      bctx.strokeStyle = rgba(palette.ring, 0.55)
+      bctx.lineWidth = 1.5
+      bctx.stroke()
+    }
+
+    /** Etiket genişlikleri: yazı tipi ve punto değişmedikçe aynı, kare başına ölçülmez. */
+    const labelWidths = new Map<string, number>()
+    let labelFont = ''
+    // Site yazı tipi ilk karelerden sonra yüklenirse yedek yazı tipiyle
+    // ölçülen genişlikler atılır.
+    const onFontsLoaded = () => labelWidths.clear()
+    document.fonts?.addEventListener('loadingdone', onFontsLoaded)
 
     const draw = () => {
       if (!size) return
@@ -317,45 +384,8 @@ export default function HeroGlobe() {
         ctx.stroke()
       }
 
-      // Atmosfer.
-      const atmos = ctx.createRadialGradient(CENTER, CENTER, RADIUS - 4, CENTER, CENTER, RADIUS + sz * 0.08)
-      atmos.addColorStop(0, rgba(palette.ring, 0))
-      atmos.addColorStop(0.35, rgba(palette.ring, 0.14))
-      atmos.addColorStop(0.65, rgba(tone(1), 0.07))
-      atmos.addColorStop(1, rgba(palette.ring, 0))
-      ctx.beginPath()
-      ctx.arc(CENTER, CENTER, RADIUS + sz * 0.08, 0, Math.PI * 2)
-      ctx.fillStyle = atmos
-      ctx.fill()
-
-      // Çekirdek: sol üstten ışık alan koyu lacivert küre.
-      const core = ctx.createRadialGradient(CENTER - RADIUS * 0.3, CENTER - RADIUS * 0.3, 0, CENTER, CENTER, RADIUS)
-      core.addColorStop(0, rgba(palette.core[0], 1))
-      core.addColorStop(0.55, rgba(palette.core[1], 1))
-      core.addColorStop(1, rgba(palette.core[2], 1))
-      ctx.beginPath()
-      ctx.arc(CENTER, CENTER, RADIUS, 0, Math.PI * 2)
-      ctx.fillStyle = core
-      ctx.fill()
-
-      const spec = ctx.createRadialGradient(
-        CENTER - RADIUS * 0.38,
-        CENTER - RADIUS * 0.38,
-        0,
-        CENTER - RADIUS * 0.2,
-        CENTER - RADIUS * 0.2,
-        RADIUS * 0.65,
-      )
-      spec.addColorStop(0, rgba(palette.star, 0.05))
-      spec.addColorStop(1, rgba(palette.star, 0))
-      ctx.fillStyle = spec
-      ctx.fill()
-
-      ctx.beginPath()
-      ctx.arc(CENTER, CENTER, RADIUS, 0, Math.PI * 2)
-      ctx.strokeStyle = rgba(palette.ring, 0.55)
-      ctx.lineWidth = 1.5
-      ctx.stroke()
+      // Atmosfer, çekirdek, parlama ve dış çizgi: dönmeyen katman, önbellekten.
+      if (base.width) ctx.drawImage(base, 0, 0, sz, sz)
 
       // Izgara, kürenin içine kırpılmış.
       ctx.save()
@@ -461,7 +491,12 @@ export default function HeroGlobe() {
 
       // Şehirler: hale, nabız halkaları, nokta ve etiket.
       const labelSize = Math.max(10, sz * 0.025)
-      ctx.font = `600 ${labelSize}px ${palette.font}`
+      const font = `600 ${labelSize}px ${palette.font}`
+      ctx.font = font
+      if (font !== labelFont) {
+        labelFont = font
+        labelWidths.clear()
+      }
       ctx.textAlign = 'center'
       ctx.textBaseline = 'middle'
       for (const city of CITIES) {
@@ -502,7 +537,11 @@ export default function HeroGlobe() {
 
         if (visibility > 0.3 && sz >= MIN_SIZE) {
           ctx.globalAlpha = Math.min(1, (visibility - 0.3) * 3.5) * alpha
-          const tw = ctx.measureText(city.name).width
+          let tw = labelWidths.get(city.name)
+          if (tw === undefined) {
+            tw = ctx.measureText(city.name).width
+            labelWidths.set(city.name, tw)
+          }
           const pw = tw + 12
           const ph = labelSize * 1.9
           const dir = city.labelDir ?? 'above'
@@ -590,6 +629,7 @@ export default function HeroGlobe() {
       canvas.height = Math.round(size * dpr)
       canvas.style.width = `${size}px`
       canvas.style.height = `${size}px`
+      buildBase()
       draw()
       canvas.dataset.ready = ''
     }
@@ -610,9 +650,21 @@ export default function HeroGlobe() {
 
     const themeWatch = new MutationObserver(() => {
       palette = readPalette()
+      buildBase()
       draw()
     })
     themeWatch.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
+
+    // Hareketi azalt tercihi sayfa açıkken de değişebilir: küre hemen durur
+    // ya da yeniden döner (önceden yalnız açılışta okunuyordu).
+    const onMotionChange = () => {
+      still = motionQuery.matches
+      if (still) {
+        pause()
+        draw()
+      } else run()
+    }
+    motionQuery.addEventListener('change', onMotionChange)
 
     // Sürükle-döndür. Fareyle iki eksen. Dokunmatikte önce yön kararı:
     //  · yatay başlayan hareket küreyi tutar;
@@ -734,6 +786,8 @@ export default function HeroGlobe() {
 
     return () => {
       pause()
+      motionQuery.removeEventListener('change', onMotionChange)
+      document.fonts?.removeEventListener('loadingdone', onFontsLoaded)
       ro.disconnect()
       io.disconnect()
       themeWatch.disconnect()
