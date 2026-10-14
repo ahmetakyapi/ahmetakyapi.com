@@ -1,6 +1,7 @@
 import { ArrowRight } from 'lucide-react'
 import Link from 'next/link'
 import { splitLead } from '@/components/projects/project-text'
+import { CoverArt } from '@/components/ui/CoverArt'
 import { ThemedImage } from '@/components/ui/ThemedImage'
 import { shotSources } from '@/lib/content/project-shots'
 import type { BlogPost, Project } from '@/lib/content/types'
@@ -12,6 +13,12 @@ import { Inline } from './Inline'
  * Kart değil liste: diğer yazılar dizindeki satırla aynı dili konuşur
  * (tarih, başlık). Proje kartı tek, gerçek ekran görüntüsüyle.
  * Kapak morfu (`post-*`) burada YOK: bir sayfada bir ad tek öğede.
+ *
+ * Ekran görüntüsü olmayan proje (ahmetakyapi.com) dizindeki gibi
+ * tipografik kapak alır (CoverArt). 14 Ekim 2026'ya kadar burada stili
+ * çoktan silinmiş `post-cover-type` sınıfı duruyordu: en yeni yazının
+ * sonunda kartın tepesinde 24 piksellik mavi bir şerit, altında boş bir
+ * kutu görünüyordu (ölçüldü, 390 ve 1440).
  */
 export function RelatedProject({ project }: { project: Project }) {
   const shot = shotSources(project.slug, 'desktop')
@@ -25,9 +32,7 @@ export function RelatedProject({ project }: { project: Project }) {
           {shot ? (
             <ThemedImage {...shot} alt="" className="size-full object-cover object-top" />
           ) : (
-            <div className="post-cover-type bg-cta" aria-hidden="true">
-              <span className="post-cover-word">{project.category}</span>
-            </div>
+            <CoverArt word={project.title} kicker={project.category} />
           )}
         </div>
         <div className="post-project-text">

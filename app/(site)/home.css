@@ -790,9 +790,12 @@
   color: var(--text-body);
 }
 
+/* Tek satırda ölçü kaygısı yok: ilk cümle (RecentPosts) 1440'ta kırpılmadan
+   sığsın diye 60ch'den 75ch'ye. */
 @media (min-width: 768px) {
   .home-post-excerpt {
     -webkit-line-clamp: 1;
+    max-width: 75ch;
   }
 }
 

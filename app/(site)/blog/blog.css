@@ -934,9 +934,17 @@
   border-bottom: 1px solid var(--line);
 }
 
+/* Yan yana düzende görsel sütunu doldurur. `aspect-ratio` burada KAPALI:
+   açıkken genişlik yükseklikten hesaplanıyordu (satır 181 piksel → 289
+   piksel genişlik) ve 240 piksellik sütundan taşan görsel, metnin ilk
+   49 pikselini örtüyordu ("Finansal Takip" → "nsal Takip"; 14 Ekim 2026,
+   ölçüldü). En az yükseklik 16/10'un karşılığı: kısa metinde de oran aynı. */
 @media (min-width: 640px) {
   .post-project-shot {
+    aspect-ratio: auto;
+    width: 100%;
     height: 100%;
+    min-height: 9.375rem;
     border-bottom: 0;
     border-right: 1px solid var(--line);
   }
@@ -946,7 +954,9 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: top;
+  /* Sol üst: yan yana düzende görsel yanlardan kırpılıyor; uygulamanın
+     logosu ve başlığı solda, onlar görünür kalsın. */
+  object-position: left top;
   transition: scale 500ms var(--ease-brand, ease);
 }
 

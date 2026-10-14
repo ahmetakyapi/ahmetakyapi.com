@@ -34,7 +34,7 @@ export function Footer() {
               satırına sığmayıp sola, tek başına bir satıra düşüyordu
               (4 Ekim 2026). Geniş ekranda künye satırının sağında. */}
           <div className="flex items-center justify-between gap-4">
-            <Link href="/" aria-label="Ahmet Akyapı, ana sayfa" className="flex w-fit items-center gap-3">
+            <Link href="/" aria-label="Ahmet Akyapı, ana sayfa" className="flex min-h-11 w-fit items-center gap-3">
               <Logo size={36} />
               <Signature className="h-8" />
             </Link>

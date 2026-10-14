@@ -94,7 +94,9 @@ export const defaultHomeContent: HomeContent = {
      güncellendi (3 Ekim 2026): "Thor ve Lena gibi iki büyük projede" ve
      Ar-Ge ile TÜBİTAK projeleri. */
   about: {
-    title: 'Merhaba, Ben Ahmet.',
+    /* Başlıkta sonda nokta yok (sahibinin kuralı, 10 Ekim 2026: başlık ve
+       imza noktasız; soru işareti kalır). */
+    title: 'Merhaba, Ben Ahmet',
     paragraphs: [
       'Bir fikri alıp tasarımından geliştirmesine, oradan da yayına almasına kadar uçtan uca kendim götürmeyi seviyorum. Bana göre iyi bir ürün kendini anlatmak zorunda kalmaz. Hızlı açılır, rahat okunur, kullanana ne yapacağını söyler ve doğru bilgi verir. Ben de tam olarak bunu yapmaya çalışıyorum.',
       "Nar Sistem Teknoloji'de enerji sektörüne yönelik Thor ve Lena gibi iki büyük projede görev aldım. Thor, iş emirlerinin, faturaların ve tahakkukların oluşturulup takip edildiği bir sistem. Lena ise akıllı sayaçlardan gelen veriyi toplayıp yöneten bir platform. Bunların dışında Ar-Ge ve TÜBİTAK projelerinde de görev aldım.",

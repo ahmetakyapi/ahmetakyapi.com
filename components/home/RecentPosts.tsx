@@ -2,6 +2,7 @@ import { ArrowRight, ArrowUpRight } from 'lucide-react'
 import Link from 'next/link'
 import { Inline } from '@/components/blog/Inline'
 import { MaskTitle } from '@/components/home/MaskTitle'
+import { splitLead } from '@/components/projects/project-text'
 import { ButtonLink } from '@/components/ui/Button'
 import { Container } from '@/components/ui/Container'
 import { SectionHeading } from '@/components/ui/SectionHeading'
@@ -19,6 +20,10 @@ import { formatPostDate, readingTime } from '@/lib/reading-time'
  * (sahibi: "son yazılarda hover ile projeyi göstermeye gerek yok").
  *
  * Yazı kapağının `post-<slug>` adını burası TAŞIMAZ (o /blog kartında).
+ *
+ * Özet satırı özetin İLK CÜMLESİ (14 Ekim 2026): özetin tamamı tek satıra
+ * kırpılıyordu ve satır ya cümlenin ortasında ya da noktanın hemen
+ * ardından üç noktayla bitiyordu ("kurduğum site.…").
  */
 const COUNT = 3
 
@@ -32,7 +37,10 @@ export function RecentPosts({ posts }: { posts: BlogPost[] }) {
         title={<MaskTitle accentLast>Son Yazılar</MaskTitle>}
         size="home"
         action={
-          <ButtonLink href="/blog" variant="ghost">
+          /* Eksi yatay pay düğmenin iç boşluğu kadar: yazı listenin
+             kenarıyla aynı hatta biter (masaüstünde sağ, telefonda sol
+             kenar; önce 16 piksel içerideydi). */
+          <ButtonLink href="/blog" variant="ghost" className="-mx-4">
             Tüm Yazılar
             <ArrowRight aria-hidden="true" />
           </ButtonLink>
@@ -55,7 +63,7 @@ export function RecentPosts({ posts }: { posts: BlogPost[] }) {
                 <span className="home-post-main">
                   <span className="home-post-title ink ink-hover">{post.title}</span>
                   <span className="home-post-excerpt">
-                    <Inline text={post.excerpt} />
+                    <Inline text={splitLead(post.excerpt).lead} />
                   </span>
                 </span>
                 <span className="home-post-side">

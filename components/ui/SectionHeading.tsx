@@ -42,7 +42,10 @@ export function SectionHeading({
 }: SectionHeadingProps) {
   return (
     <header className={cx('flex flex-wrap items-end justify-between gap-x-8 gap-y-4', className)}>
-      <div className="min-w-0 max-w-3xl">
+      {/* Ana sayfa başlığı 6rem'e kadar büyüyor; 48rem tavanı "Öne Çıkan
+          Projeler"i 1440'ta iki satıra bölüp son kelimeyi tek başına
+          bırakıyordu (ölçüldü: tek satırda 787 piksel). */}
+      <div className={cx('min-w-0', size === 'home' ? 'max-w-5xl' : 'max-w-3xl')}>
         {kunye ? <p className="mb-3 text-[0.9375rem] leading-snug font-semibold text-body">{kunye}</p> : null}
         <Heading
           id={id}
