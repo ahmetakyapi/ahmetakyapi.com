@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { Comments } from '@/components/blog/Comments'
+import { HeadingAnchors } from '@/components/blog/HeadingAnchors'
 import { Inline } from '@/components/blog/Inline'
 import { PostBody } from '@/components/blog/PostBody'
 import { PostCover } from '@/components/blog/PostCover'
@@ -11,6 +12,7 @@ import { PostTocAside, PostTocInline } from '@/components/blog/PostToc'
 import { findPost, morePosts, postSections, postsByDate, projectForPost } from '@/components/blog/posts'
 import { PageTransition } from '@/components/site/PageTransition'
 import { Container } from '@/components/ui/Container'
+import { CopyButton } from '@/components/ui/CopyButton'
 import { KunyeLine } from '@/components/ui/Kunye'
 import { AUTHOR, SITE_URL, TWITTER, blogPostingJsonLd, breadcrumbJsonLd } from '@/lib/seo'
 import { formatPostDate, readingTime } from '@/lib/reading-time'
@@ -20,9 +22,9 @@ import '../blog.css'
  * Yazı sayfası, SUNUCU bileşeni. Düzen tek sütun: başlık, kapak (başlığın
  * ALTINDA, ekranın en çok %45'i), gövde ve yazı sonu aynı okuma sütununda;
  * masaüstünde sağda yapışkan içindekiler. Ayrıntı blog.css başındaki notta.
- * İstemciye inen yalnızca üç adacık: kod
- * kopyala (CopyCode), içindekilerin etkin bölüm işareti (TocSpy) ve
- * kimlikleri tanımlıysa Giscus. Okuma ilerlemesi CSS'te
+ * İstemciye inen adacıklar: kod kopyala (CopyCode), içindekilerin etkin
+ * bölüm işareti (TocSpy), bölüm bağlantısını kopyalama (HeadingAnchors),
+ * yazının sonundaki "Bağlantıyı Kopyala" ve kimlikleri tanımlıysa Giscus. Okuma ilerlemesi CSS'te
  * (`animation-timeline: scroll()`), desteklemeyen tarayıcıda hiç görünmez.
  *
  * Bu segmentte `loading.tsx` YOK ve olmamalı: varsa sayfa bir Suspense
@@ -127,12 +129,21 @@ export default async function BlogPostPage({ params }: PageProps<'/blog/[slug]'>
               <PostCover post={post} variant="hero" priority />
               <PostTocInline sections={sections} />
               <PostBody blocks={post.content} sections={byIndex} />
+              {sections.length > 0 ? <HeadingAnchors /> : null}
 
+              {/* Yazı bitince paylaşmak için tek tık: kanonik adres panoya.
+                  Paylaşım menüsü (Web Share) bilerek yok: tarayıcının kendi
+                  penceresi açılmasın, okur adresi istediği yere yapıştırsın. */}
               <footer className="post-end">
                 <KunyeLine items={[AUTHOR, formatPostDate(post.date)]} />
-                <a href="/rss.xml" className="tap-y text-small font-medium text-muted transition-colors hover:text-strong">
-                  RSS ile Takip Et
-                </a>
+                <div className="post-end-actions">
+                  <CopyButton value={`${SITE_URL}/blog/${post.slug}`} variant="ghost" size="sm" copiedLabel="Bağlantı Kopyalandı">
+                    Bağlantıyı Kopyala
+                  </CopyButton>
+                  <a href="/rss.xml" className="tap-y text-small font-medium text-muted transition-colors hover:text-strong">
+                    RSS ile Takip Et
+                  </a>
+                </div>
               </footer>
               <Comments />
 

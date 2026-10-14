@@ -1,10 +1,11 @@
 'use client'
 
-import { ArrowRight, ArrowUp, BookOpen, FileText, Folder, Home, Layers, Mail, Moon, Rss, Search, Sun } from 'lucide-react'
+import { ArrowRight, ArrowUp, BookOpen, FileText, Folder, Home, Layers, Mail, Moon, Rss, Search, Sun, X } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from 'react'
 import { BrandIcon } from '@/components/site/BrandIcon'
 import { EMAIL, SOCIAL_LINKS } from '@/lib/nav'
+import { foldTr, matchesTokens, queryTokens } from '@/lib/search'
 import { readTheme, subscribeTheme, switchTheme } from '@/lib/theme-client'
 
 /**
@@ -20,8 +21,23 @@ import { readTheme, subscribeTheme, switchTheme } from '@/lib/theme-client'
  *
  * Odak: açılınca arama kutusuna, kapanınca (bileşen sökülünce) geldiği
  * yere döner; Tab paletten dışarı kaçmaz.
+ *
+ * Arama Türkçe harflere duyarsız ve kelime kelime (lib/search.ts):
+ * "acilis" Açılış Zili'yi, "oyun drizzle" iki kelimeyi birden taşıyan
+ * satırı bulur. Satırın künyesi (kategori, tarih) ve görünmeyen anahtar
+ * kelimeler (tech stack) de aranır.
+ *
+ * Dokunmatikte klavye ipuçları (Esc, ↑↓) yok; yerine görünür bir Kapat
+ * düğmesi var (telefonda Esc tuşu yok, örtüye dokunmak tek yoldu).
  */
-export type PaletteLink = { title: string; href: string }
+export type PaletteLink = {
+  title: string
+  href: string
+  /** Satırın altındaki kısa künye: proje kategorisi, yazı tarihi ve etiketi. */
+  meta?: string
+  /** Görünmez, yalnız aranır (projenin tech stack'i). */
+  keywords?: string
+}
 
 type Command = {
   id: string
@@ -31,6 +47,7 @@ type Command = {
   category: string
   action: () => void
   shortcut?: string
+  keywords?: string
 }
 
 const ICON = 'size-4'
@@ -81,6 +98,8 @@ export default function CommandPalette({
       ...projects.map((item) => ({
         id: `project-${item.title}`,
         label: item.title,
+        description: item.meta,
+        keywords: item.keywords,
         icon: <Folder className={ICON} />,
         category: 'Projeler',
         action: go(item.href),
@@ -88,6 +107,8 @@ export default function CommandPalette({
       ...posts.map((item) => ({
         id: `post-${item.title}`,
         label: item.title,
+        description: item.meta,
+        keywords: item.keywords,
         icon: <FileText className={ICON} />,
         category: 'Yazılar',
         action: go(item.href),
@@ -132,16 +153,17 @@ export default function CommandPalette({
     ]
   }, [projects, posts, theme, router, close])
 
+  /* Her satırın aranan metni bir kez katlanır, tuş başına değil. */
+  const haystacks = useMemo(
+    () => commands.map((c) => foldTr([c.label, c.description, c.category, c.keywords].filter(Boolean).join(' '))),
+    [commands],
+  )
+
   const filtered = useMemo(() => {
-    const q = query.trim().toLocaleLowerCase('tr-TR')
-    if (!q) return commands
-    return commands.filter(
-      (c) =>
-        c.label.toLocaleLowerCase('tr-TR').includes(q) ||
-        c.description?.toLocaleLowerCase('tr-TR').includes(q) ||
-        c.category.toLocaleLowerCase('tr-TR').includes(q),
-    )
-  }, [commands, query])
+    const tokens = queryTokens(query)
+    if (tokens.length === 0) return commands
+    return commands.filter((_, i) => matchesTokens(haystacks[i] ?? '', tokens))
+  }, [commands, haystacks, query])
 
   const grouped = useMemo(
     () =>
@@ -224,12 +246,24 @@ export default function CommandPalette({
               aria-activedescendant={filtered[selected] ? `komut-${selected}` : undefined}
               className="min-w-0 flex-1 bg-transparent text-sm text-strong outline-none placeholder:text-muted"
             />
-            <kbd className="rounded border border-line bg-surface px-1.5 py-0.5 font-mono text-micro text-muted">Esc</kbd>
+            <kbd className="rounded border border-line bg-surface px-1.5 py-0.5 font-mono text-micro text-muted pointer-coarse:hidden">
+              Esc
+            </kbd>
+            <button
+              type="button"
+              onClick={close}
+              aria-label="Kapat"
+              className="-mr-2 hidden size-11 shrink-0 place-items-center rounded-full text-muted transition-colors hover:text-strong pointer-coarse:inline-grid"
+            >
+              <X className="size-5" aria-hidden="true" />
+            </button>
           </div>
 
           <div id="komut-listesi" role="listbox" aria-label="Komutlar" className="max-h-[min(360px,55vh)] overflow-y-auto py-2">
             {filtered.length === 0 ? (
-              <p className="px-4 py-8 text-center text-sm text-muted">Sonuç bulunamadı.</p>
+              <p className="px-4 py-8 text-center text-sm text-muted" role="status">
+                Sonuç bulunamadı. Başka bir kelimeyle dene.
+              </p>
             ) : (
               Object.entries(grouped).map(([category, cmds]) => (
                 <div key={category} role="group" aria-label={category}>
@@ -279,7 +313,7 @@ export default function CommandPalette({
             )}
           </div>
 
-          <div className="flex items-center gap-4 border-t border-line px-4 py-2.5 text-micro font-medium text-muted">
+          <div className="flex items-center gap-4 border-t border-line px-4 py-2.5 text-micro font-medium text-muted pointer-coarse:hidden">
             <span>↑↓ Seç</span>
             <span>↵ Aç</span>
             <span>Esc Kapat</span>

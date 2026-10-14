@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
 import { Logo } from '@/components/site/Logo'
+import { NotFoundSuggest, type SuggestTarget } from '@/components/site/NotFoundSuggest'
 import { ButtonLink } from '@/components/ui/Button'
+import { blogPosts } from '@/lib/content/posts'
+import { projects } from '@/lib/content/projects'
 
 export const metadata: Metadata = { title: 'Sayfa Bulunamadı' }
 
@@ -10,7 +13,15 @@ export const metadata: Metadata = { title: 'Sayfa Bulunamadı' }
  *
  * Bu sayfa (site) kabuğunun DIŞINDA çizilir (kök not-found), o yüzden
  * atlama bağlantısının hedefi burada kendi `<main>`i.
+ *
+ * Altta "Bunu mu arıyordun?" (NotFoundSuggest): adrese en çok benzeyen
+ * proje ya da yazı. İstemciye yalnız başlık, adres ve slug gider.
  */
+const SUGGEST_TARGETS: SuggestTarget[] = [
+  ...projects.map((p) => ({ title: p.title, href: `/projeler/${p.slug}`, slug: p.slug, kind: 'Proje' as const })),
+  ...blogPosts.map((p) => ({ title: p.title, href: `/blog/${p.slug}`, slug: p.slug, kind: 'Yazı' as const })),
+]
+
 export default function NotFound() {
   return (
     <main id="main-content" className="mx-auto grid min-h-dvh max-w-xl place-items-center px-4 py-16 text-center">
@@ -27,6 +38,7 @@ export default function NotFound() {
             Yazıları Oku
           </ButtonLink>
         </div>
+        <NotFoundSuggest targets={SUGGEST_TARGETS} />
       </div>
     </main>
   )

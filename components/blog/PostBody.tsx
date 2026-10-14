@@ -1,4 +1,4 @@
-import { ArrowRight, Info, Lightbulb, TriangleAlert } from 'lucide-react'
+import { ArrowRight, Check, Info, Lightbulb, Link2, TriangleAlert } from 'lucide-react'
 import type { CSSProperties } from 'react'
 import type { Block } from '@/lib/content/types'
 import { CodeBlock } from './CodeBlock'
@@ -49,10 +49,12 @@ function BlockView({ block, section }: { block: Block; section?: PostSection }) 
 
     case 'h2':
       return (
-        /* Numara yok: "03" gibi mono bir sayı başlığın önünde okumayı
-           yavaşlatıyordu; sıra içindekilerde zaten görünüyor. */
+        /* Bölüm numarası CSS sayacından (blog.css). Numaranın yanında
+           bölümün bağlantısı: JavaScript'le tıklayınca adres panoya
+           kopyalanır (HeadingAnchors), JavaScript yoksa düz çapa. */
         <h2 id={section?.id}>
           <Inline text={block.text} />
+          {section ? <SectionAnchor id={section.id} /> : null}
         </h2>
       )
 
@@ -249,4 +251,21 @@ function BlockView({ block, section }: { block: Block; section?: PostSection }) 
 
 function assertNever(value: never): never {
   throw new Error(`Bilinmeyen blok tipi: ${JSON.stringify(value)}`)
+}
+
+/**
+ * Bölüm bağlantısı: başlığın üstündeki numara satırında, numaranın hemen
+ * sağında (blog.css → `.post-anchor`). Başlık metninin akışına girmez;
+ * uzun başlıkta tek başına alt satıra düşen bir ikon olmaz.
+ */
+function SectionAnchor({ id }: { id: string }) {
+  return (
+    <a href={`#${id}`} className="post-anchor" data-anchor="" aria-label="Bu bölümün bağlantısını kopyala">
+      <Link2 aria-hidden="true" data-part="idle" />
+      <Check aria-hidden="true" data-part="done" />
+      <span data-part="tip" aria-hidden="true">
+        Bağlantı Kopyalandı
+      </span>
+    </a>
+  )
 }

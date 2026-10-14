@@ -267,6 +267,86 @@
   background: var(--primary);
 }
 
+/* Bölüm bağlantısı (PostBody → SectionAnchor, HeadingAnchors). Numara
+   satırında, numaranın sağında: başlığın kendi akışına girmez, uzun
+   başlıkta tek başına alt satıra düşmez. Hassas imleçte başlığın üzerine
+   gelince ya da klavyeyle odaklanınca belirir; dokunmatikte hep görünür,
+   soluk ve 44 piksellik vuruş alanıyla.
+   TUZAK (globals.css → "Başlık mürekkebi"): başlık degradeyi
+   `background-clip: text` ile boyuyor ve metin dolgusu saydam. Bağlantının
+   kendi opaklığı onu ayrı katmana alıyor; içindeki metin ancak kendi dolgu
+   rengiyle görünür, o yüzden `-webkit-text-fill-color` açıkça yazılı.
+   Seçiciler `.post-prose` önekli: gövde bağlantısının kuralı (`.post-prose
+   a`, altı çizili ve mavi) yoksa bunu eziyordu. */
+.post-prose .post-anchor {
+  position: absolute;
+  /* Numara satırının ortası: üst boşluk 1,25rem + numara satırının yarısı
+     (0,9375rem / 2), eksi kutunun yarısı. */
+  top: calc(1.25rem + 0.47rem - 1rem);
+  left: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  height: 2rem;
+  padding-inline: 0.5rem;
+  border-radius: 999px;
+  font-size: var(--text-small);
+  font-weight: 500;
+  letter-spacing: normal;
+  line-height: 1;
+  white-space: nowrap;
+  text-decoration: none;
+  color: var(--text-muted);
+  -webkit-text-fill-color: currentColor;
+  opacity: 0;
+  transition:
+    opacity 260ms var(--ease-brand),
+    color 260ms var(--ease-brand),
+    background-color 260ms var(--ease-brand);
+}
+.post-prose .post-anchor svg {
+  width: 1rem;
+  height: 1rem;
+  flex: none;
+}
+.post-prose .post-anchor [data-part="done"],
+.post-prose .post-anchor [data-part="tip"] {
+  display: none;
+}
+.post-prose .post-anchor[data-copied] {
+  opacity: 1;
+  color: var(--primary-ink);
+}
+.post-prose .post-anchor[data-copied] [data-part="idle"] {
+  display: none;
+}
+.post-prose .post-anchor[data-copied] :is([data-part="done"], [data-part="tip"]) {
+  display: inline;
+}
+.post-prose > h2:hover .post-anchor,
+.post-prose .post-anchor:focus-visible {
+  opacity: 1;
+}
+.post-prose .post-anchor:hover {
+  color: var(--primary-ink);
+  background: var(--primary-wash);
+}
+@media (pointer: coarse) {
+  .post-prose .post-anchor {
+    opacity: 0.85;
+    /* 44 piksellik vuruş alanı; kutu numara satırına göre yeniden ortalı. */
+    top: calc(1.25rem + 0.47rem - 1.375rem);
+    left: calc(1.5rem - 0.375rem);
+    height: 2.75rem;
+    padding-inline: 0.875rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .post-prose .post-anchor {
+    transition: none;
+  }
+}
+
 .post-prose > h3 {
   margin-top: 1.75em;
   font-size: clamp(1.375rem, 1.2rem + 0.6vw, 1.625rem);
@@ -775,6 +855,18 @@
 
 .post-end > * {
   font-size: 0.8125rem;
+}
+
+/* Sağ uç: "Bağlantıyı Kopyala" ve RSS. Düğmenin iç boşluğu kadar eksi pay:
+   yazı çizginin sağ ucuyla değil, metnin kendisiyle hizalı dursun. */
+.post-end-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 1.25rem;
+}
+.post-end-actions > button {
+  margin-left: -0.75rem;
 }
 
 /* --------------------------------------------------------------------------

@@ -1,6 +1,6 @@
 'use client'
 
-import { Command, Menu, X } from 'lucide-react'
+import { Command, Menu, Search, X } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from 'react'
@@ -25,10 +25,15 @@ function isActive(pathname: string, href: string) {
  * altından geçmeye başlayınca `.glass` (desteklenmiyorsa ya da saydamlık
  * azaltılmışsa opak). Rota geçişinde başlık sabit kalır (`.vt-header`).
  *
- * Mobil menü: açılınca odak ilk bağlantıya gider, Tab menünün içinde
+ * Mobil menü: açılınca odak ilk öğeye (arama) gider, Tab menünün içinde
  * döner (menü düğmesi dahil), Esc ve dışarı tıklama kapatır, kapanınca
  * odak menü düğmesine döner. Menü açıldığı adrese bağlı: gezinme olunca
  * kendiliğinden kapanır (efekt içinde durum yazmadan).
+ *
+ * Telefonda arama mobil menünün başında (14 Ekim 2026): ⌘K hapı yalnız
+ * 640 piksel üstünde görünüyor ve palet telefonda hiç açılamıyordu; proje
+ * ya da yazı aramak için tek yol listeyi kaydırmaktı. Başlığa ayrı bir
+ * büyüteç denendi: 390 pikselde imzanın üstüne biniyordu (ölçüldü, 17 px).
  */
 export function Header() {
   const pathname = usePathname()
@@ -92,10 +97,10 @@ export function Header() {
     if (restoreFocus) menuButtonRef.current?.focus()
   }, [])
 
-  /* Açılışta odak ilk bağlantıya; dışarı tıklama kapatır. */
+  /* Açılışta odak ilk öğeye (arama); dışarı tıklama kapatır. */
   useEffect(() => {
     if (!menuOpen) return
-    menuRef.current?.querySelector<HTMLElement>('a')?.focus()
+    menuRef.current?.querySelector<HTMLElement>('a, button')?.focus()
 
     function onPointer(event: PointerEvent) {
       const target = event.target as Node
@@ -113,11 +118,19 @@ export function Header() {
       return
     }
     if (event.key !== 'Tab' || !menuRef.current || !menuButtonRef.current) return
-    const focusables = [menuButtonRef.current, ...menuRef.current.querySelectorAll<HTMLElement>('a')]
+    const focusables = [menuButtonRef.current, ...menuRef.current.querySelectorAll<HTMLElement>('a, button')]
     const index = focusables.indexOf(document.activeElement as HTMLElement)
     const nextIndex = event.shiftKey ? index - 1 : index + 1
     event.preventDefault()
     focusables[(nextIndex + focusables.length) % focusables.length]?.focus()
+  }
+
+  /* Menüden açılınca odak önce menü düğmesine döner: palet kapanınca
+     odağı açıldığı öğeye geri veriyor ve menüdeki düğme o an sökülmüş
+     olurdu (odak sayfanın başına düşerdi). */
+  function openPalette(fromMenu = false) {
+    if (fromMenu) closeMenu(true)
+    window.dispatchEvent(new CustomEvent('command-palette:open'))
   }
 
   return (
@@ -166,7 +179,7 @@ export function Header() {
         <div className="flex items-center gap-1">
           <button
             type="button"
-            onClick={() => window.dispatchEvent(new CustomEvent('command-palette:open'))}
+            onClick={() => openPalette()}
             className="hidden h-9 items-center gap-1.5 rounded-full border border-line px-3 font-mono text-small text-body transition-colors hover:border-line-strong hover:text-strong sm:inline-flex"
             aria-label="Komut paletini aç"
             aria-keyshortcuts="Meta+K Control+K"
@@ -203,6 +216,17 @@ export function Header() {
             aria-label="Mobil gezinme"
             className="overflow-hidden rounded-card border border-line bg-surface-solid p-2 shadow-floating"
           >
+            {/* Arama kutusu görünümünde düğme: dokununca menü kapanır, ⌘K
+                paleti açılır (yazmaya hazır). Metin paletin kendi arama
+                kutusuyla aynı. Odak döngüsünde (onMenuKeyDown) ilk sırada. */}
+            <button
+              type="button"
+              onClick={() => openPalette(true)}
+              className="mb-1 flex min-h-12 w-full items-center gap-3 rounded-button border border-line bg-surface px-4 text-left text-base text-muted transition-colors hover:border-line-strong hover:text-strong"
+            >
+              <Search className="size-[1.125rem] shrink-0" aria-hidden="true" />
+              Sayfa, proje ya da yazı ara
+            </button>
             {NAV_ITEMS.map((item) => {
               const active = isActive(pathname, item.href)
               return (
