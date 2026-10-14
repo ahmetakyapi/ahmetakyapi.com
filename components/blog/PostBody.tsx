@@ -51,11 +51,23 @@ function BlockView({ block, section }: { block: Block; section?: PostSection }) 
       return (
         /* Bölüm numarası CSS sayacından (blog.css). Numaranın yanında
            bölümün bağlantısı: JavaScript'le tıklayınca adres panoya
-           kopyalanır (HeadingAnchors), JavaScript yoksa düz çapa. */
-        <h2 id={section?.id}>
-          <Inline text={block.text} />
-          {section ? <SectionAnchor id={section.id} /> : null}
-        </h2>
+           kopyalanır (HeadingAnchors), JavaScript yoksa düz çapa.
+           Başlığın erişilebilir adı yalnız metni (`aria-labelledby`):
+           bağlantı başlığın içinde olduğu için ekran okuyucunun başlık
+           listesinde her bölüm "… Bu bölümün bağlantısını kopyala" diye
+           okunuyordu. */
+        section ? (
+          <h2 id={section.id} aria-labelledby={`${section.id}--baslik`}>
+            <span id={`${section.id}--baslik`}>
+              <Inline text={block.text} />
+            </span>
+            <SectionAnchor id={section.id} />
+          </h2>
+        ) : (
+          <h2>
+            <Inline text={block.text} />
+          </h2>
+        )
       )
 
     case 'h3':

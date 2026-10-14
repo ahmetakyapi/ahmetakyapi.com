@@ -32,7 +32,9 @@ export function RelatedProject({ project }: { project: Project }) {
           {shot ? (
             <ThemedImage {...shot} alt="" className="size-full object-cover object-top" />
           ) : (
-            <CoverArt word={project.title} kicker={project.category} />
+            /* Künyesiz: kategori hemen yandaki metinde zaten yazılı
+               ("Portfolyo" aynı kartta iki kez okunuyordu). */
+            <CoverArt word={project.title} />
           )}
         </div>
         <div className="post-project-text">
