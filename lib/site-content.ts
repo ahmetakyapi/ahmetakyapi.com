@@ -153,5 +153,3 @@ export const defaultSiteContent: SiteContent = {
 export function getSiteContent(): SiteContent {
   return defaultSiteContent
 }
-
-export { getOrderedProjects } from './project-order'

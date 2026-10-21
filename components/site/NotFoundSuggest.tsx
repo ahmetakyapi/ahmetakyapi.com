@@ -16,9 +16,10 @@ import { similarity } from '@/lib/search'
  *
  * Sayfa statik, adres yalnız tarayıcıda biliniyor: öneri hidrasyondan sonra
  * belirir (sunucuda ve JavaScript yokken hiçbir şey çizmez). Düğmelerin
- * ALTINDA durur, gelince hiçbir şeyi aşağı itmez. Yeterince benzer bir şey
- * yoksa (eşik 0,5) öneri yok: alakasız bir sayfayı "bunu mu arıyordun"
- * diye göstermek hiç göstermemekten kötü.
+ * ALTINA asılır (`absolute`, akışın dışında): ortalanmış blok onunla
+ * yeniden ortalanıp yukarı kaymaz (mobilde 84 px, CLS 0,05 ölçülmüştü).
+ * Yeterince benzer bir şey yoksa (eşik 0,5) öneri yok: alakasız bir
+ * sayfayı "bunu mu arıyordun" diye göstermek hiç göstermemekten kötü.
  */
 export type SuggestTarget = { title: string; href: string; slug: string; kind: 'Proje' | 'Yazı' }
 
@@ -60,7 +61,7 @@ export function NotFoundSuggest({ targets }: { targets: readonly SuggestTarget[]
   if (!match) return null
 
   return (
-    <div className="panel-in mt-10 border-t border-line pt-8">
+    <div className="panel-in absolute inset-x-0 top-full mt-10 border-t border-line pt-8">
       <p className="text-small font-medium text-muted">Bunu mu arıyordun?</p>
       <Link
         href={match.href}

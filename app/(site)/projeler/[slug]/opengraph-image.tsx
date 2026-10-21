@@ -4,18 +4,20 @@ import { ImageResponse } from 'next/og'
 import { splitLead } from '@/components/projects/project-text'
 import { DEV_STARTER_BANNER, shotSources } from '@/lib/content/project-shots'
 import { getProjectBySlug, projects } from '@/lib/content/projects'
-import { SIGNATURE_MARK_A, SIGNATURE_MARK_FLOURISH } from '@/lib/brand/signature'
-import { OG_CONTENT_TYPE, OG_SIZE } from '@/lib/og'
+import { BrandMark, loadFonts, OG_COLORS as C, OG_CONTENT_TYPE, OG_SIZE } from '@/lib/og'
 
 export const alt = 'Ahmet Akyapı projelerinden birinin paylaşım kartı'
 export const size = OG_SIZE
 export const contentType = OG_CONTENT_TYPE
 
 /* Kartlar derleme anında üretilsin: her paylaşım önizlemesi bir fonksiyon
-   çağrısı olmasın. */
+   çağrısı olmasın. `dynamicParams = false`: listede olmayan slug 404
+   (yoksa her uydurma adres istekte çizilip 200 dönüyordu). */
 export function generateStaticParams() {
   return projects.map((project) => ({ slug: project.slug }))
 }
+
+export const dynamicParams = false
 
 /**
  * Proje detayının paylaşım kartı: solda ad ve tek cümle, sağda projenin
@@ -24,24 +26,13 @@ export function generateStaticParams() {
  * Adres rota grubu yüzünden sonekli (`/projeler/<slug>/opengraph-image-<özet>`);
  * JSON-LD lib/seo.ts → `projectOgImagePath` ile hesaplıyor.
  *
- * Satori CSS değişkeni çözmez: renkler `signature` koyu paletinden sabit
- * (lib/og.tsx ile aynı değerler; orada değişirse burada da). Görsel
- * diskten okunup veri adresi olarak gömülüyor: ağ turu yok.
+ * Palet, font ve marka işareti lib/og.tsx'ten (Satori CSS değişkeni
+ * çözmez; renkler orada sabit). Görsel diskten okunup veri adresi olarak
+ * gömülüyor: ağ turu yok.
  */
-const C = {
-  ground: '#070d16',
-  ink: '#eaf1f8',
-  body: '#94a7ba',
-  muted: '#8497a9',
-  primary: '#35b8ff',
-  line: 'rgba(255,255,255,0.14)',
-  surface: 'rgba(255,255,255,0.05)',
-  brandFrom: '#5cc4ff',
-  brandMid: '#1f86e0',
-  brandTo: '#0b3f86',
-  onBrand: '#ffffff',
-  brandGlow: '#bfe6ff',
-} as const
+
+/** Ekran görüntüsünün çerçevesi: --line'dan bir ton belirgin. */
+const FRAME_LINE = 'rgba(255,255,255,0.14)'
 
 /** Ekran görüntüsünün kartta kapladığı genişlik; sağdan ve alttan taşar. */
 const SHOT_WIDTH = 700
@@ -53,27 +44,6 @@ const TITLE_MAX = 96
 const GLYPH_EM = 0.54
 /** Bundan geniş görsel ekran görüntüsü değil afiştir (dev-starter 3,5:1). */
 const BANNER_RATIO = 2
-
-type OgFont = { name: string; data: ArrayBuffer; weight: 400 | 700; style: 'normal' }
-
-/* lib/og.tsx'teki yükleyicinin kopyası: orası dışa aktarmıyor ve ortak
-   dosya bu fazda değişmiyor (öneri olarak raporlandı). */
-let fontCache: Promise<OgFont[]> | null = null
-function loadFonts(): Promise<OgFont[]> {
-  fontCache ??= (async () => {
-    const dir = join(process.cwd(), 'assets', 'fonts')
-    const [regular, bold] = await Promise.all([
-      readFile(join(dir, 'SchibstedGrotesk-Regular.ttf')),
-      readFile(join(dir, 'SchibstedGrotesk-Bold.ttf')),
-    ])
-    const ab = (buf: Buffer) => buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength) as ArrayBuffer
-    return [
-      { name: 'Schibsted', data: ab(regular), weight: 400, style: 'normal' },
-      { name: 'Schibsted', data: ab(bold), weight: 700, style: 'normal' },
-    ]
-  })()
-  return fontCache
-}
 
 function toDataUrl(buf: Buffer, mime: string) {
   return `data:${mime};base64,${buf.toString('base64')}`
@@ -153,7 +123,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
               width: SHOT_WIDTH,
               display: 'flex',
               borderRadius: 20,
-              border: `2px solid ${C.line}`,
+              border: `2px solid ${FRAME_LINE}`,
               overflow: 'hidden',
               backgroundColor: C.surface,
             }}
@@ -183,23 +153,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <div
-              style={{
-                width: 52,
-                height: 52,
-                borderRadius: 15,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: C.brandMid,
-                backgroundImage: `linear-gradient(150deg, ${C.brandFrom} 0%, ${C.brandMid} 48%, ${C.brandTo} 100%)`,
-              }}
-            >
-              <svg width={52} height={52} viewBox="0 0 42 42" fill="none">
-                <path d={SIGNATURE_MARK_A} fill={C.onBrand} />
-                <path d={SIGNATURE_MARK_FLOURISH} stroke={C.brandGlow} strokeWidth="1.7" strokeLinecap="round" />
-              </svg>
-            </div>
+            <BrandMark size={52} radius={15} />
             <div style={{ display: 'flex', marginLeft: 16, fontSize: 24, fontWeight: 700 }}>Ahmet Akyapı</div>
             <div style={{ display: 'flex', marginLeft: 14, fontSize: 22, color: C.muted }}>Projeler</div>
           </div>

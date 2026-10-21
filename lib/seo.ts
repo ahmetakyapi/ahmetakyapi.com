@@ -1,9 +1,22 @@
+import type { Metadata } from 'next'
 import type { BlogPost, Project } from '@/lib/content/types'
 import { EMAIL, JOB_TITLE, SOCIAL_LINKS } from '@/lib/nav'
 
 export { JOB_TITLE }
 
-export const SITE_URL = 'https://ahmetakyapi.com'
+/**
+ * Kanonik adres www'li: site Vercel'de www'den yayında, çıplak alan adı
+ * www'ye 307 ile yönleniyor. Canonical, og:url, site haritası ve JSON-LD
+ * eskiden çıplak adresi gösteriyordu; her bağlantı bir yönlendirme
+ * fazlasıydı ve kanonik sinyal yayındaki adresle çelişiyordu.
+ */
+export const SITE_URL = 'https://www.ahmetakyapi.com'
+/**
+ * Yalnızca RSS `<guid>` için ESKİ kök. Okuyucular yazıyı guid ile tanır;
+ * guid değişirse bütün yazılar yeniden "yeni" görünür. Mevcut yazıların
+ * guid'i çıplak alan adıyla yayımlandı, öyle kalır (adres yine açılıyor).
+ */
+export const FEED_GUID_ORIGIN = 'https://ahmetakyapi.com'
 export const AUTHOR = 'Ahmet Akyapı'
 export const TWITTER = '@ahmetakyapi'
 /** Site adı ve başlık şablonunun soneki (`%s · Ahmet Akyapı`). */
@@ -11,8 +24,41 @@ export const SITE_NAME = AUTHOR
 export const SITE_DESCRIPTION =
   'Full-Stack & AI Developer. Next.js, TypeScript, Postgres ve Claude API ile uçtan uca web ürünleri geliştiriyorum; yaptıklarımın nasıl yapıldığını da yazıyorum.'
 
+/*
+ * Metadata TABANLARI. Next metadata'yı üst anahtar bazında sığ birleştirir:
+ * sayfa `alternates`, `openGraph` ya da `twitter` verince kökteki nesne
+ * tümüyle düşer. RSS keşif bağlantısı yalnızca 404'te kalmıştı; /blog ve
+ * /projeler'de og:site_name ile og:locale, yazı ve proje sayfalarında
+ * twitter:site yoktu. Kök layout ve bu nesneleri ezen her sayfa onları
+ * kendi nesnesine yayar.
+ */
+export const ALTERNATES_BASE = {
+  types: { 'application/rss+xml': '/rss.xml' },
+} as const satisfies Metadata['alternates']
+
+export const OPEN_GRAPH_BASE = {
+  siteName: SITE_NAME,
+  locale: 'tr_TR',
+  type: 'website',
+} as const satisfies Metadata['openGraph']
+
+export const TWITTER_BASE = {
+  card: 'summary_large_image',
+  site: TWITTER,
+  creator: TWITTER,
+} as const satisfies Metadata['twitter']
+
 export function abs(path: string) {
   return path.startsWith('http') ? path : `${SITE_URL}${path}`
+}
+
+/**
+ * JSON-LD'yi `<script>` içine yazılacak metne çevirir. `<` kaçırılır
+ * (`<`): başlıkta ya da özette `</script>` veya `<!--` geçerse betik
+ * erken kapanmasın. JSON olarak anlamı aynı.
+ */
+export function jsonLdHtml(data: unknown) {
+  return { __html: JSON.stringify(data).replace(/</g, '\\u003c') }
 }
 
 /**
@@ -147,21 +193,6 @@ export function blogPostingJsonLd(post: BlogPost) {
     keywords: post.tag,
     author: { '@type': 'Person', name: AUTHOR, url: SITE_URL },
     publisher: { '@type': 'Person', name: AUTHOR, url: SITE_URL },
-  }
-}
-
-/** Proje detayı (`/projeler/[slug]`, faz 2) için. */
-export function projectJsonLd(project: Project) {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'CreativeWork',
-    name: project.title,
-    description: project.description,
-    url: abs(`/projeler/${project.slug}`),
-    sameAs: [project.link, ...(project.github ? [project.github] : [])],
-    keywords: project.tags.join(', '),
-    inLanguage: 'tr-TR',
-    author: { '@type': 'Person', name: AUTHOR, url: SITE_URL },
   }
 }
 

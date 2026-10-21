@@ -1,4 +1,5 @@
 import { ArrowRight } from 'lucide-react'
+import { ContactLink } from '@/components/home/ContactLink'
 import { GlobeIsland } from '@/components/home/GlobeIsland'
 import { SketchArrow } from '@/components/ui/Sketch'
 import { ButtonLink } from '@/components/ui/Button'
@@ -40,14 +41,15 @@ export function HomeHero({ home }: { home: HomeContent }) {
               Projeleri Gör
               <ArrowRight aria-hidden="true" />
             </ButtonLink>
-            <ButtonLink href="/#iletisim" variant="secondary" size="lg">
-              İletişime Geç
-            </ButtonLink>
+            <ContactLink>İletişime Geç</ContactLink>
           </div>
         </div>
 
         <div className="home-hero-art">
-          <GlobeIsland />
+          {/* Kare sunucuda çiziliyor: küre istemcide inince hiçbir şey kaymaz. */}
+          <div className="home-globe-box">
+            <GlobeIsland />
+          </div>
           <p className="home-globe-hint">
             <SketchArrow />
             Basılı tutup sürükleyerek döndürebilirsin.

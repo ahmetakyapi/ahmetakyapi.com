@@ -1,5 +1,5 @@
 import { postsByDate } from '@/components/blog/posts'
-import { SITE_NAME, SITE_URL } from '@/lib/seo'
+import { FEED_GUID_ORIGIN, SITE_NAME, SITE_URL } from '@/lib/seo'
 
 function escapeXml(value: string) {
   return value
@@ -26,7 +26,7 @@ export function GET() {
     <item>
       <title>${escapeXml(p.title)}</title>
       <link>${SITE_URL}/blog/${p.slug}</link>
-      <guid isPermaLink="true">${SITE_URL}/blog/${p.slug}</guid>
+      <guid isPermaLink="true">${FEED_GUID_ORIGIN}/blog/${p.slug}</guid>
       <pubDate>${new Date(p.date).toUTCString()}</pubDate>
       <category>${escapeXml(p.tag)}</category>
       <description>${escapeXml(p.excerpt)}</description>

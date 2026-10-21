@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
-import { useEffect } from 'react'
+import { useLayoutEffect } from 'react'
 import { FILTER_PARAM, GROUP_LABELS, LIST_ID, isProjectGroup } from '@/components/projects/project-text'
 import { PROJECT_GROUPS, type ProjectGroup } from '@/lib/content/types'
 import { cx } from '@/lib/utils'
@@ -13,7 +13,8 @@ import { cx } from '@/lib/utils'
  * Sayfa STATİK kalsın diye süzgeç sunucuda değil burada: `searchParams`
  * okuyan bir sayfa her istekte yeniden çizilir. Satırların tamamı HTML'de;
  * bu ada yalnız listeye `data-filter` yazıyor ve gizleme CSS'te
- * (projects.css). JavaScript yoksa ya da ada henüz yüklenmediyse bütün
+ * (projects.css). Doğrudan açılan süzülmüş adreste ilk değeri sayfadaki
+ * küçük betik yazar (page.tsx → FILTER_SCRIPT). JavaScript yoksa bütün
  * projeler görünür, hiçbir şey kaybolmaz.
  *
  * Görünüm çip değil METİN SEKMESİ: dört kutu yan yana listenin üstünde
@@ -26,8 +27,13 @@ export function ProjectFilter({ counts }: { counts: Counts }) {
   const raw = useSearchParams().get(FILTER_PARAM)
   const active = isProjectGroup(raw) ? raw : null
 
-  useEffect(() => {
-    document.getElementById(LIST_ID)?.setAttribute('data-filter', active ?? 'all')
+  /* Boyamadan önce: geri gelinen süzülmüş adreste liste bir kare bile
+     tamamıyla görünmesin. `data-live`: satırların solarak belirmesi
+     (projects.css) yalnız bundan sonra, ilk çizimde değil. */
+  useLayoutEffect(() => {
+    const list = document.getElementById(LIST_ID)
+    list?.setAttribute('data-filter', active ?? 'all')
+    list?.setAttribute('data-live', '')
   }, [active])
 
   return (

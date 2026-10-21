@@ -1,12 +1,14 @@
-import { setThemeAction } from '@/app/actions/theme'
-import type { Theme } from '@/lib/theme'
+import { DEFAULT_THEME, THEME_COLOR, THEME_COOKIE, THEME_COOKIE_MAX_AGE, isTheme, type Theme } from '@/lib/theme'
 
 /**
  * Temayı değiştir: ThemeToggle ve ⌘K aynı yolu kullanır.
  *
- * Görsel değişim anında (`<html data-theme>`), çerez arkada (server action):
- * sunucuyu beklemek düğmeyi dondururdu. Bir sonraki sunucu çizimi çerezden
- * aynı temayı basar.
+ * Görsel değişim anında (`<html data-theme>`), çerezi tarayıcı kendisi
+ * yazar. Sunucu çerezi hiç okumuyor (sayfalar statik, lib/theme.ts); okuyan
+ * yalnızca bir sonraki yüklemedeki THEME_SCRIPT. Eskiden çerez bir server
+ * action ile yazılıyordu: Next çerez yazan eylemi yeniden doğrulama sayıp
+ * her tıklamada sayfayı fonksiyonda baştan çiziyor ve istemcinin ön
+ * yükleme önbelleğini siliyordu.
  *
  * `origin` verilirse yeni tema o noktadan büyüyen bir dairenin içinde açılır
  * (View Transitions, app/globals.css → `theme-reveal`). Hareketi azaltan
@@ -15,15 +17,23 @@ import type { Theme } from '@/lib/theme'
 let activeTransition: ViewTransition | null = null
 
 export function readTheme(): Theme {
-  return document.documentElement.dataset.theme === 'light' ? 'light' : 'dark'
+  const value = document.documentElement.dataset.theme
+  return isTheme(value) ? value : DEFAULT_THEME
+}
+
+function writeThemeCookie(theme: Theme) {
+  const secure = location.protocol === 'https:' ? '; Secure' : ''
+  document.cookie = `${THEME_COOKIE}=${theme}; path=/; max-age=${THEME_COOKIE_MAX_AGE}; SameSite=Lax${secure}`
 }
 
 export function switchTheme(next: Theme, origin?: { x: number; y: number }) {
   const root = document.documentElement
   const apply = () => {
     root.dataset.theme = next
+    // Tarayıcı çubuğu da siteyle döner; etiketi THEME_SCRIPT oluşturur.
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', THEME_COLOR[next])
   }
-  void setThemeAction(next)
+  writeThemeCookie(next)
 
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
   if (!document.startViewTransition || reduce) {

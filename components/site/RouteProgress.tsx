@@ -19,7 +19,13 @@ import { SketchMark } from '@/components/ui/Sketch'
  * Bağlantılar tek tek sarılmıyor: belge yakalama evresinde dinleniyor,
  * sunucu bileşenlerindeki `<Link>`ler de kapsanıyor. Aynı yolun yalnız
  * sorgusunu değiştiren bağlantı (projeler süzgeci, `scroll={false}`)
- * gezinme sayılmaz: sayfa yerinde kalıyor, çizgi gereksiz.
+ * gezinme sayılmaz: sayfa yerinde kalıyor, çizgi gereksiz. Uzantılı adres
+ * (`/rss.xml`) de sayılmaz: rota değil dosya; tarayıcı onu indirirse
+ * sayfa hiç değişmez ve çizgi frene kadar yanardı.
+ *
+ * Koddan gezinme (`router.push`: ⌘K, G kısayolları) tıklama değil; onlar
+ * `route-progress:start` olayını adresle birlikte yollar, aynı süzgeçten
+ * geçer.
  *
  * TUZAK (Açılış Zili): Next'in yamalı `history.replaceState`i uçuştaki
  * gezinmeyi sessizce iptal eder ve yol hiç değişmez. Çizgi o durumda
@@ -36,9 +42,15 @@ const POP_FLAG_MS = 700
 
 export function RouteProgress() {
   const pathname = usePathname()
-  /* Çizgi hangi yoldan AYRILIRKEN açıldı: yol değişince kendiliğinden
-     söner, sıfırlamak için efekt içinde durum yazmak gerekmez. */
+  /* Çizgi hangi yoldan AYRILIRKEN açıldı. Yol değişince çizimde sıfırlanır
+     (efekt içinde durum yazmadan): sıfırlanmasaydı aynı sayfaya hızlıca
+     geri dönüşte eşleşme yeniden tutar ve çizgi takılı kalırdı. */
   const [shownAt, setShownAt] = useState<string | null>(null)
+  const [lastPath, setLastPath] = useState(pathname)
+  if (lastPath !== pathname) {
+    setLastPath(pathname)
+    setShownAt(null)
+  }
   const settled = useRef(pathname)
   const timers = useRef<{ show: number; brake: number }>({ show: 0, brake: 0 })
 
@@ -56,6 +68,20 @@ export function RouteProgress() {
       }, MAX_RUN_MS)
     }
 
+    const startFor = (href: string) => {
+      let url: URL
+      try {
+        url = new URL(href, window.location.href)
+      } catch {
+        return
+      }
+      if (url.origin !== window.location.origin) return
+      // Aynı yol (çapa ya da yalnız sorgu): gezinme değil, çizgi hiç sönmezdi.
+      if (url.pathname === window.location.pathname) return
+      if (/\.[a-z0-9]+$/i.test(url.pathname)) return
+      start()
+    }
+
     const onClick = (event: MouseEvent) => {
       if (event.defaultPrevented || event.button !== 0) return
       if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
@@ -63,16 +89,11 @@ export function RouteProgress() {
       if (!anchor || anchor.hasAttribute('download')) return
       const target = anchor.getAttribute('target')
       if (target && target !== '_self') return
-      let url: URL
-      try {
-        url = new URL(anchor.href, window.location.href)
-      } catch {
-        return
-      }
-      if (url.origin !== window.location.origin) return
-      // Aynı yol (çapa ya da yalnız sorgu): gezinme değil, çizgi hiç sönmezdi.
-      if (url.pathname === window.location.pathname) return
-      start()
+      startFor(anchor.href)
+    }
+
+    const onStartRequest = (event: Event) => {
+      if (event instanceof CustomEvent && typeof event.detail === 'string') startFor(event.detail)
     }
 
     let popTimer = 0
@@ -86,11 +107,13 @@ export function RouteProgress() {
 
     document.addEventListener('click', onClick, { capture: true })
     window.addEventListener('popstate', onPop)
+    window.addEventListener('route-progress:start', onStartRequest)
     return () => {
       clear()
       window.clearTimeout(popTimer)
       document.removeEventListener('click', onClick, { capture: true })
       window.removeEventListener('popstate', onPop)
+      window.removeEventListener('route-progress:start', onStartRequest)
     }
   }, [])
 
@@ -103,14 +126,24 @@ export function RouteProgress() {
   }, [pathname])
 
   /* Çizginin yanında altta küçük bir hap: marka üçgeni kara kalemle çizilip
-     silinir. Okuyucu beklediğini görür; yüzde yok (kalan süreyi bilmiyoruz). */
-  return shownAt === pathname ? (
+     silinir. Okuyucu beklediğini görür; yüzde yok (kalan süreyi bilmiyoruz).
+     Ekran okuyucu için durum bölgesi HEP yerinde, yalnız metni değişir:
+     bölge metniyle birlikte eklenince çoğu okuyucu onu duyurmuyor. */
+  const showing = shownAt === pathname
+  return (
     <>
-      <span aria-hidden="true" className="route-progress" />
-      <span role="status" className="route-loader">
-        <SketchMark />
-        <span>Yükleniyor</span>
+      <span role="status" className="sr-only">
+        {showing ? 'Yükleniyor' : ''}
       </span>
+      {showing ? (
+        <>
+          <span aria-hidden="true" className="route-progress" />
+          <span aria-hidden="true" className="route-loader">
+            <SketchMark />
+            <span>Yükleniyor</span>
+          </span>
+        </>
+      ) : null}
     </>
-  ) : null
+  )
 }

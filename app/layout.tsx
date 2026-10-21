@@ -2,10 +2,18 @@ import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import type { ReactNode } from 'react'
-import { JOB_TITLE, SITE_DESCRIPTION, SITE_NAME, SITE_URL, TWITTER } from '@/lib/seo'
+import {
+  ALTERNATES_BASE,
+  JOB_TITLE,
+  OPEN_GRAPH_BASE,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_URL,
+  TWITTER_BASE,
+} from '@/lib/seo'
 import { IntroCurtain } from '@/components/site/IntroCurtain'
 import { INTRO_SCRIPT } from '@/lib/intro'
-import { DEFAULT_THEME, PALETTE, THEME_COLOR, THEME_SCRIPT } from '@/lib/theme'
+import { DEFAULT_THEME, PALETTE, THEME_SCRIPT } from '@/lib/theme'
 import './globals.css'
 
 /*
@@ -27,10 +35,14 @@ const sans = Geist({
   display: 'swap',
 })
 
+/* Mono ön yüklenmiyor: ilk ekranda neredeyse yok (masaüstü başlıktaki ⌘K'nın
+   "K"si), ama her sayfada dört font ön yüklemesinin ~38 KB'ı onundu. Yazı
+   kodu ve e-posta gibi yerlerde kullanıldığı an iner. */
 const mono = Geist_Mono({
   subsets: ['latin', 'latin-ext'],
   variable: '--font-mono-face',
   display: 'swap',
+  preload: false,
 })
 
 const DEFAULT_TITLE = `${SITE_NAME} · ${JOB_TITLE}`
@@ -45,23 +57,16 @@ export const metadata: Metadata = {
   creator: SITE_NAME,
   /* canonical burada TANIMLI DEĞİL: kökte '/' yazılıydı ve Next metadata'yı
      alan bazında sığ birleştirdiği için her blog yazısı da ana sayfayı
-     canonical gösteriyordu. Her rota kendi canonical'ını veriyor. */
-  alternates: {
-    types: { 'application/rss+xml': '/rss.xml' },
-  },
+     canonical gösteriyordu. Her rota kendi canonical'ını veriyor ve aynı
+     sebeple tabanları (lib/seo.ts) kendi nesnesine yayıyor. */
+  alternates: ALTERNATES_BASE,
   openGraph: {
+    ...OPEN_GRAPH_BASE,
     title: DEFAULT_TITLE,
     description: SITE_DESCRIPTION,
     url: SITE_URL,
-    siteName: SITE_NAME,
-    type: 'website',
-    locale: 'tr_TR',
   },
-  twitter: {
-    card: 'summary_large_image',
-    site: TWITTER,
-    creator: TWITTER,
-  },
+  twitter: TWITTER_BASE,
   robots: {
     index: true,
     follow: true,
@@ -69,13 +74,13 @@ export const metadata: Metadata = {
   },
 }
 
-/* Tarayıcı çubuğunun rengi işletim sisteminden değil SİTENİN temasından:
-   varsayılan burada, seçilen tema THEME_SCRIPT ile ilk boyamadan önce. */
+/* `themeColor` burada YOK: tarayıcı çubuğunun rengi SİTENİN temasından ve
+   etiketi THEME_SCRIPT ilk boyamadan önce kendisi basıyor (gerekçe
+   lib/theme.ts). */
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
-  themeColor: THEME_COLOR[DEFAULT_THEME],
 }
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -84,6 +89,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
       lang="tr"
+      // globals.css `scroll-behavior: smooth`; bu öznitelik olmadan Next 16
+      // sayfa geçişindeki başa sarmayı da yumuşak kaydırıyordu.
+      data-scroll-behavior="smooth"
       data-theme={DEFAULT_THEME}
       data-palette={PALETTE}
       // THEME_SCRIPT özniteliği hidrasyondan önce değiştirir; bu bilinçli

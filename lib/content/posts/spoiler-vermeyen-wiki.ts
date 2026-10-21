@@ -3,12 +3,10 @@ import type { BlogPost } from '../types'
 export const post: BlogPost = {
   slug: 'spoiler-vermeyen-wiki',
   tag: 'Ürün',
-  tagColor: '#ef4444',
   title: 'One Piece Hub: Spoiler Vermeyen Türkçe Wiki',
   excerpt:
     "One Piece Hub, bin bölümlük seriyi Türkçe ve düzenli gezmek için yaptığım bir fan sitesi. Kaldığın arkı söylüyorsun, sonrasına ait her şey perdeleniyor. Sitede ne var ve o perdeyi nasıl kurdum.",
   date: '2026-09-01',
-  coverGradient: 'linear-gradient(135deg, #ef4444 0%, #f59e0b 50%, #eab308 100%)',
   content: [
     {
       type: 'lead',

@@ -18,7 +18,8 @@
 
    DEGRADE DİSİPLİNİ: degrade yalnızca üç yerde. Kısa display başlık
    (`.display-ink`), ekranın tek birincil CTA'sı (`bg-cta`, Button
-   variant="primary") ve marka işareti (`bg-brand`, Logo).
+   variant="primary") ve marka işareti (Logo'nun SVG degradesi,
+   `--brand-from/mid/to`).
 
    AD ÇAKIŞMASI TUZAĞI: katman 2'deki ad katman 1'dekiyle aynı olursa
    değişken kendine başvurur ve sessizce geçersiz olur. Bu yüzden gölgeler
@@ -28,8 +29,8 @@
      • Tailwind'in punto (`text-sm…`), radius ve gölge ölçekleri TEMİZLENMEDİ;
        mevcut sayfa bileşenleri onları kullanıyor. Rol adları (`text-read`,
        `rounded-card`) yanlarına eklendi; yeni kod rol adlarını kullanır.
-     • Varsayılan tema KOYU: sunucu `data-theme`i çerezden basar, çerez yoksa
-       `dark` (lib/theme.ts → DEFAULT_THEME).
+     • Varsayılan tema AÇIK (lib/theme.ts → DEFAULT_THEME). Sayfalar statik:
+       çerezdeki temayı ilk boyamadan önce THEME_SCRIPT uygular.
    ========================================================================== */
 
 /* --- Sistem: açık ---------------------------------------------------------- */
@@ -69,6 +70,8 @@
   --vt-exit: 140ms;
   --vt-enter: 220ms;
   --vt-move: 380ms;
+  /* Paylaşılan öğe morfu (kart ↔ vaka/kapak). */
+  --vt-morph: 440ms;
   /* Perde silme: rotalar arası. 460 ms sayfa ölçeği (hareket rehberi
      400-600); başı ve sonu yavaş, ortası hızlı: çizgi "çekilen" bir
      perde gibi okunur, sabit hızla kayan bir tarayıcı gibi değil. */
@@ -183,12 +186,9 @@
      "her şey mavi" olunca büyük başlıklar ağırlığını kaybediyordu. Küçük
      başlıklar ve kart adları baştan sona mavi (`--inkb-*`). */
   --display-gradient: linear-gradient(105deg, #0a1a30 0%, #0c3a72 50%, #1a7fd8 100%);
-  /* Vurgu kelimesi ve üzerine gelinen başlık: markanın mavisi içinde kalan
-     kısa degrade. En açık uç #1b7bd6 / #e9eff6 ≈ 3,9:1 (büyük metin ≥ 3). */
-  --accent-gradient: linear-gradient(105deg, #1270d0 0%, #2b8fe6 100%);
-  /* Degradenin bittiği renk: uzun başlıkta 11em'den sonrası. */
-  --ink-end: #1a7fd8;
-  /* Başlık degradesinin durakları ve üzerine gelinen hâli (aynı aile). */
+  /* Başlık degradesinin durakları ve üzerine gelinen hâli (aynı aile).
+     Vurgu kelimesi ve üzerine gelinen başlık (`--acc-*`) markanın mavisi
+     içinde kalan kısa degrade. */
   --ink-1: #0a1a30;
   --ink-2: #0c3a72;
   --ink-3: #1a7fd8;
@@ -197,10 +197,6 @@
   --inkb-3: #1a7fd8;
   --acc-1: #1270d0;
   --acc-2: #2b8fe6;
-  --display-gradient-tight: linear-gradient(100deg, #0a2547 0%, #1e6fbe 100%);
-  /* Ana sayfadaki isim: iki kelimeyi tek yüzey gibi kaplar, koyu
-     laciverten derin maviye. En açık uç #1066b8 / #f5f7fa ≈ 5,5:1. */
-  --name-gradient: linear-gradient(118deg, #0a1a30 0%, #0b2f5c 38%, #0c4f96 72%, #1066b8 100%);
   /* Hero ismi, dikey: üst satır koyu, alt satır mavi uçta biter.
      En açık uç #0d74c4 / #e9eff6 ≈ 4,4:1, büyük metin için AA (≥ 3). */
   --name-top: #0a1a30;
@@ -216,15 +212,16 @@
   /* İmza (başlıktaki ad): başlık mürekkebiyle aynı uçlar. */
   --sig-from: #0a1a30;
   --sig-to: #1a7fd8;
-  --brand-gradient: linear-gradient(150deg, var(--brand-from) 0%, var(--brand-mid) 48%, var(--brand-to) 100%);
   /* Birincil CTA: aynı ailenin koyu yarısı, beyaz metinle her noktada AA. */
   --cta-gradient: linear-gradient(150deg, #1673c4 0%, #0b3f86 100%);
 
-  /* Sözdizimi boyası: kod blokları. Vurgu ailesi + durum renkleri; mor yok. */
+  /* Sözdizimi boyası: kod blokları. Vurgu ailesi + durum renkleri; mor yok.
+     Çukur yüzeyde (#dce5ef) hepsi ≥ 4,5:1; sayı (#a4720f, 3,3:1) ve tip
+     (#0c69b1, 4,49:1) aynı tonda bir kademe koyulaştı. */
   --code-keyword: #0a5a9a;
   --code-string: #0c7350;
-  --code-number: #a4720f;
-  --code-type: #0c69b1;
+  --code-number: #875e0c;
+  --code-type: #0c68b0;
   --code-fn: #101c2b;
   --code-comment: #536477;
 }
@@ -256,8 +253,6 @@
   --on-primary: #06121f;
 
   --display-gradient: linear-gradient(105deg, #ffffff 0%, #cfe9ff 45%, #35b8ff 100%);
-  --accent-gradient: linear-gradient(105deg, #5cc4ff 0%, #a8ddff 100%);
-  --ink-end: #35b8ff;
   --ink-1: #ffffff;
   --ink-2: #cfe9ff;
   --ink-3: #35b8ff;
@@ -268,9 +263,6 @@
   --acc-2: #a8ddff;
   --sig-from: #ffffff;
   --sig-to: #35b8ff;
-  --display-gradient-tight: linear-gradient(100deg, #eef5fc 0%, #58c4ff 100%);
-  /* İsim: mavimsi beyazdan maviye. En koyu uç #3fbcff / #070d16 ≈ 9,4:1. */
-  --name-gradient: linear-gradient(118deg, #f2f7fc 0%, #d4ecff 34%, #8fd3ff 70%, #3fbcff 100%);
   /* Hero ismi, dikey: beyazdan buz mavisine, alt satır markanın
      mavisinde biter. En koyu uç #35b8ff / #050a14 ≈ 9,6:1. */
   --name-top: #ffffff;
@@ -392,6 +384,9 @@
        `position: sticky` öğeleri bozar. */
     overflow-x: clip;
     scroll-behavior: smooth;
+    /* Yapışkan başlık (64px + çentik) çapa hedefini ve klavyeyle odaklanan
+       öğeyi örtmesin; altında yarım rem nefes. */
+    scroll-padding-top: calc(4rem + env(safe-area-inset-top) + 0.5rem);
     scrollbar-width: thin;
     scrollbar-color: var(--line-strong) transparent;
   }
@@ -521,11 +516,6 @@
    Degradeler: yalnızca üç yer (başlıktaki disiplin notu).
    -------------------------------------------------------------------------- */
 
-/* Marka karosu: logo taşıyan küçük kare. Üstüne metin yazılmaz. */
-@utility bg-brand {
-  background-image: var(--brand-gradient);
-}
-
 /* Birincil CTA zemini: aynı ailenin koyu yarısı, beyaz metin her noktada AA. */
 @utility bg-cta {
   background-image: var(--cta-gradient);
@@ -547,10 +537,6 @@
       color: transparent;
       /* Degrade metnin altına inen harfleri (g, y, ş, ç) kırpmasın. */
       padding-bottom: 0.06em;
-    }
-
-    .display-ink-tight {
-      background-image: var(--display-gradient-tight);
     }
 
     /* TUZAK: `.display-ink` içindeki bir çocuğa opacity, transform ya da
@@ -591,18 +577,6 @@
   @media (pointer: coarse) {
     padding-block: calc((2.75rem - 1em) / 2);
     margin-block: calc((1em - 2.75rem) / 2);
-  }
-}
-
-/* Yükleme iskeleti. */
-@utility skeleton {
-  background-color: var(--line);
-  animation: skeleton-pulse 1.6s var(--ease-brand) infinite;
-}
-
-@keyframes skeleton-pulse {
-  50% {
-    opacity: 0.55;
   }
 }
 
@@ -682,11 +656,11 @@
    sayfanın tepesini gösteriyor). Hareketi azaltan okuyucuda aşağıdaki
    reduced-motion bloğu süreleri sıfırlar: morf hiç oynamaz. */
 ::view-transition-group(.morph) {
-  animation-duration: var(--vt-morph, 440ms);
+  animation-duration: var(--vt-morph);
   animation-timing-function: var(--ease-brand);
 }
 ::view-transition-image-pair(.morph) {
-  animation: var(--vt-morph, 440ms) var(--ease-brand) both vt-morph-blur;
+  animation: var(--vt-morph) var(--ease-brand) both vt-morph-blur;
 }
 ::view-transition-old(.morph),
 ::view-transition-new(.morph) {
@@ -823,9 +797,19 @@
    hiçbir temaya ait olmayan bir griyi gösterirdi. Başlık bu geçişte ayrı
    bir katman OLMAZ: yoksa daire açılırken başlık anında yeni temaya
    atlardı.
+   Yeni ekran canlı çizim: renk geçişleri (`transition-colors`, `.ink`
+   durakları) açık kalsaydı daire ara tonlarla açılırdı (ölçüldü: tek
+   tıklamada ~240 geçiş, başlık gri bir bant). Geçiş süresince kapalı;
+   dairenin kendisi animasyon, geçiş değil.
    -------------------------------------------------------------------------- */
 html.theme-switching .vt-header {
   view-transition-name: none;
+}
+
+html.theme-switching *,
+html.theme-switching *::before,
+html.theme-switching *::after {
+  transition: none !important;
 }
 
 html.theme-switching::view-transition-old(root),
@@ -1188,6 +1172,16 @@ html.theme-switching::view-transition-new(root) {
   background: var(--text-strong);
   color: var(--page-bg);
 }
+/* Zorunlu renklerde seçili sekme ötekilerden ayrılmıyordu. */
+@media (forced-colors: active) {
+  .tab[aria-current],
+  .tab.is-active {
+    forced-color-adjust: none;
+    border-color: Highlight;
+    background: Highlight;
+    color: HighlightText;
+  }
+}
 
 /* Sayı: 13 piksel, gövde yazısı, neredeyse tam renk (9 Ekim 2026; mono
    12 piksel ve %70 opaklıkta seçili olmayan sekmede okunmuyordu). */
@@ -1241,7 +1235,7 @@ html.theme-switching::view-transition-new(root) {
 
    `.ink` sınıfı ya da aşağıdaki seçiciler. Degrade metin (`--display-
    gradient`), vurgu kelimesi (`.home-title-accent`) ve üzerine gelinen
-   başlık (`.ink-hover`) markanın mavisi (`--accent-gradient`).
+   başlık (`.ink-hover`) markanın mavisi (`--acc-1/2`).
    TUZAK (`.display-ink` ile aynı): degrade taşıyan öğenin İÇİNDEKİ bir
    çocuğa transform verilirse çocuk boyama alanından çıkar ve görünmez
    olur. Hareket eden öğe degradeyi KENDİSİ taşır (`.home-mask-in`).
@@ -1292,7 +1286,6 @@ html.theme-switching::view-transition-new(root) {
 
   /* Küçük başlıklar ve kart adları: baştan sona mavi. */
   :is(
-      .ink-blue,
       .home-post-title,
       .bl-archive-title,
       .bl-featured-title,
@@ -1333,7 +1326,18 @@ html.theme-switching::view-transition-new(root) {
 }
 
 @media (forced-colors: active) {
-  :is(.ink, .home-title .home-mask-in, .home-title-accent, .bl-archive-title, .bl-featured-title, .post-title, .post-prose > h2, .post-prose > h3) {
+  :is(
+      .ink,
+      .home-title .home-mask-in,
+      .home-title-accent,
+      .bl-archive-title,
+      .bl-featured-title,
+      .prow-title,
+      .post-title,
+      .post-prose > h2,
+      .post-prose > h3,
+      .tint-card-title
+    ) {
     background: none;
     -webkit-text-fill-color: currentColor;
     color: CanvasText;
@@ -1729,7 +1733,13 @@ html.theme-switching::view-transition-new(root) {
   right: -6cqi;
   z-index: -1;
   width: 62cqi;
+  aspect-ratio: 1;
   translate: 0 -50%;
+}
+.cover-art-rings > svg {
+  display: block;
+  width: 100%;
+  height: 100%;
   overflow: visible;
 }
 .cover-art-rings :is(ellipse, circle) {
@@ -1820,6 +1830,8 @@ html.theme-switching::view-transition-new(root) {
    İmza logosu (components/site/Logo.tsx, Signature.tsx). Sayfa açılınca
    ad soldan sağa yazılır, karodaki kuyruk ardından çizilir. Hareketi
    azaltan okuyucuda ikisi de baştan yerinde.
+   Katmansız, bilerek: `display: block` Tailwind yardımcılarını (`hidden`)
+   ezer. İmza telefonda da başlıkta görünür.
    ========================================================================== */
 .signature {
   display: block;

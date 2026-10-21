@@ -9,12 +9,10 @@ import type { BlogPost } from '../types'
 export const post: BlogPost = {
   slug: 'acilis-zili-abd-borsalarini-takip',
   tag: 'Ürün',
-  tagColor: '#0d74c4',
   title: 'Açılış Zili: ABD Borsasını Doğru Takip Etmek',
   excerpt:
     "Açılış Zili'nin tek derdi ABD borsasını Türkiye'den doğru takip edebilmek. Doğru takip dört şey demek: doğru saat, doğru gün, doğru sıra ve eksiksiz bağlam. Her birini sitede nasıl kurduğumu anlatıyorum.",
   date: '2026-10-03',
-  coverGradient: 'linear-gradient(135deg, #0d74c4 0%, #0a5a9a 45%, #101c2b 100%)',
   project: 'acilis-zili',
   content: [
     {

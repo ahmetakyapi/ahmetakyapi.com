@@ -372,8 +372,6 @@
 .home-stack-media {
   position: relative;
   align-self: start;
-  /* Telefon görseli masaüstünün altından taşar; payı burada. */
-  padding-bottom: 7%;
 }
 
 .home-stack-phone {
@@ -566,8 +564,11 @@
   .home-marquee-track {
     animation: home-marquee 42s linear infinite;
   }
+  /* `:focus`, `:focus-visible` değil: dokunma da kabı odaklar ama halkayı
+     açmaz; telefonda şeridi durdurmanın tek yolu bu (iOS dokunmada
+     `:hover` vermiyor). Başka yere dokununca akış sürer. */
   .home-marquee:hover .home-marquee-track,
-  .home-marquee:focus-visible .home-marquee-track {
+  .home-marquee:focus .home-marquee-track {
     animation-play-state: paused;
   }
 }
@@ -869,24 +870,6 @@
   border-radius: var(--radius-card);
 }
 
-@media (max-width: 639.98px) {
-  .home-xp-card {
-    gap: 1.4rem;
-  }
-  .home-xp-icon {
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 0.75rem;
-  }
-  .home-xp-roles {
-    gap: 1.25rem;
-    padding-left: 1.25rem;
-  }
-  .home-xp-roles > li::before {
-    left: calc(-1.25rem - 4px);
-  }
-}
-
 .home-xp-card-head {
   display: flex;
   align-items: center;
@@ -916,7 +899,6 @@
   color: var(--text-strong);
 }
 
-.home-xp-tag,
 .home-xp-tag {
   margin-top: 0.2rem;
 }
@@ -960,6 +942,28 @@
 .home-xp-roles > li:first-child::before {
   background: var(--tint);
   box-shadow: 0 0 0 4px color-mix(in oklab, var(--tint) 22%, transparent);
+}
+
+/* Telefonda kart sıkı: küçük ikon, dar girinti. Temel kuralların ARKASINDA:
+   4 Ekim'den beri önlerindeydi, aynı özgüllükte ezildiği için kartın
+   boşluğu dışında hiçbiri uygulanmamıştı; nabız halesi (aşağıda) bu
+   girintiye göre konduğu için telefonda noktadan 4 piksel sağda atıyordu. */
+@media (max-width: 639.98px) {
+  .home-xp-card {
+    gap: 1.4rem;
+  }
+  .home-xp-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.75rem;
+  }
+  .home-xp-roles {
+    gap: 1.25rem;
+    padding-left: 1.25rem;
+  }
+  .home-xp-roles > li::before {
+    left: calc(-1.25rem - 4px);
+  }
 }
 
 .home-xp-role {
@@ -1108,6 +1112,7 @@
   font-size: clamp(2rem, 1.4rem + 2.2vw, 3.25rem);
 }
 
+/* Telefon görseli masaüstünün altından taşar; payı burada. */
 .home-stack-media {
   padding-bottom: 5%;
 }
@@ -1274,7 +1279,6 @@
 .home-own-tile > :first-child {
   border-radius: 0.7rem;
   border-color: color-mix(in oklab, var(--tint) 30%, transparent);
-  box-shadow: 0 16px 30px -18px color-mix(in oklab, var(--tint) 55%, var(--scrim) 45%);
 }
 :root[data-theme="dark"] .home-own-tile > :first-child {
   border-color: color-mix(in oklab, var(--tint) 45%, transparent);
@@ -1298,9 +1302,11 @@
   display: flex;
   gap: clamp(1.5rem, 3vw, 2.5rem);
 }
+/* Etiket üstte, sayı altta. `<dl>` içinde `dt` önce gelmeli: eskiden `dd`
+   önceydi ve `column-reverse` ile aynı görünüm elde ediliyordu. */
 .home-own-stats > div {
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
 }
 .home-own-stats dd {
   font-size: clamp(2rem, 1.5rem + 1.6vw, 2.75rem);

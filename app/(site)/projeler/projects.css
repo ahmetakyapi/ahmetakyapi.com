@@ -24,7 +24,8 @@
 }
 
 /* Süzgeç değişince yeniden görünen satır solarak oturur. İlk çizimde
-   tetiklenmez: @starting-style yalnız `display: none`dan çıkan öğede. */
+   tetiklenmez: `data-live`ı ada ilk çizimden SONRA yazar (`data-filter`
+   süzülmüş adreste ilk çizimde zaten var, page.tsx → FILTER_SCRIPT). */
 @media (prefers-reduced-motion: no-preference) {
   :is(.pfeat, .prow) {
     transition:
@@ -32,7 +33,7 @@
       translate 380ms var(--ease-brand);
   }
   @starting-style {
-    .pscope[data-filter] :is(.pfeat, .prow) {
+    .pscope[data-live] :is(.pfeat, .prow) {
       opacity: 0;
       translate: 0 10px;
     }
@@ -174,6 +175,12 @@
   background: var(--primary-wash);
   font-size: 0.875rem;
   color: var(--primary-ink);
+}
+
+/* Açık temada mavi yıkamanın üstünde 14 piksel rakam: düz `--primary-ink`
+   4,3:1 kalıyordu, bir tık koyusu 4,9:1 (AA). Koyu tema 7,3:1, dokunulmadı. */
+:root:not([data-theme="dark"]) .prest-count {
+  color: color-mix(in oklab, var(--primary-ink) 90%, var(--text-strong));
 }
 
 @media (min-width: 1024px) {
@@ -344,7 +351,7 @@
    azaltan okur, `data-preview="still"`): satırın sağında, kategori
    sütununun solunda sabit bir yerde yalnızca solarak belirir. PreviewFollow
    `data-preview="follow"` yazınca önizleme sabit konuma geçer ve imleci
-   izler (`--px`, `--py`). Görseller liste kabına ilk girişe kadar
+   izler (satır içi `translate`). Görseller liste kabına ilk girişe kadar
    `display: none`: tembel yükleme onları istemez. */
 @media (hover: hover) and (pointer: fine) and (min-width: 768px) {
   .prow-in {
@@ -397,13 +404,10 @@
        altında açılıyordu; sebep satıra eklenen kaydırma animasyonuydu
        (`translate` taşıyan ata `position: fixed`in referansını satıra
        çeviriyor). Satırda dönüşüm YOK; yeni bir animasyon eklerken bunu
-       koru. */
-    translate: calc(var(--px, 0px) + var(--pp-gap)) calc(var(--py, 0px) - 50%);
-    rotate: var(--pr, 0deg);
+       koru. Konum ve eğim satır içi stil (PreviewFollow); bu, imleç
+       gelmeden önceki yer. */
+    translate: var(--pp-gap) -50%;
     scale: 0.9;
-    transition:
-      opacity 320ms var(--ease-brand),
-      scale 480ms var(--ease-brand);
   }
 
   .pscope[data-preview="follow"] .prow-in:hover .pprev {
@@ -445,10 +449,20 @@
     scale: 1;
   }
 
-  /* Üstünde durulan satır öne çıkar, ötekiler bir ton geri çekilir
-     (sessiz metin rengi: AA'nın üstünde kalır). */
+  /* Üstünde durulan satır öne çıkar, ötekiler bir ton geri çekilir. Geri
+     çekilen adlar hâlâ bağlantı: büyük metnin 3:1'i korunur. 0,45'te açık
+     temada 2,3:1'e düşüyordu; 0,7'de degradenin ilk yarısı (kısa adların
+     tamamı) açıkta 3:1, koyuda 6:1'in üstünde. */
   .prow-list:hover .prow-in:not(:hover) .prow-title {
-    opacity: 0.45;
+    opacity: 0.7;
+  }
+
+  /* Görünmeyen önizlemenin kapak döngüsü beklesin: `opacity: 0` ekranda
+     sayılıyor, PauseOffscreen durduramıyordu. Seçiciler yukarıdaki
+     görünürlük kurallarının tersi. */
+  .pscope:not([data-preview="follow"]) .prow-in:not(:hover, :focus-within) .pprev :is(.cover-art-orb, .cover-art-rings),
+  .pscope[data-preview="follow"] .prow-in:not(:hover) .pprev :is(.cover-art-orb, .cover-art-rings) {
+    animation-play-state: paused;
   }
 }
 

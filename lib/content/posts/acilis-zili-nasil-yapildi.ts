@@ -9,12 +9,10 @@ import type { BlogPost } from '../types'
 export const post: BlogPost = {
   slug: 'acilis-zili-nasil-yapildi',
   tag: 'Ürün',
-  tagColor: '#0d74c4',
   title: 'Açılış Zili: ABD Borsasını Türkçe Takip Eden Site',
   excerpt:
     "Açılış Zili'ni ABD borsasını Türkiye saatiyle, tek ekrandan ve Türkçe takip etmek için yazdım. Sitede ne var, nasıl kurdum ve ekrandaki her sayının doğru olması için hangi kuralları koydum.",
   date: '2026-08-12',
-  coverGradient: 'linear-gradient(135deg, #0d74c4 0%, #0a5a9a 45%, #101c2b 100%)',
   content: [
     {
       type: 'lead',

@@ -1,4 +1,5 @@
-import { projectShot, type ShotView } from '@/lib/project-shot'
+import { projectShot, shotRendition, type ShotView } from '@/lib/project-shot'
+import RENDITIONS from './shot-renditions.json'
 
 /**
  * Ekran görüntüsü envanteri: hangi projenin hangi görünümü var, iki temalı
@@ -18,6 +19,11 @@ import { projectShot, type ShotView } from '@/lib/project-shot'
  *   gradyanlı metni düşük çözünürlükte basıp büyütüyor ve iPhone'da yalnız
  *   başlık bulanık görünüyordu (4 Ekim 2026). İki düz renkli `tspan`.
  * - ahmetakyapi-com: henüz yok (yeni site bitince çekilecek); tipografik kapak.
+ * - Küçük kopyalar (srcset adayları): her asıl dosyanın yanında
+ *   `<görünüm>-<tema>.w<genişlik>.webp`, genişlikler shot-renditions.json'da.
+ *   `npm run shots` üretir; prebuild'deki `--check` eksik ya da eski kopyada
+ *   derlemeyi kırar (scripts/shot-renditions.mjs). Çekim yenilenince
+ *   `npm run shots` yeniden çalıştırılır.
  *
  * Eski düz dosyalar (`public/projects/<slug>.webp`) faz 2 bitince silinecek;
  * yeni kod onları KULLANMAZ.
@@ -69,7 +75,23 @@ export const DEV_STARTER_BANNER = {
   height: 360,
 } as const
 
-export type ShotSources = { light: string; dark?: string; width: number; height: number }
+export type ShotSources = {
+  light: string
+  dark?: string
+  width: number
+  height: number
+  /** Temaya göre srcset (küçük kopyalar + asıl dosya); ThemedImage'a `sizes` ile. */
+  srcSet?: { light: string; dark?: string }
+}
+
+const WIDTHS: Readonly<Partial<Record<ShotView, readonly number[]>>> = RENDITIONS
+
+/** Asıl dosya ve küçük kopyaları: `… 640w, … 1280w, <asıl> 2160w`. Yalnız küçültülür. */
+function srcSetOf(src: string, view: ShotView, width: number): string | undefined {
+  const smaller = (WIDTHS[view] ?? []).filter((w) => w < width)
+  if (smaller.length === 0) return undefined
+  return [...smaller.map((w) => `${shotRendition(src, w)} ${w}w`), `${src} ${width}w`].join(', ')
+}
 
 /**
  * ThemedImage'a doğrudan verilecek kaynaklar; görünüm yoksa `null`.
@@ -82,11 +104,15 @@ export function shotSources(slug: string, view: ShotView): ShotSources | null {
   const set: ShotSet = PROJECT_SHOTS[slug as ShotSlug]
   const size = set.size[view]
   if (!set.views.includes(view) || !size) return null
+  const light = projectShot(slug, view, set.alwaysDark ? 'dark' : 'light')
+  const dark = set.themed && !set.alwaysDark ? projectShot(slug, view, 'dark') : undefined
+  const lightSet = srcSetOf(light, view, size.width)
   return {
-    light: projectShot(slug, view, set.alwaysDark ? 'dark' : 'light'),
-    dark: set.themed && !set.alwaysDark ? projectShot(slug, view, 'dark') : undefined,
+    light,
+    dark,
     width: size.width,
     height: size.height,
+    srcSet: lightSet ? { light: lightSet, dark: dark && srcSetOf(dark, view, size.width) } : undefined,
   }
 }
 

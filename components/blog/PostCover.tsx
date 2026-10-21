@@ -3,7 +3,7 @@ import { CoverArt } from '@/components/ui/CoverArt'
 import { ThemedImage } from '@/components/ui/ThemedImage'
 import type { BlogPost } from '@/lib/content/types'
 import { DEFAULT_THEME } from '@/lib/theme'
-import { cn } from '@/lib/utils'
+import { cx } from '@/lib/utils'
 import { coverSubject, postShot } from './posts'
 
 /**
@@ -24,6 +24,12 @@ type Variant = 'hero' | 'feature' | 'thumb'
 /* Ekran görüntüleri 16:10 çekildi; kapak her genişlikte aynı oranda. 2:1
    masaüstünde görselin alt %20'sini kesiyordu (başlık altındaki kartlar
    yarım kalıyordu). Tipografik kapak ayrı: blog.css'te 3:1. */
+/* Üç boy da yazı kapağının `sizes`ını taşır (en çok `.post-main`, 44rem;
+   telefonda kenardan kenara): dizindeki kapak ile yazının kapağı aynı
+   cihazda aynı kopyayı seçer, morf önbellekten iner (ProjectCover →
+   HERO_SIZES ile aynı gerekçe). */
+const SIZES = '(min-width: 44rem) 44rem, 100vw'
+
 const FRAME: Record<Variant, string> = {
   hero: 'aspect-[16/10]',
   feature: 'aspect-[16/10]',
@@ -50,7 +56,7 @@ export function PostCover({
 
   const cover = (
     <div
-      className={cn(
+      className={cx(
         'post-cover relative overflow-hidden border border-line',
         variant === 'thumb' ? 'rounded-button' : 'rounded-card',
         FRAME[variant],
@@ -63,6 +69,7 @@ export function PostCover({
         <ThemedImage
           {...found.shot}
           alt={alt}
+          sizes={SIZES}
           priority={priority}
           theme={priority ? DEFAULT_THEME : undefined}
           className="size-full object-cover object-top"

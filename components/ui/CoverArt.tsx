@@ -21,11 +21,15 @@ export function CoverArt({ word, kicker }: { word: string; kicker?: string }) {
       <span className="cover-art-orb cover-art-orb-1" />
       <span className="cover-art-orb cover-art-orb-2" />
       <span className="cover-art-grid" />
-      <svg className="cover-art-rings" viewBox="0 0 200 200" focusable="false">
-        <ellipse cx="100" cy="100" rx="92" ry="34" />
-        <ellipse cx="100" cy="100" rx="70" ry="22" transform="rotate(-24 100 100)" />
-        <circle cx="100" cy="100" r="44" />
-      </svg>
+      {/* Dönen HTML sarmalayıcı, svg değil: svg öğesinde `rotate` canlanması
+          her karede ana iş parçacığında çiziliyordu; kutuda bileştiricide. */}
+      <span className="cover-art-rings">
+        <svg viewBox="0 0 200 200" focusable="false">
+          <ellipse cx="100" cy="100" rx="92" ry="34" />
+          <ellipse cx="100" cy="100" rx="70" ry="22" transform="rotate(-24 100 100)" />
+          <circle cx="100" cy="100" r="44" />
+        </svg>
+      </span>
       <div className="cover-art-text">
         {kicker ? <span className="cover-art-kicker">{kicker}</span> : null}
         <span className="cover-art-word">

@@ -4,8 +4,9 @@ import { ArrowRight, ArrowUp, BookOpen, FileText, Folder, Home, Layers, Mail, Mo
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from 'react'
 import { BrandIcon } from '@/components/site/BrandIcon'
-import { EMAIL, SOCIAL_LINKS } from '@/lib/nav'
+import { EMAIL, NAV_ITEMS, SOCIAL_LINKS } from '@/lib/nav'
 import { foldTr, matchesTokens, queryTokens } from '@/lib/search'
+import { DEFAULT_THEME } from '@/lib/theme'
 import { readTheme, subscribeTheme, switchTheme } from '@/lib/theme-client'
 
 /**
@@ -52,6 +53,13 @@ type Command = {
 
 const ICON = 'size-4'
 
+/** Gezinme satırları lib/nav.ts'ten; burada yalnız ikonları ve kimlikleri. */
+const NAV_COMMANDS: Record<(typeof NAV_ITEMS)[number]['href'], { id: string; icon: ReactNode }> = {
+  '/': { id: 'nav-home', icon: <Home className={ICON} /> },
+  '/projeler': { id: 'nav-projects', icon: <Layers className={ICON} /> },
+  '/blog': { id: 'nav-blog', icon: <BookOpen className={ICON} /> },
+}
+
 export default function CommandPalette({
   projects,
   posts,
@@ -66,12 +74,14 @@ export default function CommandPalette({
   const inputRef = useRef<HTMLInputElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
-  const theme = useSyncExternalStore(subscribeTheme, readTheme, () => 'dark' as const)
+  const theme = useSyncExternalStore(subscribeTheme, readTheme, () => DEFAULT_THEME)
 
   const close = useCallback(() => onClose(), [onClose])
 
   const commands = useMemo<Command[]>(() => {
     const go = (href: string) => () => {
+      // router.push bir bağlantı tıklaması değil: gezinme göstergesine haber ver.
+      window.dispatchEvent(new CustomEvent('route-progress:start', { detail: href }))
       router.push(href)
       close()
     }
@@ -81,9 +91,13 @@ export default function CommandPalette({
     }
 
     return [
-      { id: 'nav-home', label: 'Ana Sayfa', icon: <Home className={ICON} />, category: 'Gezinme', action: go('/'), shortcut: 'G H' },
-      { id: 'nav-projects', label: 'Projeler', icon: <Layers className={ICON} />, category: 'Gezinme', action: go('/projeler'), shortcut: 'G P' },
-      { id: 'nav-blog', label: 'Blog', icon: <BookOpen className={ICON} />, category: 'Gezinme', action: go('/blog'), shortcut: 'G B' },
+      ...NAV_ITEMS.map((item) => ({
+        ...NAV_COMMANDS[item.href],
+        label: item.label,
+        category: 'Gezinme',
+        action: go(item.href),
+        shortcut: item.shortcut,
+      })),
       {
         id: 'nav-top',
         label: 'Başa Dön',
@@ -204,18 +218,34 @@ export default function CommandPalette({
     return () => window.removeEventListener('keydown', onKey)
   }, [filtered, selected, close])
 
-  /* Odak: açılışta arama kutusuna, sökülünce geldiği yere. Kaydırma kilidi. */
+  /* Odak: açılışta arama kutusuna, sökülünce geldiği yere. Kaydırma kilidi
+     KÖKTE, body'de değil: kökte `overflow-x: clip` var ve body'nin
+     `hidden`ı görünüm alanına geçmiyor; body kendisi kaydırma kabı oluyor,
+     sayfa yine kayıyor ve yapışkan başlık yukarı kaçıyordu (ölçüldü).
+     Kaydırma çubuğu yer kaplıyorsa (klasik çubuk) `scrollbar-gutter` onun
+     yerini tutar: sayfa yana kaymaz. Kaplamıyorsa (macOS, dokunmatik)
+     dokunulmaz; boşluk ayırmak orada sayfayı daraltırdı. */
   useEffect(() => {
     const restore = document.activeElement as HTMLElement | null
     inputRef.current?.focus()
-    const previous = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
+    const root = document.documentElement
+    const previous = { overflow: root.style.overflow, gutter: root.style.scrollbarGutter }
+    if (window.innerWidth > root.clientWidth) root.style.scrollbarGutter = 'stable'
+    root.style.overflow = 'hidden'
     return () => {
-      document.body.style.overflow = previous
+      root.style.overflow = previous.overflow
+      root.style.scrollbarGutter = previous.gutter
       restore?.focus?.()
     }
   }, [])
 
+  /* Ekran okuyucuya sonuç sayısı: bölge baştan yerinde, yalnız metni
+     değişir (metniyle birlikte eklenen bölge çoğu zaman duyurulmuyor). */
+  const status = query.trim()
+    ? filtered.length === 0
+      ? 'Sonuç bulunamadı. Başka bir kelimeyle dene.'
+      : `${filtered.length} sonuç`
+    : ''
 
   return (
     <>
@@ -261,7 +291,7 @@ export default function CommandPalette({
 
           <div id="komut-listesi" role="listbox" aria-label="Komutlar" className="max-h-[min(360px,55vh)] overflow-y-auto py-2">
             {filtered.length === 0 ? (
-              <p className="px-4 py-8 text-center text-sm text-muted" role="status">
+              <p className="px-4 py-8 text-center text-sm text-muted" aria-hidden="true">
                 Sonuç bulunamadı. Başka bir kelimeyle dene.
               </p>
             ) : (
@@ -312,6 +342,9 @@ export default function CommandPalette({
               ))
             )}
           </div>
+          <p role="status" className="sr-only">
+            {status}
+          </p>
 
           <div className="flex items-center gap-4 border-t border-line px-4 py-2.5 text-micro font-medium text-muted pointer-coarse:hidden">
             <span>↑↓ Seç</span>

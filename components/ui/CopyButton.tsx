@@ -10,7 +10,8 @@ import { buttonClass, type ButtonSize, type ButtonVariant } from '@/components/u
  *   <CopyButton value="ahmetakyapii@gmail.com">E-postayı Kopyala</CopyButton>
  *   <CopyButton value={kod} variant="ghost" size="sm" copiedLabel="Kopyalandı" />
  *
- * Sonuç ekran okuyucuya `aria-live` ile söylenir; görsel etiket 1,8 sn
+ * Sonuç ekran okuyucuya `aria-live` ile söylenir (düğmenin kardeşi, gizli
+ * ve konumlu: yerleşime girmez); görsel etiket 1,8 sn
  * sonra eski hâline döner. Clipboard API yoksa (eski Safari, güvensiz
  * köken) gizli textarea yöntemine düşer; o da olmazsa "Tekrar Dene" der.
  */
@@ -45,11 +46,21 @@ export function CopyButton({
     timer.current = window.setTimeout(() => setState('idle'), RESET_MS)
   }
 
+  const message = state === 'copied' ? copiedLabel : state === 'error' ? 'Tekrar Dene' : null
+
+  /* Duyuru düğmenin DIŞINDA, hep yerinde bir bölgede ve yalnız sonuçta:
+     düğmenin içindeyken etiket eski hâline dönünce ("Adresi Kopyala") o da
+     yeniden okunuyordu. */
   return (
-    <button type="button" onClick={handleClick} className={buttonClass({ variant, size, className })}>
-      {state === 'copied' ? <Check aria-hidden="true" /> : <Copy aria-hidden="true" />}
-      <span aria-live="polite">{state === 'copied' ? copiedLabel : state === 'error' ? 'Tekrar Dene' : children}</span>
-    </button>
+    <>
+      <button type="button" onClick={handleClick} className={buttonClass({ variant, size, className })}>
+        {state === 'copied' ? <Check aria-hidden="true" /> : <Copy aria-hidden="true" />}
+        <span>{message ?? children}</span>
+      </button>
+      <span className="sr-only" aria-live="polite">
+        {message}
+      </span>
+    </>
   )
 }
 

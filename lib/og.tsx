@@ -21,15 +21,17 @@ import { JOB_TITLE } from '@/lib/nav'
 export const OG_SIZE = { width: 1200, height: 630 } as const
 export const OG_CONTENT_TYPE = 'image/png'
 
-/** `signature` koyu: --page-bg, --text-strong, --text-body, --primary, --line. */
+/** `signature` koyu: --page-bg, --text-strong, --text-body, --primary, --line.
+    Zemin ve yüzey "Gece Mavisi"ni (3 Ekim 2026) izler; kartlar eski
+    #070d16'da kalmıştı. */
 const C = {
-  ground: '#070d16',
+  ground: '#050a14',
   ink: '#eaf1f8',
   body: '#94a7ba',
   muted: '#8497a9',
   primary: '#35b8ff',
   line: 'rgba(255,255,255,0.11)',
-  surface: 'rgba(255,255,255,0.05)',
+  surface: 'rgba(255,255,255,0.045)',
   /* Marka degradesi duraklar: --brand-from / --brand-mid / --brand-to. */
   brandFrom: '#5cc4ff',
   brandMid: '#1f86e0',
@@ -37,6 +39,9 @@ const C = {
   onBrand: '#ffffff',
   brandGlow: '#bfe6ff',
 } as const
+
+/** Kendi iskeletini çizen rotalar (proje kartı) için: palet, font ve işaret tek yerde. */
+export const OG_COLORS = C
 
 /**
  * Marka fontu DEPODA (`assets/fonts`, OFL lisansı yanında), Google'dan
@@ -52,7 +57,7 @@ type OgFont = { name: string; data: ArrayBuffer; weight: 400 | 700; style: 'norm
 
 let fontCache: Promise<OgFont[]> | null = null
 
-function loadFonts(): Promise<OgFont[]> {
+export function loadFonts(): Promise<OgFont[]> {
   fontCache ??= (async () => {
     const dir = join(process.cwd(), 'assets', 'fonts')
     const [regular, bold] = await Promise.all([
@@ -69,7 +74,7 @@ function loadFonts(): Promise<OgFont[]> {
 }
 
 /** Marka işareti: components/site/Logo.tsx ile aynı üçgen ve degrade. */
-function BrandMark({ size = 64, radius = size * 0.29 }: { size?: number; radius?: number }) {
+export function BrandMark({ size = 64, radius = size * 0.29 }: { size?: number; radius?: number }) {
   return (
     <div
       style={{

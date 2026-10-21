@@ -3,12 +3,10 @@ import type { BlogPost } from '../types'
 export const post: BlogPost = {
   slug: 'firebase-realtime-chat-uygulamasi',
   tag: 'Gerçek Zamanlı',
-  tagColor: '#f59e0b',
   title: "İlk Sohbet Uygulamam: 2021'den Bugüne Ne Değişti",
   excerpt:
     "2021'de yazdığım ilk sohbet uygulamasının sunucusu on beş satırdı ve mesajın kimden geldiğini tarayıcı söylüyordu. Beş yıl sonra bir çizim oyununda aynı soruya bambaşka bir cevap verdim.",
   date: '2026-05-16',
-  coverGradient: 'linear-gradient(135deg, #f59e0b 0%, #ea580c 50%, #dc2626 100%)',
   content: [
     {
       type: 'lead',

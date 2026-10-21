@@ -2,6 +2,7 @@ import { shotSources, type ShotSources } from '@/lib/content/project-shots'
 import { blogPosts } from '@/lib/content/posts'
 import { projects } from '@/lib/content/projects'
 import type { BlogPost, Project } from '@/lib/content/types'
+import { foldTr } from '@/lib/search'
 
 /*
  * Blog yüzeyinin veri yardımcıları. Saf ve yalnızca sunucuda okunuyor:
@@ -10,14 +11,10 @@ import type { BlogPost, Project } from '@/lib/content/types'
  */
 
 /**
- * Yazılar YENİDEN ESKİYE. `lib/content/posts/index.ts` sırası elle tutuluyor
- * ve tarihle tutarsızdı (Mayıs'taki Karalama yazısı Nisan'daki One Piece
- * Hub yazısının altında duruyordu); dizin, RSS ve "diğer yazılar" sırayı buradan alır.
- * Kopya sıralanır, kaynak dizi değişmez.
+ * Yazılar YENİDEN ESKİYE. Sıralama tek yerde, `lib/content/posts/index.ts`;
+ * dizin, RSS ve "diğer yazılar" sırayı bu addan okur.
  */
-export const postsByDate: readonly BlogPost[] = [...blogPosts].sort(
-  (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
-)
+export const postsByDate: readonly BlogPost[] = blogPosts
 
 export function findPost(slug: string): BlogPost | undefined {
   return blogPosts.find((post) => post.slug === slug)
@@ -60,15 +57,10 @@ export function coverSubject(post: BlogPost): string | null {
  * Ara başlık çapası. Eskiden `section-<blok sırası>`ydı: yazıya bir
  * paragraf eklenince bütün çapalar kayıyordu. Başlıktan türeyen ad hem
  * paylaşılan bağlantıda okunuyor hem de içerik düzenlenince yerinde kalıyor.
+ * Türkçe katlama aramayla ortak (lib/search.ts → `foldTr`).
  */
-const TR_ASCII: Record<string, string> = { ç: 'c', ğ: 'g', ı: 'i', ö: 'o', ş: 's', ü: 'u', â: 'a', î: 'i', û: 'u' }
-
 function slugify(text: string): string {
-  return text
-    .toLocaleLowerCase('tr-TR')
-    .replace(/[çğıöşüâîû]/g, (ch) => TR_ASCII[ch] ?? ch)
-    .normalize('NFKD')
-    .replace(/[̀-ͯ]/g, '')
+  return foldTr(text)
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '')
 }

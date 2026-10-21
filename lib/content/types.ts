@@ -7,7 +7,6 @@ export const PROJECT_GROUPS = ['platform', 'oyun', 'arac'] as const
 export type ProjectGroup = (typeof PROJECT_GROUPS)[number]
 
 export interface Project {
-  id: number
   category: string
   group: ProjectGroup
   /**
@@ -37,7 +36,6 @@ export interface Project {
    * arayüzü altın. Yoksa `accent` kullanılır.
    */
   tint?: string
-  gradient: string
   badge: 'Canlı' | 'GitHub'
   featured: boolean
   /** Bu projeyi anlatan blog yazısının slug'ı. */
@@ -75,11 +73,9 @@ export type Block =
 export interface BlogPost {
   slug: string
   tag: string
-  tagColor: string
   title: string
   excerpt: string
   date: string
-  coverGradient: string
   /**
    * Yazının anlattığı proje (projects.ts `slug`). Kapak görseli ve "ilgili
    * proje" bağlantısı buradan çözülür. Boşsa eski eşleşme geçerli: projenin
@@ -88,9 +84,4 @@ export interface BlogPost {
    */
   project?: string
   content: Block[]
-}
-
-export interface TechStackItem {
-  name: string
-  tagline: string
 }

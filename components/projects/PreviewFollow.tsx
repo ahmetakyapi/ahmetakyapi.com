@@ -8,13 +8,14 @@ import { useEffect } from 'react'
  * içinde basılı; bu ada yalnızca iki şey yazar:
  *
  *   data-preview="follow" | "still"   liste kabına; önizleme kipini CSS'e söyler
- *   --px / --py / --pr                önizlemelere; imlecin yumuşatılmış konumu
+ *   translate / rotate                önizlemelere (satır içi); imlecin yumuşatılmış konumu
  *
- * Konum değişkenleri liste kabına değil doğrudan `.pprev` öğelerine yazılır:
- * özel özellikler miras alındığı için kaba yazılan değer her karede listenin
- * bütün alt ağacının stilini yeniden hesaplatıyordu (14 Ekim 2026).
+ * Konum doğrudan `.pprev` öğelerinin `translate`/`rotate`ına yazılır, CSS
+ * değişkenine değil: özel özellikler miras alındığı için değişken her
+ * karede önizlemelerin bütün alt ağacının stilini yeniden hesaplatıyordu
+ * (14 Ekim 2026'da kaptan önizlemelere indi; şimdi değişken hiç yok).
  *
- * React durumuna HİÇ yazılmıyor: konum her karede CSS değişkenine gidiyor,
+ * React durumuna HİÇ yazılmıyor: konum her karede satır içi stile gidiyor,
  * ağaç yeniden çizilmiyor. Döngü yalnızca imleç hareket ederken ve hedefe
  * yakınsayana kadar dönüyor; durunca kendini kapatıyor.
  *
@@ -64,14 +65,22 @@ export function PreviewFollow({ targetId }: { targetId: string }) {
        taşınan bir kart gibi. */
     function write() {
       const tilt = Math.max(-MAX_TILT, Math.min(MAX_TILT, (tx - x) * TILT_PER_PX))
-      const px = `${x.toFixed(1)}px`
-      const py = `${y.toFixed(1)}px`
-      const pr = `${tilt.toFixed(2)}deg`
+      const translate = `calc(${x.toFixed(1)}px + var(--pp-gap)) calc(${y.toFixed(1)}px - 50%)`
+      const rotate = `${tilt.toFixed(2)}deg`
       for (const preview of previews) {
-        preview.style.setProperty('--px', px)
-        preview.style.setProperty('--py', py)
-        preview.style.setProperty('--pr', pr)
+        preview.style.translate = translate
+        preview.style.rotate = rotate
       }
+    }
+
+    /* Satır içi konum yalnız `follow` kipinin: öteki kiplerde CSS'teki
+       sabit yer geçerli olsun. */
+    function clear() {
+      for (const preview of previews) {
+        preview.style.translate = ''
+        preview.style.rotate = ''
+      }
+      primed = false
     }
 
     function frame() {
@@ -89,7 +98,8 @@ export function PreviewFollow({ targetId }: { targetId: string }) {
     /* Önizleme imlecin sağında açılır; ekranın sağ kenarına yaklaşınca
        imlecin soluna geçmek yerine kenarda durur (sıçrama yok). */
     function clampX(clientX: number) {
-      if (!previewWidth) previewWidth = previews[0]?.offsetWidth ?? 0
+      /* Görünen bir önizlemeden ölç: süzgecin gizlediği satırınki 0 döner. */
+      if (!previewWidth) previewWidth = previews.find((p) => p.offsetWidth > 0)?.offsetWidth ?? 0
       return Math.min(clientX, window.innerWidth - previewWidth - EDGE_MARGIN * 3)
     }
 
@@ -121,10 +131,12 @@ export function PreviewFollow({ targetId }: { targetId: string }) {
       host.removeEventListener('pointermove', onMove)
       if (!fine.matches) {
         delete host.dataset.preview
+        clear()
         return
       }
       host.dataset.preview = still.matches ? 'still' : 'follow'
-      if (!still.matches) host.addEventListener('pointermove', onMove, { passive: true })
+      if (still.matches) clear()
+      else host.addEventListener('pointermove', onMove, { passive: true })
     }
 
     collect()

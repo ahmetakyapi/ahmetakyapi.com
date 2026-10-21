@@ -3,26 +3,26 @@ import { Suspense } from 'react'
 import { FilterTabs, ProjectFilter } from '@/components/projects/ProjectFilter'
 import { PreviewFollow } from '@/components/projects/PreviewFollow'
 import { FeaturedRow, ProjectRow } from '@/components/projects/ProjectRow'
-import { LIST_ID } from '@/components/projects/project-text'
+import { FILTER_PARAM, LIST_ID } from '@/components/projects/project-text'
 import { PageTransition } from '@/components/site/PageTransition'
 import { Container } from '@/components/ui/Container'
 import { SketchUnderline } from '@/components/ui/Sketch'
 import { projects } from '@/lib/content/projects'
 import { PROJECT_GROUPS, type ProjectGroup } from '@/lib/content/types'
 import { getOrderedProjects } from '@/lib/project-order'
-import { breadcrumbJsonLd, collectionJsonLd } from '@/lib/seo'
+import { ALTERNATES_BASE, OPEN_GRAPH_BASE, breadcrumbJsonLd, collectionJsonLd, jsonLdHtml } from '@/lib/seo'
 import './projects.css'
 
 export const metadata: Metadata = {
   title: 'Projeler',
   description:
     'Açılış Zili, Mimio, One Piece Hub, Harfiyen ve diğerleri: Next.js, TypeScript ve Postgres ile geliştirdiğim canlı projeler.',
-  alternates: { canonical: '/projeler' },
+  alternates: { ...ALTERNATES_BASE, canonical: '/projeler' },
   openGraph: {
+    ...OPEN_GRAPH_BASE,
     title: 'Projeler · Ahmet Akyapı',
     description: 'Next.js, TypeScript ve Postgres ile geliştirdiğim canlı projeler.',
     url: '/projeler',
-    type: 'website',
   },
 }
 
@@ -55,19 +55,17 @@ export default function ProjectsPage() {
     <PageTransition>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify([
-            breadcrumbJsonLd([
-              { name: 'Ana Sayfa', path: '/' },
-              { name: 'Projeler', path: '/projeler' },
-            ]),
-            collectionJsonLd({
-              name: 'Projeler',
-              path: '/projeler',
-              items: ordered.map((p) => ({ name: p.title, url: `/projeler/${p.slug}` })),
-            }),
+        dangerouslySetInnerHTML={jsonLdHtml([
+          breadcrumbJsonLd([
+            { name: 'Ana Sayfa', path: '/' },
+            { name: 'Projeler', path: '/projeler' },
           ]),
-        }}
+          collectionJsonLd({
+            name: 'Projeler',
+            path: '/projeler',
+            items: ordered.map((p) => ({ name: p.title, url: `/projeler/${p.slug}` })),
+          }),
+        ])}
       />
       <style>{sectionRules(featured.map((p) => p.group), rest.map((p) => p.group))}</style>
 
@@ -91,7 +89,13 @@ export default function ProjectsPage() {
           </Suspense>
         </div>
 
-        <div id={LIST_ID} className="pscope mt-8 sm:mt-12">
+        {/* Süzülmüş adres (`?kategori=oyun`) doğrudan açılınca süzgeç ilk
+            boyamadan ÖNCE uygulanır (THEME_SCRIPT ile aynı yol). Önceden
+            liste önce tamamıyla çiziliyor, ada yüklenince öne çıkanlar
+            kalkıp liste yukarı zıplıyordu (CLS 0,36–0,49). Sayfa statik
+            kalır; istemcide gezinmede bu betik çalışmaz, ProjectFilter yazar. */}
+        <div id={LIST_ID} className="pscope mt-8 sm:mt-12" suppressHydrationWarning>
+          <script dangerouslySetInnerHTML={{ __html: FILTER_SCRIPT }} />
           <section aria-labelledby="one-cikanlar" className="pfeat-section">
             <h2 id="one-cikanlar" className="sr-only">
               Öne Çıkan Projeler
@@ -111,9 +115,18 @@ export default function ProjectsPage() {
                 kalktı, başlık tek başına ve daha büyük puntoda duruyor; mono yazı
                 da kalktı, gövde yazısıyla okunuyor. */}
             <header className="prest-head">
+              {/* Sayı süzgeçle değişir: her küme için ayrı rozet, görüneni CSS
+                  seçer (sectionRules). JavaScript yoksa yalnız toplam. */}
               <h2 id="diger-projeler" className="prest-title">
                 Diğer Projeler
-                <span className="prest-count">{rest.length}</span>
+                <span className="prest-count" data-for="all">
+                  {rest.length}
+                </span>
+                {PROJECT_GROUPS.map((group) => (
+                  <span key={group} className="prest-count" data-for={group}>
+                    {rest.filter((p) => p.group === group).length}
+                  </span>
+                ))}
               </h2>
             </header>
             <ol className="prow-list">
@@ -132,14 +145,21 @@ export default function ProjectsPage() {
 /**
  * Seçili kümede hiç öğesi kalmayan bölümü gizleyen kurallar. Öne çıkanlar
  * bölümü boşsa "Diğer Projeler" başlığı da kalkar: üstünde bir şey yokken
- * "diğer" demek anlamsız.
+ * "diğer" demek anlamsız. Başlığın sayısı da burada: yalnız seçili kümenin
+ * rozeti görünür.
  */
 function sectionRules(featuredGroups: readonly ProjectGroup[], restGroups: readonly ProjectGroup[]) {
   return PROJECT_GROUPS.map((group) => {
     const on = `.pscope[data-filter="${group}"]`
-    const rules: string[] = []
+    const rules: string[] = [
+      `.pscope:not([data-filter="${group}"]) .prest-count[data-for="${group}"]{display:none}`,
+      `${on} .prest-count[data-for="all"]{display:none}`,
+    ]
     if (!featuredGroups.includes(group)) rules.push(`${on} .pfeat-section{display:none}`, `${on} .prest-title{display:none}`)
     if (!restGroups.includes(group)) rules.push(`${on} .prest-section{display:none}`)
     return rules.join('')
   }).join('')
 }
+
+/** Listenin ilk çocuğu olarak çalışır: kabı `currentScript`in ebeveyni. */
+const FILTER_SCRIPT = `(function(){try{var v=new URLSearchParams(location.search).get(${JSON.stringify(FILTER_PARAM)});if(${JSON.stringify(PROJECT_GROUPS)}.indexOf(v)>-1)document.currentScript.parentElement.setAttribute("data-filter",v)}catch(e){}})()`

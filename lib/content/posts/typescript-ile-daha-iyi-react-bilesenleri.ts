@@ -3,12 +3,10 @@ import type { BlogPost } from '../types'
 export const post: BlogPost = {
   slug: 'typescript-ile-daha-iyi-react-bilesenleri',
   tag: 'TypeScript',
-  tagColor: '#3178c6',
   title: 'ahmetakyapi.com: Yazılar Neden Markdown Değil',
   excerpt:
     'Bu blogdaki her yazı bir TypeScript dosyası ve içerik bir blok dizisi. Bunun nasıl çalıştığını, bana neler kazandırdığını ve tip sisteminin nerede yetmediğini anlatıyorum.',
   date: '2026-08-14',
-  coverGradient: 'linear-gradient(135deg, #3178c6 0%, #235a97 100%)',
   content: [
     {
       type: 'lead',

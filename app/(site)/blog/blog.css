@@ -242,7 +242,9 @@
   letter-spacing: -0.035em;
   color: var(--text-strong);
   text-wrap: balance;
-  scroll-margin-top: 5.5rem;
+  /* Başlığın payı köktekinin (`scroll-padding-top`, globals.css) ÜSTÜNE
+     eklenir: toplam yine 5,5rem. */
+  scroll-margin-top: 1rem;
 }
 
 .post-prose > h2::before {
@@ -265,6 +267,7 @@
   height: 2px;
   border-radius: 2px;
   background: var(--primary);
+  transform-origin: left;
 }
 
 /* Bölüm bağlantısı (PostBody → SectionAnchor, HeadingAnchors). Numara
@@ -355,14 +358,16 @@
   letter-spacing: -0.02em;
   color: var(--text-strong);
   text-wrap: balance;
-  scroll-margin-top: 5.5rem;
+  scroll-margin-top: 1rem;
 }
 
 /* Bölüm başlığı görünüme girerken çizgi soldan uzar, başlık hafifçe
-   yükselir. Desteksiz ya da hareketi azaltan okuyucuda son hâl. */
+   yükselir. Desteksiz ya da hareketi azaltan okuyucuda son hâl. Çizgi
+   genişlikle değil ölçekle uzar: kaydırma zaman çizelgesinde genişlik her
+   karede ana iş parçacığında yerleşim ister, ölçek bileşiciye gider. */
 @keyframes post-rule-in {
   from {
-    width: 0;
+    scale: 0 1;
   }
 }
 @keyframes post-head-in {
@@ -776,6 +781,21 @@
   color: var(--tone);
 }
 
+/* Açık temada 14 piksellik etiket kendi tonlu zemininde AA'nın altında
+   kalıyordu (bilgi 4,49, ipucu 4,43, dikkat 3,23:1). Ton aynı, yalnız
+   etiket siyahla 4,5'i geçecek kadar koyulaşır; çerçeve ve zemin değişmez. */
+:root:not([data-theme="dark"]) .post-prose > [data-block="callout"] [data-part="label"] {
+  color: color-mix(in srgb, var(--tone) 99%, black);
+}
+
+:root:not([data-theme="dark"]) .post-prose > [data-block="callout"][data-variant="tip"] [data-part="label"] {
+  color: color-mix(in srgb, var(--tone) 98%, black);
+}
+
+:root:not([data-theme="dark"]) .post-prose > [data-block="callout"][data-variant="warning"] [data-part="label"] {
+  color: color-mix(in srgb, var(--tone) 81%, black);
+}
+
 .post-prose > [data-block="callout"] [data-part="label"] svg {
   width: 1rem;
   height: 1rem;
@@ -1163,6 +1183,10 @@
   min-width: 0;
 }
 
+.bl-chip {
+  position: relative;
+}
+
 .bl-chip-input {
   position: absolute;
   width: 1px;
@@ -1171,15 +1195,26 @@
   pointer-events: none;
 }
 
-.bl-chip-input:checked + .tab {
+.bl-chip:has(> .bl-chip-input:checked) {
   border-color: var(--text-strong);
   background: var(--text-strong);
   color: var(--page-bg);
 }
 
-.bl-chip-input:focus-visible + .tab {
+.bl-chip:has(> .bl-chip-input:focus-visible) {
   outline: 2px solid var(--line-focus);
   outline-offset: 2px;
+}
+
+/* Zorunlu renklerde zemin ve kenar sistem rengine döner, seçili çip
+   ötekilerden ayrılmıyordu. */
+@media (forced-colors: active) {
+  .bl-chip:has(> .bl-chip-input:checked) {
+    forced-color-adjust: none;
+    border-color: Highlight;
+    background: Highlight;
+    color: HighlightText;
+  }
 }
 
 /* Arşiv başlığı: projelerdeki "Diğer Projeler" ile aynı ölçü. */

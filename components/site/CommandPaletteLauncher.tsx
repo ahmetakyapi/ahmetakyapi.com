@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import type { PaletteLink } from '@/components/site/CommandPalette'
+import { NAV_ITEMS } from '@/lib/nav'
 
 /**
  * ⌘K komut paletinin açıcısı: ilk yükte yalnızca bu küçük dinleyici var.
@@ -21,7 +22,10 @@ const CommandPalette = dynamic(() => import('@/components/site/CommandPalette'),
 
 /** İki tuşluk dizinin (G sonra H) tamamlanma süresi. */
 const SEQUENCE_MS = 800
-const SEQUENCES: Record<string, string> = { h: '/', p: '/projeler', b: '/blog' }
+/** İkinci tuş → adres, NAV_ITEMS'taki `G H` biçiminden: { h: '/', p: '/projeler', b: '/blog' }. */
+const SEQUENCES: Record<string, string> = Object.fromEntries(
+  NAV_ITEMS.map((item) => [item.shortcut.split(' ')[1].toLowerCase(), item.href]),
+)
 
 export function CommandPaletteLauncher({ projects, posts }: { projects: PaletteLink[]; posts: PaletteLink[] }) {
   const [open, setOpen] = useState(false)
@@ -61,6 +65,7 @@ export function CommandPaletteLauncher({ projects, posts }: { projects: PaletteL
         const href = SEQUENCES[e.key.toLowerCase()]
         if (href) {
           e.preventDefault()
+          window.dispatchEvent(new CustomEvent('route-progress:start', { detail: href }))
           router.push(href)
         }
         lastKey = ''

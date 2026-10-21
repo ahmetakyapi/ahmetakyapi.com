@@ -15,7 +15,7 @@ alan adı www'ye 307 ile yönleniyor).
 
 ## Yığın ve komutlar
 
-Next.js 16 (App Router) · React 19 · Tailwind v4 · `motion` · TypeScript.
+Next.js 16 (App Router) · React 19 · Tailwind v4 · TypeScript.
 `npm run typecheck` (`next typegen && tsc --noEmit`), `npm run lint`, `npm run build`.
 
 ## İçerik nerede
@@ -28,6 +28,10 @@ Next.js 16 (App Router) · React 19 · Tailwind v4 · `motion` · TypeScript.
   değişir). Çekim ölçüsü: masaüstü 1080×675, telefon 390×844, ikisi de 2x, WebP
   q80; canlı siteden, intro perdesi atlanarak. Paylaşım kartı kaynağı
   `assets/project-og/<slug>.jpg` (masaüstü koyu görselden 1050×656, JPEG q78).
+  Küçük kopyalar (srcset) yanlarında `<ad>.w<genişlik>.webp`, genişlikler
+  `lib/content/shot-renditions.json`; çekim değişince `npm run shots`.
+  `prebuild` aynı betiği `--check` ile çalıştırır: eksik ya da eski kopya
+  derlemeyi kırar.
 - Tema çerez ile (`theme`, `lib/theme.ts`), next-themes yok.
 
 ## Commit yazarı

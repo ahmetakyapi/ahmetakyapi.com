@@ -36,7 +36,10 @@ export function HeadingAnchors() {
       const canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.href
       const base = canonical || `${location.origin}${location.pathname}`
       const ok = await copyText(`${base}${anchor.hash}`)
-      history.replaceState(history.state, '', anchor.hash)
+      /* Durum `null`: Next yönlendiricisi bu çağrıyı kendi adresine işler.
+         `history.state` geçilseydi (`__NA` taşıyor) yönlendirici atlanır ve
+         sonraki ilk güncellemede (tema değişimi gibi) çapa adresten silinirdi. */
+      window.history.replaceState(null, '', anchor.hash)
 
       active?.removeAttribute('data-copied')
       window.clearTimeout(timer)

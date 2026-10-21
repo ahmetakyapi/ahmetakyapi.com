@@ -1,7 +1,7 @@
 'use client'
 
 import { ChevronLeft, ChevronRight, X } from 'lucide-react'
-import { useCallback, useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent, type MouseEvent as ReactMouseEvent } from 'react'
+import { useCallback, useEffect, useId, useRef, useState, type KeyboardEvent as ReactKeyboardEvent, type MouseEvent as ReactMouseEvent } from 'react'
 import { buttonClass } from '@/components/ui/Button'
 import { ThemedImage } from '@/components/ui/ThemedImage'
 
@@ -28,6 +28,8 @@ const MAX_SVH = 82
 export function ShotViewer({ shots }: { shots: ViewerShot[] }) {
   const dialogRef = useRef<HTMLDialogElement>(null)
   const openerRef = useRef<HTMLElement | null>(null)
+  const closeRef = useRef<HTMLButtonElement>(null)
+  const captionId = useId()
   const [index, setIndex] = useState(0)
 
   const step = useCallback(
@@ -44,6 +46,9 @@ export function ShotViewer({ shots }: { shots: ViewerShot[] }) {
       openerRef.current = target
       setIndex(i)
       dialogRef.current?.showModal()
+      /* Elle: `autoFocus` yalnız sunucu HTML'inde öznitelik oluyor; istemcide
+         gezinerek gelince pencere ilk düğmeye ("Önceki") odaklanıyordu. */
+      closeRef.current?.focus()
     }
     document.addEventListener('click', onClick)
     return () => document.removeEventListener('click', onClick)
@@ -83,12 +88,16 @@ export function ShotViewer({ shots }: { shots: ViewerShot[] }) {
       onKeyDown={onKeyDown}
       onClick={onDialogClick}
     >
-      <figure className="flex flex-col items-center gap-3">
+      <figure className="flex flex-col items-center gap-3" aria-labelledby={captionId}>
         <div className="overflow-hidden rounded-card border border-line bg-surface-sunken shadow-modal" style={{ width }}>
           <ThemedImage key={index} light={shot.light} dark={shot.dark} width={shot.width} height={shot.height} alt={shot.alt} />
         </div>
         <figcaption className="flex w-full items-center justify-between gap-3" style={{ width }}>
-          <span className="min-w-0 truncate text-sm text-body">{shot.caption}</span>
+          {/* Görünüm değişince künye okunur; şekil de yalnız künyeyle adlanır
+              (düğme etiketleri adına karışmasın). */}
+          <span id={captionId} aria-live="polite" className="min-w-0 truncate text-sm text-body">
+            {shot.caption}
+          </span>
           <span className="flex shrink-0 items-center gap-1">
             {shots.length > 1 ? (
               <>
@@ -104,7 +113,7 @@ export function ShotViewer({ shots }: { shots: ViewerShot[] }) {
               type="button"
               onClick={() => dialogRef.current?.close()}
               aria-label="Kapat"
-              autoFocus
+              ref={closeRef}
               className={buttonClass({ variant: 'secondary', size: 'icon' })}
             >
               <X aria-hidden="true" />

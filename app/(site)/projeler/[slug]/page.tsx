@@ -12,13 +12,20 @@ import { Container } from '@/components/ui/Container'
 import { KunyeGrid, KunyeLine } from '@/components/ui/Kunye'
 import { ThemedImage } from '@/components/ui/ThemedImage'
 import { blogPosts } from '@/lib/content/posts'
-import { shotSources } from '@/lib/content/project-shots'
+import { shotSources, type ShotSources } from '@/lib/content/project-shots'
 import { getProjectBySlug, projects } from '@/lib/content/projects'
 import type { Project } from '@/lib/content/types'
 import { getOrderedProjects } from '@/lib/project-order'
 import type { ShotView } from '@/lib/project-shot'
 import { formatPostDate, readingTime } from '@/lib/reading-time'
-import { TWITTER, breadcrumbJsonLd, projectDetailJsonLd } from '@/lib/seo'
+import {
+  ALTERNATES_BASE,
+  OPEN_GRAPH_BASE,
+  TWITTER_BASE,
+  breadcrumbJsonLd,
+  jsonLdHtml,
+  projectDetailJsonLd,
+} from '@/lib/seo'
 import '../projects.css'
 
 /*
@@ -55,20 +62,18 @@ export async function generateMetadata({ params }: PageProps<'/projeler/[slug]'>
   return {
     title: project.title,
     description: lead,
-    alternates: { canonical: url },
+    alternates: { ...ALTERNATES_BASE, canonical: url },
     keywords: [project.category, ...project.tags, 'Ahmet Akyapı'],
     openGraph: {
-      type: 'website',
+      ...OPEN_GRAPH_BASE,
       title: `${project.title} · Ahmet Akyapı`,
       description: lead,
       url,
-      locale: 'tr_TR',
     },
     twitter: {
-      card: 'summary_large_image',
+      ...TWITTER_BASE,
       title: `${project.title} · Ahmet Akyapı`,
       description: lead,
-      creator: TWITTER,
     },
   }
 }
@@ -114,7 +119,8 @@ export default async function ProjectPage({ params }: PageProps<'/projeler/[slug
     const src = shotSources(project.slug, view)
     return src ? [{ view, src, alt: VIEW_ALT[view](project.title), caption: VIEW_CAPTION[view](project.title) }] : []
   })
-  const viewerShots: ViewerShot[] = shots.map(({ src, alt, caption }) => ({ ...src, alt, caption }))
+  /* Büyütülen görüntü asıl dosya: küçük kopyalar (srcSet) pencereye gitmez. */
+  const viewerShots: ViewerShot[] = shots.map(({ src: { light, dark, width, height }, alt, caption }) => ({ light, dark, width, height, alt, caption }))
   const hasHeroShot = shots[0]?.view === 'desktop'
   const second = shots.find((s) => s.view === 'desktop-2')
   const phone = shots.find((s) => s.view === 'mobile')
@@ -128,16 +134,14 @@ export default async function ProjectPage({ params }: PageProps<'/projeler/[slug
     <PageTransition>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify([
-            projectDetailJsonLd(project),
-            breadcrumbJsonLd([
-              { name: 'Ana Sayfa', path: '/' },
-              { name: 'Projeler', path: '/projeler' },
-              { name: project.title, path: `/projeler/${project.slug}` },
-            ]),
+        dangerouslySetInnerHTML={jsonLdHtml([
+          projectDetailJsonLd(project),
+          breadcrumbJsonLd([
+            { name: 'Ana Sayfa', path: '/' },
+            { name: 'Projeler', path: '/projeler' },
+            { name: project.title, path: `/projeler/${project.slug}` },
           ]),
-        }}
+        ])}
       />
       {viewerShots.length > 0 ? <ShotViewer shots={viewerShots} /> : null}
 
@@ -287,13 +291,19 @@ function ZoomHint() {
   )
 }
 
+/* Galeri yuvaları (srcset seçimi): `sm` üstünde iki sütun 3,46 : 1 (bkz.
+   galleryColumns), kap en çok 72rem; altında tek sütun, telefon görseli en
+   çok 15rem. */
+const GALLERY_DESKTOP_SIZES = '(min-width: 72rem) 52rem, (min-width: 640px) 75vw, 100vw'
+const GALLERY_PHONE_SIZES = '(min-width: 72rem) 15rem, (min-width: 640px) 21vw, 15rem'
+
 function GalleryShot({
   index,
   shot,
   phone = false,
 }: {
   index: number
-  shot: { src: { light: string; dark?: string; width: number; height: number }; alt: string }
+  shot: { src: ShotSources; alt: string }
   phone?: boolean
 }) {
   return (
@@ -304,7 +314,7 @@ function GalleryShot({
       className={phone ? 'shot-zoom group relative mx-auto max-w-[15rem] sm:max-w-none' : 'shot-zoom group relative'}
     >
       <span className="block overflow-hidden rounded-card border border-line bg-surface-sunken">
-        <ThemedImage {...shot.src} alt={shot.alt} />
+        <ThemedImage {...shot.src} alt={shot.alt} sizes={phone ? GALLERY_PHONE_SIZES : GALLERY_DESKTOP_SIZES} />
       </span>
       <ZoomHint />
     </button>
@@ -354,8 +364,13 @@ function NextProject({ project }: { project: Project }) {
         coverClassName="lg:col-span-5"
         content={
           <div className="min-w-0 lg:col-span-7">
-            <p className="text-sm font-medium text-body">Sıradaki Proje</p>
+            {/* Etiket başlığın içinde de var (gizli): bölge ve başlık listesinde
+                yalnız öteki projenin adı okunuyordu. */}
+            <p className="text-sm font-medium text-body" aria-hidden="true">
+              Sıradaki Proje
+            </p>
             <h2 id="sonraki-proje" className="mt-2 text-[clamp(2.25rem,6vw,4.5rem)] leading-[1] font-semibold tracking-[-0.04em] text-strong">
+              <span className="sr-only">Sıradaki Proje: </span>
               <Link
                 href={`/projeler/${project.slug}`}
                 transitionTypes={['nav-forward']}
@@ -371,7 +386,8 @@ function NextProject({ project }: { project: Project }) {
             </span>
           </div>
         }
-        cover={<ProjectCover project={project} />}
+        coverHidden
+        cover={<ProjectCover project={project} morph="armed" alt="" />}
       />
     </Container>
   )

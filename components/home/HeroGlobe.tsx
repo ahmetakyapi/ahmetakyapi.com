@@ -81,6 +81,12 @@ const TIME_RATE = 0.48
 const LEGACY_FRAME_MS = 1000 / 30
 const TARGET_FPS = 60
 const FRAME_INTERVAL = 1000 / TARGET_FPS
+/**
+ * Kare sınırı aralığın bu kadar altında: rAF zaman damgası yuvarlanıyor ve
+ * 60 Hz'de iki kare arası 16,6 da ölçülüyor; sınır tam aralıktayken her
+ * yedinci kare düşüyor, 120 Hz'de kareler 8/17/25 ms aralıkla geliyordu.
+ */
+const FRAME_SLACK_MS = 2
 /** Sekme uzun süre arkada kaldıysa tek karede zıplamasın. */
 const MAX_STEP_MS = 64
 const MAX_DPR = 2
@@ -597,16 +603,18 @@ export default function HeroGlobe() {
       }
     }
 
+    // Süre son ÇİZİLEN kareden ölçülür. Önceden 60 kare/sn ızgarasından
+    // ölçülüyordu ve her adıma rastgele bir artık (0-16 ms) ekleniyordu:
+    // sahne her açılışta 1 ile 2 kat arası bir hızda dönüyordu.
     const loop = (now: number) => {
       raf = requestAnimationFrame(loop)
       if (document.hidden) return
       const elapsed = now - lastFrame
-      if (elapsed < FRAME_INTERVAL) return
-      lastFrame = now - (elapsed % FRAME_INTERVAL)
+      if (elapsed < FRAME_INTERVAL - FRAME_SLACK_MS) return
+      lastFrame = now
       const dt = Math.min(elapsed, MAX_STEP_MS)
       s.step = dt
       s.time += (dt / 1000) * TIME_RATE
-      s.rotX = Math.max(-ROT_X_LIMIT, Math.min(ROT_X_LIMIT, s.rotX))
       draw()
     }
 
@@ -678,7 +686,10 @@ export default function HeroGlobe() {
     // tarayıcının kaydırmaya geçmesini touchmove'daki preventDefault
     // engelliyor; `pan-y` tek başına yatay başlayıp yukarı kıvrılan
     // parmağı sayfaya bırakıyordu.
+    // Yalnız birincil işaretçi: ikinci parmak başlangıç noktasının üstüne
+    // yazıyor ve her harekette küre iki parmak arası kadar sıçrıyordu.
     const onDown = (event: PointerEvent) => {
+      if (!event.isPrimary) return
       s.pressed = true
       s.touch = event.pointerType !== 'mouse'
       s.lock = s.touch ? 'none' : 'globe'
@@ -720,7 +731,7 @@ export default function HeroGlobe() {
       // Basılı değilken hareket yok sayılır. Önceden fareyle yalnız üzerine
       // gelmek de küreyi döndürüyordu: başlangıç noktası 0'da kaldığı için
       // ilk harekette yön kararı verilip sürükleme başlıyordu (4 Ekim 2026).
-      if (!s.pressed) return
+      if (!s.pressed || !event.isPrimary) return
       const totalX = event.clientX - s.startX
       const totalY = event.clientY - s.startY
       if (Math.hypot(totalX, totalY) > TAP_SLOP) s.moved = true
@@ -735,12 +746,15 @@ export default function HeroGlobe() {
       const dx = event.clientX - s.lastX
       const dy = event.clientY - s.lastY
       s.rotY += dx * DRAG_SENSITIVITY
-      s.rotX += dy * DRAG_SENSITIVITY
+      // Sınır burada: hareketi azaltan okuyucuda döngü hiç çalışmıyor ve
+      // küre kutbun ötesine, baş aşağı dönebiliyordu.
+      s.rotX = Math.max(-ROT_X_LIMIT, Math.min(ROT_X_LIMIT, s.rotX + dy * DRAG_SENSITIVITY))
       s.lastX = event.clientX
       s.lastY = event.clientY
       if (still) draw()
     }
-    const onUp = () => {
+    const onUp = (event: PointerEvent) => {
+      if (!event.isPrimary) return
       clearHold()
       s.pressed = false
       s.lock = 'none'
@@ -804,7 +818,7 @@ export default function HeroGlobe() {
   }, [])
 
   return (
-    <div ref={boxRef} className="home-globe-box">
+    <div ref={boxRef} className="size-full">
       <canvas
         ref={canvasRef}
         role="img"

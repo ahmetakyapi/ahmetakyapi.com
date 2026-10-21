@@ -3,12 +3,10 @@ import type { BlogPost } from '../types'
 export const post: BlogPost = {
   slug: 'socket-io-ile-oda-tabanli-multiplayer',
   tag: 'Gerçek Zamanlı',
-  tagColor: '#22d3ee',
   title: 'Karalama: Arkadaşlarla Oynanan Çizim Oyunu',
   excerpt:
     "Karalama, kayıt olmadan bir bağlantıyla oynanan Türkçe çizim ve tahmin oyunu. Oyunun nasıl işlediğini, sunucunun neden her kararı kendisinin verdiğini ve Türkçe harflerin başıma açtığı işi anlatıyorum.",
   date: '2026-05-15',
-  coverGradient: 'linear-gradient(135deg, #22d3ee 0%, #0ea5e9 50%, #6366f1 100%)',
   content: [
     {
       type: 'lead',

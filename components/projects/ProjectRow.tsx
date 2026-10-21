@@ -21,6 +21,10 @@ import type { Project } from '@/lib/content/types'
 const LINK =
   'after:absolute after:inset-0 after:z-10 after:rounded-card focus-visible:outline-none focus-visible:after:outline-2 focus-visible:after:outline-offset-2 focus-visible:after:outline-line-focus focus-visible:after:outline-solid'
 
+/** Öne çıkan kartta halka İÇERİDE: `.tint-card` taşanı kırpıyor, dışarı
+    çizilen halka hiç görünmüyordu. */
+const FEATURED_LINK = LINK.replace('focus-visible:after:outline-offset-2', 'focus-visible:after:-outline-offset-2')
+
 /** Satırda gösterilen teknoloji sayısı; tamamı proje sayfasında. */
 const STACK_PREVIEW = 2
 
@@ -42,7 +46,7 @@ export function FeaturedRow({ project, priority = false }: { project: Project; p
               {project.badge !== 'Canlı' ? <span> · {badgeLabel(project.badge)}</span> : null}
             </p>
             <h3 className="pfeat-title tint-card-title mt-4">
-              <Link href={`/projeler/${project.slug}`} transitionTypes={['nav-forward']} className={LINK}>
+              <Link href={`/projeler/${project.slug}`} transitionTypes={['nav-forward']} className={FEATURED_LINK}>
                 {project.title}
               </Link>
             </h3>
@@ -53,7 +57,7 @@ export function FeaturedRow({ project, priority = false }: { project: Project; p
             </span>
           </div>
         }
-        cover={<ProjectCover project={project} priority={priority} alt="" />}
+        cover={<ProjectCover project={project} morph="armed" priority={priority} alt="" />}
       />
     </li>
   )
@@ -100,7 +104,7 @@ export function ProjectRow({ project }: { project: Project }) {
             </span>
           </>
         }
-        cover={<ProjectCover project={project} alt="" />}
+        cover={<ProjectCover project={project} morph="armed" alt="" />}
       />
     </li>
   )

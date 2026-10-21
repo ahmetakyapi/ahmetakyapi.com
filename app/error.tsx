@@ -1,7 +1,5 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
-
 /**
  * Segment hata sınırı.
  *
@@ -13,6 +11,12 @@ import { useRouter } from 'next/navigation'
  * Link ve lucide ikonlarıyla ~4,7 KB (gzip) tutuyordu; düz öğe ve
  * sınıf dizeleriyle ~1 KB (yönlendirici zaten çerçevede).
  *
+ * Bu sınır (site) kabuğunun ÜSTÜNDE: hata anında başlık, altbilgi ve
+ * oradaki `<main>` yok, atlama bağlantısının hedefi burada. "Ana Sayfa"
+ * BİLEREK `Link` değil, düz `<a>`: tam yükleme hatalı durumu temizler.
+ * İstemci gezintisi (`router.push('/')`, `Link`) sınırı yalnız adres
+ * değişince sıfırlıyor; hata zaten /'deyken düğme hiçbir şey yapmıyordu.
+ *
  * Hata MESAJI gösterilmez: sunucu hatası dosya yolu ya da yanıt
  * taşıyabilir. Kullanıcının iletebileceği tek şey `digest`.
  */
@@ -20,11 +24,12 @@ const PRIMARY =
   'inline-flex min-h-11 items-center justify-center rounded-button bg-cta px-4 text-sm font-semibold text-on-brand hover:brightness-110'
 const GHOST =
   'inline-flex min-h-11 items-center justify-center rounded-button px-4 text-sm font-semibold text-body hover:bg-primary-wash hover:text-strong'
+/** Tam yükleme için düz bağlantının hedefi (bkz. yukarı). */
+const HOME_HREF = '/'
 
 export default function ErrorBoundary({ error, retry }: { error: Error & { digest?: string }; retry: () => void }) {
-  const router = useRouter()
   return (
-    <div className="mx-auto grid min-h-[60svh] max-w-xl place-items-center px-4 py-16 text-center">
+    <main id="main-content" className="mx-auto grid min-h-[60svh] max-w-xl place-items-center px-4 py-16 text-center">
       <div>
         <h1 className="text-heading font-semibold">Bir Şeyler Ters Gitti</h1>
         <p className="mt-3 text-base text-body">
@@ -34,12 +39,12 @@ export default function ErrorBoundary({ error, retry }: { error: Error & { diges
           <button type="button" className={PRIMARY} onClick={() => retry()}>
             Tekrar Dene
           </button>
-          <button type="button" className={GHOST} onClick={() => router.push('/')}>
+          <a href={HOME_HREF} className={GHOST}>
             Ana Sayfa
-          </button>
+          </a>
         </div>
         {error.digest ? <p className="mt-6 font-mono text-small text-muted">Hata Kimliği {error.digest}</p> : null}
       </div>
-    </div>
+    </main>
   )
 }

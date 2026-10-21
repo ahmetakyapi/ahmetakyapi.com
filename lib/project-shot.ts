@@ -18,3 +18,12 @@ export type ShotView = (typeof SHOT_VIEWS)[number]
 export function projectShot(slug: string, view: ShotView, theme: Theme): string {
   return `/projects/${slug}/${view}-${theme}.webp`
 }
+
+/**
+ * Aynı görselin `width` piksel genişliğindeki küçük kopyası (srcset adayı):
+ * `desktop-dark.webp` → `desktop-dark.w640.webp`. Kopyaları
+ * scripts/shot-renditions.mjs üretir; ad düzeni orada da aynı.
+ */
+export function shotRendition(src: string, width: number): string {
+  return src.replace(/\.webp$/, `.w${width}.webp`)
+}

@@ -3,12 +3,10 @@ import type { BlogPost } from '../types'
 export const post: BlogPost = {
   slug: 'bilmedigim-meslege-arac-yazmak',
   tag: 'Ürün',
-  tagColor: '#2b62f5',
   title: 'Mimio: Ergoterapistler İçin Seans ve Oyun Paneli',
   excerpt:
     "Mimio, ergoterapistlerin danışanlarını, seanslarını ve terapi oyunlarını tek panelde yönettiği bir uygulama. Başladığımda mesleği bilmiyordum; panelde ne var, nasıl kurdum ve bilmediğim bir alana araç yazarken ne öğrendim.",
   date: '2026-08-06',
-  coverGradient: 'linear-gradient(135deg, #2b62f5 0%, #1d8ad4 55%, #17c2e0 100%)',
   content: [
     {
       type: 'lead',

@@ -6,7 +6,9 @@ import { SITE_URL } from '@/lib/seo'
 /**
  * `lastModified` İÇERİKTEN gelir, derleme anından değil: eskiden `new Date()`
  * yazılıydı ve her derleme her adresi "bugün değişti" diye bildiriyordu;
- * tarayıcı motoru bu sinyale güvenmeyi bırakır.
+ * tarayıcı motoru bu sinyale güvenmeyi bırakır. Projelerin verisinde tarih
+ * yok: /projeler ve proje adresleri `lastModified` TAŞIMAZ (en yeni yazının
+ * tarihini alıyorlardı; yanlış tarih, tarihsizden kötü).
  *
  * Proje detay rotası (`/projeler/[slug]`) yayında: on üç adres, hepsi
  * derleme anında üretiliyor (generateStaticParams, dynamicParams = false).
@@ -22,10 +24,9 @@ function newest(dates: string[]): Date {
   }, new Date(0))
 }
 
-const projectSitemapEntries = (lastModified: Date): MetadataRoute.Sitemap =>
+const projectSitemapEntries = (): MetadataRoute.Sitemap =>
   projects.map((project) => ({
     url: `${SITE_URL}/projeler/${project.slug}`,
-    lastModified,
     changeFrequency: 'monthly',
     priority: 0.8,
   }))
@@ -35,9 +36,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return [
     { url: SITE_URL, lastModified: newestPost, changeFrequency: 'weekly', priority: 1 },
-    { url: `${SITE_URL}/projeler`, lastModified: newestPost, changeFrequency: 'monthly', priority: 0.9 },
+    { url: `${SITE_URL}/projeler`, changeFrequency: 'monthly', priority: 0.9 },
     { url: `${SITE_URL}/blog`, lastModified: newestPost, changeFrequency: 'weekly', priority: 0.9 },
-    ...(INCLUDE_PROJECT_PAGES ? projectSitemapEntries(newestPost) : []),
+    ...(INCLUDE_PROJECT_PAGES ? projectSitemapEntries() : []),
     ...blogPosts.map((post) => ({
       url: `${SITE_URL}/blog/${post.slug}`,
       lastModified: new Date(post.date),

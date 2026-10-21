@@ -7,12 +7,12 @@ import { RecentPosts } from '@/components/home/RecentPosts'
 import { SelectedWork } from '@/components/home/SelectedWork'
 import { StackMarquee } from '@/components/home/StackMarquee'
 import { PageTransition } from '@/components/site/PageTransition'
-import { personJsonLd, websiteJsonLd } from '@/lib/seo'
+import { ALTERNATES_BASE, jsonLdHtml, personJsonLd, websiteJsonLd } from '@/lib/seo'
 import { getSiteContent } from '@/lib/site-content'
 import './home.css'
 
 export const metadata: Metadata = {
-  alternates: { canonical: '/' },
+  alternates: { ...ALTERNATES_BASE, canonical: '/' },
 }
 
 /*
@@ -34,8 +34,10 @@ export const metadata: Metadata = {
  * Aynı düzen iki kez kullanılmıyor; bölüm başlıkları aynı maskeli
  * açılışla gelir (MaskTitle), bölümler birbirine bağlanır.
  *
- * Tamamı sunucu bileşeni. İstemciye giden adalar: küre ve e-posta kopyalama düğmesi. Bölüm
- * hareketlerinin hepsi CSS (./home.css); rota statik kalır.
+ * Tamamı sunucu bileşeni. İstemciye giden adalar: küre, "İletişime Geç"
+ * düğmesi (odağı kapanışa taşır), e-posta kopyalama düğmesi ve döngüleri
+ * ekran dışında bekleten PauseOffscreen. Bölüm hareketlerinin hepsi CSS
+ * (./home.css); rota statik kalır.
  */
 export default function HomePage() {
   const { home, projects, blogPosts } = getSiteContent()
@@ -45,7 +47,7 @@ export default function HomePage() {
       <script
         type="application/ld+json"
         // Yapısal veri; Google'ın kişi ve site bilgisini doğru okuması için.
-        dangerouslySetInnerHTML={{ __html: JSON.stringify([personJsonLd(), websiteJsonLd()]) }}
+        dangerouslySetInnerHTML={jsonLdHtml([personJsonLd(), websiteJsonLd()])}
       />
       <HomeHero home={home} />
       <About about={home.about} />

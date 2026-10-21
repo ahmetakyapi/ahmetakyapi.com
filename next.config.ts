@@ -1,22 +1,29 @@
 import type { NextConfig } from 'next'
 
+const isDev = process.env.NODE_ENV === 'development'
+
 /**
- * İçerik güvenliği politikası. next.config.mjs'teki hâliyle birebir; tek
- * ekleme Vercel Analytics.
+ * İçerik güvenliği politikası.
  *
- * VERCEL ANALYTICS: üretimde betik ve ölçüm ucu aynı kökenden gelir
- * (`/_vercel/insights/script.js`, `/_vercel/insights/view`), yani `'self'`
- * yeter. Geliştirmede ise paket hata ayıklama betiğini
- * `va.vercel-scripts.com`dan çeker; o adres eklenmezse yerelde konsol CSP
- * ihlaliyle dolar. Yalnızca betik kaynağı genişledi, bağlantı kaynağı değil.
+ * GELİŞTİRMEYE ÖZEL iki izin üretimde yok: `'unsafe-eval'` (React'in
+ * geliştirme yapısı hata yığınlarını eval ile kuruyor; üretim paketinde eval
+ * yok) ve `va.vercel-scripts.com` (Vercel Analytics geliştirmede hata
+ * ayıklama betiğini oradan çeker; üretimde betik ve ölçüm ucu aynı kökende,
+ * `/_vercel/insights/*`, `'self'` yeter).
+ *
+ * GISCUS yalnızca `frame-src`: @giscus/react bileşeni yerel bir parçadan
+ * yükleniyor, sayfaya yalnızca giscus.app iframe'ini koyuyor ve onunla
+ * postMessage ile konuşuyor; üst sayfaya betik, stil ya da istek getirmiyor
+ * (node_modules/@giscus/react/dist, 21 Ekim 2026). GitHub'la konuşan da
+ * iframe'in kendisi; `api.github.com` bu yüzden yok.
  */
 const ContentSecurityPolicy = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://giscus.app https://va.vercel-scripts.com",
-  "style-src 'self' 'unsafe-inline' https://giscus.app",
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval' https://va.vercel-scripts.com" : ''}`,
+  "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https:",
   "font-src 'self' data:",
-  "connect-src 'self' https://api.github.com https://giscus.app",
+  "connect-src 'self'",
   'frame-src https://giscus.app',
   "worker-src 'self' blob:",
   "object-src 'none'",
@@ -30,23 +37,34 @@ const securityHeaders = [
   { key: 'X-Frame-Options', value: 'DENY' },
   { key: 'X-Content-Type-Options', value: 'nosniff' },
   { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-  { key: 'X-DNS-Prefetch-Control', value: 'on' },
+  /* `same-origin` değil: o, sitenin açtığı açılır pencerelerle bağı da
+     keserdi; bu değer yalnızca başka kökenin bu sekmeye uzanmasını keser. */
+  { key: 'Cross-Origin-Opener-Policy', value: 'same-origin-allow-popups' },
   {
     key: 'Strict-Transport-Security',
     value: 'max-age=63072000; includeSubDomains; preload',
   },
   {
+    /* `interest-cohort` (FLoC) Chrome'dan kalktı ve her sayfada konsola
+       "Unrecognized feature" hatası düşürüyordu; yerini `browsing-topics`
+       aldı. */
     key: 'Permissions-Policy',
-    value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()',
+    value: 'camera=(), microphone=(), geolocation=(), browsing-topics=()',
   },
   { key: 'Content-Security-Policy', value: ContentSecurityPolicy },
 ]
+
+const STATIC_ASSET_CACHE = 'public, max-age=3600, stale-while-revalidate=604800'
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   compress: true,
   // Üst dizinlerde başka bir lockfile varsa Turbopack kökü yanlış tahmin eder.
   turbopack: { root: __dirname },
+  /* next/image kullanılmıyor (components/ui/ThemedImage.tsx); bu satır
+     olmadan `/_next/image` ucu yine açıktı ve isteyen herkes Vercel'in
+     görsel dönüştürme kotasını harcatabilirdi. */
+  images: { unoptimized: true },
   async redirects() {
     return [
       {
@@ -89,9 +107,19 @@ const nextConfig: NextConfig = {
         source: '/(.*)',
         headers: securityHeaders,
       },
+      /* Proje görselleri ve simge: adlar içerikten türemiyor, çekimler aynı
+         adla yenileniyor; `immutable` olamaz. Bir saat taze, sonra bir hafta
+         eskisi gösterilip arkada yenileniyor (Vercel varsayılanı max-age=0:
+         her ziyarette her görsel için yeniden doğrulama). Simge manifestte
+         sürümsüz adresle geçiyor; bir yıl `immutable` değişikliği
+         kilitlerdi. */
+      {
+        source: '/projects/:path*',
+        headers: [{ key: 'Cache-Control', value: STATIC_ASSET_CACHE }],
+      },
       {
         source: '/icon.svg',
-        headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
+        headers: [{ key: 'Cache-Control', value: STATIC_ASSET_CACHE }],
       },
       {
         source: '/rss.xml',

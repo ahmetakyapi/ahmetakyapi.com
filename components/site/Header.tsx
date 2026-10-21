@@ -18,6 +18,12 @@ function isActive(pathname: string, href: string) {
   return href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(`${href}/`)
 }
 
+/* Görünüşte bölüm etkin, ekran okuyucuya ayrım: "geçerli sayfa" yalnız
+   tam eşleşmede; yazının içindeyken Blog bağlantısı "geçerli" (`true`). */
+function currentOf(pathname: string, href: string) {
+  return pathname === href ? 'page' : isActive(pathname, href) ? 'true' : undefined
+}
+
 /**
  * Site başlığı: yapışkan, tek satır, 64px.
  *
@@ -51,7 +57,7 @@ export function Header() {
     const nav = navRef.current
     const pill = pillRef.current
     if (!nav || !pill) return
-    const active = nav.querySelector<HTMLElement>('[aria-current="page"]')
+    const active = nav.querySelector<HTMLElement>('[aria-current]')
     if (!active) {
       pill.style.opacity = '0'
       return
@@ -149,7 +155,7 @@ export function Header() {
           <Logo size={36} className="transition-transform group-hover:scale-105" />
           {/* Unvan burada yok: hero'nun üst satırında zaten yazıyor ve iki
               yerde aynı metin duruyordu (3 Ekim 2026). */}
-          <Signature className="header-signature hidden sm:block" />
+          <Signature className="header-signature" />
         </Link>
 
         <nav
@@ -164,7 +170,7 @@ export function Header() {
               <Link
                 key={item.href}
                 href={item.href}
-                aria-current={active ? 'page' : undefined}
+                aria-current={currentOf(pathname, item.href)}
                 className={cx(
                   'relative z-10 rounded-full px-4 py-1.5 text-sm font-medium transition-colors',
                   active ? 'text-strong' : 'text-body hover:text-strong',
@@ -233,7 +239,7 @@ export function Header() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  aria-current={active ? 'page' : undefined}
+                  aria-current={currentOf(pathname, item.href)}
                   onClick={() => closeMenu(false)}
                   className={cx(
                     'flex min-h-12 items-center rounded-button px-4 text-base font-medium transition-colors',

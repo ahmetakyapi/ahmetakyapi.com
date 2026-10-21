@@ -49,32 +49,41 @@ export function RecentPosts({ posts }: { posts: BlogPost[] }) {
       />
 
       <ol className="border-t border-line">
-          {recent.map((post) => (
-            <li key={post.slug} className="reveal border-b border-line">
-              <Link
-                href={`/blog/${post.slug}`}
-                className="home-post group"
-              >
-                <span className="home-post-meta">
-                  <time dateTime={post.date}>{formatPostDate(post.date)}</time>
-                  <span aria-hidden="true">·</span>
-                  <span>{readingTime(post)}</span>
-                </span>
-                <span className="home-post-main">
-                  <span className="home-post-title ink ink-hover">{post.title}</span>
-                  <span className="home-post-excerpt">
-                    <Inline text={splitLead(post.excerpt).lead} />
+          {recent.map((post) => {
+            /* Satırın tamamı bağlantı; adı yalnız başlık. Önceden ad satırın
+               bütün metniydi (~150 harf) ve tarihle başlıyordu: üç bağlantı
+               "4 Ekim 2026 5 Dakika…" diye okunuyor, birbirinden
+               ayrılmıyordu. Künye, özet ve etiket açıklama olarak gelir. */
+            const id = `yazi-${post.slug}`
+            return (
+              <li key={post.slug} className="reveal border-b border-line">
+                <Link
+                  href={`/blog/${post.slug}`}
+                  className="home-post group"
+                  aria-labelledby={id}
+                  aria-describedby={`${id}-kunye ${id}-ozet ${id}-etiket`}
+                >
+                  <span id={`${id}-kunye`} className="home-post-meta">
+                    <time dateTime={post.date}>{formatPostDate(post.date)}</time>
+                    <span aria-hidden="true">·</span>
+                    <span>{readingTime(post)}</span>
                   </span>
-                </span>
-                <span className="home-post-side">
-                  <span className="home-post-tag">{post.tag}</span>
-                  <span className="home-post-arrow" aria-hidden="true">
-                    <ArrowUpRight className="size-4" />
+                  <span className="home-post-main">
+                    <span id={id} className="home-post-title ink ink-hover">{post.title}</span>
+                    <span id={`${id}-ozet`} className="home-post-excerpt">
+                      <Inline text={splitLead(post.excerpt).lead} />
+                    </span>
                   </span>
-                </span>
-              </Link>
-            </li>
-          ))}
+                  <span className="home-post-side">
+                    <span id={`${id}-etiket`} className="home-post-tag">{post.tag}</span>
+                    <span className="home-post-arrow" aria-hidden="true">
+                      <ArrowUpRight className="size-4" />
+                    </span>
+                  </span>
+                </Link>
+              </li>
+            )
+          })}
         </ol>
     </Container>
   )

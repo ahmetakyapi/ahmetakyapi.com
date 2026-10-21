@@ -1,14 +1,13 @@
 /**
- * Gezinme tek kaynaktan. Header, komut paleti, 404 önerileri ve sitemap
- * aynı listeyi okur; biri değişince diğerleri geride kalmasın.
+ * Gezinme tek kaynaktan. Header, alt bilgi, ⌘K'nın gezinme satırları ve G
+ * kısayolları (CommandPaletteLauncher, `shortcut`un ikinci harfi) aynı
+ * listeyi okur; biri değişince diğerleri geride kalmasın.
  */
 export const NAV_ITEMS = [
   { href: '/', label: 'Ana Sayfa', shortcut: 'G H' },
   { href: '/projeler', label: 'Projeler', shortcut: 'G P' },
   { href: '/blog', label: 'Blog', shortcut: 'G B' },
 ] as const
-
-export type NavItem = (typeof NAV_ITEMS)[number]
 
 /** Kişisel bağlantılar: Footer, ⌘K ve JSON-LD `sameAs` aynı listeyi okur. */
 export const SOCIAL_LINKS = [

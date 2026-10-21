@@ -8,9 +8,9 @@ import { techStack } from '@/lib/content/tech-stack'
  * karo yükselir, logo markanın mavisine döner.
  *
  * Neden kayan şerit: on bir logoyu tek tek okutmaya değmez, tech stack'in
- * genişliği bir bakışta anlaşılsın yeter. Üzerine gelince ya da klavyeyle
- * odaklanınca durur (WCAG 2.2.2: kendiliğinden hareket eden içerik
- * durdurulabilmeli); hareket azaltılmışsa sarılı, durağan bir ızgara.
+ * genişliği bir bakışta anlaşılsın yeter. Üzerine gelince, klavyeyle
+ * odaklanınca ya da dokununca durur (WCAG 2.2.2: kendiliğinden hareket eden
+ * içerik durdurulabilmeli); hareket azaltılmışsa sarılı, durağan bir ızgara.
  * İkinci kopya yalnız döngünün dikişini kapatmak için: `aria-hidden`.
  * Ekrandan çıkınca şerit durur (PauseOffscreen).
  */
@@ -37,7 +37,14 @@ export function StackMarquee() {
       <h2 id="tech-stack" className="sr-only">
         Tech Stack
       </h2>
-      <div className="home-marquee" tabIndex={0} aria-label="Kullandığım araçların logoları; odaklanınca durur">
+      {/* `role="group"`: rolsüz `div`e ad verilemez (ARIA), ekran okuyucu
+          odakta adı okumuyordu. */}
+      <div
+        className="home-marquee"
+        role="group"
+        tabIndex={0}
+        aria-label="Kullandığım araçların logoları; odaklanınca durur"
+      >
         <div className="home-marquee-track">
           <Logos />
           <Logos hidden />

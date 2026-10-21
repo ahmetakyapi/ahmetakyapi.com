@@ -8,12 +8,10 @@ import type { BlogPost } from '../types'
 export const post: BlogPost = {
   slug: 'ahmetakyapi-com-nasil-yapildi',
   tag: 'Ürün',
-  tagColor: '#8b5cf6',
   title: 'ahmetakyapi.com: Bu Siteyi Nasıl Kurdum',
   excerpt:
     'Projelerimi, yazdıklarımı ve kim olduğumu tek adreste toplamak için kurduğum site. Neden hazır bir şablon kullanmadım, sitede ne var, hangi teknolojileri seçtim ve hızlı kalması için neler yaptım.',
   date: '2026-10-04',
-  coverGradient: 'linear-gradient(135deg, #8b5cf6 0%, #6366f1 50%, #3b82f6 100%)',
   content: [
     {
       type: 'lead',

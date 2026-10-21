@@ -1,4 +1,5 @@
 import { ViewTransition, type ReactNode } from 'react'
+import { ArmedName } from '@/components/projects/ArmedMorph'
 import { CoverArt } from '@/components/ui/CoverArt'
 import { ThemedImage } from '@/components/ui/ThemedImage'
 import { DEV_STARTER_BANNER, isDarkInk, shotSources } from '@/lib/content/project-shots'
@@ -11,12 +12,13 @@ import { cx } from '@/lib/utils'
  * Proje"de ve ana sayfanın proje şeridinde AYNI bileşen. Aynı bileşen
  * olması morfun şartı: iki uçtaki kutu aynı oranda ve aynı köşede.
  *
- *   <ProjectCover project={p} morph />                     // dizin kartı
+ *   <ProjectCover project={p} morph="armed" />             // dizin satırı, Sıradaki Proje
  *   <ProjectCover project={p} morph priority />            // detay kahramanı (LCP)
  *
  * `morph`: kutu `project-${slug}` adlı paylaşılan öğe olur
  * (`share="morph" default="none"`). Bir sayfada bir ad YALNIZ BİR öğede;
  * aynı projeyi iki kez gösteren sayfa yalnız birine `morph` verir.
+ * `"armed"`: ad yalnız çevreleyen ArmedMorph tıklanınca takılır.
  *
  * Üç durum, envantere göre (lib/content/project-shots.ts):
  *  · ekran görüntüsü var: masaüstü görünümü, 16/10, temaya göre
@@ -28,7 +30,7 @@ import { cx } from '@/lib/utils'
  */
 type ProjectCoverProps = {
   project: Pick<Project, 'slug' | 'title'>
-  morph?: boolean
+  morph?: boolean | 'armed'
   /** LCP adayı: yalnız varsayılan temanın görseli öncelik alır. */
   priority?: boolean
   /** Kart: afiş 16/10 yüzeyin ortasında. Kahraman: afiş tam genişlik. */
@@ -36,12 +38,22 @@ type ProjectCoverProps = {
   className?: string
   /** Görselin alt metni; verilmezse projenin adından kurulur. */
   alt?: string
+  /** Yuvanın genişliği (srcset seçimi); morf etmeyen küçük yuvalar için. */
+  sizes?: string
 }
+
+/* Morf eden her kapak (dizin, Sıradaki Proje) kahramanın `sizes`ını taşır:
+   aynı cihazda kart, satır ve kahraman aynı kopyayı seçer, tıklanan kapağın
+   görseli kahramanda önbellekten gelir. React geçişi yeni görsel inene
+   kadar bekletiyor; ayrı kopya her tıklamada bir indirme ve gecikme olurdu.
+   Kahraman en çok kap genişliği (72rem), telefonda ekran genişliği. */
+const HERO_SIZES = '(min-width: 72rem) 72rem, 100vw'
 
 const FRAME = 'relative overflow-hidden rounded-card border border-line bg-surface-sunken'
 
-function Morph({ name, on, children }: { name: string; on: boolean; children: ReactNode }) {
+function Morph({ name, on, children }: { name: string; on: boolean | 'armed'; children: ReactNode }) {
   if (!on) return <>{children}</>
+  if (on === 'armed') return <ArmedName>{children}</ArmedName>
   return (
     <ViewTransition name={name} share="morph" default="none">
       {children}
@@ -49,7 +61,15 @@ function Morph({ name, on, children }: { name: string; on: boolean; children: Re
   )
 }
 
-export function ProjectCover({ project, morph = false, priority = false, layout = 'card', className, alt }: ProjectCoverProps) {
+export function ProjectCover({
+  project,
+  morph = false,
+  priority = false,
+  layout = 'card',
+  className,
+  alt,
+  sizes = HERO_SIZES,
+}: ProjectCoverProps) {
   const name = `project-${project.slug}`
   const shot = shotSources(project.slug, 'desktop')
   const theme = priority ? DEFAULT_THEME : undefined
@@ -61,6 +81,7 @@ export function ProjectCover({ project, morph = false, priority = false, layout 
           <ThemedImage
             {...shot}
             alt={alt ?? `${project.title} ana ekranı`}
+            sizes={sizes}
             priority={priority}
             theme={theme}
             className="pcover-img size-full object-cover object-top"

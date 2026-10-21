@@ -15,7 +15,8 @@ export const metadata: Metadata = { title: 'Sayfa Bulunamadı' }
  * atlama bağlantısının hedefi burada kendi `<main>`i.
  *
  * Altta "Bunu mu arıyordun?" (NotFoundSuggest): adrese en çok benzeyen
- * proje ya da yazı. İstemciye yalnız başlık, adres ve slug gider.
+ * proje ya da yazı. İstemciye yalnız başlık, adres ve slug gider. Blok
+ * `relative`: öneri altına asılır, ortalanmış blok yerinden oynamaz.
  */
 const SUGGEST_TARGETS: SuggestTarget[] = [
   ...projects.map((p) => ({ title: p.title, href: `/projeler/${p.slug}`, slug: p.slug, kind: 'Proje' as const })),
@@ -25,7 +26,7 @@ const SUGGEST_TARGETS: SuggestTarget[] = [
 export default function NotFound() {
   return (
     <main id="main-content" className="mx-auto grid min-h-dvh max-w-xl place-items-center px-4 py-16 text-center">
-      <div>
+      <div className="relative">
         <Logo size={48} className="mx-auto" />
         <p className="mt-8 font-mono text-small text-muted">404</p>
         <h1 className="mt-2 text-display font-semibold tracking-[-0.03em]">Sayfa Bulunamadı</h1>

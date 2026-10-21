@@ -72,11 +72,16 @@ export function readingTime(post: Pick<BlogPost, 'content'>): string {
   return `${readingMinutes(post)} Dakika`
 }
 
-/** Yazı listelerinde ve künyede kullanılan tek tarih biçimi. */
+/**
+ * Yazı listelerinde ve künyede kullanılan tek tarih biçimi. `YYYY-MM-DD`
+ * UTC gece yarısı diye okunur; `timeZone: 'UTC'` olmasa batıdaki bir
+ * makinede derlenen sayfa her tarihi bir gün erken basardı.
+ */
 export function formatPostDate(dateStr: string): string {
   return new Date(dateStr).toLocaleDateString('tr-TR', {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
+    timeZone: 'UTC',
   })
 }

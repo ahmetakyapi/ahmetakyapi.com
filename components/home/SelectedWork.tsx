@@ -2,7 +2,7 @@ import { ArrowRight, ArrowUpRight } from 'lucide-react'
 import Link from 'next/link'
 import type { CSSProperties } from 'react'
 import { MaskTitle } from '@/components/home/MaskTitle'
-import { trTitle } from '@/components/home/tr-title'
+import { titleCaseTr } from '@/components/projects/project-text'
 import { Container } from '@/components/ui/Container'
 import { SectionHeading } from '@/components/ui/SectionHeading'
 import { ThemedImage } from '@/components/ui/ThemedImage'
@@ -25,11 +25,21 @@ import type { HomeContent } from '@/lib/site-content'
  * (transform) ve morfun başlangıç kutusu o an ölçülen küçülmüş hâl olurdu.
  * Ana sayfadan proje sayfasına morf yok; bilinçli takas.
  */
+
+/* Yuva genişlikleri (srcset seçimi): görsel sütunu `lg`de kartın ~%65'i
+   (kap en çok 88rem), altında kartın tamamı; telefon görseli onun %22'si. */
+const DESKTOP_SIZES = '(min-width: 88rem) 52rem, (min-width: 1024px) 60vw, 100vw'
+const PHONE_SIZES = '(min-width: 88rem) 12rem, (min-width: 1024px) 13vw, 22vw'
+
 export function SelectedWork({ home, projects }: { home: HomeContent; projects: Project[] }) {
-  const panels = home.selectedWork.flatMap(({ slug, summary }) => {
+  const panels = home.selectedWork.map(({ slug, summary }) => {
     const project = projects.find((p) => p.slug === slug)
     const desktop = shotSources(slug, 'desktop')
-    return project && desktop ? [{ project, summary, desktop, mobile: shotSources(slug, 'mobile') }] : []
+    // Sessizce düşürmek yerine derleme kırılır: adı değişen ya da görseli
+    // olmayan proje önceden ana sayfadan uyarısız kayboluyordu (paneller ve
+    // home.css'teki yapışma zinciri üç proje için kurulu).
+    if (!project || !desktop) throw new Error(`Öne Çıkan Projeler: "${slug}" için proje ya da masaüstü görseli yok`)
+    return { project, summary, desktop, mobile: shotSources(slug, 'mobile') }
   })
 
   return (
@@ -51,11 +61,11 @@ export function SelectedWork({ home, projects }: { home: HomeContent; projects: 
               <span aria-hidden="true" className="tint-card-glow" />
               <div className="home-stack-media tint-card-media">
                 <div className="overflow-hidden rounded-button">
-                  <ThemedImage {...desktop} alt={`${project.title} masaüstü ekranı`} />
+                  <ThemedImage {...desktop} alt={`${project.title} masaüstü ekranı`} sizes={DESKTOP_SIZES} />
                 </div>
                 {mobile ? (
                   <div className="home-stack-phone overflow-hidden">
-                    <ThemedImage {...mobile} alt={`${project.title} telefon ekranı`} />
+                    <ThemedImage {...mobile} alt={`${project.title} telefon ekranı`} sizes={PHONE_SIZES} />
                   </div>
                 ) : null}
               </div>
@@ -69,7 +79,7 @@ export function SelectedWork({ home, projects }: { home: HomeContent; projects: 
                   <dl className="tint-card-stats mt-5 grid max-w-sm grid-cols-3 gap-4 pt-4">
                     {project.stats.map((stat) => (
                       <div key={stat.label} className="flex min-w-0 flex-col-reverse">
-                        <dt className="mt-1.5 text-small font-medium text-muted">{trTitle(stat.label)}</dt>
+                        <dt className="mt-1.5 text-small font-medium text-muted">{titleCaseTr(stat.label)}</dt>
                         <dd className="font-mono text-[1.375rem] font-semibold leading-none">{stat.value}</dd>
                       </div>
                     ))}

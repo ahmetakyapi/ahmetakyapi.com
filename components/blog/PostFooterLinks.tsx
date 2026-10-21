@@ -30,7 +30,7 @@ export function RelatedProject({ project }: { project: Project }) {
       <Link href={`/projeler/${project.slug}`} className="group post-project">
         <div className="post-project-shot">
           {shot ? (
-            <ThemedImage {...shot} alt="" className="size-full object-cover object-top" />
+            <ThemedImage {...shot} alt="" sizes="(min-width: 640px) 15rem, 100vw" className="size-full object-cover object-top" />
           ) : (
             /* Künyesiz: kategori hemen yandaki metinde zaten yazılı
                ("Portfolyo" aynı kartta iki kez okunuyordu). */

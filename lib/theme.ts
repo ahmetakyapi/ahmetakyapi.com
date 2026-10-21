@@ -37,8 +37,8 @@ export const DEFAULT_THEME: Theme = 'light'
 export const PALETTE = 'signature' as const
 
 /**
- * Her temanın sayfa zemini, CSS'in okunamadığı yerler için (viewport
- * `themeColor`, manifest, paylaşım görseli). Kaynak `app/globals.css` →
+ * Her temanın sayfa zemini, CSS'in okunamadığı yerler için (tarayıcı
+ * çubuğu `theme-color`, manifest, paylaşım görseli). Kaynak `app/globals.css` →
  * `--page-bg`; orada değişirse burada da değişir.
  */
 export const THEME_COLOR = { dark: '#050a14', light: '#e3e9f0' } as const satisfies Record<Theme, string>
@@ -52,9 +52,14 @@ export function isTheme(value: unknown): value is Theme {
 
 /**
  * `<head>` içinde, ilk boyamadan önce çalışan betik. Çerezdeki temayı
- * `<html data-theme>`'ye ve tarayıcı çubuğu rengine yazar. Bağımlılıksız ve
- * hatada sessiz: çerez okunamazsa varsayılan tema kalır.
- * `theme-color` meta etiketi betikten sonra basılabildiği için onu
- * DOMContentLoaded'da da günceller.
+ * `<html data-theme>`'ye yazar ve tarayıcı çubuğunun `theme-color` meta
+ * etiketini OLUŞTURUR. Bağımlılıksız ve hatada sessiz: çerez okunamazsa
+ * varsayılan tema kalır.
+ *
+ * Meta etiketi React'te (viewport `themeColor`) DEĞİL, bilerek: React onu
+ * içeriğinden tanıyordu; betik koyu temaya çevirince hidrasyonda ikinci bir
+ * açık etiket ekliyor, Next de her istemci gezinmesinde açık rengi yeniden
+ * basıyordu. Etiketin tek sahibi bu betik ve `switchTheme`
+ * (lib/theme-client.ts); JavaScript'siz ziyaretçide tarayıcının kendi rengi.
  */
-export const THEME_SCRIPT = `(function(){try{var m=document.cookie.match(/(?:^|; )${THEME_COOKIE}=(dark|light)/);var t=m?m[1]:"${DEFAULT_THEME}";var d=document.documentElement;d.dataset.theme=t;var c=${JSON.stringify(THEME_COLOR)}[t];var s=function(){var e=document.querySelector('meta[name="theme-color"]');if(e)e.setAttribute("content",c)};s();document.addEventListener("DOMContentLoaded",s)}catch(e){}})()`
+export const THEME_SCRIPT = `(function(){try{var m=document.cookie.match(/(?:^|; )${THEME_COOKIE}=(dark|light)/);var t=m?m[1]:"${DEFAULT_THEME}";document.documentElement.dataset.theme=t;var e=document.createElement("meta");e.name="theme-color";e.content=${JSON.stringify(THEME_COLOR)}[t];document.head.appendChild(e)}catch(e){}})()`

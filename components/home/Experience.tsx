@@ -126,15 +126,17 @@ export function Experience({ experience, projects }: { experience: HomeContent['
 
           {/* İki sıra, ters yönde akar; her sıra iki kez basılır ki döngü
               dikişsiz olsun. Süs: adlar ve bağlantı aşağıda, sayılar
-              ekran okuyucuya yetiyor. */}
-          <div className="home-own-reel" aria-hidden="true">
+              ekran okuyucuya yetiyor. `tabIndex={-1}`: hareketsizken şerit
+              kaydırılabilir ve Chrome onu Tab durağı yapıyordu; odak gizli
+              bir öğede sessizce kalıyordu. */}
+          <div className="home-own-reel" aria-hidden="true" tabIndex={-1}>
             {rows.map((row, r) => (
               <div key={r} className="home-own-row" data-dir={r === 0 ? 'left' : 'right'}>
                 {[0, 1].map((copy) => (
                   <div key={copy} className="home-own-track">
                     {row.map((project) => (
                       <figure key={project.slug} className="home-own-tile">
-                        <ProjectCover project={project} alt="" />
+                        <ProjectCover project={project} alt="" sizes="12rem" />
                         <figcaption>{project.title}</figcaption>
                       </figure>
                     ))}
@@ -148,12 +150,12 @@ export function Experience({ experience, projects }: { experience: HomeContent['
           <div className="home-own-foot">
             <dl className="home-own-stats">
               <div>
-                <dd>{projects.length}</dd>
                 <dt>Proje</dt>
+                <dd>{projects.length}</dd>
               </div>
               <div>
-                <dd>{domains.length}</dd>
                 <dt>Alan</dt>
+                <dd>{domains.length}</dd>
               </div>
             </dl>
             <Link href="/projeler" className="tint-card-btn w-fit">

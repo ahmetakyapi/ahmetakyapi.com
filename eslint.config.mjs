@@ -18,7 +18,7 @@ const eslintConfig = defineConfig([
   {
     /* ThemedImage iki düz <img> basıyor ve bu bilinçli: next/image'ın
        optimizer'ı Vercel kotası yüzünden kapalı, kaynaklar gösterim
-       ölçüsünde WebP ve ikisinden biri CSS ile gizleniyor. next/image
+       ölçüsünde WebP (srcset kopyaları scripts/shot-renditions.mjs ile) ve ikisinden biri CSS ile gizleniyor. next/image
        `unoptimized` ile de aynı <img>'i üretirdi, yalnızca sarmalayıcıyla.
        İstisna dosya düzeyinde ve tek; başka yerde <img> yazılmaz,
        ThemedImage kullanılır. */

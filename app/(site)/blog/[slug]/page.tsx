@@ -14,7 +14,16 @@ import { PageTransition } from '@/components/site/PageTransition'
 import { Container } from '@/components/ui/Container'
 import { CopyButton } from '@/components/ui/CopyButton'
 import { KunyeLine } from '@/components/ui/Kunye'
-import { AUTHOR, SITE_URL, TWITTER, blogPostingJsonLd, breadcrumbJsonLd } from '@/lib/seo'
+import {
+  ALTERNATES_BASE,
+  AUTHOR,
+  OPEN_GRAPH_BASE,
+  SITE_URL,
+  TWITTER_BASE,
+  blogPostingJsonLd,
+  breadcrumbJsonLd,
+  jsonLdHtml,
+} from '@/lib/seo'
 import { formatPostDate, readingTime } from '@/lib/reading-time'
 import '../blog.css'
 
@@ -51,26 +60,24 @@ export async function generateMetadata({ params }: PageProps<'/blog/[slug]'>): P
     /* Şablon zaten " · Ahmet Akyapı" ekliyor; başlıkta tekrar yazmıyoruz. */
     title: post.title,
     description: post.excerpt,
-    alternates: { canonical: url },
+    alternates: { ...ALTERNATES_BASE, canonical: url },
     authors: [{ name: AUTHOR, url: SITE_URL }],
     keywords: [post.tag, 'Ahmet Akyapı', 'Türkçe teknik blog'],
     openGraph: {
+      ...OPEN_GRAPH_BASE,
       type: 'article',
       title: post.title,
       description: post.excerpt,
       url,
-      siteName: AUTHOR,
-      locale: 'tr_TR',
       publishedTime: published,
       modifiedTime: published,
       authors: [AUTHOR],
       tags: [post.tag],
     },
     twitter: {
-      card: 'summary_large_image',
+      ...TWITTER_BASE,
       title: post.title,
       description: post.excerpt,
-      creator: TWITTER,
     },
   }
 }
@@ -88,16 +95,14 @@ export default async function BlogPostPage({ params }: PageProps<'/blog/[slug]'>
     <PageTransition>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify([
-            blogPostingJsonLd(post),
-            breadcrumbJsonLd([
-              { name: 'Ana Sayfa', path: '/' },
-              { name: 'Blog', path: '/blog' },
-              { name: post.title, path: `/blog/${post.slug}` },
-            ]),
+        dangerouslySetInnerHTML={jsonLdHtml([
+          blogPostingJsonLd(post),
+          breadcrumbJsonLd([
+            { name: 'Ana Sayfa', path: '/' },
+            { name: 'Blog', path: '/blog' },
+            { name: post.title, path: `/blog/${post.slug}` },
           ]),
-        }}
+        ])}
       />
       <div className="post-progress" aria-hidden="true" />
 

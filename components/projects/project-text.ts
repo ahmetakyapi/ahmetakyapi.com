@@ -48,13 +48,18 @@ export function splitLead(text: string): { lead: string; rest: string } {
   return { lead: sentences.slice(0, count).join(' '), rest: sentences.slice(count).join(' ') }
 }
 
-/** Türkçe Title Case'te küçük kalan bağlaç ve edatlar (başta değilse). */
-const SMALL_WORDS = new Set(['ve', 'ile', 'için', 'de', 'da', 'mi', 'ya', 'veya'])
+/** Türkçe Title Case'te küçük kalan bağlaç, edat ve soru ekleri (başta değilse). */
+const SMALL_WORDS = new Set(['ve', 'ile', 'için', 'de', 'da', 'mi', 'mı', 'mu', 'mü', 'ya', 'veya'])
 
 /**
  * Veri içindeki küçük harfli künyeyi ("veri sağlayıcı") Title Case'e
  * çevirir. `text-transform: capitalize` KULLANILMAZ: `i → I` üretir, `İ`
  * değil. Büyük harf `tr-TR` yerel ayarıyla.
+ *
+ * Proje istatistiklerinin etiketleri hem ana sayfa kartında hem proje
+ * sayfasında buradan geçer. Ana sayfanın ayrı bir kopyası vardı ve kelime
+ * listesi ayrışmıştı: "veri ya da API" iki sayfada farklı yazılacaktı
+ * (21 Ekim 2026'da tek yardımcıya indi).
  */
 export function titleCaseTr(text: string): string {
   return text

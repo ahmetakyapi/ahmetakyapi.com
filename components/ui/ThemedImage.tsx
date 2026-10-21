@@ -14,19 +14,31 @@ import { cx } from '@/lib/utils'
  * `width`/`height` ZORUNLU: oran rezervi, CLS 0. `dark` verilmezse görsel
  * temayla değişmez (tek temalı projeler) ve tek `<img>` basılır.
  *
+ * `srcSet` + `sizes`: ekran görüntülerinin küçük kopyaları (`shotSources`
+ * envanterden kurar, temaya göre iki liste). `sizes` yuvanın gerçek CSS
+ * genişliği olmalı; srcSet yoksa (afiş, elle verilen kaynak) tek `src`.
+ *
  * `priority`: LCP adayı görseller için `loading="eager"` + `fetchPriority="high"`.
  * LCP görselinde `theme={DEFAULT_THEME}` ver (sayfalar statik, sunucu yalnız varsayılanı bilir): yalnızca o
  * temanın görseli öncelik alır, öteki tembel kalır ve hiç inmez. `theme`
  * verilmezse ikisi de öncelikli iner (iki kat bayt; bilerek seç).
  * Öncelikli olmayan görseller `loading="lazy"`: gizli olan hiç indirilmez.
  *
+ * Tembel olmayan `<img>` `<picture>` içinde (`display: contents`, kutu
+ * yok): React tembel olmayan her `<img>` için `<link rel=preload>` basıyor
+ * ve Next bunu sayfanın ön getirme (prefetch) paketine koyuyordu. Bir
+ * projeye giden her görünür bağlantı, o sayfanın kahraman görselini (koyu
+ * temada açık olanını da) gösterilmeden indiriyordu. `<picture>` içindeki
+ * görsel için React preload basmaz; tarayıcı görseli HTML'den yine erken
+ * ve öncelikli bulur.
+ *
  * `loading` / `fetchPriority`: varsayılanı ezer, `priority`den bağımsız.
  * Tembel yüklemenin geç tetiklendiği yatay kaydırıcılar için
  * (`loading="eager" fetchPriority="low"`, ana sayfa proje şeridi). İki temalı
  * görselde `eager` gizli olanı da indirir; tek temalı görsellerde kullan.
  *
- * `next/image` kullanılmıyor: optimizer bilerek kapalı (Vercel kotası) ve
- * kaynaklar zaten gösterim ölçüsünde WebP.
+ * `next/image` kullanılmıyor: optimizer bilerek kapalı (Vercel kotası);
+ * küçük kopyalar derlemeden önce üretilir (scripts/shot-renditions.mjs).
  */
 type ThemedImageProps = {
   light: string
@@ -37,6 +49,7 @@ type ThemedImageProps = {
   priority?: boolean
   theme?: Theme
   className?: string
+  srcSet?: { light: string; dark?: string }
   sizes?: string
   loading?: 'eager' | 'lazy'
   fetchPriority?: 'high' | 'low' | 'auto'
@@ -51,6 +64,7 @@ export function ThemedImage({
   priority = false,
   theme,
   className,
+  srcSet,
   sizes,
   loading,
   fetchPriority,
@@ -66,20 +80,30 @@ export function ThemedImage({
     <>
       {variants.map(({ src, only }) => {
         const urgent = priority && (only === undefined || theme === undefined || theme === only)
-        return (
+        const eager = (loading ?? (urgent ? 'eager' : 'lazy')) === 'eager'
+        const set = srcSet?.[only ?? 'light']
+        const img = (
           <img
             key={only ?? 'single'}
             src={src}
+            srcSet={set}
+            sizes={set ? sizes : undefined}
             alt={alt}
             width={width}
             height={height}
-            sizes={sizes}
             data-theme-only={only}
-            loading={loading ?? (urgent ? 'eager' : 'lazy')}
+            loading={eager ? 'eager' : 'lazy'}
             fetchPriority={fetchPriority ?? (urgent ? 'high' : 'auto')}
             decoding="async"
             className={cx('block h-auto w-full', className)}
           />
+        )
+        return eager ? (
+          <picture key={only ?? 'single'} className="contents">
+            {img}
+          </picture>
+        ) : (
+          img
         )
       })}
     </>

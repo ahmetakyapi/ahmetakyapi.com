@@ -3,12 +3,10 @@ import type { BlogPost } from '../types'
 export const post: BlogPost = {
   slug: 'bsp-ile-prosedurel-zindan-uretmek',
   tag: 'Oyun',
-  tagColor: '#a855f7',
   title: 'Dungeon Mates: Dört Kişilik Tarayıcı Zindanı',
   excerpt:
     "Dungeon Mates, oda koduyla dört kişi birlikte oynanan, her katı yeniden üretilen bir zindan oyunu. Oyunda ne var, sunucu neden her şeyi kendisi hesaplıyor ve haritaları hem rastgele hem oynanabilir yapmak için ne yaptım.",
   date: '2026-08-03',
-  coverGradient: 'linear-gradient(135deg, #a855f7 0%, #6366f1 50%, #0ea5e9 100%)',
   content: [
     {
       type: 'lead',

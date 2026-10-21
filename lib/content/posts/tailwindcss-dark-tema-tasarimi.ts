@@ -9,12 +9,10 @@ import type { BlogPost } from '../types'
 export const post: BlogPost = {
   slug: 'tailwindcss-dark-tema-tasarimi',
   tag: 'Tasarım',
-  tagColor: '#06b6d4',
   title: 'ahmetakyapi.com: Açık ve Koyu Tema Nasıl Çalışıyor',
   excerpt:
     'Bu sitede tema bir çerezde duruyor, ilk boyamadan önce okunuyor ve bütün renkler tek bir token listesinden geliyor. Bu düzene nasıl geldiğimi ve beni oraya iten görünmez CSS hatasını anlatıyorum.',
   date: '2026-08-17',
-  coverGradient: 'linear-gradient(135deg, #06b6d4 0%, #0891b2 50%, #0f172a 100%)',
   content: [
     {
       type: 'lead',
@@ -27,7 +25,7 @@ export const post: BlogPost = {
       items: [
         {
           title: 'Tercih Çerezde',
-          text: 'Tema düğmesine basınca sayfa anında değişiyor; çerez arkada, küçük bir sunucu eylemiyle yazılıyor. Sunucuyu beklemek düğmeyi dondururdu.',
+          text: 'Tema düğmesine basınca sayfa anında değişiyor; çerezi de tarayıcı kendisi yazıyor, sunucuya hiç gidilmiyor.',
         },
         {
           title: 'İlk Boyamadan Önce Okunuyor',

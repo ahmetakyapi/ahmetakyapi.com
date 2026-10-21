@@ -13,10 +13,11 @@ import {
 } from 'simple-icons'
 
 /**
- * Ana sayfadaki tech stack şeridi: yalnız logo, etiket yok (ad ekran okuyucuya
- * `title` ile gider). Liste projelerin `tags` alanlarında geçen araçlardan,
- * artı hepsinin altında duran Node.js ve yayın yeri Vercel. Angular ve
- * Flutter eski listedeydi ama hiçbir güncel projede yok; çıkarıldı.
+ * Ana sayfadaki tech stack şeridi: her logo kendi karosunda, adı altında
+ * yazılı (StackMarquee). Liste projelerin `tags` alanlarında geçen
+ * araçlardan, artı hepsinin altında duran Node.js ve yayın yeri Vercel.
+ * Angular ve Flutter eski listedeydi ama hiçbir güncel projede yok;
+ * çıkarıldı.
  *
  * `simple-icons` adlandırılmış içe aktarımla ağaçtan sarsılıyor: pakete
  * yalnızca buradaki yollar girer, ve bu dosya yalnızca sunucu

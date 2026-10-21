@@ -1,6 +1,5 @@
 import { ArrowRight, Rss } from 'lucide-react'
 import Link from 'next/link'
-import { Fragment } from 'react'
 import { Container } from '@/components/ui/Container'
 import { SketchUnderline } from '@/components/ui/Sketch'
 import { KunyeLine } from '@/components/ui/Kunye'
@@ -140,15 +139,18 @@ function Row({ post }: { post: BlogPost }) {
   )
 }
 
+/**
+ * Radyo kendi etiketinin İÇİNDE: kardeş olunca konumlu ilk ata (`.page-top`)
+ * kaydırılan şeridin dışında kalıyordu; telefonda bütün girişler şeridin sol
+ * ucunda duruyor, odaklanan çip ekran dışındayken şerit kaymıyordu.
+ */
 function Chip({ id, label, count, defaultChecked }: { id: string; label: string; count: number; defaultChecked?: boolean }) {
   return (
-    <Fragment>
+    <label htmlFor={id} className="bl-chip tab">
       <input type="radio" name="bl-tag" id={id} defaultChecked={defaultChecked} className="bl-chip-input" />
-      <label htmlFor={id} className="bl-chip tab">
-        {label}
-        <span className="tab-count">{count}</span>
-      </label>
-    </Fragment>
+      {label}
+      <span className="tab-count">{count}</span>
+    </label>
   )
 }
 
@@ -163,7 +165,7 @@ function countTags(posts: readonly BlogPost[]) {
 
 /**
  * Seçili etiketin dışında kalanı gizleyen kurallar, etiket başına:
- *   - arşivde etiketi taşımayan satırlar,
+ *   - arşivde etiketi taşımayan satırlar (ilk görünenin üst çizgisi de),
  *   - öne çıkan yazı etikete uymuyorsa onun kendisi (arşiv yukarı yaklaşır),
  *   - arşivde o etiketten hiç yazı yoksa arşiv bölümü (boş başlık kalmasın).
  */
@@ -173,6 +175,10 @@ function filterCss(tags: readonly { name: string }[], featuredTag: number, archi
       const n = i + 1
       const on = `.bl-scope:has(#bl-f-${n}:checked)`
       const rules = [`${on} .bl-row:not([data-tag="${n}"]){display:none}`]
+      /* `.bl-row + .bl-row` gizli kardeşi de sayar: ilk görünen satır ilk
+         `<li>` değilse kendi çizgisi listenin üst çizgisinin altına biner. */
+      const first = archiveTags.indexOf(n)
+      if (first > 0) rules.push(`${on} .bl-row:nth-child(${first + 1} of .bl-row){border-top:0}`)
       if (featuredTag !== n) rules.push(`${on} .bl-featured-item{display:none}`, `${on} .bl-archive{margin-top:2.5rem}`)
       if (!archiveTags.includes(n)) rules.push(`${on} .bl-archive{display:none}`)
       return rules.join('')
