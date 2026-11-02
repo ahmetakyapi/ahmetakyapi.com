@@ -5,9 +5,10 @@ import { notFound } from 'next/navigation'
 import { ArmedMorph } from '@/components/projects/ArmedMorph'
 import { ProjectCover } from '@/components/projects/ProjectCover'
 import { ShotViewer, type ViewerShot } from '@/components/projects/ShotViewer'
-import { splitLead, titleCaseTr } from '@/components/projects/project-text'
+import { liveUrl, splitLead, titleCaseTr } from '@/components/projects/project-text'
 import { BrandIcon } from '@/components/site/BrandIcon'
 import { PageTransition } from '@/components/site/PageTransition'
+import { buttonClass } from '@/components/ui/Button'
 import { Container } from '@/components/ui/Container'
 import { KunyeGrid, KunyeLine } from '@/components/ui/Kunye'
 import { ThemedImage } from '@/components/ui/ThemedImage'
@@ -180,15 +181,15 @@ export default async function ProjectPage({ params }: PageProps<'/projeler/[slug
               {project.title}
             </h1>
             <p className="mt-5 max-w-[48ch] text-lead text-body sm:text-[1.375rem] sm:leading-[1.55]">{lead}</p>
+            <ProjectLinks project={project} />
           </header>
 
           <KunyeGrid
-            columns={3}
+            columns={2}
             className="mt-10 max-w-5xl sm:mt-12"
             items={[
               { label: 'Kategori', value: project.category },
               { label: 'Tech Stack', value: project.tags.join(', ') },
-              { label: 'Bağlantılar', value: <ProjectLinks project={project} /> },
             ]}
           />
         </Container>
@@ -314,28 +315,32 @@ function GalleryShot({
 }
 
 const EXTERNAL = { target: '_blank', rel: 'noopener noreferrer' } as const
-const LINK_CLASS =
-  'inline-flex min-h-11 items-center gap-1.5 font-medium text-primary-ink underline decoration-primary-soft/40 underline-offset-4 transition-colors hover:decoration-primary-ink pointer-fine:min-h-7'
 
+/**
+ * Başlığın hemen altında, ilk bakışta görünen eylemler: canlı site birincil
+ * düğme, kaynak kod ikincil. Eskiden künyenin üçüncü sütununda altı çizili
+ * küçük bağlantılardı ve gözden kaçıyordu.
+ */
 function ProjectLinks({ project }: { project: Project }) {
-  const hasSite = project.badge === 'Canlı' && project.link !== project.github
+  const site = liveUrl(project)
+  if (!site && !project.github) return null
   return (
-    <span className="flex flex-col items-start">
-      {hasSite ? (
-        <a href={project.link} {...EXTERNAL} className={LINK_CLASS}>
+    <div className="mt-8 flex flex-wrap gap-3">
+      {site ? (
+        <a href={site} {...EXTERNAL} className={buttonClass({ variant: 'primary', size: 'lg' })}>
           Siteyi Aç
-          <ArrowUpRight className="size-3.5" aria-hidden="true" />
+          <ArrowUpRight aria-hidden="true" />
           <span className="sr-only"> (yeni sekmede açılır)</span>
         </a>
       ) : null}
       {project.github ? (
-        <a href={project.github} {...EXTERNAL} className={LINK_CLASS}>
-          <BrandIcon name="github" size={14} />
+        <a href={project.github} {...EXTERNAL} className={buttonClass({ variant: site ? 'secondary' : 'primary', size: 'lg' })}>
+          <BrandIcon name="github" size={16} />
           Kaynak Kod
           <span className="sr-only"> (yeni sekmede açılır)</span>
         </a>
       ) : null}
-    </span>
+    </div>
   )
 }
 

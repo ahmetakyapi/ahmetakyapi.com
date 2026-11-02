@@ -79,3 +79,8 @@ const BADGE_LABELS = { Canlı: 'Canlı', GitHub: 'Açık Kaynak' } as const sati
 export function badgeLabel(badge: Project['badge']): string {
   return BADGE_LABELS[badge]
 }
+
+/** Canlı sitenin adresi; yoksa (yalnız kaynak kodu olan proje) null. */
+export function liveUrl(project: Project): string | null {
+  return project.badge === 'Canlı' && project.link && project.link !== project.github ? project.link : null
+}

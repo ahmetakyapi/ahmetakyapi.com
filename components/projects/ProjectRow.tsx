@@ -1,9 +1,9 @@
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, ArrowUpRight } from 'lucide-react'
 import Link from 'next/link'
 import type { CSSProperties } from 'react'
 import { ArmedMorph } from '@/components/projects/ArmedMorph'
 import { ProjectCover } from '@/components/projects/ProjectCover'
-import { badgeLabel, splitLead } from '@/components/projects/project-text'
+import { badgeLabel, liveUrl, splitLead } from '@/components/projects/project-text'
 import type { Project } from '@/lib/content/types'
 
 /**
@@ -28,9 +28,14 @@ const FEATURED_LINK = LINK.replace('focus-visible:after:outline-offset-2', 'focu
 /** Satırda gösterilen teknoloji sayısı; tamamı proje sayfasında. */
 const STACK_PREVIEW = 2
 
+/** Canlı site bağlantısı satırın `::after` katmanının ÜSTÜNDE (z-20): satırın
+    geri kalanı detaya, bu bağlantı doğrudan siteye götürür. İç içe bağlantı yok. */
+const EXTERNAL = { target: '_blank', rel: 'noopener noreferrer' } as const
+
 /** Öne çıkan proje: büyük ad, tek cümle, yanında görünür ekran görüntüsü. */
 export function FeaturedRow({ project, priority = false }: { project: Project; priority?: boolean }) {
   const { lead } = splitLead(project.description)
+  const site = liveUrl(project)
   return (
     <li className="pfeat" data-group={project.group} style={{ '--card-tint': project.tint ?? project.accent } as CSSProperties}>
       <ArmedMorph
@@ -51,10 +56,19 @@ export function FeaturedRow({ project, priority = false }: { project: Project; p
               </Link>
             </h3>
             <p className="pfeat-lead">{lead}</p>
-            <span className="pfeat-more tint-card-btn" aria-hidden="true">
-              Projeyi İncele
-              <ArrowRight className="size-4" />
-            </span>
+            <div className="pfeat-more flex flex-wrap gap-2">
+              <span className="tint-card-btn" aria-hidden="true">
+                Projeyi İncele
+                <ArrowRight className="size-4" />
+              </span>
+              {site ? (
+                <a href={site} {...EXTERNAL} className="tint-card-link relative z-20">
+                  Siteyi Aç
+                  <ArrowUpRight aria-hidden="true" className="size-4" />
+                  <span className="sr-only"> ({project.title}, yeni sekmede açılır)</span>
+                </a>
+              ) : null}
+            </div>
           </div>
         }
         cover={<ProjectCover project={project} morph="armed" priority={priority} alt="" />}
@@ -77,6 +91,7 @@ export function FeaturedRow({ project, priority = false }: { project: Project; p
  */
 export function ProjectRow({ project }: { project: Project }) {
   const { lead } = splitLead(project.description)
+  const site = liveUrl(project)
   return (
     <li className="prow" data-group={project.group}>
       <ArmedMorph
@@ -98,6 +113,13 @@ export function ProjectRow({ project }: { project: Project }) {
                 {project.badge !== 'Canlı' ? <span className="prow-badge">{badgeLabel(project.badge)}</span> : null}
               </span>
               <span className="prow-stack">{project.tags.slice(0, STACK_PREVIEW).join(', ')}</span>
+              {site ? (
+                <a href={site} {...EXTERNAL} className="prow-live relative z-20">
+                  Siteyi Aç
+                  <ArrowUpRight aria-hidden="true" />
+                  <span className="sr-only"> ({project.title}, yeni sekmede açılır)</span>
+                </a>
+              ) : null}
             </p>
             <span className="prow-arrow" aria-hidden="true">
               <ArrowRight />

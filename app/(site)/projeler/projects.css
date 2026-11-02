@@ -265,6 +265,43 @@
   color: var(--text-muted);
 }
 
+/* Canlı siteye doğrudan bağlantı: satırın katmanının üstünde, küçük bir hap.
+   Satırın geri kalanı detay sayfasına götürür. */
+.prow-live {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-height: 2.75rem;
+  margin-top: 0.25rem;
+  padding-inline: 0.8rem;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+  font-size: var(--text-small);
+  font-weight: 600;
+  color: var(--primary-ink);
+  transition:
+    background-color 300ms var(--ease-brand),
+    box-shadow 300ms var(--ease-brand);
+}
+.prow-live svg {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+.prow-live:focus-visible {
+  outline: 2px solid var(--line-focus);
+  outline-offset: 2px;
+}
+@media (hover: hover) and (pointer: fine) {
+  .prow-live {
+    min-height: 2rem;
+  }
+  .prow-live:hover {
+    background: var(--primary-wash);
+    box-shadow: inset 0 0 0 1px var(--primary-soft);
+  }
+}
+
 /* Küçük görselde kart yarıçapı (20px) fazla yuvarlak; tipografik kapağın
    üst satırı ("Portfolyo ve Blog") bu ölçüde okunmuyor. */
 .prow .pprev > * {
