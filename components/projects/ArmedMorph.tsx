@@ -19,7 +19,7 @@ const ArmedNameContext = createContext<string | undefined>(undefined)
  * geçişi başlamadan işleniyor.
  *
  * Adı hangi kutunun taşıyacağını kapak seçer (`<ProjectCover morph="armed" />`
- * → ArmedName): dev-starter'da 16/10 çerçeve değil afişin kendisi.
+ * → ArmedName).
  * Görünmeyen kapak (masaüstünde klavyeyle Enter, önizleme saydam) ad
  * almaz: saydam kutunun kırpık görüntüsü kahramana uçuyordu; gezinme
  * düz yönlü geçişle olur.

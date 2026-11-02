@@ -187,14 +187,14 @@ export const projects: Project[] = [
     slug: 'dev-starter',
     group: 'arac',
     description:
-      'Her yeni projeye sıfırdan başlamamak için kurduğum geliştirme altyapısı. İçinde dört hazır Next.js şablonu (full-stack uygulama, tanıtım sayfası, yapay zekâ sohbet arayüzü, belge sitesi), 36 kopyalanıp kullanılabilen arayüz parçası ve on bir adımlık bir rehber var. Projeye başlarken fikirden plana, renk paletinden yayına kadar her adım aynı kurallarla ilerliyor.',
+      'Her yeni projeye sıfırdan başlamamak için kurduğum geliştirme altyapısı. İçinde dört hazır Next.js şablonu (full-stack uygulama, tanıtım sayfası, yapay zekâ sohbet arayüzü, belge sitesi), 73 kopyalanıp kullanılabilen arayüz parçası ve on iki adımlık bir rehber var. Bütün parçalar 541 hikâyelik bir Storybook kataloğunda açık ve koyu temada, on renk paletiyle canlı olarak gezilebiliyor.',
     detail:
-      'Tasarım tokenları ve bileşenler iki ayrı npm paketi: @ahmetakyapi/theme ve @ahmetakyapi/ui. Dört renk paleti (signature, verdant, ember, iris) aynı token adlarını kullandığı için bir projenin rengini değiştirmek tek satır. Yanında Claude Code için on bir uzman ajan (strateji, tasarım denetimi, metin editörü, kalite kapısı) ve projelerde yaşanmış hataların tutulduğu bir bilgi tabanı duruyor; yeni bir bilgisayarda hepsi tek betikle kuruluyor.',
-    tags: ['Next.js 16', 'TypeScript', 'Tailwind v4', 'npm Workspaces', 'Claude Code'],
-    link: 'https://github.com/ahmetakyapi/dev-starter',
+      'Tasarım dili sakin bir yüzey ve renkli veri üzerine kurulu: beyaz sayfa, gri kuyu, içinde beyaz karolar; renk yalnızca veride ve tek birincil eylemde. Tokenlar ve bileşenler iki ayrı npm paketi (@ahmetakyapi/theme, @ahmetakyapi/ui); on palet aynı token adlarını kullandığı için bir projenin rengini değiştirmek tek satır ve her paletin kontrastı testte ölçülüyor. Katalogdaki “Pusula” örneği 73 bileşenin hepsini tek bir uygulamada, tutarlı örnek veriyle bir arada gösteriyor. Yanında Claude Code için uzman ajanlar (strateji, tasarım denetimi, metin editörü, kalite kapısı) ve projelerde yaşanmış hataların tutulduğu bir bilgi tabanı duruyor.',
+    tags: ['Next.js 16', 'TypeScript', 'Tailwind v4', 'Storybook 10', 'Claude Code'],
+    link: 'https://dev-starter-storybook.vercel.app',
     github: 'https://github.com/ahmetakyapi/dev-starter',
     accent: '#6366f1',
-    badge: 'GitHub',
+    badge: 'Canlı',
     featured: false,
   },
   {

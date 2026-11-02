@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { ImageResponse } from 'next/og'
 import { splitLead } from '@/components/projects/project-text'
-import { DEV_STARTER_BANNER, shotSources } from '@/lib/content/project-shots'
+import { shotSources } from '@/lib/content/project-shots'
 import { getProjectBySlug, projects } from '@/lib/content/projects'
 import { BrandMark, loadFonts, OG_COLORS as C, OG_CONTENT_TYPE, OG_SIZE } from '@/lib/og'
 
@@ -50,7 +50,7 @@ function toDataUrl(buf: Buffer, mime: string) {
 }
 
 /**
- * Kartın görseli: koyu masaüstü görüntüsü, yoksa dev-starter afişi, yoksa hiç.
+ * Kartın görseli: koyu masaüstü görüntüsü, yoksa hiç.
  *
  * Görüntü `public/`teki WebP DEĞİL, `assets/project-og/<slug>.jpg`: Satori
  * WebP'yi tanıyor ama çizemiyor (derleme "u2 is not iterable" ile
@@ -65,14 +65,6 @@ async function coverFor(slug: string): Promise<{ src: string; width: number; hei
        bir yol bütün projeyi (public/ dahil) sunucu paketine çekiyordu. */
     const buf = await readFile(join(process.cwd(), 'assets', 'project-og', `${slug}.jpg`))
     return { src: toDataUrl(buf, 'image/jpeg'), width: shot.width, height: shot.height }
-  }
-  if (slug === 'dev-starter') {
-    const buf = await readFile(join(process.cwd(), 'public', 'projects', 'dev-starter', 'banner-dark.svg'))
-    return {
-      src: toDataUrl(buf, 'image/svg+xml'),
-      width: DEV_STARTER_BANNER.width,
-      height: DEV_STARTER_BANNER.height,
-    }
   }
   return null
 }

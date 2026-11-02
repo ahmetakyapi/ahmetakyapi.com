@@ -125,10 +125,6 @@ export default async function ProjectPage({ params }: PageProps<'/projeler/[slug
   const second = shots.find((s) => s.view === 'desktop-2')
   const phone = shots.find((s) => s.view === 'mobile')
   const indexOf = (view: ShotView) => shots.findIndex((s) => s.view === view)
-  /* Afişli kahraman (dev-starter): afiş adı zaten büyük puntoyla yazıyor.
-     Altında aynı ad bir kez daha dev puntoyla duruyordu; burada h1 künye
-     ölçeğine iner, yeri ve anlamı aynı kalır. */
-  const bannerHero = !hasHeroShot && project.slug === 'dev-starter'
 
   return (
     <PageTransition>
@@ -165,25 +161,21 @@ export default async function ProjectPage({ params }: PageProps<'/projeler/[slug
           <div className="phero-frame">
             {hasHeroShot ? (
               <button type="button" data-shot={0} className="shot-zoom group relative" aria-label={`${VIEW_ALT.desktop(project.title)}, büyüt`}>
-                <ProjectCover project={project} morph priority layout="hero" />
+                <ProjectCover project={project} morph priority />
                 <ZoomHint />
               </button>
             ) : (
-              <ProjectCover project={project} morph priority layout="hero" />
+              <ProjectCover project={project} morph priority />
             )}
           </div>
         </Container>
 
       <article aria-labelledby="proje-adi">
         <Container size="default">
-          <header className={bannerHero ? 'mt-6 max-w-4xl sm:mt-8' : 'mt-8 max-w-4xl sm:mt-12'}>
+          <header className="mt-8 max-w-4xl sm:mt-12">
             <h1
               id="proje-adi"
-              className={
-                bannerHero
-                  ? 'text-heading font-semibold tracking-[-0.03em] text-strong'
-                  : 'display-ink text-[clamp(2.75rem,7vw,5.5rem)] leading-[0.98] font-semibold tracking-[-0.045em]'
-              }
+              className="display-ink text-[clamp(2.75rem,7vw,5.5rem)] leading-[0.98] font-semibold tracking-[-0.045em]"
             >
               {project.title}
             </h1>

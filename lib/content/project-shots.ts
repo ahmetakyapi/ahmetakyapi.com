@@ -14,10 +14,9 @@ import RENDITIONS from './shot-renditions.json'
  * - karalama, dungeon-mates ve ramazan-vakitleri yalnız KOYU temalı
  *   uygulamalar: iki dosya da koyu, o yüzden `themed: false` (tek görsel,
  *   ikisini indirmeye gerek yok).
- * - dev-starter: ekran görüntüsü yok, README afişi (1280×360, iki temalı SVG).
- *   Afişteki başlık gradyanla DOLDURULMAZ: WebKit `<img>` içindeki SVG'de
- *   gradyanlı metni düşük çözünürlükte basıp büyütüyor ve iPhone'da yalnız
- *   başlık bulanık görünüyordu (4 Ekim 2026). İki düz renkli `tspan`.
+ * - dev-starter: 2 Kasım 2026'da Storybook kataloğundan çekildi
+ *   (dev-starter-storybook.vercel.app; masaüstü Giriş sayfası, ikinci
+ *   masaüstü ve telefon Pusula panosu). Eskiden README afişi kapaktı.
  * - ahmetakyapi-com: henüz yok (yeni site bitince çekilecek); tipografik kapak.
  * - Küçük kopyalar (srcset adayları): her asıl dosyanın yanında
  *   `<görünüm>-<tema>.w<genişlik>.webp`, genişlikler shot-renditions.json'da.
@@ -63,17 +62,10 @@ export const PROJECT_SHOTS = {
   karalama: { views: ALL_VIEWS, themed: false, size: FULL, darkInk: true },
   'dungeon-mates': { views: ALL_VIEWS, themed: false, size: FULL, darkInk: true },
   'ramazan-vakitleri': { views: ALL_VIEWS, themed: false, size: FULL, darkInk: true },
+  'dev-starter': { views: ALL_VIEWS, themed: true, size: FULL },
 } as const satisfies Record<string, ShotSet>
 
 export type ShotSlug = keyof typeof PROJECT_SHOTS
-
-/** dev-starter'ın README afişi: görseli olmayan proje için kapak. */
-export const DEV_STARTER_BANNER = {
-  light: '/projects/dev-starter/banner-light.svg',
-  dark: '/projects/dev-starter/banner-dark.svg',
-  width: 1280,
-  height: 360,
-} as const
 
 export type ShotSources = {
   light: string

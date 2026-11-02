@@ -2,7 +2,7 @@ import { ViewTransition, type ReactNode } from 'react'
 import { ArmedName } from '@/components/projects/ArmedMorph'
 import { CoverArt } from '@/components/ui/CoverArt'
 import { ThemedImage } from '@/components/ui/ThemedImage'
-import { DEV_STARTER_BANNER, isDarkInk, shotSources } from '@/lib/content/project-shots'
+import { isDarkInk, shotSources } from '@/lib/content/project-shots'
 import type { Project } from '@/lib/content/types'
 import { DEFAULT_THEME } from '@/lib/theme'
 import { cx } from '@/lib/utils'
@@ -33,8 +33,6 @@ type ProjectCoverProps = {
   morph?: boolean | 'armed'
   /** LCP adayı: yalnız varsayılan temanın görseli öncelik alır. */
   priority?: boolean
-  /** Kart: afiş 16/10 yüzeyin ortasında. Kahraman: afiş tam genişlik. */
-  layout?: 'card' | 'hero'
   className?: string
   /** Görselin alt metni; verilmezse projenin adından kurulur. */
   alt?: string
@@ -65,7 +63,6 @@ export function ProjectCover({
   project,
   morph = false,
   priority = false,
-  layout = 'card',
   className,
   alt,
   sizes = HERO_SIZES,
@@ -88,25 +85,6 @@ export function ProjectCover({
           />
         </div>
       </Morph>
-    )
-  }
-
-  if (project.slug === 'dev-starter') {
-    const banner = (
-      <Morph name={name} on={morph}>
-        <div className="overflow-hidden rounded-[0.75rem]">
-          <ThemedImage {...DEV_STARTER_BANNER} alt={alt ?? 'dev-starter README afişi'} priority={priority} theme={theme} />
-        </div>
-      </Morph>
-    )
-    return layout === 'card' ? (
-      <div className={cx(FRAME, 'flex aspect-[16/10] items-center px-[6%]', className)}>
-        <div className="pcover-img w-full">{banner}</div>
-      </div>
-    ) : (
-      /* Kahramanda çerçeve YOK: afişin kendi kenarı ve köşesi var; dış
-         kutu "çerçeve içinde çerçeve" gösteriyordu. */
-      <div className={className}>{banner}</div>
     )
   }
 
