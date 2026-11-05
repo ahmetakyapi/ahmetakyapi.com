@@ -17,35 +17,7 @@
    başlık, kapak, gövde ve kutular tek sütunda; içindekiler sağda.
    ========================================================================== */
 
-/* --------------------------------------------------------------------------
-   Okuma ilerlemesi: JavaScript yok. Desteklemeyen tarayıcıda hiç
-   görünmez (yarım duran bir çubuk yanlış bilgi olurdu).
-   -------------------------------------------------------------------------- */
-.post-progress {
-  display: none;
-}
-
-@supports (animation-timeline: scroll()) {
-  .post-progress {
-    display: block;
-    position: fixed;
-    inset-inline: 0;
-    top: 0;
-    z-index: 60; /* yapışkan başlığın (z-50) üstünde */
-    height: 2px;
-    background: var(--primary);
-    transform-origin: 0 50%;
-    transform: scaleX(0);
-    animation: post-progress linear both;
-    animation-timeline: scroll(root block);
-  }
-}
-
-@keyframes post-progress {
-  to {
-    transform: scaleX(1);
-  }
-}
+/* Okuma ilerlemesi artık ortak: app/craft.css → `.scroll-progress`. */
 
 /* --------------------------------------------------------------------------
    Sayfa ızgarası: okuma sütunu + içindekiler

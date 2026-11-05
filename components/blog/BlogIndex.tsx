@@ -115,7 +115,7 @@ function Featured({ post, tag }: { post: BlogPost; tag: number }) {
 
 function Row({ post }: { post: BlogPost }) {
   return (
-    <Link href={`/blog/${post.slug}`} transitionTypes={['nav-forward']} className="group bl-row-link">
+    <Link href={`/blog/${post.slug}`} transitionTypes={['nav-forward']} className="group bl-row-link row-sweep">
       <span className="bl-row-meta text-small font-medium tabular-nums text-muted">
         <time dateTime={post.date}>{formatPostDate(post.date)}</time>
         <span className="bl-row-dot" aria-hidden="true">
@@ -123,7 +123,7 @@ function Row({ post }: { post: BlogPost }) {
         </span>
         <span>{readingTime(post)}</span>
       </span>
-      <span className="bl-row-main">
+      <span className="bl-row-main row-sweep-shift">
         <span className="block text-small font-medium text-primary-ink">{post.tag}</span>
         <span className="ink ink-hover mt-1.5 block font-display text-title font-bold tracking-[-0.025em] sm:text-[1.5rem] sm:leading-[1.2]">
           <Inline text={post.title} />

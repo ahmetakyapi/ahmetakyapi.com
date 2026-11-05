@@ -104,7 +104,7 @@ export default async function BlogPostPage({ params }: PageProps<'/blog/[slug]'>
           ]),
         ])}
       />
-      <div className="post-progress" aria-hidden="true" />
+      <div className="scroll-progress" aria-hidden="true" />
 
       <article className="post">
         <Container className="pt-6 sm:pt-10">

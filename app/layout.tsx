@@ -15,6 +15,7 @@ import { IntroCurtain } from '@/components/site/IntroCurtain'
 import { INTRO_SCRIPT } from '@/lib/intro'
 import { DEFAULT_THEME, PALETTE, THEME_SCRIPT } from '@/lib/theme'
 import './globals.css'
+import './craft.css'
 
 /*
  * Fontlar (3 Ekim 2026, "Gece Mavisi" yönüyle): tek aile, Geist.

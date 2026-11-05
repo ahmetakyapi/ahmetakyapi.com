@@ -27,7 +27,7 @@ export function Footer() {
   const year = new Date().getFullYear()
 
   return (
-    <footer className="mt-16 border-t border-line pb-[env(safe-area-inset-bottom)] sm:mt-20">
+    <footer className="relative mt-16 overflow-clip border-t border-line pb-[env(safe-area-inset-bottom)] sm:mt-20">
       <div className="mx-auto w-full max-w-[88rem] px-[max(1rem,env(safe-area-inset-left))] sm:px-6 lg:px-8">
         <div className="flex flex-col gap-8 py-10 md:flex-row md:items-center md:justify-between">
           {/* Telefonda Başa Dön imzanın hizasında, en sağda: alttaki künye
@@ -78,6 +78,14 @@ export function Footer() {
           </p>
           <BackToTop className="max-md:hidden" />
         </div>
+      </div>
+
+      {/* Sayfanın son satırı imza: kenardan kenara, kaydırıp alta inen
+          okuyucunun gözünün önünde kalem soldan sağa yazar (globals.css'teki
+          başlık imzasının aynı hareketi, burada kaydırmaya bağlı;
+          app/craft.css → `.footer-mark`). Dekoratif, ad zaten yukarıda. */}
+      <div className="footer-mark" aria-hidden="true">
+        <Signature className="footer-signature" />
       </div>
     </footer>
   )

@@ -2,6 +2,7 @@ import { ArrowRight, Building2, Sparkles } from 'lucide-react'
 import Link from 'next/link'
 import { MaskTitle } from '@/components/home/MaskTitle'
 import { ProjectCover } from '@/components/projects/ProjectCover'
+import { PointerLight } from '@/components/site/PointerLight'
 import { PauseOffscreen } from '@/components/site/PauseOffscreen'
 import { Container } from '@/components/ui/Container'
 import type { Project } from '@/lib/content/types'
@@ -63,8 +64,9 @@ export function Experience({ experience, projects }: { experience: HomeContent['
       </h2>
 
       <div className="home-xp mt-8 sm:mt-10">
-        <article className="tint-card home-xp-card reveal">
+        <article className="tint-card home-xp-card edge-lit reveal">
           <span aria-hidden="true" className="tint-card-glow" />
+          <PointerLight />
           <header className="home-xp-card-head">
             <span className="home-xp-icon" aria-hidden="true">
               <Building2 />
@@ -113,7 +115,8 @@ export function Experience({ experience, projects }: { experience: HomeContent['
           <PauseOffscreen />
         </article>
 
-        <article className="tint-card home-xp-card home-own reveal">
+        <article className="tint-card home-xp-card home-own edge-lit reveal">
+          <PointerLight />
           <header className="home-xp-card-head home-own-head">
             <span className="home-xp-icon" aria-hidden="true">
               <Sparkles />

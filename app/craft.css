@@ -1,0 +1,348 @@
+/* ==========================================================================
+   İşçilik katmanı (5 Kasım 2026, "görsel ve sanatsal turu").
+
+   dev-starter'ın işçilik turundan (gölge merdiveni, ışıklı kenar, düğme
+   hacmi) ve ödüllü portfolyolardaki sessiz ayrıntılardan uyarlananlar,
+   bütün sayfalarda ortak olanlar burada. Bölüme özgü hareket kendi
+   dosyasında (home.css, projects.css, blog.css).
+
+   Kurallar aynı: renk değeri yalnız rol değişkenlerinden, hareket yalnız
+   `transform` / `opacity` / `clip-path`, kaydırmaya bağlı her şey
+   `@supports (animation-timeline: …)` içinde, hareketi azaltan okuyucuda
+   hiçbir şey oynamaz ve hiçbir şey gizli kalmaz.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Gölge merdiveni: katmanlı, negatif yayılmalı. Önce kıl kenar, sonra
+   kısa ve yumuşak düşüş (dev-starter → packages/@ahmet/theme). Eskiden tek
+   katmandı ve kart "yüzen kutu" gibi duruyordu; şimdi neredeyse yere basar.
+   Koyuda gölge görünmez: derinliği üst kenardaki ışık çizgisi taşır.
+   -------------------------------------------------------------------------- */
+:root {
+  --shadow-sm:
+    0 0 0 1px rgb(16 32 52 / 0.035), 0 1px 1px -0.5px rgb(16 32 52 / 0.08), 0 2px 6px -2px rgb(16 32 52 / 0.08);
+  --shadow-md:
+    0 0 0 1px rgb(16 32 52 / 0.04), 0 2px 4px -1px rgb(16 32 52 / 0.06), 0 8px 16px -4px rgb(16 32 52 / 0.08),
+    0 16px 32px -12px rgb(16 32 52 / 0.12);
+  --shadow-overlay:
+    0 0 0 1px rgb(16 32 52 / 0.05), 0 4px 8px -2px rgb(16 32 52 / 0.06), 0 16px 32px -8px rgb(16 32 52 / 0.12),
+    0 32px 64px -16px rgb(16 32 52 / 0.2);
+  /* Dolgulu düğme: üstte ışık, altta gölge çizgisi, dışta kıl çizgi ve
+     dolgunun kendi renginde kısa düşüş. */
+  --shadow-button:
+    inset 0 1px 0 rgb(255 255 255 / 0.22), inset 0 -1px 0 rgb(0 0 0 / 0.12), 0 0 0 1px rgb(16 32 52 / 0.06),
+    0 1px 2px rgb(16 32 52 / 0.12), 0 6px 14px -6px color-mix(in srgb, var(--primary) 55%, transparent);
+  /* `.edge-lit` kenarı: ışık yukarıdan düşer. */
+  --edge-light: linear-gradient(180deg, rgb(255 255 255 / 0.9), rgb(255 255 255 / 0.35) 40%, rgb(16 32 52 / 0.06));
+  /* Film greni: açıkta koyu, koyuda açık tanecik. */
+  --grain-ink: 0 0 0;
+  --grain-opacity: 0.045;
+}
+
+:root[data-theme="dark"] {
+  --shadow-sm:
+    inset 0 1px 0 rgb(255 255 255 / 0.06), 0 0 0 1px rgb(255 255 255 / 0.04), 0 1px 2px -1px rgb(0 0 0 / 0.6),
+    0 2px 6px -2px rgb(0 0 0 / 0.5);
+  --shadow-md:
+    inset 0 1px 0 rgb(255 255 255 / 0.06), 0 0 0 1px rgb(255 255 255 / 0.04), 0 2px 4px -1px rgb(0 0 0 / 0.4),
+    0 8px 16px -4px rgb(0 0 0 / 0.45), 0 16px 32px -8px rgb(0 0 0 / 0.6);
+  --shadow-overlay:
+    inset 0 1px 0 rgb(255 255 255 / 0.06), 0 0 0 1px rgb(255 255 255 / 0.04), 0 4px 8px -2px rgb(0 0 0 / 0.4),
+    0 16px 32px -8px rgb(0 0 0 / 0.55), 0 32px 64px -16px rgb(0 0 0 / 0.75);
+  --shadow-button:
+    inset 0 1px 0 rgb(255 255 255 / 0.24), inset 0 -1px 0 rgb(0 0 0 / 0.16), 0 0 0 1px rgb(0 0 0 / 0.5),
+    0 2px 6px rgb(0 0 0 / 0.35), 0 10px 20px -10px color-mix(in srgb, var(--primary) 45%, transparent);
+  --edge-light: linear-gradient(180deg, rgb(255 255 255 / 0.16), rgb(255 255 255 / 0.06) 35%, rgb(255 255 255 / 0.03));
+  --grain-ink: 255 255 255;
+  --grain-opacity: 0.035;
+}
+
+/* --------------------------------------------------------------------------
+   Üstten ışıklı kenar: tek renkli kıl çizgi yerine yukarıdan aşağı sönen
+   kenar. Yalnız "nesne" yüzeylerde (vitrin kartı, deneyim kartı, öne
+   çıkan yazı); tekrar eden satırda kullanılmaz. Maskeli sözde öğe, yarı
+   saydam zeminde de çalışır. `::after` kullanır: kartların `::before`u
+   başka işlerde.
+   -------------------------------------------------------------------------- */
+.edge-lit {
+  position: relative;
+}
+.edge-lit::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  border-radius: inherit;
+  padding: 1px;
+  background: var(--edge-light);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+@media (forced-colors: active) {
+  .edge-lit::after {
+    display: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Film greni. Sayfanın üstünde sabit, çok ince bir tanecik katmanı: düz
+   degradeler "ekran" gibi değil "baskı" gibi okunur ve koyu temada bantlanma
+   (degrade basamakları) kırılır. Görsel bir kez rasterlenir; katman
+   kaydırmada hareket etmez, karışım modu (blend) YOK: bileşimci her karede
+   sayfayı yeniden harmanlamasın. Yazdırmada, yüksek kontrastta ve
+   saydamlığı azaltan okuyucuda yok.
+   -------------------------------------------------------------------------- */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  background-color: rgb(var(--grain-ink));
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2.2 -0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")
+    0 0 / 220px 220px repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 2.2 -0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")
+    0 0 / 220px 220px repeat;
+}
+@media print, (forced-colors: active), (prefers-reduced-transparency: reduce) {
+  body::after {
+    display: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Kaydırma ilerlemesi (ana sayfa, proje ve yazı sayfası). JavaScript yok;
+   desteklemeyen tarayıcıda hiç görünmez (yarım duran bir çubuk yanlış
+   bilgi olurdu). Eskiden yalnız yazı sayfasında düz bir çizgiydi
+   (`.post-progress`); şimdi markanın açık mavisinden koyusuna giden bir
+   iplik ve ucunda yumuşak bir ışık: okuyucu nerede olduğunu kenardan görür.
+   -------------------------------------------------------------------------- */
+.scroll-progress {
+  display: none;
+}
+
+@supports (animation-timeline: scroll()) {
+  .scroll-progress {
+    display: block;
+    position: fixed;
+    inset-inline: 0;
+    top: 0;
+    z-index: 60; /* yapışkan başlığın (z-50) üstünde */
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary-soft), var(--primary));
+    transform-origin: 0 50%;
+    transform: scaleX(0);
+    animation: scroll-progress linear both;
+    animation-timeline: scroll(root block);
+  }
+  .scroll-progress::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: -2px;
+    width: 4rem;
+    height: 6px;
+    border-radius: 999px;
+    background: radial-gradient(closest-side, color-mix(in oklab, var(--primary-soft) 70%, transparent), transparent);
+  }
+}
+
+@keyframes scroll-progress {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Görselin maskeli açılışı: görünüme girerken alttan yukarı açılır, içindeki
+   görsel biraz büyükten yerine oturur. Yalnız ekran görüntüsü çerçevelerinde
+   (`.shot-reveal`); LCP görseli (ilk ekrandaki) bu sınıfı taşımaz.
+   `clip-path` yalnız açılırken, bölüm ekranda dururken çizilmez.
+   -------------------------------------------------------------------------- */
+@keyframes shot-reveal {
+  from {
+    clip-path: inset(18% 6% 0 6% round 1.25rem);
+    opacity: 0.4;
+  }
+  to {
+    clip-path: inset(0 0 0 0 round 0);
+    opacity: 1;
+  }
+}
+@keyframes shot-reveal-img {
+  from {
+    transform: scale(1.12);
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .shot-reveal {
+      animation: shot-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 5% cover 35%;
+    }
+    .shot-reveal img {
+      animation: shot-reveal-img linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 45%;
+    }
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Editoryal satırın üzerine gelme izi (Son Yazılar, Diğer Projeler, blog
+   listesi): satırın arkasında soldan sağa yayılan, markanın çok soluk bir
+   yıkaması ve başlığın yarım rem içeri kayması. Tekrar eden satırda kart
+   yok; iz yalnız gezinen işaretçide ve yalnız üzerinde durulan satırda.
+   -------------------------------------------------------------------------- */
+.row-sweep {
+  position: relative;
+  isolation: isolate;
+}
+.row-sweep::before {
+  content: "";
+  position: absolute;
+  inset: 0 calc(-1 * var(--row-bleed, 0.75rem));
+  z-index: -1;
+  border-radius: 1rem;
+  background: linear-gradient(90deg, color-mix(in oklab, var(--primary) 9%, transparent), transparent 85%);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    transform 640ms var(--ease-brand),
+    opacity 420ms var(--ease-brand);
+}
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .row-sweep:hover::before,
+  .row-sweep:focus-visible::before {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+  .row-sweep .row-sweep-shift {
+    transition: translate 520ms var(--ease-brand);
+  }
+  .row-sweep:hover .row-sweep-shift {
+    translate: 0.5rem 0;
+  }
+}
+@media (forced-colors: active) {
+  .row-sweep::before {
+    display: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   İmleci izleyen ışık (`--mx` / `--my`, components/site/PointerLight.tsx):
+   kartın üstünde çok yumuşak bir parlama. React durumu yok; konum CSS
+   değişkenine yazılır, degradeyi CSS çizer. Yalnız hassas işaretçide.
+   -------------------------------------------------------------------------- */
+:where(:has(> .pointer-sheen)) {
+  isolation: isolate;
+}
+/* Kartın zemininin üstünde, içeriğin (metin, görsel) ALTINDA: ışık ekran
+   görüntüsünü boyamaz, aradaki boşlukta parlar. */
+.pointer-sheen {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    28rem circle at var(--mx, 50%) var(--my, 0%),
+    color-mix(in oklab, var(--sheen, var(--primary)) 16%, transparent),
+    transparent 60%
+  );
+  transition: opacity 500ms var(--ease-brand);
+}
+@media (hover: hover) and (pointer: fine) {
+  :hover > .pointer-sheen,
+  [data-pointer-in] > .pointer-sheen {
+    opacity: 1;
+  }
+}
+:root[data-theme="dark"] .pointer-sheen {
+  background: radial-gradient(
+    28rem circle at var(--mx, 50%) var(--my, 0%),
+    color-mix(in oklab, var(--sheen, var(--primary)) 14%, transparent),
+    transparent 60%
+  );
+}
+@media (forced-colors: active) {
+  .pointer-sheen {
+    display: none;
+  }
+}
+
+/* Projenin kendi tonundaki kartta ışık da o tonda. */
+.tint-card > .pointer-sheen {
+  --sheen: var(--tint);
+}
+
+/* --------------------------------------------------------------------------
+   Alt bilginin imzası (components/site/Footer.tsx). Kenardan kenara dev
+   "Ahmet Akyapı"; alt kenarı sayfanın dibine gömülür (maske), üstü
+   başlıklardaki mürekkep degradesi. Kaydırıp alta inen okuyucunun gözü
+   önünde soldan sağa yazılır; destek yoksa ya da hareket azaltılmışsa
+   baştan yazılı durur.
+   -------------------------------------------------------------------------- */
+.footer-mark {
+  display: flex;
+  justify-content: center;
+  max-width: 88rem;
+  margin-inline: auto;
+  padding: 0.5rem max(1rem, env(safe-area-inset-left)) 0;
+  -webkit-mask-image: linear-gradient(180deg, black 45%, transparent 100%);
+  mask-image: linear-gradient(180deg, black 45%, transparent 100%);
+  opacity: 0.9;
+  user-select: none;
+}
+@media (min-width: 640px) {
+  .footer-mark {
+    padding-inline: 1.5rem;
+  }
+}
+@media (min-width: 1024px) {
+  .footer-mark {
+    padding-inline: 2rem;
+  }
+}
+.footer-mark .footer-signature {
+  width: 100%;
+  height: auto;
+  /* Başlıktaki imzanın açılış hareketi burada yok (aşağıda kaydırmaya bağlı). */
+  animation: none;
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .footer-mark .footer-signature {
+      animation: signature-write linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 85%;
+    }
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Sayfa sarmalayıcısı (components/site/PageTransition.tsx). Opak zemin
+   YALNIZ rota geçişi sürerken: silmenin görüntüsü opak olsun diye. Eskiden
+   hep opaktı ve sayfa zeminindeki sabit ışığı (globals.css → `body::before`,
+   4 Ekim 2026 "arka planı zenginleştirelim") içerik boyunca örtüyordu; ışık
+   yalnız alt bilgide görünüyor, içerik bittiği yerde zeminde bir ton
+   farkıyla düz bir kenar kalıyordu.
+   -------------------------------------------------------------------------- */
+.page-sheet {
+  background: transparent;
+}
+:root:active-view-transition .page-sheet {
+  background: var(--page-bg);
+}

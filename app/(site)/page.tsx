@@ -44,6 +44,7 @@ export default function HomePage() {
 
   return (
     <PageTransition>
+      <div className="scroll-progress" aria-hidden="true" />
       <script
         type="application/ld+json"
         // Yapısal veri; Google'ın kişi ve site bilgisini doğru okuması için.

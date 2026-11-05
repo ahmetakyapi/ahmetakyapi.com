@@ -32,7 +32,7 @@ const EXIT = { 'nav-forward': 'nav-forward', 'nav-back': 'nav-back', default: 'p
 export function PageTransition({ children }: { children: ReactNode }) {
   return (
     <ViewTransition enter={ENTER} exit={EXIT} default="none">
-      <div className="bg-page">{children}</div>
+      <div className="page-sheet">{children}</div>
     </ViewTransition>
   )
 }

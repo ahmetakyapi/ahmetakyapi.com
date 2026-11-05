@@ -59,7 +59,7 @@ export function RecentPosts({ posts }: { posts: BlogPost[] }) {
               <li key={post.slug} className="reveal border-b border-line">
                 <Link
                   href={`/blog/${post.slug}`}
-                  className="home-post group"
+                  className="home-post row-sweep group"
                   aria-labelledby={id}
                   aria-describedby={`${id}-kunye ${id}-ozet ${id}-etiket`}
                 >
@@ -68,7 +68,7 @@ export function RecentPosts({ posts }: { posts: BlogPost[] }) {
                     <span aria-hidden="true">·</span>
                     <span>{readingTime(post)}</span>
                   </span>
-                  <span className="home-post-main">
+                  <span className="home-post-main row-sweep-shift">
                     <span id={id} className="home-post-title ink ink-hover">{post.title}</span>
                     <span id={`${id}-ozet`} className="home-post-excerpt">
                       <Inline text={splitLead(post.excerpt).lead} />

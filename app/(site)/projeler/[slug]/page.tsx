@@ -129,6 +129,7 @@ export default async function ProjectPage({ params }: PageProps<'/projeler/[slug
 
   return (
     <PageTransition>
+      <div className="scroll-progress" aria-hidden="true" />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={jsonLdHtml([
@@ -306,7 +307,7 @@ function GalleryShot({
       aria-label={`${shot.alt}, büyüt`}
       className={phone ? 'shot-zoom group relative mx-auto max-w-[15rem] sm:max-w-none' : 'shot-zoom group relative'}
     >
-      <span className="block overflow-hidden rounded-card border border-line bg-surface-sunken">
+      <span className="shot-reveal block overflow-hidden rounded-card border border-line bg-surface-sunken">
         <ThemedImage {...shot.src} alt={shot.alt} sizes={phone ? GALLERY_PHONE_SIZES : GALLERY_DESKTOP_SIZES} />
       </span>
       <ZoomHint />

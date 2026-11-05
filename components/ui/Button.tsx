@@ -24,10 +24,10 @@ import { cx } from '@/lib/utils'
  */
 
 const BASE =
-  'inline-flex shrink-0 select-none items-center justify-center gap-2 whitespace-nowrap rounded-button font-semibold transition-[background-color,color,border-color,filter,transform] active:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&_svg]:size-4 [&_svg]:shrink-0'
+  'inline-flex shrink-0 select-none items-center justify-center gap-2 whitespace-nowrap rounded-button font-semibold transition-[background-color,color,border-color,filter,transform,scale] active:scale-[0.97] disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&_svg]:size-4 [&_svg]:shrink-0'
 
 const BUTTON_VARIANTS = {
-  primary: 'bg-cta text-on-brand shadow-raised hover:brightness-110',
+  primary: 'bg-cta text-on-brand shadow-[var(--shadow-button)] hover:brightness-110',
   secondary: 'border border-line-strong bg-surface text-strong hover:border-primary-soft hover:bg-surface-raised',
   ghost: 'text-body hover:bg-primary-wash hover:text-strong',
 } as const

@@ -1,6 +1,9 @@
 import { ArrowRight } from 'lucide-react'
 import { ContactLink } from '@/components/home/ContactLink'
 import { GlobeIsland } from '@/components/home/GlobeIsland'
+import { LocalTime } from '@/components/home/LocalTime'
+import { PauseOffscreen } from '@/components/site/PauseOffscreen'
+import { PointerLight } from '@/components/site/PointerLight'
 import { SketchArrow } from '@/components/ui/Sketch'
 import { ButtonLink } from '@/components/ui/Button'
 import type { HomeContent } from '@/lib/site-content'
@@ -24,6 +27,10 @@ import type { HomeContent } from '@/lib/site-content'
 export function HomeHero({ home }: { home: HomeContent }) {
   return (
     <section aria-labelledby="hero-baslik" className="home-hero">
+      {/* İmlecin çevresinde noktalı ızgara aydınlanır (home.css → `.home-hero-spot`). */}
+      <span aria-hidden="true" className="home-hero-spot" />
+      <PointerLight bare />
+      <PauseOffscreen />
       <div className="home-hero-inner">
         <div className="home-hero-copy">
           <p className="home-hero-eyebrow home-rise">{home.role}</p>
@@ -55,6 +62,22 @@ export function HomeHero({ home }: { home: HomeContent }) {
             Basılı tutup sürükleyerek döndürebilirsin.
           </p>
         </div>
+      </div>
+
+      {/* Sahnenin alt kenarı (yalnız geniş ekranda): solda kürenin ev
+          şehri ve oradaki saat, sağda aşağı inme işareti. Bilgi taşıyan
+          sessiz bir künye; kaydırınca ilk o çekilir. */}
+      <div className="home-hero-foot" aria-hidden="true">
+        <p className="home-hero-place">
+          <span className="home-hero-dot" />
+          İstanbul
+          <span className="home-hero-sep">·</span>
+          <LocalTime />
+        </p>
+        <p className="home-hero-cue">
+          Aşağı Kaydır
+          <span className="home-hero-cue-line" />
+        </p>
       </div>
     </section>
   )

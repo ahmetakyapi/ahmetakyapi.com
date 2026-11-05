@@ -5,6 +5,7 @@ import { MaskTitle } from '@/components/home/MaskTitle'
 import { titleCaseTr } from '@/components/projects/project-text'
 import { Container } from '@/components/ui/Container'
 import { SectionHeading } from '@/components/ui/SectionHeading'
+import { PointerLight } from '@/components/site/PointerLight'
 import { ThemedImage } from '@/components/ui/ThemedImage'
 import { shotSources } from '@/lib/content/project-shots'
 import type { Project } from '@/lib/content/types'
@@ -59,6 +60,7 @@ export function SelectedWork({ home, projects }: { home: HomeContent; projects: 
               style={{ '--tint': project.tint ?? project.accent } as CSSProperties}
             >
               <span aria-hidden="true" className="tint-card-glow" />
+              <PointerLight />
               <div className="home-stack-media tint-card-media">
                 <div className="overflow-hidden rounded-button">
                   <ThemedImage {...desktop} alt={`${project.title} masaüstü ekranı`} sizes={DESKTOP_SIZES} />

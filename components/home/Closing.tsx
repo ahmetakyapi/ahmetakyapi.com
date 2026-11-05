@@ -1,5 +1,6 @@
 import { MaskTitle } from '@/components/home/MaskTitle'
 import { BrandIcon } from '@/components/site/BrandIcon'
+import { PauseOffscreen } from '@/components/site/PauseOffscreen'
 import { Container } from '@/components/ui/Container'
 import { CopyButton } from '@/components/ui/CopyButton'
 import { EMAIL, SOCIAL_LINKS } from '@/lib/nav'
@@ -18,9 +19,16 @@ const ICON_LINK =
 
 export function Closing({ closing }: { closing: HomeContent['closing'] }) {
   return (
-    <Container as="section" size="wide" aria-labelledby="iletisim" className="pt-24 sm:pt-36">
+    <Container as="section" size="wide" aria-labelledby="iletisim" className="home-close pt-24 sm:pt-36">
+      {/* Kapanışın ışığı: sayfanın dibinden yükselen yavaş bir mavi şafak
+          (home.css → `.home-close-aurora`). Dekoratif, ekran dışında durur. */}
+      <span aria-hidden="true" className="home-close-aurora">
+        <span />
+        <span />
+      </span>
+      <PauseOffscreen />
       {/* Odaklanabilir: hero'daki "İletişime Geç" odağı buraya taşır (ContactLink). */}
-      <h2 id="iletisim" tabIndex={-1} className="home-title home-title-xl outline-none">
+      <h2 id="iletisim" tabIndex={-1} className="home-title home-title-xl home-close-title outline-none">
         <MaskTitle accentLast>{closing.title}</MaskTitle>
       </h2>
       <div className="mt-8 grid gap-8 border-t border-line pt-8 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
@@ -29,7 +37,7 @@ export function Closing({ closing }: { closing: HomeContent['closing'] }) {
           <p className="mt-5">
             <a
               href={`mailto:${EMAIL}`}
-              className="tap-y inline-block break-all font-mono text-[clamp(1.125rem,2.4vw,1.5rem)] text-strong underline decoration-line-strong underline-offset-[6px] transition-colors hover:text-primary-ink hover:decoration-primary-soft"
+              className="home-close-mail tap-y inline-block break-all font-mono text-[clamp(1.125rem,2.4vw,1.5rem)] text-strong transition-colors hover:text-primary-ink"
             >
               {EMAIL}
             </a>

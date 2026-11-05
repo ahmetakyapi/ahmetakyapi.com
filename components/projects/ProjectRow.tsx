@@ -40,7 +40,7 @@ export function FeaturedRow({ project, priority = false }: { project: Project; p
     <li className="pfeat" data-group={project.group} style={{ '--card-tint': project.tint ?? project.accent } as CSSProperties}>
       <ArmedMorph
         name={`project-${project.slug}`}
-        className="pfeat-in tint-card reveal group relative"
+        className="pfeat-in tint-card edge-lit reveal group relative"
         coverClassName="pfeat-cover"
         coverHidden
         content={
@@ -96,7 +96,7 @@ export function ProjectRow({ project }: { project: Project }) {
     <li className="prow" data-group={project.group}>
       <ArmedMorph
         name={`project-${project.slug}`}
-        className="prow-in group relative"
+        className="prow-in row-sweep group relative"
         coverClassName="pprev"
         coverHidden
         content={
