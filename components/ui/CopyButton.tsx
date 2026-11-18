@@ -5,12 +5,12 @@ import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { buttonClass, type ButtonSize, type ButtonVariant } from '@/components/ui/Button'
 
 /**
- * Panoya kopyalama düğmesi.
+ * Panoya kopyalama butonu.
  *
  *   <CopyButton value="ahmetakyapii@gmail.com">E-postayı Kopyala</CopyButton>
  *   <CopyButton value={kod} variant="ghost" size="sm" copiedLabel="Kopyalandı" />
  *
- * Sonuç ekran okuyucuya `aria-live` ile söylenir (düğmenin kardeşi, gizli
+ * Sonuç ekran okuyucuya `aria-live` ile söylenir (butonun kardeşi, gizli
  * ve konumlu: yerleşime girmez); görsel etiket 1,8 sn
  * sonra eski hâline döner. Clipboard API yoksa (eski Safari, güvensiz
  * köken) gizli textarea yöntemine düşer; o da olmazsa "Tekrar Dene" der.
@@ -48,8 +48,8 @@ export function CopyButton({
 
   const message = state === 'copied' ? copiedLabel : state === 'error' ? 'Tekrar Dene' : null
 
-  /* Duyuru düğmenin DIŞINDA, hep yerinde bir bölgede ve yalnız sonuçta:
-     düğmenin içindeyken etiket eski hâline dönünce ("Adresi Kopyala") o da
+  /* Duyuru butonun DIŞINDA, hep yerinde bir bölgede ve yalnız sonuçta:
+     butonun içindeyken etiket eski hâline dönünce ("Adresi Kopyala") o da
      yeniden okunuyordu. */
   return (
     <>

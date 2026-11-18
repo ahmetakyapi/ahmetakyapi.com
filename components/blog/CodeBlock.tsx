@@ -3,7 +3,7 @@ import { CopyCode } from './CopyCode'
 
 /**
  * Kod bloğu, sunucuda boyanır: CodeHighlight artık istemci paketinde değil.
- * Başlık satırında dosya yolu (yoksa dil) ve kopyala düğmesi; gövde
+ * Başlık satırında dosya yolu (yoksa dil) ve kopyala butonu; gövde
  * yatayda kayar, satır kırılmaz (kodda kırılan satır yanlış okunur).
  */
 export function CodeBlock({ lang, text, file }: { lang: string; text: string; file?: string }) {

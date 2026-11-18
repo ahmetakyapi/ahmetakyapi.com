@@ -5,7 +5,7 @@ import type { MouseEvent } from 'react'
 import { cx } from '@/lib/utils'
 
 /**
- * Alt bilginin "Başa Dön" düğmesi.
+ * Alt bilginin "Başa Dön" butonu.
  *
  * Önceden düz bir `#main-content` bağlantısıydı ve iki sorunu vardı
  * (4 Ekim 2026, iPhone): hedef `<main>`in üstüydü, yapışkan başlık o
@@ -16,7 +16,7 @@ import { cx } from '@/lib/utils'
  * odak yüzünden bir daha kaymaz. JavaScript yoksa bağlantı eskisi gibi
  * çalışır.
  *
- * Görünüm: metin bağlantısı düğme olduğunu belli etmiyordu; çerçeveli bir
+ * Görünüm: metin bağlantısı buton olduğunu belli etmiyordu; çerçeveli bir
  * hap, oku dolu bir dairenin içinde.
  */
 export function BackToTop({ className }: { className?: string }) {

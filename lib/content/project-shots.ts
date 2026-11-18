@@ -14,9 +14,10 @@ import RENDITIONS from './shot-renditions.json'
  * - karalama, dungeon-mates ve ramazan-vakitleri yalnız KOYU temalı
  *   uygulamalar: iki dosya da koyu, o yüzden `themed: false` (tek görsel,
  *   ikisini indirmeye gerek yok).
- * - dev-starter: 2 Kasım 2026'da Storybook kataloğundan çekildi
- *   (dev-starter-storybook.vercel.app; masaüstü Giriş sayfası, ikinci
- *   masaüstü ve telefon Pusula panosu). Eskiden README afişi kapaktı.
+ * - dev-starter: 18 Kasım 2026'da Storybook kataloğundan yeniden çekildi
+ *   (dev-starter-storybook.vercel.app; masaüstü Tanıtım sayfası, ikinci
+ *   masaüstü ve telefon Pusula panosu, Signature paleti). 2 Kasım'daki
+ *   çekimde masaüstü Giriş sayfasıydı; eskiden README afişi kapaktı.
  * - ahmetakyapi-com: henüz yok (yeni site bitince çekilecek); tipografik kapak.
  * - Küçük kopyalar (srcset adayları): her asıl dosyanın yanında
  *   `<görünüm>-<tema>.w<genişlik>.webp`, genişlikler shot-renditions.json'da.

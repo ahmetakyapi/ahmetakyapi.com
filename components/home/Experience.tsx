@@ -20,7 +20,7 @@ import type { HomeContent } from '@/lib/site-content'
  * anlatacakken içinde ya yalnız sayılar ya da yarı saydam, okunmayan
  * kapaklar vardı. Şimdi kartın ortası bir FİLM ŞERİDİ: iki sıra net kapak,
  * ters yönde yavaşça akıyor, her kapağın altında projenin adı (home.css →
- * "Kendi Ürünlerim"). Üstünde başlık ve alanlar, altında iki ölçü ve düğme.
+ * "Kendi Ürünlerim"). Üstünde başlık ve alanlar, altında iki ölçü ve buton.
  * "Yayında" sayısı sahibinin isteğiyle kaldırıldı.
  *
  * Alan sayıları veriden HESAPLANIR (lib/content/projects.ts): proje

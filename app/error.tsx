@@ -15,7 +15,7 @@
  * oradaki `<main>` yok, atlama bağlantısının hedefi burada. "Ana Sayfa"
  * BİLEREK `Link` değil, düz `<a>`: tam yükleme hatalı durumu temizler.
  * İstemci gezintisi (`router.push('/')`, `Link`) sınırı yalnız adres
- * değişince sıfırlıyor; hata zaten /'deyken düğme hiçbir şey yapmıyordu.
+ * değişince sıfırlıyor; hata zaten /'deyken buton hiçbir şey yapmıyordu.
  *
  * Hata MESAJI gösterilmez: sunucu hatası dosya yolu ya da yanıt
  * taşıyabilir. Kullanıcının iletebileceği tek şey `digest`.

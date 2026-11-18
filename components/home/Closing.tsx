@@ -9,10 +9,10 @@ import type { HomeContent } from '@/lib/site-content'
 /**
  * Kapanış: dev başlık, tek cümle, e-posta ve sosyal bağlantılar.
  *
- * Birincil (degrade) düğme yok: sayfanın tek birincil eylemi hero'daki
+ * Birincil (degrade) buton yok: sayfanın tek birincil eylemi hero'daki
  * "Projeleri Gör". E-posta adresinin kendisi bağlantı (mailto); ayrıca bir
- * "E-posta Gönder" düğmesi aynı niyeti ikinci kez söylerdi. Posta
- * uygulaması kullanmayan için yanında kopyala düğmesi.
+ * "E-posta Gönder" butonu aynı niyeti ikinci kez söylerdi. Posta
+ * uygulaması kullanmayan için yanında kopyala butonu.
  */
 const ICON_LINK =
   'inline-grid size-11 place-items-center rounded-full border border-line text-body transition-colors hover:border-line-strong hover:text-strong'

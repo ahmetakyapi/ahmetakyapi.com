@@ -51,7 +51,7 @@ export const post: BlogPost = {
     },
     {
       type: 'p',
-      text: 'Çizim tarafı mantıksal olarak 480×270 piksellik küçük bir ekrana yapılıyor ve sonra büyütülüyor; piksel grafiğin keskinliği oradan geliyor. Zemin, dekor, loot, canavarlar, mermiler, oyuncular, parçacıklar ve görüş sisi ayrı katmanlarda çiziliyor. Cihaz yavaş kalırsa oyun kare hızını izleyip kaliteyi kendisi düşürüyor. Telefonda ekranda bir joystick ve düğmeler var.',
+      text: 'Çizim tarafı mantıksal olarak 480×270 piksellik küçük bir ekrana yapılıyor ve sonra büyütülüyor; piksel grafiğin keskinliği oradan geliyor. Zemin, dekor, loot, canavarlar, mermiler, oyuncular, parçacıklar ve görüş sisi ayrı katmanlarda çiziliyor. Cihaz yavaş kalırsa oyun kare hızını izleyip kaliteyi kendisi düşürüyor. Telefonda ekranda bir joystick ve butonlar var.',
     },
     {
       type: 'p',

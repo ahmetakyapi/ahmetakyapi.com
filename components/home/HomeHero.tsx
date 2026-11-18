@@ -12,7 +12,7 @@ import type { HomeContent } from '@/lib/site-content'
  * Hero: "Gece Mavisi" (3 Ekim 2026, sahibinin üç yön taslağından seçtiği).
  *
  * İki kolon, ilk ekranın tamamı: solda kimlik (unvan, isim, tek cümle, iki
- * düğme), sağda ilk sürümün etkileşimli küresi. Önceki tipografik hero
+ * buton), sağda ilk sürümün etkileşimli küresi. Önceki tipografik hero
  * (kenardan kenara isim, harf harf ağırlık dalgası) "editör sitesi gibi"
  * okunuyordu; sağ yarıya Açılış Zili ekranı da denendi ve reddedildi:
  * hero tek bir projeyi öne çıkarmamalı.

@@ -1,6 +1,6 @@
 /**
  * Tema sabitleri. Bu modül SAF: sunucu ve istemci ikisi de okur (çerez
- * adı tema düğmesinde, betik kök layout'ta lazım). `next/headers` burada
+ * adı tema butonunda, betik kök layout'ta lazım). `next/headers` burada
  * olsaydı istemci bu modülü içe aktaramazdı.
  *
  * Tema tek kaynaktan: çerez. Sayfalar STATİK: sunucu `<html data-theme>`

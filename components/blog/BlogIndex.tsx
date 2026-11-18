@@ -15,15 +15,15 @@ import { PostCover } from './PostCover'
  * (tarih, başlık, tek cümle, küçük kapak). Kart ızgarası değil: dokuz
  * yazının dokuz eş kutusu birbirinden ayırt edilmiyordu.
  *
- * ETİKET SÜZGECİ JAVASCRIPT'SİZ: her etiket bir radyo düğmesi, satırlar
- * `data-tag` taşıyor ve süzme `:has(:checked)` ile CSS'te. Sayfa statik
+ * ETİKET SÜZGECİ JAVASCRIPT'SİZ: her etiket bir radyo butonu, satırlar
+ * `data-tag` taşıyor ve filtreleme `:has(:checked)` ile CSS'te. Sayfa statik
  * kalıyor (adres parametresi okumak rotayı dinamik yapardı), istemciye
  * tek bayt inmiyor, ok tuşlarıyla gezinme radyo grubunun kendisinden.
  * `:has()` kökte değil dizinin kabında (`.bl-scope`): yalnızca o alt ağaç
  * yeniden hesaplanır. Seçim adreste durmuyor, bilerek: paylaşılacak bir
  * durum değil.
  *
- * Süzgeç DOKUZ yazının hepsine uygulanır, öne çıkan dahil. Önceden yalnız
+ * Filtre DOKUZ yazının hepsine uygulanır, öne çıkan dahil. Önceden yalnız
  * arşivi süzüyordu: başlıkta "9 Yazı", çipte "Tümü 8" yazıyordu ve etiket
  * sayıları öne çıkan yazıyı saymıyordu. Öne çıkan yazı seçili etikete
  * uymuyorsa gizlenir; çipler bu yüzden başlığın hemen altında, süzdükleri

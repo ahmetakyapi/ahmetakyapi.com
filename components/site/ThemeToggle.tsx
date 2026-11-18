@@ -7,12 +7,12 @@ import { readTheme, subscribeTheme, switchTheme } from '@/lib/theme-client'
 import { cx } from '@/lib/utils'
 
 /**
- * Tema düğmesi.
+ * Tema butonu.
  *
  *   <ThemeToggle />
  *
  * Tema `<html data-theme>` özniteliğinde yaşar; bileşen onu DİNLER, kendi
- * durumunu tutmaz. Böylece aynı sayfada iki düğme (başlık ve ⌘K) hep aynı
+ * durumunu tutmaz. Böylece aynı sayfada iki buton (başlık ve ⌘K) hep aynı
  * şeyi gösterir. Sunucu anlık görüntüsü varsayılan tema; THEME_SCRIPT
  * özniteliği önceden değiştirdiyse useSyncExternalStore hidrasyondan hemen
  * sonra doğru ikona geçer (`mounted` bekçisi gerekmez).
@@ -23,7 +23,7 @@ export function ThemeToggle({ className }: { className?: string }) {
   const label = next === 'light' ? 'Açık temaya geç' : 'Koyu temaya geç'
 
   function toggle(event: MouseEvent<HTMLButtonElement>) {
-    // Klavyeyle tetiklenen tıklamada koordinat yok (detail 0): düğmenin ortası.
+    // Klavyeyle tetiklenen tıklamada koordinat yok (detail 0): butonun ortası.
     const box = event.currentTarget.getBoundingClientRect()
     const x = event.detail > 0 ? event.clientX : box.left + box.width / 2
     const y = event.detail > 0 ? event.clientY : box.top + box.height / 2

@@ -8,14 +8,14 @@ import { ThemedImage } from '@/components/ui/ThemedImage'
 /**
  * Ekran görüntüsünü büyüten pencere: yerel `<dialog>`.
  *
- * Görseller ve tetikleyici düğmeler SUNUCUDA çiziliyor (sayfa statik, LCP
+ * Görseller ve tetikleyici butonlar SUNUCUDA çiziliyor (sayfa statik, LCP
  * görseli bu adayı beklemiyor); ada yalnızca pencereyi taşır ve
- * `[data-shot]` düğmelerine tıklamayı belgede yakalar. Ada yüklenmeden
- * tıklanan düğme hiçbir şey yapmaz, sayfa yine okunur.
+ * `[data-shot]` butonlarına tıklamayı belgede yakalar. Ada yüklenmeden
+ * tıklanan buton hiçbir şey yapmaz, sayfa yine okunur.
  *
  * Klavye: Esc kapatır (yerel), ←/→ görünümler arasında gezer, Tab pencerenin
  * içinde kalır (showModal belgenin geri kalanını etkisiz kılar). Kapanınca
- * odak açan düğmeye döner; tarayıcı bunu çoğunlukla kendisi yapıyor ama
+ * odak açan butona döner; tarayıcı bunu çoğunlukla kendisi yapıyor ama
  * her motorda değil, o yüzden elle de.
  */
 /** `alt`: ekran okuyucuya giden cümle. `caption`: pencerenin altındaki künye (Title Case). */
@@ -47,7 +47,7 @@ export function ShotViewer({ shots }: { shots: ViewerShot[] }) {
       setIndex(i)
       dialogRef.current?.showModal()
       /* Elle: `autoFocus` yalnız sunucu HTML'inde öznitelik oluyor; istemcide
-         gezinerek gelince pencere ilk düğmeye ("Önceki") odaklanıyordu. */
+         gezinerek gelince pencere ilk butona ("Önceki") odaklanıyordu. */
       closeRef.current?.focus()
     }
     document.addEventListener('click', onClick)
@@ -94,7 +94,7 @@ export function ShotViewer({ shots }: { shots: ViewerShot[] }) {
         </div>
         <figcaption className="flex w-full items-center justify-between gap-3" style={{ width }}>
           {/* Görünüm değişince künye okunur; şekil de yalnız künyeyle adlanır
-              (düğme etiketleri adına karışmasın). */}
+              (buton etiketleri adına karışmasın). */}
           <span id={captionId} aria-live="polite" className="min-w-0 truncate text-sm text-body">
             {shot.caption}
           </span>

@@ -103,13 +103,13 @@ export const post: BlogPost = {
     },
     {
       type: 'p',
-      text: 'Ekranın köşesindeki küçük düğme durumu sürekli söylüyor: koruma açıksa kaçıncı arkta olduğunu, açık ama ark seçilmemişse ark seçmen gerektiğini. Çalıştığını iddia etmeden önce gerçekten çalışıyor olması gerekiyor; bunu zor yoldan öğrendim.',
+      text: 'Ekranın köşesindeki küçük buton durumu sürekli söylüyor: koruma açıksa kaçıncı arkta olduğunu, açık ama ark seçilmemişse ark seçmen gerektiğini. Çalıştığını iddia etmeden önce gerçekten çalışıyor olması gerekiyor; bunu zor yoldan öğrendim.',
     },
 
     { type: 'h2', text: 'Perde Aylarca Hiçbir Şeyi Örtmemiş' },
     {
       type: 'p',
-      text: "Spoiler korumasını siteye eklediğim günden dört ay sonrasına kadar o köşedeki düğme yanlış bilgi verdi. Koruma düz bir React hook'uydu ve onu çağıran her bileşen kendi state'ini kuruyordu. Düğmenin bir kopyası vardı, listedeki her ark kartının da ayrı bir kopyası. Düğmeden ark seçince yalnızca düğmenin kopyası değişiyordu. Düğme \"Spoiler: 14/36\" yazıyor, kartlar ise sayfa yenilenene kadar hiçbir şeyi gizlemiyordu.",
+      text: "Spoiler korumasını siteye eklediğim günden dört ay sonrasına kadar o köşedeki buton yanlış bilgi verdi. Koruma düz bir React hook'uydu ve onu çağıran her bileşen kendi state'ini kuruyordu. Butonun bir kopyası vardı, listedeki her ark kartının da ayrı bir kopyası. Butondan ark seçince yalnızca butonun kopyası değişiyordu. Buton \"Spoiler: 14/36\" yazıyor, kartlar ise sayfa yenilenene kadar hiçbir şeyi gizlemiyordu.",
     },
     {
       type: 'compare',

@@ -4,7 +4,7 @@ import type { ReactNode } from 'react'
 import { ButtonLink } from '@/components/ui/Button'
 
 /**
- * Hero'nun "İletişime Geç" düğmesi: kaydırma Next'in, odak burada.
+ * Hero'nun "İletişime Geç" butonu: kaydırma Next'in, odak burada.
  *
  * Next 16 çapaya yalnız kaydırıyor, odağa dokunmuyor: Enter'dan sonra odak
  * hero'da kalıyor, sonraki Tab sayfayı Hakkımda'ya geri atıyordu. Düz

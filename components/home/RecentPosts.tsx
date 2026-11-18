@@ -37,7 +37,7 @@ export function RecentPosts({ posts }: { posts: BlogPost[] }) {
         title={<MaskTitle accentLast>Son Yazılar</MaskTitle>}
         size="home"
         action={
-          /* Eksi yatay pay düğmenin iç boşluğu kadar: yazı listenin
+          /* Eksi yatay pay butonun iç boşluğu kadar: yazı listenin
              kenarıyla aynı hatta biter (masaüstünde sağ, telefonda sol
              kenar; önce 16 piksel içerideydi). */
           <ButtonLink href="/blog" variant="ghost" className="-mx-4">

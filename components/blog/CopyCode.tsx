@@ -6,11 +6,11 @@ import { buttonClass } from '@/components/ui/Button'
 import { copyText } from '@/components/ui/CopyButton'
 
 /**
- * Kod bloğunun kopyala düğmesi: yazı sayfasının üç istemci adacığından biri.
+ * Kod bloğunun kopyala butonu: yazı sayfasının üç istemci adacığından biri.
  *
  * Kodu prop olarak ALMAZ, kendi bloğunun `<pre>`sinden okur. Prop olarak
  * verilseydi her kod bloğu sayfaya iki kez inerdi: bir kez HTML'de, bir kez
- * de RSC yükünde bu düğmenin argümanı olarak.
+ * de RSC yükünde bu butonun argümanı olarak.
  */
 const RESET_MS = 1800
 

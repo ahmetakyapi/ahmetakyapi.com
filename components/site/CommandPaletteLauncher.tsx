@@ -11,7 +11,7 @@ import { NAV_ITEMS } from '@/lib/nav'
  *
  *   <CommandPaletteLauncher projects={…} posts={…} />   // (site)/layout.tsx
  *
- * Açılış yolları: ⌘K / Ctrl+K, başlıktaki düğme (`command-palette:open`
+ * Açılış yolları: ⌘K / Ctrl+K, başlıktaki buton (`command-palette:open`
  * olayı) ve G H / G P / G B kısayolları (iki tuş, 800 ms içinde).
  *
  * Paletin kendisi (ikonlar, arama, liste) tembel: tarayıcı boşta kalınca

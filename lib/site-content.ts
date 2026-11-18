@@ -55,7 +55,7 @@ export const defaultHomeContent: HomeContent = {
      gibi zamanla eskiyen bir satır da kimliğin önüne geçiyordu. Künye
      kalktı, alanları da (`now`, `stack`): bağlantılar kapanışta ve alt
      bilgide, tech stack kendi marquee'sinde. Hero yalnız isim, unvan, bu
-     cümle ve iki düğme. */
+     cümle ve iki buton. */
   /* Hero cümlesi (4 Ekim 2026, üçüncü sürüm): sahibinin kendi metni, iki
      cümleye sıkıştırılmış hâli. İkinci sürümün gerekçesi aşağıda.
      Hero cümlesi (3 Ekim 2026, ikinci sürüm). Önceki "fikirden yayına

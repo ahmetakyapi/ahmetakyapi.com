@@ -32,8 +32,8 @@ function currentOf(pathname: string, href: string) {
  * azaltılmışsa opak). Rota geçişinde başlık sabit kalır (`.vt-header`).
  *
  * Mobil menü: açılınca odak ilk öğeye (arama) gider, Tab menünün içinde
- * döner (menü düğmesi dahil), Esc ve dışarı tıklama kapatır, kapanınca
- * odak menü düğmesine döner. Menü açıldığı adrese bağlı: gezinme olunca
+ * döner (menü butonu dahil), Esc ve dışarı tıklama kapatır, kapanınca
+ * odak menü butonuna döner. Menü açıldığı adrese bağlı: gezinme olunca
  * kendiliğinden kapanır (efekt içinde durum yazmadan).
  *
  * Telefonda arama mobil menünün başında (14 Ekim 2026): ⌘K hapı yalnız
@@ -131,8 +131,8 @@ export function Header() {
     focusables[(nextIndex + focusables.length) % focusables.length]?.focus()
   }
 
-  /* Menüden açılınca odak önce menü düğmesine döner: palet kapanınca
-     odağı açıldığı öğeye geri veriyor ve menüdeki düğme o an sökülmüş
+  /* Menüden açılınca odak önce menü butonuna döner: palet kapanınca
+     odağı açıldığı öğeye geri veriyor ve menüdeki buton o an sökülmüş
      olurdu (odak sayfanın başına düşerdi). */
   function openPalette(fromMenu = false) {
     if (fromMenu) closeMenu(true)
@@ -222,7 +222,7 @@ export function Header() {
             aria-label="Mobil gezinme"
             className="overflow-hidden rounded-card border border-line bg-surface-solid p-2 shadow-floating"
           >
-            {/* Arama kutusu görünümünde düğme: dokununca menü kapanır, ⌘K
+            {/* Arama kutusu görünümünde buton: dokununca menü kapanır, ⌘K
                 paleti açılır (yazmaya hazır). Metin paletin kendi arama
                 kutusuyla aynı. Odak döngüsünde (onMenuKeyDown) ilk sırada. */}
             <button

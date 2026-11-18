@@ -16,7 +16,7 @@ export const post: BlogPost = {
   content: [
     {
       type: 'lead',
-      text: 'Bu sitenin sağ üstünde bir tema düğmesi var. Tıkladığın noktadan yeni tema bir daire gibi büyüyor, sayfa yenilenince de aynı tema geliyor, ilk karede bile yanlış renk görünmüyor. Bu yazı o küçük düğmenin arkasındaki düzeni anlatıyor: tema nerede duruyor, renkler nereden geliyor ve bu düzeni kurmadan önce koyu temanın yer yer açık temanın renkleriyle çizilmesine yol açan hata neydi.',
+      text: 'Bu sitenin sağ üstünde bir tema butonu var. Tıkladığın noktadan yeni tema bir daire gibi büyüyor, sayfa yenilenince de aynı tema geliyor, ilk karede bile yanlış renk görünmüyor. Bu yazı o küçük butonun arkasındaki düzeni anlatıyor: tema nerede duruyor, renkler nereden geliyor ve bu düzeni kurmadan önce koyu temanın yer yer açık temanın renkleriyle çizilmesine yol açan hata neydi.',
     },
 
     { type: 'h2', text: 'Tema Bugün Nasıl Çalışıyor' },
@@ -25,7 +25,7 @@ export const post: BlogPost = {
       items: [
         {
           title: 'Tercih Çerezde',
-          text: 'Tema düğmesine basınca sayfa anında değişiyor; çerezi de tarayıcı kendisi yazıyor, sunucuya hiç gidilmiyor.',
+          text: 'Tema butonuna basınca sayfa anında değişiyor; çerezi de tarayıcı kendisi yazıyor, sunucuya hiç gidilmiyor.',
         },
         {
           title: 'İlk Boyamadan Önce Okunuyor',
@@ -146,7 +146,7 @@ document.documentElement.dataset.theme = m ? m[1] : 'light'`,
     },
     {
       type: 'p',
-      text: 'Tema düğmesi de kendi durumunu tutmuyor; `<html>` üstündeki özniteliği dinliyor. Böylece başlıktaki düğme ile komut paletindeki düğme hep aynı şeyi gösteriyor ve sayfa açılırken bir an yanlış ikon görünüp sonra değişmiyor.',
+      text: 'Tema butonu da kendi durumunu tutmuyor; `<html>` üstündeki özniteliği dinliyor. Böylece başlıktaki buton ile komut paletindeki buton hep aynı şeyi gösteriyor ve sayfa açılırken bir an yanlış ikon görünüp sonra değişmiyor.',
     },
 
     { type: 'h2', text: 'Baştan Yapsam' },

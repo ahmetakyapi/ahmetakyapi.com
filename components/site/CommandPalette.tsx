@@ -29,7 +29,7 @@ import { readTheme, subscribeTheme, switchTheme } from '@/lib/theme-client'
  * kelimeler (tech stack) de aranır.
  *
  * Dokunmatikte klavye ipuçları (Esc, ↑↓) yok; yerine görünür bir Kapat
- * düğmesi var (telefonda Esc tuşu yok, örtüye dokunmak tek yoldu).
+ * butonu var (telefonda Esc tuşu yok, örtüye dokunmak tek yoldu).
  */
 export type PaletteLink = {
   title: string

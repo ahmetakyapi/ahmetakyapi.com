@@ -35,7 +35,7 @@ export const metadata: Metadata = {
  * açılışla gelir (MaskTitle), bölümler birbirine bağlanır.
  *
  * Tamamı sunucu bileşeni. İstemciye giden adalar: küre, "İletişime Geç"
- * düğmesi (odağı kapanışa taşır), e-posta kopyalama düğmesi ve döngüleri
+ * butonu (odağı kapanışa taşır), e-posta kopyalama butonu ve döngüleri
  * ekran dışında bekleten PauseOffscreen. Bölüm hareketlerinin hepsi CSS
  * (./home.css); rota statik kalır.
  */

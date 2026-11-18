@@ -15,7 +15,7 @@ import { EMAIL, JOB_TITLE, NAV_ITEMS, SOCIAL_LINKS } from '@/lib/nav'
  *
  * E-posta artık ikon (4 Ekim 2026): adresin tamamı yazılıydı ve satırın
  * en uzun öğesi oydu; adres kapanış bölümünde zaten büyük ve kopyalanabilir
- * duruyor. Bütün bağlantılar aynı yuvarlak düğme, erişilebilir adı
+ * duruyor. Bütün bağlantılar aynı yuvarlak buton, erişilebilir adı
  * `aria-label`dan.
  *
  * Kontrast: künye `text-muted` (açıkta #536477 / zemin ≈ 5,4:1).

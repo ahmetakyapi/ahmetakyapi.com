@@ -319,7 +319,7 @@ const EXTERNAL = { target: '_blank', rel: 'noopener noreferrer' } as const
 
 /**
  * Başlığın hemen altında, ilk bakışta görünen eylemler: canlı site birincil
- * düğme, kaynak kod ikincil. Eskiden künyenin üçüncü sütununda altı çizili
+ * buton, kaynak kod ikincil. Eskiden künyenin üçüncü sütununda altı çizili
  * küçük bağlantılardı ve gözden kaçıyordu.
  */
 function ProjectLinks({ project }: { project: Project }) {

@@ -15,7 +15,7 @@ import { similarity } from '@/lib/search'
  * listede baştan bulmak zorundaydı.
  *
  * Sayfa statik, adres yalnız tarayıcıda biliniyor: öneri hidrasyondan sonra
- * belirir (sunucuda ve JavaScript yokken hiçbir şey çizmez). Düğmelerin
+ * belirir (sunucuda ve JavaScript yokken hiçbir şey çizmez). Butonların
  * ALTINA asılır (`absolute`, akışın dışında): ortalanmış blok onunla
  * yeniden ortalanıp yukarı kaymaz (mobilde 84 px, CLS 0,05 ölçülmüştü).
  * Yeterince benzer bir şey yoksa (eşik 0,5) öneri yok: alakasız bir

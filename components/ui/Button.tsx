@@ -3,7 +3,7 @@ import type { ComponentProps } from 'react'
 import { cx } from '@/lib/utils'
 
 /**
- * Düğme görünümlü bağlantı ve düğme sınıfı.
+ * Buton görünümlü bağlantı ve buton sınıfı.
  *
  *   <ButtonLink href="/projeler" variant="primary" size="lg">Projeleri Gör</ButtonLink>
  *   <ButtonLink href="https://github.com/…" external>Kaynak Kod</ButtonLink>
