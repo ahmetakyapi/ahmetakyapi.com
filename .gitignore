@@ -14,3 +14,6 @@ pnpm-debug.log*
 
 .DS_Store
 
+
+# `next dev` bu dosyayı kendiliğinden yazar; repoya girmesin (18 Kasım 2026).
+AGENTS.md
