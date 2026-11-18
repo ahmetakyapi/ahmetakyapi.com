@@ -1,7 +1,7 @@
 import type { BlogPost } from '../types'
 
 /*
- * 9 Ekim 2026'da baştan yazıldı. Önceki hâli doğrudan şemaya ve hata avına
+ * 9 Ekim 2026'da baştan yazıldı. Önceki hali doğrudan şemaya ve hata avına
  * giriyordu; sahibinin isteği: yazı önce sitenin ne olduğunu, kimin için
  * yapıldığını ve nasıl kurulduğunu anlatsın, teknik kararlar ondan sonra
  * gelsin. Dil günlük konuşma dili.
@@ -63,7 +63,7 @@ export const post: BlogPost = {
         },
         {
           title: 'Senin Tarafın',
-          text: "Takip listeleri, yalnızca kendi şirketlerinin bilanço takvimi, alış günü kuruyla TL kâr-zarar tutan bir portföy ve yurt dışı hisse vergisini hesaplayan bir araç.",
+          text: "Takip listeleri, yalnızca kendi şirketlerinin bilanço takvimi, alış günü kuruyla TL kar-zarar tutan bir portföy ve yurt dışı hisse vergisini hesaplayan bir araç.",
         },
       ],
     },
@@ -157,7 +157,7 @@ type FailReason = "missing-key" | "rate-limited" | "not-found" | "upstream-error
     },
     {
       type: 'p',
-      text: 'Çözüm oranı hiç saklamamak oldu. Veritabanında oranın böleni duruyor, mesela son dört çeyreğin hisse başına kârı; oranı sayfa, o anki fiyatla kendisi hesaplıyor. Okuyan kişi isterse çarpıp doğrulayabiliyor. Aynı mantıkla büyüme oranının yanına "hangi büyüme" sorusunun cevabını da ayrı bir alan olarak koydum, çünkü aynı şirket için iki kaynağa baktığımda biri ileriye dönük tahmini, öteki son on iki ayı kullanıyordu ve PEG değerleri üç kat farklıydı.',
+      text: 'Çözüm oranı hiç saklamamak oldu. Veritabanında oranın böleni duruyor, mesela son dört çeyreğin hisse başına karı; oranı sayfa, o anki fiyatla kendisi hesaplıyor. Okuyan kişi isterse çarpıp doğrulayabiliyor. Aynı mantıkla büyüme oranının yanına "hangi büyüme" sorusunun cevabını da ayrı bir alan olarak koydum, çünkü aynı şirket için iki kaynağa baktığımda biri ileriye dönük tahmini, öteki son on iki ayı kullanıyordu ve PEG değerleri üç kat farklıydı.',
     },
     {
       type: 'callout',
@@ -218,13 +218,13 @@ type FailReason = "missing-key" | "rate-limited" | "not-found" | "upstream-error
     },
     {
       type: 'p',
-      text: 'Bu sayılar yazının yazıldığı güne ait; site o günden beri büyümeye devam etti. Güncel hâli için projeler sayfasındaki karta bakabilirsin.',
+      text: 'Bu sayılar yazının yazıldığı güne ait; site o günden beri büyümeye devam etti. Güncel hali için projeler sayfasındaki karta bakabilirsin.',
     },
 
     { type: 'h2', text: 'Geriye Dönüp Bakınca' },
     {
       type: 'p',
-      text: "Veri çekmek işin en kolay kısmıydı; dört API, birkaç fetch. Zor olan o verinin doğru hâliyle ekrana çıkması. Yanlış bir sayı siteyi çökertmiyor, sadece güvenilmez yapıyor ve bunu fark etmek günler sürebiliyor. Kaydedilen oranın ertesi gün eskimesi, Brent kartının bir haftalık fiyatı bugünmüş gibi göstermesi, hiçbir hata vermeden oldu.",
+      text: "Veri çekmek işin en kolay kısmıydı; dört API, birkaç fetch. Zor olan o verinin doğru haliyle ekrana çıkması. Yanlış bir sayı siteyi çökertmiyor, sadece güvenilmez yapıyor ve bunu fark etmek günler sürebiliyor. Kaydedilen oranın ertesi gün eskimesi, Brent kartının bir haftalık fiyatı bugünmüş gibi göstermesi, hiçbir hata vermeden oldu.",
     },
     {
       type: 'p',

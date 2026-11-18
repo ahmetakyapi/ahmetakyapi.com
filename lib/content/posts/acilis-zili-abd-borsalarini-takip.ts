@@ -47,7 +47,7 @@ export const post: BlogPost = {
     { type: 'h2', text: 'Doğru Gün' },
     {
       type: 'p',
-      text: 'İkinci karar daha az görünür ama daha pahalıya mal oldu. Takvim günü ile seans günü aynı şey değil. Cumartesi siteyi açan biri cumayı görmeli. New York\'ta çarşamba gecesi saat ikide hâlâ salı seansı konuşuluyor. Tatil olan bir pazartesi önceki cumayı taşıyor.',
+      text: 'İkinci karar daha az görünür ama daha pahalıya mal oldu. Takvim günü ile seans günü aynı şey değil. Cumartesi siteyi açan biri cumayı görmeli. New York\'ta çarşamba gecesi saat ikide hala salı seansı konuşuluyor. Tatil olan bir pazartesi önceki cumayı taşıyor.',
     },
     {
       type: 'table',
@@ -146,7 +146,7 @@ export const post: BlogPost = {
     },
     {
       type: 'p',
-      text: 'Sıradaki soru, henüz yakalamadığım bir yanlış takip hâlinin nerede durduğu. Tahminim şu: onu da bir okurun ekranında, hiçbir hata mesajı görmeden bulacağım.',
+      text: 'Sıradaki soru, henüz yakalamadığım bir yanlış takip halinin nerede durduğu. Tahminim şu: onu da bir okurun ekranında, hiçbir hata mesajı görmeden bulacağım.',
     },
   ],
 }

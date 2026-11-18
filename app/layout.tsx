@@ -53,7 +53,7 @@ export const metadata: Metadata = {
   title: { default: DEFAULT_TITLE, template: `%s · ${SITE_NAME}` },
   description: SITE_DESCRIPTION,
   applicationName: SITE_NAME,
-  keywords: ['Full-Stack Developer', 'AI Developer', 'Yapay Zekâ', 'Frontend', 'React', 'Next.js', 'TypeScript', 'Claude API', 'Ahmet Akyapı'],
+  keywords: ['Full-Stack Developer', 'AI Developer', 'Yapay Zeka', 'Frontend', 'React', 'Next.js', 'TypeScript', 'Claude API', 'Ahmet Akyapı'],
   authors: [{ name: SITE_NAME, url: SITE_URL }],
   creator: SITE_NAME,
   /* canonical burada TANIMLI DEĞİL: kökte '/' yazılıydı ve Next metadata'yı

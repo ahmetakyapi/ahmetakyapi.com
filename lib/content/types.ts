@@ -59,7 +59,7 @@ export type Block =
   | { type: 'table'; head: string[]; rows: string[][] }
   /** Rakam ızgarası: büyük değer, altında etiketi. */
   | { type: 'stats'; label?: string; items: { value: string; note: string }[] }
-  /** İki hâlin karşılaştırması: öncesi / sonrası. */
+  /** İki halin karşılaştırması: öncesi / sonrası. */
   | {
       type: 'compare'
       label?: string

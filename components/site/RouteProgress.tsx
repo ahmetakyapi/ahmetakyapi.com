@@ -14,7 +14,7 @@ import { SketchMark } from '@/components/ui/Sketch'
  * altında biter. Her tıklamada yanıp sönen bir çizgi arayüzü seğiriyor gibi
  * gösterirdi; çizgi yalnız okuyucu gerçekten bekliyorsa çıkar.
  * Yüzde göstermez (kalan süreyi bilmiyoruz). Desen Açılış Zili'nden
- * (components/layout/RouteProgress.tsx), sadeleşmiş hâli.
+ * (components/layout/RouteProgress.tsx), sadeleşmiş hali.
  *
  * Bağlantılar tek tek sarılmıyor: belge yakalama evresinde dinleniyor,
  * sunucu bileşenlerindeki `<Link>`ler de kapsanıyor. Aynı yolun yalnız

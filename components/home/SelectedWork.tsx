@@ -23,7 +23,7 @@ import type { HomeContent } from '@/lib/site-content'
  * sahibinin seçtiği "B": beyaz üstü beyaz kartlar birbirinden ayrılmıyordu).
  *
  * Görseller `project-<slug>` adını TAŞIMAZ: paneller kaydırmayla küçülüyor
- * (transform) ve morfun başlangıç kutusu o an ölçülen küçülmüş hâl olurdu.
+ * (transform) ve morfun başlangıç kutusu o an ölçülen küçülmüş hal olurdu.
  * Ana sayfadan proje sayfasına morf yok; bilinçli takas.
  */
 

@@ -98,13 +98,13 @@ export const post: BlogPost = {
     .replace(/İ/g, 'i')
     .replace(/I/g, 'ı')
     .toLowerCase()
-    .replace(/[^a-zçğıöşüâîû\\s]/g, '')
+    .replace(/[^a-zçğıöşüaiu\\s]/g, '')
     .trim()
 }`,
     },
     {
       type: 'p',
-      text: 'Sondaki temizlik noktalamayı ve rakamları siliyor; şapkalı harfler listede, çünkü havuzda "rüzgâr" ve "yapay zekâ" gibi kelimeler var. Bugün yazsam harfleri elle değiştirmezdim: `toLocaleLowerCase("tr-TR")` aynı işi tek çağrıda yapıyor. O iki satır, dile göre çalışan bir fonksiyonun elle yazılmış hâli.',
+      text: 'Sondaki temizlik noktalamayı ve rakamları siliyor; şapkalı harfler listede, çünkü havuzda "rüzgar" ve "yapay zeka" gibi kelimeler var. Bugün yazsam harfleri elle değiştirmezdim: `toLocaleLowerCase("tr-TR")` aynı işi tek çağrıda yapıyor. O iki satır, dile göre çalışan bir fonksiyonun elle yazılmış hali.',
     },
 
     { type: 'h3', text: 'Yakın Tahmin' },

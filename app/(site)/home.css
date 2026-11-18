@@ -6,7 +6,7 @@
      1. `@supports`: tarayıcı desteklemiyorsa blok hiç uygulanmaz ve içerik
         olduğu gibi, durağan görünür.
      2. `prefers-reduced-motion: no-preference`: hareketi kapatan okuyucu
-        bütün içeriği ilk karede, son hâliyle görür.
+        bütün içeriği ilk karede, son haliyle görür.
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -328,7 +328,7 @@
 
 /* --------------------------------------------------------------------------
    Seçili İşler: sticky-stack.
-   Düz hâl (varsayılan): alt alta üç panel. Kart zemini opak; panel üst
+   Düz hal (varsayılan): alt alta üç panel. Kart zemini opak; panel üst
    üste bindiğinde alttaki görünmesin diye tonu zemin üstüne bindiriyoruz.
    -------------------------------------------------------------------------- */
 .home-stack {
@@ -361,7 +361,7 @@
 /* Örtü yalnız görseli karartır, metin sütunu örtünün ÜSTÜNDE kalır.
    Ölçüldü: sessiz künye (`--text-muted`) kart zemininde açık temada 5,01,
    koyuda 5,86; zemin renginde %10'luk örtü bile açıkta 4,08'e indiriyordu
-   ve sonraki panel gelirken künye hâlâ görünür durumda (1280×800'de
+   ve sonraki panel gelirken künye hala görünür durumda (1280×800'de
    örtünün bittiği anda üst 144 piksel açıkta). Görsel kararıyor, metin
    AA'da kalıyor. */
 .home-stack-card > :not(.home-stack-media, .tint-card-glow, .pointer-sheen) {
@@ -422,7 +422,7 @@
     /* Önceki panelin zamanlayıcısı SONRAKİ panelin girişi: sonraki alttan
        girmeye başlayınca küçülme başlar, tamamen girince biter. Kararma
        girişin son %40'ında: sonraki panel ekranın alt yarısındayken önceki
-       hâlâ okunuyor ve kararmıyor (eskiden ilk pikselde başlıyordu). */
+       hala okunuyor ve kararmıyor (eskiden ilk pikselde başlıyordu). */
     .home-stack-item:nth-child(1) .home-stack-card,
     .home-stack-item:nth-child(2) .home-stack-card {
       animation: home-stack-recede linear both;
@@ -596,7 +596,7 @@
 /* --------------------------------------------------------------------------
    Bölüm başlıkları: maskeli açılış (components/home/MaskTitle.tsx).
    Neden: her bölüm aynı hareketle başlar; ana sayfa ayrı kutular değil, bir
-   hikâyenin sıradaki başlıkları gibi okunur. Başlık ekranın alt kenarından
+   hikayenin sıradaki başlıkları gibi okunur. Başlık ekranın alt kenarından
    girerken yükselir, ekranın alt üçte birini geçmeden yerine oturur:
    okuyucu hareketli bir başlık okumak zorunda kalmaz.
    -------------------------------------------------------------------------- */
@@ -656,7 +656,7 @@
   isolation: isolate;
   /* Bloğun tonu. Açıkta çukur yüzey; koyuda çukur yüzey (zemine %30 siyah)
      neredeyse siyah zeminle aynı tonda kalıyor ve blok görünmüyordu
-     (3 Ekim 2026). Koyuda zeminin bir tık açık, mavimsi hâli. */
+     (3 Ekim 2026). Koyuda zeminin bir tık açık, mavimsi hali. */
   --about-tone: var(--surface-sunken);
 }
 :root[data-theme="dark"] .home-about {
@@ -1176,7 +1176,7 @@
 /* --------------------------------------------------------------------------
    İş Deneyimi, koyu tema (4 Ekim 2026: "özellikle dark temada eksiklikler
    var"). Açık temanın kuralları koyuda üç yerde tutmuyordu:
-     - İkon karosu tonun açık hâlinde, ikon beyaz: kontrast yok denecek
+     - İkon karosu tonun açık halinde, ikon beyaz: kontrast yok denecek
        kadar düşüktü. Koyuda karo tonun koyu bir yıkaması, ikon tonun
        kendisi ve ince bir ton kenarı.
      - Kart zeminle aynı karanlıkta kayboluyordu. Üstte tonun ince bir ışık

@@ -487,7 +487,7 @@
   }
 
   /* Üstünde durulan satır öne çıkar, ötekiler bir ton geri çekilir. Geri
-     çekilen adlar hâlâ bağlantı: büyük metnin 3:1'i korunur. 0,45'te açık
+     çekilen adlar hala bağlantı: büyük metnin 3:1'i korunur. 0,45'te açık
      temada 2,3:1'e düşüyordu; 0,7'de degradenin ilk yarısı (kısa adların
      tamamı) açıkta 3:1, koyuda 6:1'in üstünde. */
   .prow-list:hover .prow-in:not(:hover) .prow-title {
@@ -607,7 +607,7 @@
 
 /* --- Morfun hedefi geçiş anında görünür olsun ------------------------------
    React paylaşılan öğe çiftini COMMIT ANINDA kurar ve yeni öğenin görünüm
-   alanında olmasını şart koşar. O anda sayfa hâlâ ESKİ kaydırma konumunda
+   alanında olmasını şart koşar. O anda sayfa hala ESKİ kaydırma konumunda
    (Next başa kaydırmayı commit'ten sonra yapıyor): dizinde ikinci satırdaki
    bir karta tıklayan okur 900 piksel aşağıdaydı, yeni sayfanın en üstteki
    kahramanı ekranın dışında kalıyor ve morf hiç oynamıyordu (ölçüldü:

@@ -101,7 +101,7 @@ export function personJsonLd() {
     jobTitle: JOB_TITLE,
     description: SITE_DESCRIPTION,
     email: `mailto:${EMAIL}`,
-    knowsAbout: ['React', 'Next.js', 'TypeScript', 'Angular', 'PostgreSQL', 'Tailwind CSS', 'Claude API', 'Yapay Zekâ'],
+    knowsAbout: ['React', 'Next.js', 'TypeScript', 'Angular', 'PostgreSQL', 'Tailwind CSS', 'Claude API', 'Yapay Zeka'],
     sameAs: SOCIAL_LINKS.map((link) => link.href),
   }
 }

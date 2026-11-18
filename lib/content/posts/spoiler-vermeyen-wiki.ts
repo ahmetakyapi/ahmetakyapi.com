@@ -10,7 +10,7 @@ export const post: BlogPost = {
   content: [
     {
       type: 'lead',
-      text: "One Piece Hub, One Piece evrenini Türkçe gezmek için yaptığım bir fan sitesi. Binden fazla bölümü arklara göre düzenliyor, filler bölümleri ayıklıyor, karakterleri, şeytan meyvelerini ve büyük savaşları tek bir yerde topluyor ve en önemlisi, kaldığın yerden sonrasını sana göstermiyor. Çünkü bir wiki her şeyi bilir ve seriyi 300. bölümde izleyen birine 900. bölümdeki olayı göstermek, yıllardır takip ettiği hikâyeyi elinden almak demek.",
+      text: "One Piece Hub, One Piece evrenini Türkçe gezmek için yaptığım bir fan sitesi. Binden fazla bölümü arklara göre düzenliyor, filler bölümleri ayıklıyor, karakterleri, şeytan meyvelerini ve büyük savaşları tek bir yerde topluyor ve en önemlisi, kaldığın yerden sonrasını sana göstermiyor. Çünkü bir wiki her şeyi bilir ve seriyi 300. bölümde izleyen birine 900. bölümdeki olayı göstermek, yıllardır takip ettiği hikayeyi elinden almak demek.",
     },
     {
       type: 'p',
@@ -162,7 +162,7 @@ export const post: BlogPost = {
     },
     {
       type: 'p',
-      text: 'Perdenin kapsamı da hâlâ dar. Bugün yalnızca ark listesindeki kartlarda çalışıyor. Karakterlerin ilk göründüğü ark veride var ama karakter sayfaları perdeye bağlı değil. Yani bir karakter sayfasını açıp sağ üstte "Durum: Ölü" görmek hâlâ mümkün. Sıradaki iş o.',
+      text: 'Perdenin kapsamı da hala dar. Bugün yalnızca ark listesindeki kartlarda çalışıyor. Karakterlerin ilk göründüğü ark veride var ama karakter sayfaları perdeye bağlı değil. Yani bir karakter sayfasını açıp sağ üstte "Durum: Ölü" görmek hala mümkün. Sıradaki iş o.',
     },
   ],
 }

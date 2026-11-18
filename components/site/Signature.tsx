@@ -8,7 +8,7 @@ import { cx } from '@/lib/utils'
  * başlıklardaki mürekkeple aynı degrade (`--sig-from` → `--sig-to`).
  *
  * Sayfa açılınca imza soldan sağa "yazılır" (globals.css → `.signature`):
- * kalem kâğıtta ilerliyormuş gibi bir maske açılır. Başlık rota
+ * kalem kağıtta ilerliyormuş gibi bir maske açılır. Başlık rota
  * değişince yeniden çizilmediği için yalnız ilk açılışta oynar.
  * Dekoratif; erişilebilir ad onu saran bağlantıda.
  */

@@ -4,7 +4,7 @@ import type { BlogPost } from '../types'
  * 9 Ekim 2026: yazı yalnız eski bir Tailwind v3 hatasını anlatıyordu ve
  * sitenin bugünkü tema düzeniyle (çerez + data-theme, v4 tokenları)
  * çelişiyordu. Şimdi önce temanın bugün nasıl çalıştığını anlatıyor, hata
- * ise "neden böyle kurdum"un hikâyesi olarak kalıyor.
+ * ise "neden böyle kurdum"un hikayesi olarak kalıyor.
  */
 export const post: BlogPost = {
   slug: 'tailwindcss-dark-tema-tasarimi',
@@ -37,7 +37,7 @@ export const post: BlogPost = {
         },
         {
           title: 'Görseller İki Kez Çekildi',
-          text: 'Her proje görselinin açık ve koyu hâli sayfada duruyor; hangisinin görüneceğine CSS karar veriyor. JavaScript beklenmiyor.',
+          text: 'Her proje görselinin açık ve koyu hali sayfada duruyor; hangisinin görüneceğine CSS karar veriyor. JavaScript beklenmiyor.',
         },
       ],
     },
@@ -47,7 +47,7 @@ export const post: BlogPost = {
       file: 'app/globals.css',
       text: `:root {
   --page-bg: #e3e9f0;      /* zemin */
-  --surface: #edf1f6;      /* kart: zeminden açık, masadaki kâğıt */
+  --surface: #edf1f6;      /* kart: zeminden açık, masadaki kağıt */
   --surface-sunken: #dce5ef;
   --line: rgb(16 32 52 / 0.11);
   --text-strong: #0e1a28;
@@ -75,7 +75,7 @@ export const post: BlogPost = {
     { type: 'h2', text: 'Hata: Hiç CSS Üretmeyen Sınıflar' },
     {
       type: 'p',
-      text: "Sitenin ilk hâli Tailwind v3 ile yazılmıştı. Ana sayfanın üst bölümünde ince bir ayırıcı çizgi vardı ve koyu temada neredeyse beyaz, tam opak bir çizgi olarak çiziliyordu. Sebebi, koyu tema için yazdığım sınıfın CSS'te hiç karşılığı olmamasıydı.",
+      text: "Sitenin ilk hali Tailwind v3 ile yazılmıştı. Ana sayfanın üst bölümünde ince bir ayırıcı çizgi vardı ve koyu temada neredeyse beyaz, tam opak bir çizgi olarak çiziliyordu. Sebebi, koyu tema için yazdığım sınıfın CSS'te hiç karşılığı olmamasıydı.",
     },
     {
       type: 'p',
@@ -140,7 +140,7 @@ export const post: BlogPost = {
       type: 'code',
       lang: 'ts',
       file: 'lib/theme.ts',
-      text: `// <head> içinde, her şeyden önce çalışır (sadeleştirilmiş hâli).
+      text: `// <head> içinde, her şeyden önce çalışır (sadeleştirilmiş hali).
 const m = document.cookie.match(/(?:^|; )theme=(dark|light)/)
 document.documentElement.dataset.theme = m ? m[1] : 'light'`,
     },

@@ -10,7 +10,7 @@ export default async function Image() {
     eyebrow: 'Blog',
     title: 'Projelerden çıkan notlar, hatalar ve gerekçeler.',
     subtitle:
-      'Saat dilimleri, gerçek zamanlı oyunlar, prosedürel üretim ve arayüz kararları; çalışmayan hâlleriyle birlikte.',
+      'Saat dilimleri, gerçek zamanlı oyunlar, prosedürel üretim ve arayüz kararları; çalışmayan halleriyle birlikte.',
     badges: [`${blogPosts.length} Yazı`, 'Türkçe', 'RSS'],
   })
 }

@@ -10,7 +10,7 @@ import { DEFAULT_THEME } from '@/lib/theme'
 import { readTheme, subscribeTheme, switchTheme } from '@/lib/theme-client'
 
 /**
- * ⌘K komut paleti: AÇIK hâlin kendisi. Açma/kapama, kısayollar ve tembel
+ * ⌘K komut paleti: AÇIK halin kendisi. Açma/kapama, kısayollar ve tembel
  * yükleme CommandPaletteLauncher.tsx'te; bu modül ilk açılışta (ya da boşta
  * kalan ilk anda) indirilir, ilk yükün dışında.
  *

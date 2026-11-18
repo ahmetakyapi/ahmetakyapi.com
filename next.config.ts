@@ -69,7 +69,7 @@ const nextConfig: NextConfig = {
     return [
       {
         /* Yazı framer-motion kullanmayı değil, kütüphaneyi KALDIRMAYI
-           anlatır hâle geldi; eski slug yanıltıcı olduğu için taşındı. */
+           anlatır hale geldi; eski slug yanıltıcı olduğu için taşındı. */
         source: '/blog/framer-motion-sayfa-gecis-animasyonlari',
         destination: '/blog/ahmetakyapi-com-nasil-yapildi',
         permanent: true,
@@ -82,7 +82,7 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
-        /* Yazı ORM karşılaştırmasından Mimio'nun kendi hikâyesine döndü. */
+        /* Yazı ORM karşılaştırmasından Mimio'nun kendi hikayesine döndü. */
         source: '/blog/neon-drizzle-serverless-db-katmani',
         destination: '/blog/bilmedigim-meslege-arac-yazmak',
         permanent: true,

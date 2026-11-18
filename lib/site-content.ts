@@ -57,14 +57,14 @@ export const defaultHomeContent: HomeContent = {
      bilgide, tech stack kendi marquee'sinde. Hero yalnız isim, unvan, bu
      cümle ve iki buton. */
   /* Hero cümlesi (4 Ekim 2026, üçüncü sürüm): sahibinin kendi metni, iki
-     cümleye sıkıştırılmış hâli. İkinci sürümün gerekçesi aşağıda.
+     cümleye sıkıştırılmış hali. İkinci sürümün gerekçesi aşağıda.
      Hero cümlesi (3 Ekim 2026, ikinci sürüm). Önceki "fikirden yayına
      kendim götürüyorum" cümlesi sahibine göre sönüktü. Bu cümle Hakkımda'daki
      ilkeden geliyor ("iyi bir ürün sessizdir: hızlı açılır, rahat okunur,
      doğru bilgi verir") ve işin kapsamını tek nefeste söylüyor. */
   intro: 'Web ürünlerini uçtan uca geliştiriyorum: arayüzünü ve sistemini tasarlıyor, yayına kadar götürüyorum. Kurumsal enerji sistemlerinden kendi ürünlerime kadar hepsinde aynı şeyin peşindeyim: hızlı açılan, kolay anlaşılan ve doğru çalışan işler.',
   /* Unvan her yerde birebir bu yazımla (lib/nav.ts → JOB_TITLE): tireli
-     "Full-Stack", iki parçası da büyük; tiresiz "Fullstack" yok. Yapay zekâ
+     "Full-Stack", iki parçası da büyük; tiresiz "Fullstack" yok. Yapay zeka
      kısmı gerçek işe dayanıyor: Açılış Zili'nde Claude API ile haber
      çevirisi ve analiz, dev-starter'da agentic arayüz (AG-UI) şablonu. */
   role: JOB_TITLE,
@@ -101,12 +101,12 @@ export const defaultHomeContent: HomeContent = {
       'Bir fikri alıp tasarımından geliştirmesine, oradan da yayına almasına kadar uçtan uca kendim götürmeyi seviyorum. Bana göre iyi bir ürün kendini anlatmak zorunda kalmaz. Hızlı açılır, rahat okunur, kullanana ne yapacağını söyler ve doğru bilgi verir. Ben de tam olarak bunu yapmaya çalışıyorum.',
       "Nar Sistem Teknoloji'de enerji sektörüne yönelik Thor ve Lena gibi iki büyük projede görev aldım. Thor, iş emirlerinin, faturaların ve tahakkukların oluşturulup takip edildiği bir sistem. Lena ise akıllı sayaçlardan gelen veriyi toplayıp yöneten bir platform. Bunların dışında Ar-Ge ve TÜBİTAK projelerinde de görev aldım.",
       "Kendi tarafımda da birkaç ürün geliştirdim. Açılış Zili, ABD borsalarını Türkçe takip eden bir site. Derinay, bir psikoloğun danışanlarını takip ettiği bir panel. Bir de Ramazan Vakitleri ve arkadaşlarımla oynamak için yaptığım çok oyunculu oyun Dungeon Mates var. Bunları çoğunlukla Next.js, TypeScript ve PostgreSQL ile yapıyorum.",
-      "İşin büyük kısmını artık yapay zekâ ajanlarıyla birlikte yürütüyorum. Araştırma, tasarım kontrolü, test ve metin düzeltme gibi işleri kendi kurduğum ajanlara bırakıyorum. Neyin yapılacağına ve neyin yayına çıkacağına ise ben karar veriyorum. Açılış Zili'ndeki bültenleri ve bilanço analizlerini de her gün bu ajanlar yazıyor.",
+      "İşin büyük kısmını artık yapay zeka ajanlarıyla birlikte yürütüyorum. Araştırma, tasarım kontrolü, test ve metin düzeltme gibi işleri kendi kurduğum ajanlara bırakıyorum. Neyin yapılacağına ve neyin yayına çıkacağına ise ben karar veriyorum. Açılış Zili'ndeki bültenleri ve bilanço analizlerini de her gün bu ajanlar yazıyor.",
       'İş hayatı dışında saatlere meraklıyım. Bir kadranın neden kolay okunduğunu düşünmek, bir ekranın neden kolay okunduğunu düşünmekten pek farklı değil. Oyun oynamayı severim, Fenerbahçeliyim. Gezmeyi, yeni yerler görmeyi ve o gezileri önceden en ince ayrıntısına kadar planlamayı severim. İyi bir yemek için yol yapmaya da her zaman varım.',
     ],
   },
   /* Ana sayfanın Deneyim bölümü (Ekim 2026, "Ne Yaptım"ın yerine). Roller,
-     dönemler ve proje açıklamaları sahibinin kendi yazdığı hâliyle (3 Ekim
+     dönemler ve proje açıklamaları sahibinin kendi yazdığı haliyle (3 Ekim
      2026); yalnız unvan yazımı sitenin geri kalanıyla tutarlı: "Full-Stack". */
   experience: {
     company: 'Nar Sistem Teknoloji',

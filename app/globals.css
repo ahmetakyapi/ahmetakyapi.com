@@ -59,7 +59,7 @@
   --on-brand: #ffffff;
 
   /* Paletten türeyenler. Açık temada opak yüzey (⌘K, mobil menü, camın
-     yedeği) kâğıt kartla aynı ton: zeminin %8 koyusu gri bir kutu gibi
+     yedeği) kağıt kartla aynı ton: zeminin %8 koyusu gri bir kutu gibi
      duruyordu (Ekim 2026, ekran görüntüsü). Koyuda zeminden bir ton açık. */
   --line-focus: var(--primary);
   --surface-solid: var(--surface);
@@ -135,10 +135,10 @@
 :root,
 :root[data-palette="signature"] {
   /* AÇIK TEMA KENDİ BAŞINA ÇİZİLDİ (Ekim 2026, varsayılan oldu).
-     Önceki hâl koyu temanın tersiydi: kartlar zeminin üstüne lacivert bir
+     Önceki hal koyu temanın tersiydi: kartlar zeminin üstüne lacivert bir
      örtüyle (%2,8) basılıyordu, yani zeminden KOYU duruyordu ve sayfa gri
-     bir kâğıda çizilmiş koyu tema gibi okunuyordu. Şimdi üç katman ışıkla
-     kuruluyor: zemin soğuk kırık beyaz, kart ondan AÇIK (masadaki kâğıt),
+     bir kağıda çizilmiş koyu tema gibi okunuyordu. Şimdi üç katman ışıkla
+     kuruluyor: zemin soğuk kırık beyaz, kart ondan AÇIK (masadaki kağıt),
      çukur yüzey (Hakkımda bloğu, görsel çerçeveleri) bir ton mavimsi
      koyu. Hepsi aynı soğuk aileden; bej/krem yok, marka mavisiyle
      çatışmasın. Kontrast (ölçüldü, zemin / kart / çukur):
@@ -147,7 +147,7 @@
        muted  #536477    5,7 /  6,0 /  5,3   (soluk ≥ 4,5)
      Eski gövde #54677c 5,5:1'di. */
   /* "Beyaz çok beyaz" (3 Ekim 2026): zemin kırık beyazdan bir ton mavi
-     griye indi; kart hâlâ zeminden açık, çukur yüzey bir ton koyu. */
+     griye indi; kart hala zeminden açık, çukur yüzey bir ton koyu. */
   /* 4 Ekim 2026: kart beyazı göz alıyordu; zemin ve kart bir kademe
      yumuşadı (#e9eff6 → #e3e9f0, #f6f9fc → #edf1f6); bütün ekranlar
      bu iki token'dan okuyor.
@@ -162,7 +162,7 @@
   --text-soft: #3a4a5c;
   --text-muted: #536477;
 
-  /* Kâğıt kartlar zeminden açık olduğu için kenarı biraz daha belirgin. */
+  /* Kağıt kartlar zeminden açık olduğu için kenarı biraz daha belirgin. */
   --line: rgb(16 32 52 / 0.11);
   --line-soft: rgb(16 32 52 / 0.065);
   --line-strong: rgb(16 32 52 / 0.2);
@@ -186,7 +186,7 @@
      "her şey mavi" olunca büyük başlıklar ağırlığını kaybediyordu. Küçük
      başlıklar ve kart adları baştan sona mavi (`--inkb-*`). */
   --display-gradient: linear-gradient(105deg, #0a1a30 0%, #0c3a72 50%, #1a7fd8 100%);
-  /* Başlık degradesinin durakları ve üzerine gelinen hâli (aynı aile).
+  /* Başlık degradesinin durakları ve üzerine gelinen hali (aynı aile).
      Vurgu kelimesi ve üzerine gelinen başlık (`--acc-*`) markanın mavisi
      içinde kalan kısa degrade. */
   --ink-1: #0a1a30;
@@ -1524,7 +1524,7 @@ html.theme-switching::view-transition-new(root) {
      doğrudan `--tint: var(--primary)` yazmak atadan geleni eziyordu ve
      /projeler'deki bütün kartlar mavi kalıyordu (4 Ekim 2026). */
   --tint: var(--card-tint, var(--primary));
-  /* Metin olarak tonun koyu hâli: açık zeminde AA (altın bile). */
+  /* Metin olarak tonun koyu hali: açık zeminde AA (altın bile). */
   --tint-ink: color-mix(in oklab, var(--tint) 60%, var(--text-strong) 40%);
   /* Başlık degradesinin açık ucu: büyük metinde AA (altın ton dahil). */
   --tint-mid: color-mix(in oklab, var(--tint) 85%, var(--text-strong) 15%);
@@ -1616,7 +1616,7 @@ html.theme-switching::view-transition-new(root) {
   background: var(--tint);
 }
 
-/* Ad: tonun koyu hâlinden kendisine degrade. Katmanda: kartlardaki mt-*
+/* Ad: tonun koyu halinden kendisine degrade. Katmanda: kartlardaki mt-*
    yardımcıları başlığın boşluğunu ezebilsin (bkz. "Başlık mürekkebi"). */
 @layer components {
 .tint-card-title {
@@ -1629,7 +1629,7 @@ html.theme-switching::view-transition-new(root) {
 }
 @supports (background-clip: text) or (-webkit-background-clip: text) {
   .tint-card-title {
-    /* Siyahtan değil tonun koyu hâlinden tonun kendisine (4 Ekim 2026:
+    /* Siyahtan değil tonun koyu halinden tonun kendisine (4 Ekim 2026:
        "Açılış Zili mavi gradient yazmalı"). */
     background: linear-gradient(105deg, var(--tint-ink) 0%, var(--tint-mid) 100%) 0 0 / min(100%, 9em) 100% no-repeat
       var(--tint-mid);

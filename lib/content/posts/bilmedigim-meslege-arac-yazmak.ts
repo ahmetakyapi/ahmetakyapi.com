@@ -14,7 +14,7 @@ export const post: BlogPost = {
     },
     {
       type: 'p',
-      text: "Fikir bir ergoterapistle sohbetten çıktı: seanslarda oynatılan oyunlar ölçülebilir veri üretsin, veri elle not defterine değil danışanın dosyasına gitsin. Mimio'yu yazmaya başladığımda ergoterapinin ne olduğunu tam bilmiyordum. Bu yazı o yüzden biraz da bilmediğin bir mesleğe araç yazmanın hikâyesi.",
+      text: "Fikir bir ergoterapistle sohbetten çıktı: seanslarda oynatılan oyunlar ölçülebilir veri üretsin, veri elle not defterine değil danışanın dosyasına gitsin. Mimio'yu yazmaya başladığımda ergoterapinin ne olduğunu tam bilmiyordum. Bu yazı o yüzden biraz da bilmediğin bir mesleğe araç yazmanın hikayesi.",
     },
 
     { type: 'h2', text: 'Panelde Neler Var' },
@@ -58,7 +58,7 @@ export const post: BlogPost = {
     },
     {
       type: 'p',
-      text: "Oyunların her biri ergoterapi literatüründe karşılığı olan bir paradigmaya dayanıyor; mesela Sıra Hafızası klasik Corsi blok testinin oyunlaştırılmış hâli. Bunu ben uydurmadım, mesleğin zaten kullandığı ölçekleri ekrana taşıdım. Panelde ayrıca yedi uzmanlık alanı için (pediatri, nörolojik rehabilitasyon, geriatri gibi) kanıta dayalı aktivite önerileri var.",
+      text: "Oyunların her biri ergoterapi literatüründe karşılığı olan bir paradigmaya dayanıyor; mesela Sıra Hafızası klasik Corsi blok testinin oyunlaştırılmış hali. Bunu ben uydurmadım, mesleğin zaten kullandığı ölçekleri ekrana taşıdım. Panelde ayrıca yedi uzmanlık alanı için (pediatri, nörolojik rehabilitasyon, geriatri gibi) kanıta dayalı aktivite önerileri var.",
     },
 
     { type: 'h2', text: 'Nasıl Kurdum' },
@@ -118,7 +118,7 @@ export const post: BlogPost = {
     },
     {
       type: 'p',
-      text: 'Skorları yorumlayan tek bir yer var: ilerleme raporundaki oyun tablosu, en az üç seans varsa ilk ve son skoru karşılaştırıyor ve "artıyor", "düşüyor" ya da "stabil" yazıyor. Bunun eşiği dört puan. O dört puanı bir terapist değil, ben seçtim ve bu rapor aileye gidiyor. Bu, projede hâlâ en az rahat olduğum karar.',
+      text: 'Skorları yorumlayan tek bir yer var: ilerleme raporundaki oyun tablosu, en az üç seans varsa ilk ve son skoru karşılaştırıyor ve "artıyor", "düşüyor" ya da "stabil" yazıyor. Bunun eşiği dört puan. O dört puanı bir terapist değil, ben seçtim ve bu rapor aileye gidiyor. Bu, projede hala en az rahat olduğum karar.',
     },
 
     { type: 'h2', text: 'Şema Her Hafta Değişti, Migration Yazmadım' },

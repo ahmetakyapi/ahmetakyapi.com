@@ -9,7 +9,7 @@ export default async function Image() {
 
   return renderOgCard({
     eyebrow: 'Projeler',
-    title: 'Yazdığım, yayınladığım ve hâlâ uğraştığım işler.',
+    title: 'Yazdığım, yayınladığım ve hala uğraştığım işler.',
     subtitle: 'Açılış Zili, Mimio, One Piece Hub, Harfiyen, ElevenForge ve diğerleri. Hepsinin kodu açık.',
     badges: [`${projects.length} Proje`, 'Next.js', 'TypeScript'],
   })

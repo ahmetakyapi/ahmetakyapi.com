@@ -143,7 +143,7 @@ function BlockView({ block, section }: { block: Block; section?: PostSection }) 
            Yatay kaydırma yok (4 Ekim 2026: "dikeyde tablolar kaymadan
            okunsun"; üç sütunlu tablo 480 piksele zorlanıyordu). Kart
            düzeninde `display` değiştiği için tablo rolleri açıkça yazılı;
-           Safari aksi hâlde tablo anlamını düşürür. Geniş ekranda tablo
+           Safari aksi halde tablo anlamını düşürür. Geniş ekranda tablo
            kayabilir: ilk sütun yerinde durur, sağ gölge "devamı var" der. */
         <div
           data-block="table"

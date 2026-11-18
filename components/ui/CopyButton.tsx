@@ -12,7 +12,7 @@ import { buttonClass, type ButtonSize, type ButtonVariant } from '@/components/u
  *
  * Sonuç ekran okuyucuya `aria-live` ile söylenir (butonun kardeşi, gizli
  * ve konumlu: yerleşime girmez); görsel etiket 1,8 sn
- * sonra eski hâline döner. Clipboard API yoksa (eski Safari, güvensiz
+ * sonra eski haline döner. Clipboard API yoksa (eski Safari, güvensiz
  * köken) gizli textarea yöntemine düşer; o da olmazsa "Tekrar Dene" der.
  */
 const RESET_MS = 1800
@@ -49,7 +49,7 @@ export function CopyButton({
   const message = state === 'copied' ? copiedLabel : state === 'error' ? 'Tekrar Dene' : null
 
   /* Duyuru butonun DIŞINDA, hep yerinde bir bölgede ve yalnız sonuçta:
-     butonun içindeyken etiket eski hâline dönünce ("Adresi Kopyala") o da
+     butonun içindeyken etiket eski haline dönünce ("Adresi Kopyala") o da
      yeniden okunuyordu. */
   return (
     <>

@@ -7,7 +7,7 @@ import { SketchUnderline } from '@/components/ui/Sketch'
  *   <h2 className="home-title"><MaskTitle accentLast>Öne Çıkan Projeler</MaskTitle></h2>
  *
  * Neden: ana sayfada her bölüm aynı hareketle "başlar"; okuyucu bir kutudan
- * ötekine atlamıyor, aynı hikâyenin sıradaki başlığını okuyor. Zamanlayıcı
+ * ötekine atlamıyor, aynı hikayenin sıradaki başlığını okuyor. Zamanlayıcı
  * başlığın kendi görünümü (home.css → `.home-mask`), JavaScript yok.
  * Desteksiz tarayıcıda ve hareketi azaltan okuyucuda başlık olduğu gibi.
  *

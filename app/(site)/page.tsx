@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 }
 
 /*
- * Ana sayfa, yedi bölüm ve yedi ayrı düzen ailesi. SIRA bir hikâye:
+ * Ana sayfa, yedi bölüm ve yedi ayrı düzen ailesi. SIRA bir hikaye:
  *   1. Hero: solda isim ve tek cümle, sağda etkileşimli küre.
  *   2. Hakkımda: kim olduğum (sayfanın tek renk bloğu, `surface-sunken`).
  *      Sahibinin isteği (Ekim 2026): beni tanıtan kısım projelerden önce.

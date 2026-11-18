@@ -13,7 +13,7 @@
    içeride, kapak ekranın tamamı genişliğinde. Sonuç okunmuyordu: kapak
    1440×900'de 680 piksel yüksekti ve ilk ekranın tamamını alıyordu, metin
    iki ayrı sol kenar arasında sıkışıyordu (3 Ekim 2026, sahibinin
-   şikâyeti: "eskisi gibi olsun"). Şimdi her şey aynı sol kenardan başlar:
+   şikayeti: "eskisi gibi olsun"). Şimdi her şey aynı sol kenardan başlar:
    başlık, kapak, gövde ve kutular tek sütunda; içindekiler sağda.
    ========================================================================== */
 
@@ -334,7 +334,7 @@
 }
 
 /* Bölüm başlığı görünüme girerken çizgi soldan uzar, başlık hafifçe
-   yükselir. Desteksiz ya da hareketi azaltan okuyucuda son hâl. Çizgi
+   yükselir. Desteksiz ya da hareketi azaltan okuyucuda son hal. Çizgi
    genişlikle değil ölçekle uzar: kaydırma zaman çizelgesinde genişlik her
    karede ana iş parçacığında yerleşim ister, ölçek bileşiciye gider. */
 @keyframes post-rule-in {

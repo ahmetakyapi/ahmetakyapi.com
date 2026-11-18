@@ -27,11 +27,11 @@ export const post: BlogPost = {
         },
         {
           title: 'On Kat',
-          text: 'Her kat bir öncekinden zor. Üçüncü, beşinci, yedinci ve sekizinci katlarda birer boss, onuncu katta Demon bekliyor. Kata göre değişen kurallar, güçlendirilmiş canavarlar, yetenek seçimi ve bir dükkân her turu bir öncekinden ayırıyor.',
+          text: 'Her kat bir öncekinden zor. Üçüncü, beşinci, yedinci ve sekizinci katlarda birer boss, onuncu katta Demon bekliyor. Kata göre değişen kurallar, güçlendirilmiş canavarlar, yetenek seçimi ve bir dükkan her turu bir öncekinden ayırıyor.',
         },
         {
           title: 'Dokuz Canavar',
-          text: 'Fare sürüyle gelir, hayalet duvardan geçer, örümcek ağ atıp yavaşlatır, goblin canı azalınca kaçar. Her birinin kendi yapay zekâsı ve kendi davranışı var.',
+          text: 'Fare sürüyle gelir, hayalet duvardan geçer, örümcek ağ atıp yavaşlatır, goblin canı azalınca kaçar. Her birinin kendi yapay zekası ve kendi davranışı var.',
         },
         {
           title: 'Birlikte Oynamak',
@@ -41,13 +41,13 @@ export const post: BlogPost = {
     },
     {
       type: 'p',
-      text: "Oyunun bir de hikâyesi var: yerin yedi kat altında kurulmuş Zephara şehri, kendi halkını kurtarmak isterken onu lanetleyen kral ve en altta onu bekleyen son savaş. Hikâye oyunun içinde satır satır anlatılmıyor; katlar, bosslar ve dükkândaki eşyalar ona göre adlandırılmış.",
+      text: "Oyunun bir de hikayesi var: yerin yedi kat altında kurulmuş Zephara şehri, kendi halkını kurtarmak isterken onu lanetleyen kral ve en altta onu bekleyen son savaş. Hikaye oyunun içinde satır satır anlatılmıyor; katlar, bosslar ve dükkandaki eşyalar ona göre adlandırılmış.",
     },
 
     { type: 'h2', text: 'Nasıl Çalışıyor' },
     {
       type: 'p',
-      text: "Arayüz Next.js, oyun ise bir Node sunucusunda çalışıyor ve ikisi Socket.io ile konuşuyor. Bütün oyun mantığı sunucuda: canavarların yapay zekâsı, çarpışmalar, hasar, loot ve harita üretimi saniyede yirmi kez işleniyor. Tarayıcı yalnızca tuşları gönderiyor, gelen durumu Canvas'a çiziyor. Bu hem hileyi zorlaştırıyor hem de dört oyuncunun aynı dünyayı görmesini garanti ediyor.",
+      text: "Arayüz Next.js, oyun ise bir Node sunucusunda çalışıyor ve ikisi Socket.io ile konuşuyor. Bütün oyun mantığı sunucuda: canavarların yapay zekası, çarpışmalar, hasar, loot ve harita üretimi saniyede yirmi kez işleniyor. Tarayıcı yalnızca tuşları gönderiyor, gelen durumu Canvas'a çiziyor. Bu hem hileyi zorlaştırıyor hem de dört oyuncunun aynı dünyayı görmesini garanti ediyor.",
     },
     {
       type: 'p',
@@ -156,7 +156,7 @@ if (this.rooms.length > targetMax) {
     },
     {
       type: 'p',
-      text: 'Emin olmadığım bir karar da harita boyutunun oyuncu sayısına bağlanması. Tek kişilik oyun ile dört kişilik oyun artık farklı haritalarda oynanıyor ve ikisinin aynı oyun olması gerekip gerekmediğini hâlâ bilmiyorum. Bir gün rekabetçi bir mod gelirse haritanın tamamını göndermeyi de yeniden düşünmem gerekecek.',
+      text: 'Emin olmadığım bir karar da harita boyutunun oyuncu sayısına bağlanması. Tek kişilik oyun ile dört kişilik oyun artık farklı haritalarda oynanıyor ve ikisinin aynı oyun olması gerekip gerekmediğini hala bilmiyorum. Bir gün rekabetçi bir mod gelirse haritanın tamamını göndermeyi de yeniden düşünmem gerekecek.',
     },
   ],
 }

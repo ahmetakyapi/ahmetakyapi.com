@@ -84,7 +84,7 @@ export const post: BlogPost = {
       type: 'code',
       lang: 'ts',
       file: 'lib/theme.ts',
-      text: `// <head> içinde, her şeyden önce çalışır (sadeleştirilmiş hâli).
+      text: `// <head> içinde, her şeyden önce çalışır (sadeleştirilmiş hali).
 const m = document.cookie.match(/(?:^|; )theme=(dark|light)/)
 document.documentElement.dataset.theme = m ? m[1] : 'light'`,
     },
@@ -112,11 +112,11 @@ document.documentElement.dataset.theme = m ? m[1] : 'light'`,
     { type: 'h2', text: 'Animasyonlar Neden CSS' },
     {
       type: 'p',
-      text: "Sitenin ilk hâlinde animasyonlar için framer-motion kullanıyordum. Ana sayfanın indirdiği JavaScript'in yarısına yakını o kütüphaneydi. Yaptığı işlere tek tek bakınca hepsinin CSS ile yapılabildiğini gördüm ve kaldırdım.",
+      text: "Sitenin ilk halinde animasyonlar için framer-motion kullanıyordum. Ana sayfanın indirdiği JavaScript'in yarısına yakını o kütüphaneydi. Yaptığı işlere tek tek bakınca hepsinin CSS ile yapılabildiğini gördüm ve kaldırdım.",
     },
     {
       type: 'p',
-      text: 'Kaydırınca beliren kartlar artık `animation-timeline: view()` ile çalışıyor. Eleman ekrana girdikçe animasyon ilerliyor; zamanlayıcı da gözlemci de yok. Hepsi bir `@supports` bloğunun içinde, yani desteklemeyen tarayıcıda içerik zaten görünür hâlde duruyor.',
+      text: 'Kaydırınca beliren kartlar artık `animation-timeline: view()` ile çalışıyor. Eleman ekrana girdikçe animasyon ilerliyor; zamanlayıcı da gözlemci de yok. Hepsi bir `@supports` bloğunun içinde, yani desteklemeyen tarayıcıda içerik zaten görünür halde duruyor.',
     },
     {
       type: 'stats',
@@ -141,7 +141,7 @@ document.documentElement.dataset.theme = m ? m[1] : 'light'`,
     { type: 'h3', text: 'İmza' },
     {
       type: 'p',
-      text: 'Başlıktaki el yazısı "Ahmet Akyapı" bir yazı tipi değil, SVG yolu. Yazı tipi indirilmediği için sayfa yüklenirken harfler kaymıyor; sayfa açılırken de kalem kâğıtta ilerliyormuş gibi soldan sağa yazılıyor.',
+      text: 'Başlıktaki el yazısı "Ahmet Akyapı" bir yazı tipi değil, SVG yolu. Yazı tipi indirilmediği için sayfa yüklenirken harfler kaymıyor; sayfa açılırken de kalem kağıtta ilerliyormuş gibi soldan sağa yazılıyor.',
     },
     { type: 'h3', text: 'Kod Boyayıcı' },
     {

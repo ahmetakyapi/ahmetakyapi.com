@@ -137,7 +137,7 @@ export const projects: Project[] = [
     group: 'oyun',
     onlyDark: true,
     description:
-      'Tarayıcıda tek başına ya da oda koduyla en fazla dört kişi birlikte oynanan, piksel grafikli bir zindan oyunu. Savaşçı, Büyücü, Okçu ve Şifacı arasından sınıfını seçip on katlık bir zindana iniyorsun; 3, 5, 7 ve 8. katlarda birer boss, onuncu katta Demon bekliyor. Her kat yeniden üretiliyor, kata göre değişen kurallar, güçlendirilmiş canavarlar, yetenek seçimi ve dükkân da bir turu öncekinden ayırıyor.',
+      'Tarayıcıda tek başına ya da oda koduyla en fazla dört kişi birlikte oynanan, piksel grafikli bir zindan oyunu. Savaşçı, Büyücü, Okçu ve Şifacı arasından sınıfını seçip on katlık bir zindana iniyorsun; 3, 5, 7 ve 8. katlarda birer boss, onuncu katta Demon bekliyor. Her kat yeniden üretiliyor, kata göre değişen kurallar, güçlendirilmiş canavarlar, yetenek seçimi ve dükkan da bir turu öncekinden ayırıyor.',
     detail:
       'Oyunun bütün mantığı Node sunucusunda saniyede 20 kez işleniyor; tarayıcı yalnız tuş ve eylem gönderiyor, gelen durumu Canvas\'a çiziyor. Haritalar BSP ile sunucuda üretiliyor ve odadaki herkese aynısı gidiyor. Ses efektlerinin hiçbiri dosya değil, Web Audio ile o an üretiliyor.',
     tags: ['Next.js 14', 'Canvas', 'Socket.io', 'WebAudio', 'TypeScript'],
@@ -187,9 +187,9 @@ export const projects: Project[] = [
     slug: 'dev-starter',
     group: 'arac',
     description:
-      'Her yeni projeye sıfırdan başlamamak için kurduğum geliştirme altyapısı. İçinde üç hazır Next.js şablonu (full-stack uygulama, tanıtım sayfası, yapay zekâ sohbet arayüzü), 141 kopyalanıp kullanılabilen arayüz bileşeni ve on iki adımlık bir rehber var. Bütün parçalar 781 hikâyelik bir Storybook kataloğunda açık ve koyu temada, on renk paletiyle canlı olarak gezilebiliyor; her bileşen tek komutla bir projeye kuruluyor.',
+      'Her yeni projeye sıfırdan başlamamak için kurduğum geliştirme altyapısı. İçinde üç hazır Next.js şablonu (full-stack uygulama, tanıtım sayfası, yapay zeka sohbet arayüzü), 141 kopyalanıp kullanılabilen arayüz bileşeni ve on iki adımlık bir rehber var. Bütün parçalar 781 hikayelik bir Storybook kataloğunda açık ve koyu temada, on renk paletiyle canlı olarak gezilebiliyor; her bileşen tek komutla bir projeye kuruluyor.',
     detail:
-      'Tasarım dili sakin bir yüzey ve renkli veri üzerine kurulu: beyaz sayfa, gri kuyu, içinde beyaz karolar; renk yalnızca veride ve tek birincil eylemde. Tokenlar ve bileşenler iki ayrı npm paketi (@ahmetakyapi/theme, @ahmetakyapi/ui); on palet aynı token adlarını kullandığı için bir projenin rengini değiştirmek tek satır ve her paletin kontrastı testte ölçülüyor. Katalogdaki “Pusula” örnek uygulaması 141 bileşenin hepsini pano, gelen kutusu, görevler, takvim, asistan ve raporlarıyla tek bir üründe, tutarlı örnek veriyle bir arada gösteriyor. Her görsel değişiklikten sonra 781 hikâyenin etkileşim testi, kontrast ve hizalama ölçümleri koşuyor. Yanında Claude Code için uzman ajanlar (strateji, tasarım denetimi, metin editörü, kalite kapısı) ve projelerde yaşanmış hataların tutulduğu bir bilgi tabanı duruyor.',
+      'Tasarım dili sakin bir yüzey ve renkli veri üzerine kurulu: beyaz sayfa, gri kuyu, içinde beyaz karolar; renk yalnızca veride ve tek birincil eylemde. Tokenlar ve bileşenler iki ayrı npm paketi (@ahmetakyapi/theme, @ahmetakyapi/ui); on palet aynı token adlarını kullandığı için bir projenin rengini değiştirmek tek satır ve her paletin kontrastı testte ölçülüyor. Katalogdaki “Pusula” örnek uygulaması 141 bileşenin hepsini pano, gelen kutusu, görevler, takvim, asistan ve raporlarıyla tek bir üründe, tutarlı örnek veriyle bir arada gösteriyor. Her görsel değişiklikten sonra 781 hikayenin etkileşim testi, kontrast ve hizalama ölçümleri koşuyor. Yanında Claude Code için uzman ajanlar (strateji, tasarım denetimi, metin editörü, kalite kapısı) ve projelerde yaşanmış hataların tutulduğu bir bilgi tabanı duruyor.',
     tags: ['Next.js 16', 'TypeScript', 'Tailwind v4', 'Storybook 10', 'Claude Code'],
     link: 'https://dev-starter-storybook.vercel.app',
     github: 'https://github.com/ahmetakyapi/dev-starter',
