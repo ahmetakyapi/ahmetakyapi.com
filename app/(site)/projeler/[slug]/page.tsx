@@ -1,5 +1,6 @@
-import { ArrowLeft, ArrowRight, ArrowUpRight, Maximize2 } from 'lucide-react'
+import { ArrowLeft, ArrowRight, ArrowUpRight, Lock, Maximize2 } from 'lucide-react'
 import type { Metadata } from 'next'
+import type { ReactNode } from 'react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ArmedMorph } from '@/components/projects/ArmedMorph'
@@ -10,7 +11,7 @@ import { BrandIcon } from '@/components/site/BrandIcon'
 import { PageTransition } from '@/components/site/PageTransition'
 import { buttonClass } from '@/components/ui/Button'
 import { Container } from '@/components/ui/Container'
-import { KunyeGrid, KunyeLine } from '@/components/ui/Kunye'
+import { KunyeLine } from '@/components/ui/Kunye'
 import { ThemedImage } from '@/components/ui/ThemedImage'
 import { blogPosts } from '@/lib/content/posts'
 import { shotSources, type ShotSources } from '@/lib/content/project-shots'
@@ -126,6 +127,7 @@ export default async function ProjectPage({ params }: PageProps<'/projeler/[slug
   const second = shots.find((s) => s.view === 'desktop-2')
   const phone = shots.find((s) => s.view === 'mobile')
   const indexOf = (view: ShotView) => shots.findIndex((s) => s.view === view)
+  const site = liveUrl(project)
 
   return (
     <PageTransition>
@@ -162,10 +164,12 @@ export default async function ProjectPage({ params }: PageProps<'/projeler/[slug
         <Container size="default" className="phero mt-4 sm:mt-6">
           <div className="phero-frame">
             {hasHeroShot ? (
-              <button type="button" data-shot={0} className="shot-zoom group relative" aria-label={`${VIEW_ALT.desktop(project.title)}, büyüt`}>
-                <ProjectCover project={project} morph priority />
-                <ZoomHint />
-              </button>
+              <BrowserFrame host={hostOf(site ?? project.link ?? project.github)}>
+                <button type="button" data-shot={0} className="shot-zoom group relative block w-full" aria-label={`${VIEW_ALT.desktop(project.title)}, büyüt`}>
+                  <ProjectCover project={project} morph priority className="rounded-none! border-0!" />
+                  <ZoomHint />
+                </button>
+              </BrowserFrame>
             ) : (
               <ProjectCover project={project} morph priority />
             )}
@@ -174,25 +178,28 @@ export default async function ProjectPage({ params }: PageProps<'/projeler/[slug
 
       <article aria-labelledby="proje-adi">
         <Container size="default">
-          <header className="mt-8 max-w-4xl sm:mt-12">
-            <h1
-              id="proje-adi"
-              className="display-ink text-[clamp(2.75rem,7vw,5.5rem)] leading-[0.98] font-semibold tracking-[-0.045em]"
-            >
-              {project.title}
-            </h1>
-            <p className="mt-5 max-w-[48ch] text-lead text-body sm:text-[1.375rem] sm:leading-[1.55]">{lead}</p>
-            <ProjectLinks project={project} />
+          {/* İki sütun: solda ad, tek cümle ve eylemler; sağda künye. Eskiden künye
+              başlığın ALTINDA iki geniş sütundu, başlığın yanı boş kalıyordu
+              (18 Kasım 2026, sahibinin itirazı). Dar ekranda alt alta. */}
+          {/* Genişlik kahraman görselle aynı (.phero-frame: ekran yüksekliğine bağlı); künyenin sağ kenarı görselin kenarında biter. */}
+          <header className="phero-frame mt-8 grid gap-10 sm:mt-12 lg:grid-cols-12 lg:items-end lg:gap-12">
+            <div className="min-w-0 lg:col-span-7">
+              <h1
+                id="proje-adi"
+                // Boşluksuz uzun ad ("ahmetakyapi.com") yedi sütunluk alana sığmıyor, satıra da kırılamıyor: bir kademe küçük.
+                className={`display-ink leading-[0.98] font-semibold tracking-[-0.045em] text-balance ${
+                  project.title.length > 13 && !project.title.includes(' ')
+                    ? 'text-[clamp(2.5rem,4.6vw,4rem)]'
+                    : 'text-[clamp(2.75rem,6.4vw,5.25rem)]'
+                }`}
+              >
+                {project.title}
+              </h1>
+              <p className="mt-5 max-w-[46ch] text-lead text-body sm:text-[1.375rem] sm:leading-[1.55]">{lead}</p>
+              <ProjectLinks project={project} />
+            </div>
+            <ProjectFacts project={project} live={Boolean(site)} />
           </header>
-
-          <KunyeGrid
-            columns={2}
-            className="mt-10 max-w-5xl sm:mt-12"
-            items={[
-              { label: 'Kategori', value: project.category },
-              { label: 'Tech Stack', value: project.tags.join(', ') },
-            ]}
-          />
         </Container>
 
         {rest || project.detail || project.stats?.length ? (
@@ -271,6 +278,83 @@ export default async function ProjectPage({ params }: PageProps<'/projeler/[slug
       {next && next.slug !== project.slug ? <NextProject project={next} /> : null}
       </div>
     </PageTransition>
+  )
+}
+
+/** "https://www.ornek.com/yol" → "ornek.com". Pencere çubuğunun adres hapı. */
+function hostOf(url?: string | null) {
+  if (!url) return null
+  try {
+    return new URL(url).host.replace(/^www\./, '')
+  } catch {
+    return null
+  }
+}
+
+/**
+ * Kahraman ekran görüntüsünün tarayıcı penceresi. Görüntünün içinde o
+ * sitenin kendi butonları var; çerçevesiz durunca hemen altındaki bu
+ * sayfanın butonlarıyla karışıyor, tıklanacak gibi okunuyordu (18 Kasım
+ * 2026). Pencere çubuğu (üç nokta, adres) "bu bir sitenin resmi" demenin
+ * yerleşik yolu. Çubuk süs: bağlantı değil, üstüne gelince değişmez.
+ */
+function BrowserFrame({ host, children }: { host: string | null; children: ReactNode }) {
+  return (
+    <div className="pwindow overflow-hidden rounded-card border border-line bg-surface-solid">
+      <div aria-hidden="true" className="grid h-9 grid-cols-[3.5rem_minmax(0,1fr)_3.5rem] items-center border-b border-line px-3.5 select-none sm:h-10">
+        <span className="flex gap-1.5">
+          <span className="size-2.5 rounded-full bg-line-strong" />
+          <span className="size-2.5 rounded-full bg-line-strong" />
+          <span className="size-2.5 rounded-full bg-line-strong" />
+        </span>
+        {host ? (
+          <span className="mx-auto flex max-w-full min-w-0 items-center gap-1.5 rounded-full bg-surface-sunken px-3 py-1 text-small text-muted">
+            <Lock className="size-3 shrink-0" />
+            <span className="truncate">{host}</span>
+          </span>
+        ) : (
+          <span />
+        )}
+      </div>
+      {children}
+    </div>
+  )
+}
+
+/**
+ * Künye, başlığın yanında: kategori, durum, teknolojiler. Teknolojiler
+ * virgüllü tek satır değil, tek tek etiket (göz tarar). Etiketler düz
+ * yüzey: buton değil, kenarlıksız ve üstüne gelince değişmez.
+ */
+function ProjectFacts({ project, live }: { project: Project; live: boolean }) {
+  return (
+    <dl className="grid gap-6 border-t border-line pt-6 sm:grid-cols-2 lg:col-span-5 lg:grid-cols-1 lg:gap-5 lg:border-t-0 lg:border-l lg:pt-0 lg:pb-1 lg:pl-10">
+      <div className="min-w-0">
+        <dt className="text-small font-medium text-muted">Kategori</dt>
+        <dd className="mt-1.5 text-base text-strong">{project.category}</dd>
+      </div>
+      {project.badge ? (
+        <div className="min-w-0">
+          <dt className="text-small font-medium text-muted">Durum</dt>
+          <dd className="mt-1.5 inline-flex items-center gap-2 text-base text-strong">
+            {live ? <span aria-hidden="true" className="size-2 rounded-full bg-success" /> : null}
+            {project.badge}
+          </dd>
+        </div>
+      ) : null}
+      <div className="min-w-0 sm:col-span-2 lg:col-span-1">
+        <dt className="text-small font-medium text-muted">Tech Stack</dt>
+        <dd className="mt-2.5">
+          <ul className="flex flex-wrap gap-1.5">
+            {project.tags.map((tag) => (
+              <li key={tag} className="rounded-md bg-surface-sunken px-2.5 py-1 text-small font-medium text-body">
+                {tag}
+              </li>
+            ))}
+          </ul>
+        </dd>
+      </div>
+    </dl>
   )
 }
 
